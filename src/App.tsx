@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import Login from './features/auth/Login.tsx'
 import ProtectedRoute from './components/ProtectedRoute.tsx'
-import City from './features/city/city.tsx'
 import Dashboard from './features/dashboard/Dashboard.tsx'
 import { useAppDispatch } from './store.ts'
 import { useEffect, useState } from 'react'
@@ -11,6 +10,9 @@ import axios from 'axios'
 import { loginFailure, loginSuccess } from './features/auth/authSlice.ts'
 import Spinner from './components/Spinner.tsx'
 import AppLayout from './ui/AppLayout.tsx'
+import City from './features/city/City.tsx'
+import AddCity from './features/city/AddCity.tsx'
+import UpdateCity from './features/city/UpdateCity.tsx'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -58,8 +60,10 @@ function App() {
 
       <Routes>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<ProtectedRoute location={'/'}><Dashboard /></ProtectedRoute>} />
-          <Route path="/city" element={<ProtectedRoute location={'/city'}><City /></ProtectedRoute>} />
+          <Route path="/" element={<ProtectedRoute location="/"><Dashboard /></ProtectedRoute>} />
+          <Route path="/city" element={<ProtectedRoute location="/city"><City /></ProtectedRoute>} />
+          <Route path="/city/add" element={<ProtectedRoute location="/city/add"><AddCity /></ProtectedRoute>} />
+          <Route path="/city/:id/edit" element={<ProtectedRoute location="/city"><UpdateCity /></ProtectedRoute>} />
         </Route>
 
         <Route path="/login" element={<Login />} />
