@@ -1,10 +1,9 @@
-import { Button, Flex, Form, type FormProps, Input, Typography } from 'antd'
+import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
 import { UpdateCityField, updateCity, getCityById } from '../api/city.api.ts'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
-import Spinner from '../../components/Spinner.tsx'
 
 const onFinishFailed: FormProps<UpdateCityField>['onFinishFailed'] = (errorInfo) => {
   console.log('Failed:', errorInfo)
@@ -44,7 +43,7 @@ function UpdateCity() {
   }
 
   if (isLoading) {
-    return <Spinner spinning={isLoading} />
+    return <Spin spinning={isLoading} fullscreen  />
   }
 
   if (data) {

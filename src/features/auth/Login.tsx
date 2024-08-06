@@ -1,4 +1,4 @@
-import { Col, FormProps, Row, Typography } from 'antd'
+import { Col, FormProps, Row, Spin, Typography } from 'antd'
 import { Checkbox, Form, Input } from 'antd'
 import { useSelector } from 'react-redux'
 import { loginFailure, loginRequest, loginSuccess, selectAuth } from './authSlice.ts'
@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react'
 import { User } from '../../models/user.type.ts'
 import { toast } from 'sonner'
 import axios from 'axios'
-import Spinner from '../../components/Spinner.tsx'
 import GradientButton from '../../components/GradientButton.tsx'
 import { AntDesignOutlined } from '@ant-design/icons'
 
@@ -68,7 +67,7 @@ function Login() {
   }
 
   if (isAdmin) {
-    return <Spinner spinning={spinning} />
+    return <Spin spinning={spinning} fullscreen  />
   }
 
   return (

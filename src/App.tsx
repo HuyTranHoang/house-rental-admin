@@ -8,11 +8,11 @@ import { useAppDispatch } from './store.ts'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { loginFailure, loginSuccess } from './features/auth/authSlice.ts'
-import Spinner from './components/Spinner.tsx'
 import AppLayout from './ui/AppLayout.tsx'
 import City from './features/city/City.tsx'
 import AddCity from './features/city/AddCity.tsx'
 import UpdateCity from './features/city/UpdateCity.tsx'
+import { Spin } from 'antd'
 
 function App() {
   const dispatch = useAppDispatch()
@@ -51,7 +51,7 @@ function App() {
   }, [dispatch])
 
   if (spinning) {
-    return <Spinner spinning={spinning} />
+    return <Spin spinning={spinning} fullscreen />
   }
 
   return (
