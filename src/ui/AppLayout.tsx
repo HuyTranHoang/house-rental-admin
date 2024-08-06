@@ -1,7 +1,14 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { LaptopOutlined, NotificationOutlined, TruckOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  BarChartOutlined,
+  createFromIconfontCN,
+  LaptopOutlined,
+  NotificationOutlined,
+  UserOutlined
+} from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Breadcrumb, Layout, Menu, theme } from 'antd'
+import { Footer } from 'antd/lib/layout/layout'
 
 const { Header, Content, Sider } = Layout
 
@@ -9,6 +16,12 @@ const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
   key,
   label: `nav ${key}`
 }))
+
+
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js',
+});
+
 
 function AppLayout() {
   const {
@@ -21,18 +34,17 @@ function AppLayout() {
     {
       key: 'dashboard',
       label: 'Dashboard',
-      icon: <LaptopOutlined />,
+      icon:  <BarChartOutlined />,
       onClick: () => navigate('/')
     },
     {
       key: 'cityDistrict',
       label: 'Thành phố và quận huyện',
-      icon: <TruckOutlined />,
+      icon: <IconFont type="icon-city" />,
       children: [
         {
           key: 'cityDistrict-city',
           label: 'Danh sách thành phố',
-          icon: <TruckOutlined />,
           onClick: () => navigate('/city')
         },
         { key: 'cityDistrict-district', label: 'Danh sách quận huyện' },
@@ -115,6 +127,7 @@ function AppLayout() {
           </Content>
         </Layout>
       </Layout>
+      <Footer style={{ textAlign: 'center' }}>Mogu Admin ©2024 Created by Group 2</Footer>
     </Layout>
   )
 }

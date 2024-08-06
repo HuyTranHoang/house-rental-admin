@@ -9,6 +9,6 @@ export function formatDate(createdAt: string): string {
   if (now.getTime() - date.getTime() < oneDayInMs) {
     return formatDistanceToNow(date, { addSuffix: true, locale: vi });
   } else {
-    return format(date, 'dd-MM-yyyy');
+    return format(date, 'dd MMMM, yyyy', { locale: vi });
   }
 }

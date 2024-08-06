@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { CityType } from '../../models/city.type.ts'
+import { PageInfo } from '../../models/pageInfo.type.ts'
 
 export type AddCityField = {
   name: string;
@@ -10,9 +11,33 @@ export type UpdateCityField = {
   name: string;
 };
 
+interface CitiesWithPagination {
+  pageInfo: PageInfo
+  data: CityType[]
+}
+
 export const getAllCities = async () => {
   try {
     const response = await axios.get<CityType[]>('/api/city/all')
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export const getAllCitiesWithPagination = async (search: string, pageNumber: number, pageSize: number) => {
+  try {
+    pageNumber = pageNumber - 1
+
+    const params = {
+      name: search,
+      pageNumber,
+      pageSize
+    }
+
+    const response = await axios.get<CitiesWithPagination>('/api/city', { params })
     if (response.status === 200) {
       return response.data
     }
