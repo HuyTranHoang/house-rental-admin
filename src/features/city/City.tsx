@@ -19,7 +19,7 @@ import { deleteCity, getAllCitiesWithPagination } from '../api/city.api.ts'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { formatDate } from '../../utils/formatDate.ts'
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
+import { DeleteOutlined, FormOutlined, PlusCircleOutlined } from '@ant-design/icons'
 
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 
@@ -181,7 +181,7 @@ function City() {
           </Form>
         </Flex>
 
-        <Button type="primary" onClick={() => navigate('/city/add')}>Thêm mới</Button>
+        <Button icon={<PlusCircleOutlined />} shape='round' type="primary" onClick={() => navigate('/city/add')}>Thêm mới</Button>
       </Flex>
 
       {!data && <Table columns={columns} loading={isLoading} />}
