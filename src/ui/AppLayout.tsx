@@ -9,6 +9,8 @@ import {
 import type { MenuProps } from 'antd'
 import { Breadcrumb, Layout, Menu, theme } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
+import { useSelector } from 'react-redux'
+import { selectUi } from './uiSlice.ts'
 
 const { Header, Content, Sider } = Layout
 
@@ -19,22 +21,25 @@ const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
 
 
 const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js',
-});
+  scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
+})
 
 
 function AppLayout() {
+
+  const navigate = useNavigate()
+  const { breadcrumb } = useSelector(selectUi)
+
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken()
 
-  const navigate = useNavigate()
 
   const siderItems: MenuProps['items'] = [
     {
       key: 'dashboard',
       label: 'Dashboard',
-      icon:  <BarChartOutlined />,
+      icon: <BarChartOutlined />,
       onClick: () => navigate('/')
     },
     {
@@ -47,7 +52,7 @@ function AppLayout() {
           label: 'Danh sách thành phố',
           onClick: () => navigate('/city')
         },
-        { key: 'cityDistrict-district', label: 'Danh sách quận huyện' },
+        { key: 'cityDistrict-district', label: 'Danh sách quận huyện' }
       ]
     },
     {
@@ -108,11 +113,7 @@ function AppLayout() {
           />
         </Sider>
         <Layout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
-          </Breadcrumb>
+          <Breadcrumb items={breadcrumb} style={{ margin: '16px 0' }} />
           <Content
             style={{
               padding: 24,

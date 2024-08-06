@@ -16,6 +16,8 @@ interface CitiesWithPagination {
   data: CityType[]
 }
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export const getAllCities = async () => {
   try {
     const response = await axios.get<CityType[]>('/api/city/all')
@@ -27,15 +29,18 @@ export const getAllCities = async () => {
   }
 }
 
-export const getAllCitiesWithPagination = async (search: string, pageNumber: number, pageSize: number) => {
+export const getAllCitiesWithPagination = async (search: string, pageNumber: number, pageSize: number, sortBy: string) => {
   try {
     pageNumber = pageNumber - 1
 
     const params = {
       name: search,
       pageNumber,
-      pageSize
+      pageSize,
+      sortBy
     }
+
+    await delay(300)
 
     const response = await axios.get<CitiesWithPagination>('/api/city', { params })
     if (response.status === 200) {

@@ -1,9 +1,10 @@
 import { Button, Flex, Typography, Form, Input } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import type { FormProps } from 'antd'
 import { useMutation } from '@tanstack/react-query'
 import {toast} from 'sonner'
 import { addCity, AddCityField } from '../api/city.api.ts'
+import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 
 const onFinishFailed: FormProps<AddCityField>['onFinishFailed'] = (errorInfo) => {
   console.log('Failed:', errorInfo)
@@ -26,6 +27,12 @@ function AddCity() {
   if (isError) {
     toast.error('Có lỗi xảy ra khi thêm thành phố')
   }
+
+  useSetBreadcrumb([
+    { title: <Link to={'/'}>Dashboard</Link> },
+    { title: <Link to={'/city'}>Danh sách thành phố</Link> },
+    { title: 'Thêm mới thành phố' }
+  ])
 
   return (
     <>

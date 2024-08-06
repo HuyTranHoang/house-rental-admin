@@ -7,7 +7,7 @@ import {
   Form,
   FormProps,
   Input,
-  PaginationProps, Skeleton,
+  PaginationProps,
   Space,
   Table,
   TableProps,
@@ -16,9 +16,12 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { useState } from 'react'
 import { deleteCity, getAllCitiesWithPagination } from '../api/city.api.ts'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { formatDate } from '../../utils/formatDate.ts'
+import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
+
+import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 
 const { Search } = Input
 
@@ -26,6 +29,7 @@ interface DataSourceType {
   key: React.Key
   id: number
   name: string
+  createdAt: string
 }
 
 interface FieldType {
@@ -42,12 +46,13 @@ function City() {
   const queryClient = useQueryClient()
 
   const [search, setSearch] = useState('')
+  const [sortBy, setSortBy] = useState('createdAtDesc')
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['cities', search, pageNumber, pageSize],
-    queryFn: () => getAllCitiesWithPagination(search, pageNumber, pageSize)
+    queryKey: ['cities', search, pageNumber, pageSize, sortBy],
+    queryFn: () => getAllCitiesWithPagination(search, pageNumber, pageSize, sortBy)
   })
 
   const { mutate } = useMutation({
@@ -74,6 +79,20 @@ function City() {
     setPageNumber(1)
   }
 
+  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
+    if (Array.isArray(sorter)) {
+      // Handle the case where sorter is an array
+      setSortBy('createdAtDesc')
+    } else {
+      if (sorter.order) {
+        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+        setSortBy(`${sorter.field}${order}`)
+      } else {
+        setSortBy('createdAtDesc')
+      }
+    }
+  }
+
 
   let dataSource: DataSourceType[] = []
   if (data) {
@@ -94,12 +113,16 @@ function City() {
     {
       title: 'Tên thành phố',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
+      sorter: true
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
-      key: 'createdAt'
+      key: 'createdAt',
+      sorter: true,
+      fixed: 'right',
+      width: 300
     },
     {
       title: 'Hành động',
@@ -108,12 +131,17 @@ function City() {
       width: 200,
       render: (_, record) => (
         <Space size="middle">
-          <Button onClick={() => navigate(`/city/${record.id}/edit`)}>Cập nhật</Button>
-          <Button type="primary" onClick={() => mutate(record.id)}>Xóa</Button>
+          <Button icon={<FormOutlined />} onClick={() => navigate(`/city/${record.id}/edit`)}>Cập nhật</Button>
+          <Button icon={<DeleteOutlined />} type="default" onClick={() => mutate(record.id)} danger>Xóa</Button>
         </Space>
       )
     }
   ]
+
+  useSetBreadcrumb([
+    { title: <Link to={'/'}>Dashboard</Link> },
+    { title: 'Danh sách thành phố' }
+  ])
 
   if (isError) {
     return <>
@@ -130,19 +158,11 @@ function City() {
     </>
   }
 
-  if (isLoading) {
-    return <>
-      <Skeleton />
-      <Skeleton />
-      <Skeleton />
-    </>
-  }
-
   return (
     <>
-      <Flex align="center" justify="space-between">
-        <Flex>
-          <Typography.Title level={2} style={{ marginTop: 0 }}>Danh sách thành phố</Typography.Title>
+      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
+        <Flex align="center">
+          <Typography.Title level={2} style={{ margin: 0 }}>Danh sách thành phố</Typography.Title>
           <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Form
             name="basic"
@@ -152,14 +172,20 @@ function City() {
             autoComplete="off"
           >
             <Form.Item<FieldType>
+              style={{ margin: 0 }}
               name="search"
             >
-              <Search placeholder="Tìm kiếm tên thành phố" style={{ width: 250 }} />
+              <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm tên thành phố"
+                      style={{ width: 250 }} />
             </Form.Item>
           </Form>
         </Flex>
+
         <Button type="primary" onClick={() => navigate('/city/add')}>Thêm mới</Button>
       </Flex>
+
+      {!data && <Table columns={columns} loading={isLoading} />}
+
       {data && <Table dataSource={dataSource}
                       columns={columns}
                       pagination={{
@@ -173,6 +199,12 @@ function City() {
                         pageSizeOptions: ['5', '10', '20'],
                         locale: { items_per_page: '/ trang' },
                         onChange: onPageChance
+                      }}
+                      onChange={handleTableChange}
+                      locale={{
+                        triggerDesc: 'Sắp xếp giảm dần',
+                        triggerAsc: 'Sắp xếp tăng dần',
+                        cancelSort: 'Hủy sắp xếp'
                       }}
       />}
     </>
