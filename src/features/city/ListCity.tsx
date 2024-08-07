@@ -40,7 +40,7 @@ const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
   console.log('Failed:', errorInfo)
 }
 
-function City() {
+function ListCity() {
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -249,4 +249,4 @@ function City() {
   )
 }
 
-export default City
+export default ListCity
