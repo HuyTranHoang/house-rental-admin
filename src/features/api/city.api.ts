@@ -4,10 +4,10 @@ import { PageInfo } from '../../models/pageInfo.type.ts'
 import axiosInstance from '../../axiosInstance.ts'
 import { delay } from '../../utils/delay.ts'
 
-export type CityField = {
-  id?: number;
-  name: string;
-};
+export interface CityField {
+  id?: number
+  name: string
+}
 
 interface CitiesWithPagination {
   pageInfo: PageInfo

@@ -1,5 +1,5 @@
 import ListRoomType from './ListRoomType.tsx'
-import AddUpdateCity from '../city/AddUpdateCity.tsx'
+import AddUpdateRoomType from './AddUpdateRoomType.tsx'
 
 const roomTypeRouter = [
   {
@@ -8,11 +8,11 @@ const roomTypeRouter = [
   },
   {
     path: '/roomType/add',
-    element: <AddUpdateCity />
+    element: <AddUpdateRoomType />
   },
   {
     path: '/roomType/:id/edit',
-    element: <AddUpdateCity />
+    element: <AddUpdateRoomType />
   }
 ]
 

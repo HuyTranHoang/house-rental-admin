@@ -1,18 +1,17 @@
-import { Button, Flex, Typography, Form, Input, Spin } from 'antd'
 import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
-import type { FormProps } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { addCity, CityField, getCityById, updateCity } from '../api/city.api.ts'
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
-import axios from 'axios'
+import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
 import { useState } from 'react'
+import { toast } from 'sonner'
+import axios from 'axios'
+import { addRoomType, getRoomTypeById, RoomTypeField, updateRoomType } from '../api/roomType.api.ts'
+import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
+import { CityField } from '../api/city.api.ts'
 
-
-function AddUpdateCity() {
-  const match = useMatch('/city/add')
+function AddUpdateRoomType() {
+  const match = useMatch('/roomType/add')
   const isAddMode = Boolean(match)
-  const title = isAddMode ? 'Thêm mới thành phố' : 'Cập nhật thành phố'
+  const title = isAddMode ? 'Thêm mới loại phòng' : 'Cập nhật loại phòng'
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
@@ -21,13 +20,13 @@ function AddUpdateCity() {
 
   const [error, setError] = useState<string>('')
 
-  const { mutate: addCityMutate } = useMutation({
-    mutationFn: addCity,
+  const { mutate: addRoomTypeMutate } = useMutation({
+    mutationFn: addRoomType,
     onSuccess: () => {
-      toast.success('Thêm thành phố thành công')
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
+      toast.success('Thêm loại phòng thành công')
+      queryClient.invalidateQueries({ queryKey: ['roomTypes'] })
 
-      navigate('/city')
+      navigate('/roomType')
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -39,12 +38,12 @@ function AddUpdateCity() {
     }
   })
 
-  const { mutate: updateCityMutate } = useMutation({
-    mutationFn: updateCity,
+  const { mutate: updateRoomTypeMutate } = useMutation({
+    mutationFn: updateRoomType,
     onSuccess: () => {
-      toast.success('Cập nhật thành phố thành công')
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-      navigate('/city')
+      toast.success('Cập nhật loại phòng thành công')
+      queryClient.invalidateQueries({ queryKey: ['roomTypes'] })
+      navigate('/roomType')
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -56,32 +55,32 @@ function AddUpdateCity() {
     }
   })
 
-  const onFinish: FormProps<CityField>['onFinish'] = (values) => {
+  const onFinish: FormProps<RoomTypeField>['onFinish'] = (values) => {
     if (isAddMode) {
-      addCityMutate(values)
+      addRoomTypeMutate(values)
     } else {
-      updateCityMutate(values)
+      updateRoomTypeMutate(values)
     }
   }
 
-  const onFinishFailed: FormProps<CityField>['onFinishFailed'] = (errorInfo) => {
+  const onFinishFailed: FormProps<RoomTypeField>['onFinishFailed'] = (errorInfo) => {
     console.log('Failed:', errorInfo)
   }
 
-  const { data: cityUpdateData, isLoading } = useQuery({
-    queryKey: ['city', id],
-    queryFn: () => getCityById(Number(id)),
+  const { data: roomTypeUpdateData, isLoading } = useQuery({
+    queryKey: ['roomType', id],
+    queryFn: () => getRoomTypeById(Number(id)),
     enabled: !isAddMode
   })
 
-  if (cityUpdateData) {
-    form.setFieldValue('id', cityUpdateData.id)
-    form.setFieldValue('name', cityUpdateData.name)
+  if (roomTypeUpdateData) {
+    form.setFieldValue('id', roomTypeUpdateData.id)
+    form.setFieldValue('name', roomTypeUpdateData.name)
   }
 
   useSetBreadcrumb([
     { title: <Link to={'/'}>Dashboard</Link> },
-    { title: <Link to={'/city'}>Danh sách thành phố</Link> },
+    { title: <Link to={'/roomType'}>Danh sách loại phòng</Link> },
     { title: title }
   ])
 
@@ -95,11 +94,11 @@ function AddUpdateCity() {
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button type="primary" onClick={() => navigate('/city')}>Quay lại</Button>
+        <Button type="primary" onClick={() => navigate('/roomType')}>Quay lại</Button>
       </Flex>
       <Form
         form={form}
-        name="cityForm"
+        name="roomTypeForm"
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600, marginTop: 32 }}
@@ -117,11 +116,11 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item<CityField>
-          label="Tên thành phố"
+          label="Tên loại phòng"
           name="name"
           rules={[
-            { required: true, message: 'Vui lòng nhập tên thành phố!' },
-            { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự!' }
+            { required: true, message: 'Vui lòng nhập tên loại phòng!' },
+            { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự!' },
           ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
@@ -139,4 +138,4 @@ function AddUpdateCity() {
   )
 }
 
-export default AddUpdateCity
+export default AddUpdateRoomType

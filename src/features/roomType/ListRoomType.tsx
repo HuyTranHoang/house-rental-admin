@@ -206,7 +206,7 @@ function ListRoomType() {
 
         <Space>
           {deleteIdList.length > 0 && <Button shape="round" type="primary" danger onClick={handleDeleteMultiRoomType}>Xóa các mục đã chọn</Button>}
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/city/add')}>
+          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/roomType/add')}>
             Thêm mới
           </Button>
         </Space>

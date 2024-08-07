@@ -4,6 +4,10 @@ import { RoomType } from '../../models/roomType.type.ts'
 import { delay } from '../../utils/delay.ts'
 import axiosInstance from '../../axiosInstance.ts'
 
+export interface RoomTypeField {
+  id?: number
+  name: string
+}
 
 interface RoomTypesWithPagination {
   pageInfo: PageInfo
@@ -49,5 +53,25 @@ export const deleteRoomTypes = async (ids: number[]) => {
   } catch (error) {
     console.error(error)
     throw new Error('Xóa các lọai phòng thất bại')
+  }
+}
+
+export const addRoomType = async (values: RoomTypeField) => {
+  await axiosInstance.post('/api/room-type', values)
+}
+
+export const updateRoomType = async (values: RoomTypeField) => {
+  await axiosInstance.put(`/api/room-type/${values.id}`, values)
+}
+
+export const getRoomTypeById = async (id: number) => {
+  try {
+    const response = await axios.get<RoomType>(`/api/room-type/${id}`)
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    console.error(error)
+    throw new Error('Lấy thông tin loại phòng thất bại')
   }
 }
