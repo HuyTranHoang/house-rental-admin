@@ -60,6 +60,9 @@ function City() {
     onSuccess: () => {
       toast.success('Xóa thành phố thành công')
       queryClient.invalidateQueries({ queryKey: ['cities'] })
+    },
+    onError: (error) => {
+      toast.error(error.message)
     }
   })
 

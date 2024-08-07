@@ -1,13 +1,10 @@
 import axios from 'axios'
 import { CityType } from '../../models/city.type.ts'
 import { PageInfo } from '../../models/pageInfo.type.ts'
+import axiosInstance from '../../axiosInstance.ts'
 
-export type AddCityField = {
-  name: string;
-};
-
-export type UpdateCityField = {
-  id: number;
+export type CityField = {
+  id?: number;
   name: string;
 };
 
@@ -26,6 +23,7 @@ export const getAllCities = async () => {
     }
   } catch (error) {
     console.error(error)
+    throw new Error('Lấy danh sách thành phố thất bại')
   }
 }
 
@@ -48,6 +46,7 @@ export const getAllCitiesWithPagination = async (search: string, pageNumber: num
     }
   } catch (error) {
     console.error(error)
+    throw new Error('Lấy danh sách thành phố thất bại')
   }
 }
 
@@ -59,43 +58,33 @@ export const getCityById = async (id: number) => {
     }
   } catch (error) {
     console.error(error)
+    throw new Error('Lấy thông tin thành phố thất bại')
   }
 }
 
-export const addCity = async (values: AddCityField) => {
+export const addCity = async (values: CityField) => {
   try {
-    await axios.post('/api/city', values, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
-      }
-    })
+    await axiosInstance.post('/api/city', values)
   } catch (error) {
     console.error(error)
+    throw new Error('Thêm thành phố thất bại')
   }
 }
 
 export const deleteCity = async (id: number) => {
   try {
-    await axios.delete(`/api/city/${id}`, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
-      }
-    })
+    await axiosInstance.delete(`/api/city/${id}`)
   } catch (error) {
     console.error(error)
+    throw new Error('Xóa thành phố thất bại')
   }
 }
 
-export const updateCity = async (values: UpdateCityField) => {
+export const updateCity = async (values: CityField) => {
   try {
-    await axios.put(`/api/city/${values.id}`, values, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
-      }
-    })
+    await axiosInstance.put(`/api/city/${values.id}`, values)
   } catch (error) {
     console.error(error)
+    throw new Error('Cập nhật thành phố thất bại')
   }
 }
