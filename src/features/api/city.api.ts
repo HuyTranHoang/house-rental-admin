@@ -13,7 +13,7 @@ interface CitiesWithPagination {
   data: CityType[]
 }
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+//const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const getAllCities = async () => {
   try {
@@ -37,8 +37,6 @@ export const getAllCitiesWithPagination = async (search: string, pageNumber: num
       pageSize,
       sortBy
     }
-
-    await delay(300)
 
     const response = await axios.get<CitiesWithPagination>('/api/city', { params })
     if (response.status === 200) {
@@ -86,5 +84,14 @@ export const updateCity = async (values: CityField) => {
   } catch (error) {
     console.error(error)
     throw new Error('Cập nhật thành phố thất bại')
+  }
+}
+
+export const deleteCities = async (ids: number[]) => {
+  try {
+    await axiosInstance.delete('/api/city/delete-multiple', { data: { ids } })
+  } catch (error) {
+    console.error(error)
+    throw new Error('Xóa các thành phố thất bại')
   }
 }

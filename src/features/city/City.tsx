@@ -15,7 +15,7 @@ import {
 } from 'antd'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { useState } from 'react'
-import { deleteCity, getAllCitiesWithPagination } from '../api/city.api.ts'
+import { deleteCities, deleteCity, getAllCitiesWithPagination } from '../api/city.api.ts'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { formatDate } from '../../utils/formatDate.ts'
@@ -50,12 +50,14 @@ function City() {
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
+  const [deleteIdList, setDeleteIdList] = useState<number[]>([])
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ['cities', search, pageNumber, pageSize, sortBy],
     queryFn: () => getAllCitiesWithPagination(search, pageNumber, pageSize, sortBy)
   })
 
-  const { mutate } = useMutation({
+  const { mutate: deleteCityMutate } = useMutation({
     mutationFn: deleteCity,
     onSuccess: () => {
       toast.success('Xóa thành phố thành công')
@@ -65,6 +67,22 @@ function City() {
       toast.error(error.message)
     }
   })
+
+  const { mutate: deleteCitiesMutate } = useMutation({
+    mutationFn: deleteCities,
+    onSuccess: () => {
+      toast.success('Xóa các thành phố thành công')
+      queryClient.invalidateQueries({ queryKey: ['cities'] })
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    }
+  })
+
+  const handleDeleteMultiCity = () => {
+    deleteCitiesMutate(deleteIdList)
+    setDeleteIdList([])
+  }
 
   const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
     setSearch(values.search || '')
@@ -95,7 +113,6 @@ function City() {
       }
     }
   }
-
 
   let dataSource: DataSourceType[] = []
   if (data) {
@@ -135,11 +152,20 @@ function City() {
       render: (_, record) => (
         <Space size="middle">
           <Button icon={<FormOutlined />} onClick={() => navigate(`/city/${record.id}/edit`)}>Cập nhật</Button>
-          <Button icon={<DeleteOutlined />} type="default" onClick={() => mutate(record.id)} danger>Xóa</Button>
+          <Button icon={<DeleteOutlined />} type="default" onClick={() => deleteCityMutate(record.id)}
+                  danger>Xóa</Button>
         </Space>
       )
     }
   ]
+
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: DataSourceType[]) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
+      const selectedIdList = selectedRows.map((row) => row.id)
+      setDeleteIdList(selectedIdList)
+    }
+  }
 
   useSetBreadcrumb([
     { title: <Link to={'/'}>Dashboard</Link> },
@@ -184,13 +210,21 @@ function City() {
           </Form>
         </Flex>
 
-        <Button icon={<PlusCircleOutlined />} shape='round' type="primary" onClick={() => navigate('/city/add')}>Thêm mới</Button>
+        <Space>
+          {deleteIdList.length > 0 && <Button shape="round" type="primary" danger onClick={handleDeleteMultiCity}>Xóa các mục đã chọn</Button>}
+          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/city/add')}>Thêm
+            mới</Button>
+        </Space>
       </Flex>
 
       {!data && <Table columns={columns} loading={isLoading} />}
 
       {data && <Table dataSource={dataSource}
                       columns={columns}
+                      rowSelection={{
+                        type: 'checkbox',
+                        ...rowSelection
+                      }}
                       pagination={{
                         total: data.pageInfo.totalElements,
                         position: ['bottomCenter'],

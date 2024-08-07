@@ -1,7 +1,7 @@
 import { Button, Flex, Typography, Form, Input, Spin } from 'antd'
 import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
 import type { FormProps } from 'antd'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { addCity, CityField, getCityById, updateCity } from '../api/city.api.ts'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
@@ -14,6 +14,7 @@ function AddUpdateCity() {
   const match = useMatch('/city/add')
   const isAddMode = Boolean(match)
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
@@ -22,6 +23,8 @@ function AddUpdateCity() {
     mutationFn: addCity,
     onSuccess: () => {
       toast.success('Thêm thành phố thành công')
+      queryClient.invalidateQueries({ queryKey: ['cities'] })
+
       navigate('/city')
     },
     onError: (error) => {
@@ -33,6 +36,7 @@ function AddUpdateCity() {
     mutationFn: updateCity,
     onSuccess: () => {
       toast.success('Cập nhật thành phố thành công')
+      queryClient.invalidateQueries({ queryKey: ['cities'] })
       navigate('/city')
     },
     onError: (error) => {
