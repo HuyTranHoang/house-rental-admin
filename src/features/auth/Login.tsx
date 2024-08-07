@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import axios from 'axios'
 import GradientButton from '../../components/GradientButton.tsx'
 import { AntDesignOutlined } from '@ant-design/icons'
+import { delay } from '../../utils/delay.ts'
 
 type FieldType = {
   username?: string;
@@ -20,7 +21,6 @@ type FieldType = {
 const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
   console.log('Failed:', errorInfo)
 }
-
 
 function Login() {
 
@@ -34,13 +34,11 @@ function Login() {
 
   useEffect(() => {
     if (isAdmin) {
-      setTimeout(() => {
-        navigate(redirectTo)
-      }, 300)
+      delay(300)
+        .then(() => navigate(redirectTo))
     } else {
-      setTimeout(() => {
-        setSpinning(false)
-      }, 300)
+      delay(300)
+        .then(() => setSpinning(false))
     }
   }, [isAdmin, navigate, redirectTo])
 

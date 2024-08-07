@@ -2,6 +2,7 @@ import axios from 'axios'
 import { City } from '../../models/city.ts'
 import { PageInfo } from '../../models/pageInfo.type.ts'
 import axiosInstance from '../../axiosInstance.ts'
+import { delay } from '../../utils/delay.ts'
 
 export type CityField = {
   id?: number;
@@ -12,8 +13,6 @@ interface CitiesWithPagination {
   pageInfo: PageInfo
   data: City[]
 }
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const getAllCities = async () => {
   try {

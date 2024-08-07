@@ -62,7 +62,11 @@ function AppLayout() {
       label: 'Loại phòng và tiện nghi',
       icon: <HomeOutlined />,
       children: [
-        { key: 'roomTypeAmenity-roomType', label: 'Quản lý lọai phòng' },
+        {
+          key: 'roomTypeAmenity-roomType',
+          label: 'Quản lý lọai phòng',
+          onClick: () => navigate('/roomType')
+        },
         { key: 'roomTypeAmenity-amenity', label: 'Quản lý tiện nghi' },
       ]
     },

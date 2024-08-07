@@ -32,12 +32,8 @@ interface DataSourceType {
   createdAt: string
 }
 
-interface FieldType {
+interface searchField {
   search?: string
-}
-
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo)
 }
 
 function ListCity() {
@@ -84,7 +80,7 @@ function ListCity() {
     setDeleteIdList([])
   }
 
-  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+  const onFinish: FormProps<searchField>['onFinish'] = (values) => {
     setSearch(values.search || '')
   }
 
@@ -194,13 +190,12 @@ function ListCity() {
           <Typography.Title level={2} style={{ margin: 0 }}>Danh sách thành phố</Typography.Title>
           <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Form
-            name="basic"
+            name="searchCity"
             initialValues={{ remember: true }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            <Form.Item<FieldType>
+            <Form.Item<searchField>
               style={{ margin: 0 }}
               name="search"
             >
