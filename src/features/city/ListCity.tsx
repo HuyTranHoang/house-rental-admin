@@ -36,6 +36,10 @@ interface searchField {
   search?: string
 }
 
+type OnChange = NonNullable<TableProps<DataSourceType>['onChange']>;
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
+
 function ListCity() {
 
   const navigate = useNavigate()
@@ -43,12 +47,13 @@ function ListCity() {
 
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('createdAtDesc')
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
-  const { data, isLoading, isError, isFetching } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['cities', search, pageNumber, pageSize, sortBy],
     queryFn: () => getAllCitiesWithPagination(search, pageNumber, pageSize, sortBy)
   })
@@ -104,10 +109,10 @@ function ListCity() {
       if (sorter.order) {
         const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
         setSortBy(`${sorter.field}${order}`)
-      } else {
-        setSortBy('createdAtDesc')
       }
     }
+
+    setSortedInfo(sorter as Sorts)
   }
 
   let dataSource: DataSourceType[] = []
@@ -130,13 +135,15 @@ function ListCity() {
       title: 'Tên thành phố',
       dataIndex: 'name',
       key: 'name',
-      sorter: true
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.columnKey === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 300
     },
@@ -206,7 +213,8 @@ function ListCity() {
         </Flex>
 
         <Space>
-          {deleteIdList.length > 0 && <Button shape="round" type="primary" danger onClick={handleDeleteMultiCity}>Xóa các mục đã chọn</Button>}
+          {deleteIdList.length > 0 &&
+            <Button shape="round" type="primary" danger onClick={handleDeleteMultiCity}>Xóa các mục đã chọn</Button>}
           <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/city/add')}>Thêm
             mới</Button>
         </Space>
@@ -238,7 +246,7 @@ function ListCity() {
                         triggerAsc: 'Sắp xếp tăng dần',
                         cancelSort: 'Hủy sắp xếp'
                       }}
-                      loading={isFetching || isLoading}
+                      loading={isLoading}
       />}
     </>
   )

@@ -34,6 +34,10 @@ interface searchField {
   search?: string
 }
 
+type OnChange = NonNullable<TableProps<DataSourceType>['onChange']>;
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
+
 function ListRoomType() {
 
   const navigate = useNavigate()
@@ -41,6 +45,7 @@ function ListRoomType() {
 
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('createdAtDesc')
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
@@ -102,10 +107,10 @@ function ListRoomType() {
       if (sorter.order) {
         const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
         setSortBy(`${sorter.field}${order}`)
-      } else {
-        setSortBy('createdAtDesc')
       }
     }
+
+    setSortedInfo(sorter as Sorts)
   }
 
 
@@ -129,13 +134,15 @@ function ListRoomType() {
       title: 'Tên loại phòng',
       dataIndex: 'name',
       key: 'name',
-      sorter: true
+      sorter: true,
+      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.columnKey === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 300
     },
