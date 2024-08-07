@@ -13,7 +13,7 @@ interface CitiesWithPagination {
   data: CityType[]
 }
 
-//const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const getAllCities = async () => {
   try {
@@ -39,6 +39,9 @@ export const getAllCitiesWithPagination = async (search: string, pageNumber: num
     }
 
     const response = await axios.get<CitiesWithPagination>('/api/city', { params })
+
+    await delay(300) // Giả delay 300ms để thấy rõ sự chuyển động của loading
+
     if (response.status === 200) {
       return response.data
     }

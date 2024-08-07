@@ -52,7 +52,7 @@ function City() {
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: ['cities', search, pageNumber, pageSize, sortBy],
     queryFn: () => getAllCitiesWithPagination(search, pageNumber, pageSize, sortBy)
   })
@@ -243,6 +243,7 @@ function City() {
                         triggerAsc: 'Sắp xếp tăng dần',
                         cancelSort: 'Hủy sắp xếp'
                       }}
+                      loading={isFetching || isLoading}
       />}
     </>
   )
