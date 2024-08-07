@@ -1,10 +1,9 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import {
   BarChartOutlined,
-  createFromIconfontCN,
+  createFromIconfontCN, HomeOutlined,
   LaptopOutlined,
   NotificationOutlined,
-  UserOutlined
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Breadcrumb, Layout, Menu, theme } from 'antd'
@@ -49,21 +48,22 @@ function AppLayout() {
       children: [
         {
           key: 'cityDistrict-city',
-          label: 'Danh sách thành phố',
+          label: 'Quản lý thành phố',
           onClick: () => navigate('/city')
         },
-        { key: 'cityDistrict-district', label: 'Danh sách quận huyện' }
+        {
+          key: 'cityDistrict-district',
+          label: 'Quản lý quận huyện'
+        }
       ]
     },
     {
-      key: 'sub1',
-      label: 'subnav 1',
-      icon: <UserOutlined />,
+      key: 'roomTypeAmenity',
+      label: 'Loại phòng và tiện nghi',
+      icon: <HomeOutlined />,
       children: [
-        { key: '1', label: 'option1' },
-        { key: '2', label: 'option2' },
-        { key: '3', label: 'option3' },
-        { key: '4', label: 'option4' }
+        { key: 'roomTypeAmenity-roomType', label: 'Quản lý lọai phòng' },
+        { key: 'roomTypeAmenity-amenity', label: 'Quản lý tiện nghi' },
       ]
     },
     {
