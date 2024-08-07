@@ -5,10 +5,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { addCity, CityField, getCityById, updateCity } from '../api/city.api.ts'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
+import axios from 'axios'
+import { useState } from 'react'
 
-const onFinishFailed: FormProps<CityField>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo)
-}
 
 function AddUpdateCity() {
   const match = useMatch('/city/add')
@@ -19,6 +18,8 @@ function AddUpdateCity() {
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
 
+  const [error, setError] = useState<string>('')
+
   const { mutate: addCityMutate } = useMutation({
     mutationFn: addCity,
     onSuccess: () => {
@@ -28,6 +29,11 @@ function AddUpdateCity() {
       navigate('/city')
     },
     onError: (error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setError(error.response.data.message)
+        return
+      }
+
       toast.error(error.message)
     }
   })
@@ -40,6 +46,11 @@ function AddUpdateCity() {
       navigate('/city')
     },
     onError: (error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setError(error.response.data.message)
+        return
+      }
+
       toast.error(error.message)
     }
   })
@@ -50,6 +61,10 @@ function AddUpdateCity() {
     } else {
       updateCityMutate(values)
     }
+  }
+
+  const onFinishFailed: FormProps<CityField>['onFinishFailed'] = (errorInfo) => {
+    console.log('Failed:', errorInfo)
   }
 
   const { data: cityUpdateData, isLoading } = useQuery({
@@ -105,10 +120,12 @@ function AddUpdateCity() {
           name="name"
           rules={[
             { required: true, message: 'Vui lòng nhập tên thành phố!' },
-            { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự!' }
+            { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự!' },
           ]}
+          validateStatus={error ? 'error' : undefined}
+          extra={<span style={{ color: 'red' }}>{error}</span>}
         >
-          <Input />
+          <Input onChange={() => setError('')} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5, span: 16 }}>

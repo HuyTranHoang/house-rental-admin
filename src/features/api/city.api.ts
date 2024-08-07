@@ -63,12 +63,7 @@ export const getCityById = async (id: number) => {
 }
 
 export const addCity = async (values: CityField) => {
-  try {
-    await axiosInstance.post('/api/city', values)
-  } catch (error) {
-    console.error(error)
-    throw new Error('Thêm thành phố thất bại')
-  }
+  await axiosInstance.post('/api/city', values)
 }
 
 export const deleteCity = async (id: number) => {
@@ -81,12 +76,7 @@ export const deleteCity = async (id: number) => {
 }
 
 export const updateCity = async (values: CityField) => {
-  try {
-    await axiosInstance.put(`/api/city/${values.id}`, values)
-  } catch (error) {
-    console.error(error)
-    throw new Error('Cập nhật thành phố thất bại')
-  }
+  await axiosInstance.put(`/api/city/${values.id}`, values)
 }
 
 export const deleteCities = async (ids: number[]) => {
