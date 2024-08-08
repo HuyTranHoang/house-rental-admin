@@ -1,5 +1,5 @@
-import ListCity from './ListCity.tsx'
-import AddUpdateCity from './AddUpdateCity.tsx'
+import ListCity from '../features/city/ListCity.tsx'
+import AddUpdateCity from '../features/city/AddUpdateCity.tsx'
 
 const cityRouter = [
   {

@@ -1,5 +1,5 @@
-import ListRoomType from './ListRoomType.tsx'
-import AddUpdateRoomType from './AddUpdateRoomType.tsx'
+import ListRoomType from '../features/roomType/ListRoomType.tsx'
+import AddUpdateRoomType from '../features/roomType/AddUpdateRoomType.tsx'
 
 const roomTypeRouter = [
   {
