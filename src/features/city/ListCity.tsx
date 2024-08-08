@@ -2,7 +2,7 @@ import {
   Button,
   Divider,
   Flex,
-  Input,
+  Input, Modal,
   Space,
   TableProps,
   Typography
@@ -10,7 +10,7 @@ import {
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
-import { PlusCircleOutlined } from '@ant-design/icons'
+import { ExclamationCircleFilled, PlusCircleOutlined } from '@ant-design/icons'
 
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { useCities, useDeleteMultiCity } from './useCities.ts'
@@ -19,6 +19,7 @@ import { City } from '../../models/city.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 
 const { Search } = Input
+const { confirm } = Modal
 
 type DataSourceType = City & {
   key: React.Key
@@ -38,10 +39,21 @@ function ListCity() {
   const { data, isLoading, isError } = useCities(search, pageNumber, pageSize, sortBy)
   const { deleteCitiesMutate } = useDeleteMultiCity()
 
+  const showDeleteConfirm = (deleteIdList: number[]) => {
 
-  const handleDeleteMultiCity = () => {
-    deleteCitiesMutate(deleteIdList)
-    setDeleteIdList([])
+    confirm({
+      title: 'Bạn có chắc chắn muốn xóa các thành phố đã chọn?',
+      icon: <ExclamationCircleFilled />,
+      content: <p>Lưu ý: Hành động này không thể hoàn tác</p>,
+      okText: 'Xác nhận',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      maskClosable: true,
+      onOk() {
+        deleteCitiesMutate(deleteIdList)
+        setDeleteIdList([])
+      }
+    })
   }
 
   const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
@@ -94,7 +106,7 @@ function ListCity() {
 
         <Space>
           {deleteIdList.length > 0 &&
-            <Button shape="round" type="primary" danger onClick={handleDeleteMultiCity}>Xóa các mục đã chọn</Button>}
+            <Button shape="round" type="primary" danger onClick={() => showDeleteConfirm(deleteIdList)}>Xóa các mục đã chọn</Button>}
           <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/city/add')}>Thêm
             mới</Button>
         </Space>

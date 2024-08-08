@@ -63,7 +63,7 @@ export const useCreateAmenity = (setError: React.Dispatch<React.SetStateAction<s
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { mutate: addAmenityMutate } = useMutation({
+  const { mutate: addAmenityMutate, isPending: addAmenityPending } = useMutation({
     mutationFn: addAmenity,
     onSuccess: () => {
       toast.success('Thêm tiện nghi thành công')
@@ -81,14 +81,14 @@ export const useCreateAmenity = (setError: React.Dispatch<React.SetStateAction<s
     }
   })
 
-  return { addAmenityMutate }
+  return { addAmenityMutate, addAmenityPending }
 }
 
 export const useUpdateAmenity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { mutate: updateAmenityMutate } = useMutation({
+  const { mutate: updateAmenityMutate, isPending: updateAmenityPending } = useMutation({
     mutationFn: updateAmenity,
     onSuccess: () => {
       toast.success('Thêm tiện nghi thành công')
@@ -106,5 +106,5 @@ export const useUpdateAmenity = (setError: React.Dispatch<React.SetStateAction<s
     }
   })
 
-  return { updateAmenityMutate }
+  return { updateAmenityMutate, updateAmenityPending }
 }

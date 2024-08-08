@@ -2,14 +2,14 @@ import {
   Button,
   Divider,
   Flex,
-  Input,
+  Input, Modal,
   Space,
   TableProps,
   Typography
 } from 'antd'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { PlusCircleOutlined } from '@ant-design/icons'
+import { ExclamationCircleFilled, PlusCircleOutlined } from '@ant-design/icons'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb'
 import { useAmenities, useDeleteMultiAmenity } from './useAmenities.ts'
 import AmenityTable from './AmenityTable.tsx'
@@ -18,6 +18,7 @@ import { customFormatDate } from '../../utils/customFormatDate.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 
 const { Search } = Input
+const { confirm } = Modal
 
 type DataSourceType = Amenity & {
   key: React.Key
@@ -35,6 +36,23 @@ function ListAmenity() {
 
   const { data, isLoading, isError } = useAmenities(search, pageNumber, pageSize, sortBy)
   const { deleteAmenitiesMutate } = useDeleteMultiAmenity()
+
+  const showDeleteConfirm = (deleteIdList: number[]) => {
+
+    confirm({
+      title: 'Bạn có chắc chắn muốn xóa các tiện nghi đã chọn?',
+      icon: <ExclamationCircleFilled />,
+      content: <p>Lưu ý: Hành động này không thể hoàn tác</p>,
+      okText: 'Xác nhận',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      maskClosable: true,
+      onOk() {
+        deleteAmenitiesMutate(deleteIdList)
+        setDeleteIdList([])
+      }
+    })
+  }
 
 
   const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
@@ -69,11 +87,6 @@ function ListAmenity() {
     { title: 'Danh sách tiện nghi' }
   ])
 
-  const handleDeleteMultiAmenity = () => {
-    deleteAmenitiesMutate(deleteIdList)
-    setDeleteIdList([])
-  }
-
   if (isError) {
     return <ErrorFetching />
   }
@@ -93,7 +106,7 @@ function ListAmenity() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape="round" type="primary" danger onClick={handleDeleteMultiAmenity}>
+            <Button shape="round" type="primary" danger onClick={() => showDeleteConfirm(deleteIdList)}>
               Xóa các mục đã chọn
             </Button>
           )}

@@ -18,8 +18,8 @@ function AddUpdateAmenity() {
 
   const [error, setError] = useState<string>('')
 
-  const { addAmenityMutate } = useCreateAmenity(setError)
-  const { updateAmenityMutate } = useUpdateAmenity(setError)
+  const { addAmenityMutate, addAmenityPending } = useCreateAmenity(setError)
+  const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity(setError)
 
 
   const onFinish: FormProps<AmenityFeild>['onFinish'] = (values) => {
@@ -90,7 +90,8 @@ function AddUpdateAmenity() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
-          <Button type="primary" htmlType="submit" style={{ width: 100 }}>
+          <Button loading={addAmenityPending || updateAmenityPending} type="primary" htmlType="submit"
+                  style={{ width: 100 }}>
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>

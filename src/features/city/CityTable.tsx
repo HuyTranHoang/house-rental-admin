@@ -1,10 +1,19 @@
 import { City } from '../../models/city.ts'
 import React from 'react'
-import { Button, Space, Table, TablePaginationConfig, TableProps } from 'antd'
+import {
+  Button,
+  Modal,
+  Space,
+  Table,
+  TablePaginationConfig,
+  TableProps
+} from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
+import { DeleteOutlined, ExclamationCircleFilled, FormOutlined } from '@ant-design/icons'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useDeleteCity } from './useCities.ts'
+
+const { confirm } = Modal
 
 type DataSourceType = City & {
   key: React.Key;
@@ -28,11 +37,29 @@ function CityTable({
   const navigate = useNavigate()
   const { deleteCityMutate } = useDeleteCity()
 
+  const showDeleteConfirm = (record: DataSourceType) => {
+
+    confirm({
+      title: 'Bạn có chắc chắn muốn xóa thành phố này?',
+      icon: <ExclamationCircleFilled />,
+      content: <p>Lưu ý: Hành động này không thể hoàn tác</p>,
+      okText: 'Xác nhận',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      maskClosable: true,
+      onOk() {
+        deleteCityMutate(record.id)
+      }
+    })
+  }
+
   const columns: TableProps<DataSourceType>['columns'] = [
     {
       title: '#',
       dataIndex: 'id',
-      key: 'id'
+      key: 'id',
+      fixed: 'left',
+      width: 50
     },
     {
       title: 'Tên thành phố',
@@ -56,8 +83,11 @@ function CityTable({
       render: (_, record) => (
         <Space size="middle">
           <Button icon={<FormOutlined />} onClick={() => navigate(`/city/${record.id}/edit`)}>Cập nhật</Button>
-          <Button icon={<DeleteOutlined />} type="default" onClick={() => deleteCityMutate(record.id)}
-                  danger>Xóa</Button>
+          <Button icon={<DeleteOutlined />} type="default"
+                  onClick={() => showDeleteConfirm(record)}
+                  danger>
+            Xóa
+          </Button>
         </Space>
       )
     }

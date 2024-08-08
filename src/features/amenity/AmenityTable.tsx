@@ -1,10 +1,12 @@
 import React from 'react'
-import { Button, Space, Table, TablePaginationConfig, TableProps } from 'antd'
+import { Button, Modal, Space, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { Amenity } from '../../models/amenity.ts'
 import { useNavigate } from 'react-router-dom'
 import { useDeleteAmenity } from './useAmenities.ts'
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
+import { DeleteOutlined, ExclamationCircleFilled, FormOutlined } from '@ant-design/icons'
+
+const { confirm } = Modal
 
 type DataSourceType = Amenity & {
   key: React.Key;
@@ -29,11 +31,29 @@ function AmenityTable({
   const navigate = useNavigate()
   const { deleteAmenityMutate } = useDeleteAmenity()
 
+  const showDeleteConfirm = (record: DataSourceType) => {
+
+    confirm({
+      title: 'Bạn có chắc chắn muốn xóa tiện nghi này?',
+      icon: <ExclamationCircleFilled />,
+      content: 'Hành động này không thể hoàn tác',
+      okText: 'Xác nhận',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      maskClosable: true,
+      onOk() {
+        deleteAmenityMutate(record.id)
+      }
+    })
+  }
+
   const columns: TableProps<DataSourceType>['columns'] = [
     {
       title: '#',
       dataIndex: 'id',
-      key: 'id'
+      key: 'id',
+      fixed: 'left',
+      width: 50
     },
     {
       title: 'Tên tiện nghi',
@@ -59,7 +79,9 @@ function AmenityTable({
           <Button icon={<FormOutlined />} onClick={() => navigate(`/amenity/${record.id}/edit`)}>
             Cập nhật
           </Button>
-          <Button icon={<DeleteOutlined />} type="default" danger onClick={() => deleteAmenityMutate(record.id)}>
+          <Button icon={<DeleteOutlined />} type="default"
+                  onClick={() => showDeleteConfirm(record)}
+                  danger>
             Xóa
           </Button>
         </Space>
