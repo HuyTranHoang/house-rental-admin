@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { AmenityType } from '../../models/amenity.type.ts'
+import { Amenity } from '../../models/amenity.ts'
 import { PageInfo } from '../../models/pageInfo.type'
 import { delay } from '../../utils/delay'
 import axiosInstance from '../../axiosInstance'
@@ -11,12 +11,12 @@ export interface AmenityField {
 
 export interface AmenitiesWithPagination {
   pageInfo: PageInfo
-  data: AmenityType[]
+  data: Amenity[]
 }
 
 export const getAllAmenities = async () => {
   try {
-    const response = await axios.get<AmenityType[]>('/api/amenities/all')
+    const response = await axios.get<Amenity[]>('/api/amenities/all')
     if (response.status === 200) {
       return response.data
     }
@@ -57,7 +57,7 @@ export const getAllAmenitiesWithPagination = async (
 
 export const getAmenityById = async (id: number) => {
   try {
-    const response = await axios.get<AmenityType>(`/api/amenities/${id}`)
+    const response = await axios.get<Amenity>(`/api/amenities/${id}`)
     if (response.status === 200) {
       return response.data
     }

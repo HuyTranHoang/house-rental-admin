@@ -1,20 +1,20 @@
-import React from 'react'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
+import React from 'react'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { Amenity } from '../../models/amenity.ts'
+import { RoomType } from '../../models/roomType.type.ts'
 import { useNavigate } from 'react-router-dom'
-import { useDeleteAmenity } from './useAmenities.ts'
+import { useDeleteRoomType } from './useRoomTypes.ts'
+import TableActions from '../../components/TableActions.tsx'
 import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
-import TableActions from '../../components/TableActions.tsx'
 
 const { confirm } = Modal
 
-type DataSourceType = Amenity & {
+type DataSourceType = RoomType & {
   key: React.Key;
 }
 
-interface AmenityTableProps {
+interface RoomTypeTableProps {
   dataSource: DataSourceType[];
   loading: boolean;
   paginationProps: false | TablePaginationConfig | undefined;
@@ -22,15 +22,15 @@ interface AmenityTableProps {
   rowSelection: TableRowSelection<DataSourceType> | undefined
 }
 
-function AmenityTable({
-                        dataSource,
-                        loading,
-                        paginationProps,
-                        handleTableChange,
-                        rowSelection
-                      }: AmenityTableProps) {
+function RoomTypeTable({
+                         dataSource,
+                         loading,
+                         paginationProps,
+                         handleTableChange,
+                         rowSelection
+                       }: RoomTypeTableProps) {
   const navigate = useNavigate()
-  const { deleteAmenityMutate } = useDeleteAmenity()
+  const { deleteRoomTypeMutate } = useDeleteRoomType()
 
   const showDeleteConfirm = (record: DataSourceType) => {
 
@@ -43,7 +43,7 @@ function AmenityTable({
       },
       {
         key: '2',
-        label: 'Tên tiện nghi',
+        label: 'Tên loại phòng',
         children: <span>{record.name}</span>,
         span: 3
       },
@@ -57,14 +57,14 @@ function AmenityTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa tiện nghi" />,
+      title: <ConfirmModalTitle title="Xác nhận xóa loại phòng" />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
       cancelText: 'Hủy',
       maskClosable: true,
       onOk() {
-        deleteAmenityMutate(record.id)
+        deleteRoomTypeMutate(record.id)
       }
     })
   }
@@ -73,12 +73,10 @@ function AmenityTable({
     {
       title: '#',
       dataIndex: 'id',
-      key: 'id',
-      fixed: 'left',
-      width: 50
+      key: 'id'
     },
     {
-      title: 'Tên tiện nghi',
+      title: 'Tên loại phòng',
       dataIndex: 'name',
       key: 'name',
       sorter: true
@@ -97,7 +95,7 @@ function AmenityTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(`/amenity/${record.id}/edit`)}
+        <TableActions onUpdate={() => navigate(`/roomType/${record.id}/edit`)}
                       onDelete={() => showDeleteConfirm(record)} />
       )
     }
@@ -126,4 +124,4 @@ function AmenityTable({
   )
 }
 
-export default AmenityTable
+export default RoomTypeTable

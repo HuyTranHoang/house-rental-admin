@@ -1,4 +1,4 @@
-import { CityType } from '../../models/city.type.ts'
+import { City } from '../../models/city.ts'
 import React from 'react'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -10,7 +10,7 @@ import TableActions from '../../components/TableActions.tsx'
 
 const { confirm } = Modal
 
-type DataSourceType = CityType & {
+type DataSourceType = City & {
   key: React.Key;
 }
 

@@ -13,14 +13,14 @@ import { ExclamationCircleFilled, PlusCircleOutlined } from '@ant-design/icons'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb'
 import { useAmenities, useDeleteMultiAmenity } from './useAmenities.ts'
 import AmenityTable from './AmenityTable.tsx'
-import { AmenityType } from '../../models/amenity.type.ts'
+import { Amenity } from '../../models/amenity.ts'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 
 const { Search } = Input
 const { confirm } = Modal
 
-type DataSourceType = AmenityType & {
+type DataSourceType = Amenity & {
   key: React.Key
 }
 
@@ -67,7 +67,7 @@ function ListAmenity() {
   }
 
   const dataSource: DataSourceType[] = data
-    ? data.data.map((amenity: AmenityType) => ({
+    ? data.data.map((amenity: Amenity) => ({
       key: amenity.id,
       id: amenity.id,
       name: amenity.name,
