@@ -9,76 +9,43 @@ import {
   Input,
   PaginationProps,
   Space,
-  Table,
   TableProps,
   Typography
 } from 'antd'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { useState } from 'react'
-import { deleteCities, deleteCity, getAllCitiesWithPagination } from '../api/city.api.ts'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
 import { formatDate } from '../../utils/formatDate.ts'
-import { DeleteOutlined, FormOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { PlusCircleOutlined } from '@ant-design/icons'
 
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
+import { useCities, useDeleteMultiCity } from './useCities.ts'
+import CityTable from './CityTable.tsx'
+import { City } from '../../models/city.ts'
 
 const { Search } = Input
 
-interface DataSourceType {
+type DataSourceType = City & {
   key: React.Key
-  id: number
-  name: string
-  createdAt: string
 }
 
 interface searchField {
   search?: string
 }
 
-type OnChange = NonNullable<TableProps<DataSourceType>['onChange']>;
-type GetSingle<T> = T extends (infer U)[] ? U : never;
-type Sorts = GetSingle<Parameters<OnChange>[2]>;
-
 function ListCity() {
 
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('createdAtDesc')
-  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['cities', search, pageNumber, pageSize, sortBy],
-    queryFn: () => getAllCitiesWithPagination(search, pageNumber, pageSize, sortBy)
-  })
+  const { data, isLoading, isError } = useCities(search, pageNumber, pageSize, sortBy)
+  const { deleteCitiesMutate } = useDeleteMultiCity()
 
-  const { mutate: deleteCityMutate } = useMutation({
-    mutationFn: deleteCity,
-    onSuccess: () => {
-      toast.success('Xóa thành phố thành công')
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
-  })
-
-  const { mutate: deleteCitiesMutate } = useMutation({
-    mutationFn: deleteCities,
-    onSuccess: () => {
-      toast.success('Xóa các thành phố thành công')
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
-  })
 
   const handleDeleteMultiCity = () => {
     deleteCitiesMutate(deleteIdList)
@@ -111,56 +78,16 @@ function ListCity() {
         setSortBy(`${sorter.field}${order}`)
       }
     }
-
-    setSortedInfo(sorter as Sorts)
   }
 
-  let dataSource: DataSourceType[] = []
-  if (data) {
-    dataSource = data.data.map((city) => ({
+  const dataSource = data
+    ? data.data.map((city: City) => ({
       key: city.id,
       id: city.id,
       name: city.name,
       createdAt: formatDate(city.createdAt)
     }))
-  }
-
-  const columns: TableProps<DataSourceType>['columns'] = [
-    {
-      title: '#',
-      dataIndex: 'id',
-      key: 'id'
-    },
-    {
-      title: 'Tên thành phố',
-      dataIndex: 'name',
-      key: 'name',
-      sorter: true,
-      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null
-    },
-    {
-      title: 'Ngày tạo',
-      dataIndex: 'createdAt',
-      key: 'createdAt',
-      sorter: true,
-      sortOrder: sortedInfo.columnKey === 'createdAt' ? sortedInfo.order : null,
-      fixed: 'right',
-      width: 300
-    },
-    {
-      title: 'Hành động',
-      key: 'action',
-      fixed: 'right',
-      width: 200,
-      render: (_, record) => (
-        <Space size="middle">
-          <Button icon={<FormOutlined />} onClick={() => navigate(`/city/${record.id}/edit`)}>Cập nhật</Button>
-          <Button icon={<DeleteOutlined />} type="default" onClick={() => deleteCityMutate(record.id)}
-                  danger>Xóa</Button>
-        </Space>
-      )
-    }
-  ]
+    : []
 
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataSourceType[]) => {
@@ -198,7 +125,6 @@ function ListCity() {
           <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Form
             name="searchCity"
-            initialValues={{ remember: true }}
             onFinish={onFinish}
             autoComplete="off"
           >
@@ -220,34 +146,23 @@ function ListCity() {
         </Space>
       </Flex>
 
-      {!data && <Table columns={columns} loading={isLoading} />}
-
-      {data && <Table dataSource={dataSource}
-                      columns={columns}
-                      rowSelection={{
-                        type: 'checkbox',
-                        ...rowSelection
-                      }}
-                      pagination={{
-                        total: data.pageInfo.totalElements,
-                        position: ['bottomCenter'],
-                        pageSize: pageSize,
-                        current: pageNumber,
-                        showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
-                        showSizeChanger: true,
-                        onShowSizeChange: onShowSizeChange,
-                        pageSizeOptions: ['5', '10', '20'],
-                        locale: { items_per_page: '/ trang' },
-                        onChange: onPageChance
-                      }}
-                      onChange={handleTableChange}
-                      locale={{
-                        triggerDesc: 'Sắp xếp giảm dần',
-                        triggerAsc: 'Sắp xếp tăng dần',
-                        cancelSort: 'Hủy sắp xếp'
-                      }}
-                      loading={isLoading}
-      />}
+      <CityTable
+        dataSource={dataSource}
+        loading={isLoading}
+        paginationProps={{
+          total: data?.pageInfo.totalElements,
+          pageSize: pageSize,
+          current: pageNumber,
+          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
+          onShowSizeChange: onShowSizeChange,
+          onChange: onPageChance
+        }}
+        handleTableChange={handleTableChange}
+        rowSelection={{
+          type: 'checkbox',
+          ...rowSelection
+        }}
+      />
     </>
   )
 }

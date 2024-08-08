@@ -3,8 +3,8 @@ import AppLayout from './ui/AppLayout.tsx'
 import ProtectedRoute from './components/ProtectedRoute.tsx'
 import Dashboard from './features/dashboard/Dashboard.tsx'
 import Login from './features/auth/Login.tsx'
-import cityRouter from './features/city/cityRouter.tsx'
-import roomTypeRouter from './features/roomType/roomTypeRouter.tsx'
+import cityRouter from './router/cityRouter.tsx'
+import roomTypeRouter from './router/roomTypeRouter.tsx'
 
 const router = createBrowserRouter([
   {

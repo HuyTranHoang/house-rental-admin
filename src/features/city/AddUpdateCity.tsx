@@ -1,12 +1,12 @@
 import { Button, Flex, Typography, Form, Input, Spin } from 'antd'
 import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
 import type { FormProps } from 'antd'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { addCity, CityField, getCityById, updateCity } from '../api/city.api.ts'
+import { useQuery } from '@tanstack/react-query'
+import { CityField, getCityById } from '../api/city.api.ts'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
-import axios from 'axios'
+
 import { useState } from 'react'
+import { useCreateCity, useUpdateCity } from './useCities.ts'
 
 
 function AddUpdateCity() {
@@ -14,47 +14,14 @@ function AddUpdateCity() {
   const isAddMode = Boolean(match)
   const title = isAddMode ? 'Thêm mới thành phố' : 'Cập nhật thành phố'
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
 
   const [error, setError] = useState<string>('')
 
-  const { mutate: addCityMutate } = useMutation({
-    mutationFn: addCity,
-    onSuccess: () => {
-      toast.success('Thêm thành phố thành công')
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-
-      navigate('/city')
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
-  })
-
-  const { mutate: updateCityMutate } = useMutation({
-    mutationFn: updateCity,
-    onSuccess: () => {
-      toast.success('Cập nhật thành phố thành công')
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-      navigate('/city')
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
-  })
+  const { addCityMutate, addCityPending } = useCreateCity(setError)
+  const { updateCityMutate, updateCityPending } = useUpdateCity(setError)
 
   const onFinish: FormProps<CityField>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -103,7 +70,6 @@ function AddUpdateCity() {
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600, marginTop: 32 }}
-        initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -130,8 +96,8 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
-          <Button type="primary" htmlType="submit" style={{ width: 100 }}>
-            Gửi
+          <Button loading={addCityPending || updateCityPending} type="primary" htmlType="submit" style={{ width: 100 }}>
+            {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>
       </Form>
