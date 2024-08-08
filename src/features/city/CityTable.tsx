@@ -1,4 +1,4 @@
-import { City } from '../../models/city.ts'
+import { CityType } from '../../models/city.type.ts'
 import React from 'react'
 import {
   Button,
@@ -15,7 +15,7 @@ import { useDeleteCity } from './useCities.ts'
 
 const { confirm } = Modal
 
-type DataSourceType = City & {
+type DataSourceType = CityType & {
   key: React.Key;
 }
 

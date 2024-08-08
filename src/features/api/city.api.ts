@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { City } from '../../models/city.ts'
+import { CityType } from '../../models/city.type.ts'
 import { PageInfo } from '../../models/pageInfo.type.ts'
 import axiosInstance from '../../axiosInstance.ts'
 import { delay } from '../../utils/delay.ts'
@@ -11,12 +11,12 @@ export interface CityField {
 
 interface CitiesWithPagination {
   pageInfo: PageInfo
-  data: City[]
+  data: CityType[]
 }
 
 export const getAllCities = async () => {
   try {
-    const response = await axios.get<City[]>('/api/city/all')
+    const response = await axios.get<CityType[]>('/api/city/all')
     if (response.status === 200) {
       return response.data
     }
@@ -52,7 +52,7 @@ export const getAllCitiesWithPagination = async (search: string, pageNumber: num
 
 export const getCityById = async (id: number) => {
   try {
-    const response = await axios.get<City>(`/api/city/${id}`)
+    const response = await axios.get<CityType>(`/api/city/${id}`)
     if (response.status === 200) {
       return response.data
     }

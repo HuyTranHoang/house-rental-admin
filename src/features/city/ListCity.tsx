@@ -15,13 +15,13 @@ import { ExclamationCircleFilled, PlusCircleOutlined } from '@ant-design/icons'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { useCities, useDeleteMultiCity } from './useCities.ts'
 import CityTable from './CityTable.tsx'
-import { City } from '../../models/city.ts'
+import { CityType } from '../../models/city.type.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 
 const { Search } = Input
 const { confirm } = Modal
 
-type DataSourceType = City & {
+type DataSourceType = CityType & {
   key: React.Key
 }
 
@@ -69,7 +69,7 @@ function ListCity() {
   }
 
   const dataSource = data
-    ? data.data.map((city: City) => ({
+    ? data.data.map((city: CityType) => ({
       key: city.id,
       id: city.id,
       name: city.name,

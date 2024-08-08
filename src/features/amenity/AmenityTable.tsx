@@ -1,14 +1,14 @@
 import React from 'react'
 import { Button, Modal, Space, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { Amenity } from '../../models/amenity.ts'
+import { AmenityType } from '../../models/amenity.type.ts'
 import { useNavigate } from 'react-router-dom'
 import { useDeleteAmenity } from './useAmenities.ts'
 import { DeleteOutlined, ExclamationCircleFilled, FormOutlined } from '@ant-design/icons'
 
 const { confirm } = Modal
 
-type DataSourceType = Amenity & {
+type DataSourceType = AmenityType & {
   key: React.Key;
 }
 

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, FormProps, Input, Spin, Typography } from 'antd'
 import { useState } from 'react'
 import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
-import { AmenityFeild, getAmenityById } from '../api/amenity'
+import { AmenityField, getAmenityById } from '../api/amenity.api.ts'
 
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb'
 import { useCreateAmenity, useUpdateAmenity } from './useAmenities.ts'
@@ -22,7 +22,7 @@ function AddUpdateAmenity() {
   const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity(setError)
 
 
-  const onFinish: FormProps<AmenityFeild>['onFinish'] = (values) => {
+  const onFinish: FormProps<AmenityField>['onFinish'] = (values) => {
     if (isAddMode) {
       addAmenityMutate(values)
     } else {
@@ -68,7 +68,7 @@ function AddUpdateAmenity() {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<AmenityFeild>
+        <Form.Item<AmenityField>
           label="Id"
           name="id"
           hidden
@@ -76,7 +76,7 @@ function AddUpdateAmenity() {
           <Input />
         </Form.Item>
 
-        <Form.Item<AmenityFeild>
+        <Form.Item<AmenityField>
           label="Tên tiện nghi"
           name="name"
           rules={[

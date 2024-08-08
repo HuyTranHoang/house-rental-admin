@@ -1,4 +1,4 @@
-export interface City {
+export interface CityType {
   id: number
   name: string
   createdAt: string

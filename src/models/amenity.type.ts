@@ -1,4 +1,4 @@
-export interface Amenity {
+export interface AmenityType {
     id: number
     name: string
     createdAt: string
