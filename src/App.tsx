@@ -5,7 +5,7 @@ import { useAppDispatch } from './store.ts'
 import { useEffect, useState } from 'react'
 import { loginFailure, loginSuccess } from './features/auth/authSlice.ts'
 import { Spin } from 'antd'
-import router from './router.tsx'
+import router from './router/router.tsx'
 import { delay } from './utils/delay.ts'
 import axiosInstance from './axiosInstance.ts'
 

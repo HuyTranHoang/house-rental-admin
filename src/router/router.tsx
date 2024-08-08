@@ -1,12 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom'
-import AppLayout from './ui/AppLayout.tsx'
-import ProtectedRoute from './components/ProtectedRoute.tsx'
-import Dashboard from './features/dashboard/Dashboard.tsx'
-import Login from './features/auth/Login.tsx'
+import AppLayout from '../ui/AppLayout.tsx'
+import ProtectedRoute from '../components/ProtectedRoute.tsx'
+import Dashboard from '../features/dashboard/Dashboard.tsx'
+import Login from '../features/auth/Login.tsx'
 
-import amenityRouter from './router/amenityRouter.tsx'
-import cityRouter from './router/cityRouter.tsx'
-import roomTypeRouter from './router/roomTypeRouter.tsx'
+import amenityRouter from './amenityRouter.tsx'
+import cityRouter from './cityRouter.tsx'
+import roomTypeRouter from './roomTypeRouter.tsx'
+import reportRouter from './reportRouter.tsx'
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,8 @@ const router = createBrowserRouter([
           ...roomTypeRouter // /roomType, /roomType/add, /roomType/:id/edit
           ,
           ...amenityRouter // /amenity, /amenity/add, /amenity/:id:edit
+          ,
+          ...reportRouter // /report
         ] // End of ProtectedRoute children
       }
     ] // End of AppLayout children

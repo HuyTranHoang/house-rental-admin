@@ -1,9 +1,10 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import {
   BarChartOutlined,
-  createFromIconfontCN, HomeOutlined,
-  LaptopOutlined,
+  createFromIconfontCN,
+  HomeOutlined,
   NotificationOutlined,
+  SolutionOutlined
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Breadcrumb, Layout, Menu, theme } from 'antd'
@@ -71,18 +72,22 @@ function AppLayout() {
           label: 'Quản lý tiện nghi',
           onClick: () => navigate('/amenity')
         },
-          
       ]
     },
     {
-      key: 'sub2',
-      label: 'subnav 2',
-      icon: <LaptopOutlined />,
+      key: 'reportReview',
+      label: 'Báo cáo và đánh giá',
+      icon: <SolutionOutlined />,
       children: [
-        { key: '5', label: 'option5' },
-        { key: '6', label: 'option6' },
-        { key: '7', label: 'option7' },
-        { key: '8', label: 'option8' }
+        {
+          key: 'reportReview-report',
+          label: 'Quản lý báo cáo',
+          onClick: () => navigate('/report')
+        },
+        {
+          key: 'reportReview-review',
+          label: 'Quản lý đánh giá'
+        },
       ]
     },
     {
@@ -120,13 +125,13 @@ function AppLayout() {
             items={siderItems}
           />
         </Sider>
-        <Layout style={{ padding: '0 24px 24px' }}>
+        <Layout style={{ padding: '0 24px' }}>
           <Breadcrumb items={breadcrumb} style={{ margin: '16px 0' }} />
           <Content
             style={{
               padding: 24,
               margin: 0,
-              // minHeight: 'calc(100vh - 150px)',
+              // minHeight: 'calc(100vh - 190px)',
               minHeight: 260,
               background: colorBgContainer,
               borderRadius: borderRadiusLG
