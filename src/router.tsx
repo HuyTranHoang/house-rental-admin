@@ -4,7 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute.tsx'
 import Dashboard from './features/dashboard/Dashboard.tsx'
 import Login from './features/auth/Login.tsx'
 
-import amenityRouter from './features/amenity/amenityRouter.tsx'
+import amenityRouter from './router/amenityRouter.tsx'
 import cityRouter from './router/cityRouter.tsx'
 import roomTypeRouter from './router/roomTypeRouter.tsx'
 

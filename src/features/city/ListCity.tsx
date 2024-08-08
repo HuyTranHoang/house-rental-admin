@@ -1,26 +1,22 @@
 import {
-  Alert,
   Button,
   Divider,
-  Empty,
   Flex,
-  Form,
-  FormProps,
   Input,
-  PaginationProps,
   Space,
   TableProps,
   Typography
 } from 'antd'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { formatDate } from '../../utils/formatDate.ts'
+import { customFormatDate } from '../../utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { useCities, useDeleteMultiCity } from './useCities.ts'
 import CityTable from './CityTable.tsx'
 import { City } from '../../models/city.ts'
+import ErrorFetching from '../../components/ErrorFetching.tsx'
 
 const { Search } = Input
 
@@ -28,16 +24,12 @@ type DataSourceType = City & {
   key: React.Key
 }
 
-interface searchField {
-  search?: string
-}
-
 function ListCity() {
 
   const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
-  const [sortBy, setSortBy] = useState('createdAtDesc')
+  const [sortBy, setSortBy] = useState('IdDesc')
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
@@ -50,22 +42,6 @@ function ListCity() {
   const handleDeleteMultiCity = () => {
     deleteCitiesMutate(deleteIdList)
     setDeleteIdList([])
-  }
-
-  const onFinish: FormProps<searchField>['onFinish'] = (values) => {
-    setSearch(values.search || '')
-  }
-
-  const onPageChance: PaginationProps['onChange'] = (page) => {
-    setPageNumber(prevState => {
-      if (prevState === page) return prevState
-      return page
-    })
-  }
-
-  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (_, size) => {
-    setPageSize(size)
-    setPageNumber(1)
   }
 
   const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
@@ -85,7 +61,7 @@ function ListCity() {
       key: city.id,
       id: city.id,
       name: city.name,
-      createdAt: formatDate(city.createdAt)
+      createdAt: customFormatDate(city.createdAt)
     }))
     : []
 
@@ -103,18 +79,7 @@ function ListCity() {
   ])
 
   if (isError) {
-    return <>
-      <Alert
-        message="Lỗi"
-        description="Có lỗi xảy ra trong quá trình lấy dữ liệu. Vui lòng thử lại sau."
-        type="error"
-        showIcon
-        style={{ marginBottom: '3rem' }}
-      />
-
-      <Empty />
-
-    </>
+    return <ErrorFetching />
   }
 
   return (
@@ -123,19 +88,8 @@ function ListCity() {
         <Flex align="center">
           <Typography.Title level={2} style={{ margin: 0 }}>Danh sách thành phố</Typography.Title>
           <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Form
-            name="searchCity"
-            onFinish={onFinish}
-            autoComplete="off"
-          >
-            <Form.Item<searchField>
-              style={{ margin: 0 }}
-              name="search"
-            >
-              <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm tên thành phố"
-                      style={{ width: 250 }} />
-            </Form.Item>
-          </Form>
+          <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm tên thành phố"
+                  style={{ width: 250 }} />
         </Flex>
 
         <Space>
@@ -154,8 +108,8 @@ function ListCity() {
           pageSize: pageSize,
           current: pageNumber,
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
-          onShowSizeChange: onShowSizeChange,
-          onChange: onPageChance
+          onShowSizeChange: (_, size) => setPageSize(size),
+          onChange: (page) => setPageNumber(page)
         }}
         handleTableChange={handleTableChange}
         rowSelection={{

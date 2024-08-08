@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import React, { useState } from 'react'
 import { deleteRoomType, deleteRoomTypes, getAllRoomTypesWithPagination } from '../api/roomType.api.ts'
-import { formatDate } from '../../utils/formatDate.ts'
+import { customFormatDate } from '../../utils/customFormatDate.ts'
 import {
   Alert,
   Button,
@@ -20,6 +20,7 @@ import {
 } from 'antd'
 import { DeleteOutlined, FormOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { toast } from 'sonner'
+
 const { Search } = Input
 
 
@@ -44,7 +45,7 @@ function ListRoomType() {
   const queryClient = useQueryClient()
 
   const [search, setSearch] = useState('')
-  const [sortBy, setSortBy] = useState('createdAtDesc')
+  const [sortBy, setSortBy] = useState('IdDesc')
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
@@ -120,7 +121,7 @@ function ListRoomType() {
       key: roomType.id,
       id: roomType.id,
       name: roomType.name,
-      createdAt: formatDate(roomType.createdAt)
+      createdAt: customFormatDate(roomType.createdAt)
     }))
   }
 
@@ -212,7 +213,9 @@ function ListRoomType() {
         </Flex>
 
         <Space>
-          {deleteIdList.length > 0 && <Button shape="round" type="primary" danger onClick={handleDeleteMultiRoomType}>Xóa các mục đã chọn</Button>}
+          {deleteIdList.length > 0 &&
+            <Button shape="round" type="primary" danger onClick={handleDeleteMultiRoomType}>Xóa các mục đã
+              chọn</Button>}
           <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/roomType/add')}>
             Thêm mới
           </Button>

@@ -1,16 +1,16 @@
-import { City } from '../../models/city.ts'
 import React from 'react'
 import { Button, Space, Table, TablePaginationConfig, TableProps } from 'antd'
-import { useNavigate } from 'react-router-dom'
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { useDeleteCity } from './useCities.ts'
+import { Amenity } from '../../models/amenity.ts'
+import { useNavigate } from 'react-router-dom'
+import { useDeleteAmenity } from './useAmenities.ts'
+import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
 
-type DataSourceType = City & {
+type DataSourceType = Amenity & {
   key: React.Key;
 }
 
-interface CityTableProps {
+interface AmenityTableProps {
   dataSource: DataSourceType[];
   loading: boolean;
   paginationProps: false | TablePaginationConfig | undefined;
@@ -18,15 +18,16 @@ interface CityTableProps {
   rowSelection: TableRowSelection<DataSourceType> | undefined
 }
 
-function CityTable({
-                     dataSource,
-                     loading,
-                     paginationProps,
-                     handleTableChange,
-                     rowSelection
-                   }: CityTableProps) {
+
+function AmenityTable({
+                        dataSource,
+                        loading,
+                        paginationProps,
+                        handleTableChange,
+                        rowSelection
+                      }: AmenityTableProps) {
   const navigate = useNavigate()
-  const { deleteCityMutate } = useDeleteCity()
+  const { deleteAmenityMutate } = useDeleteAmenity()
 
   const columns: TableProps<DataSourceType>['columns'] = [
     {
@@ -35,7 +36,7 @@ function CityTable({
       key: 'id'
     },
     {
-      title: 'Tên thành phố',
+      title: 'Tên tiện nghi',
       dataIndex: 'name',
       key: 'name',
       sorter: true
@@ -55,9 +56,12 @@ function CityTable({
       width: 200,
       render: (_, record) => (
         <Space size="middle">
-          <Button icon={<FormOutlined />} onClick={() => navigate(`/city/${record.id}/edit`)}>Cập nhật</Button>
-          <Button icon={<DeleteOutlined />} type="default" onClick={() => deleteCityMutate(record.id)}
-                  danger>Xóa</Button>
+          <Button icon={<FormOutlined />} onClick={() => navigate(`/amenity/${record.id}/edit`)}>
+            Cập nhật
+          </Button>
+          <Button icon={<DeleteOutlined />} type="default" danger onClick={() => deleteAmenityMutate(record.id)}>
+            Xóa
+          </Button>
         </Space>
       )
     }
@@ -86,4 +90,4 @@ function CityTable({
   )
 }
 
-export default CityTable
+export default AmenityTable
