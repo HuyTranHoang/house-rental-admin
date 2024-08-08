@@ -67,7 +67,11 @@ function AppLayout() {
           label: 'Quản lý lọai phòng',
           onClick: () => navigate('/roomType')
         },
-        { key: 'roomTypeAmenity-amenity', label: 'Quản lý tiện nghi' },
+        { key: 'roomTypeAmenity-amenity', 
+          label: 'Quản lý tiện nghi',
+          onClick: () => navigate('/amenity')
+        },
+          
       ]
     },
     {
