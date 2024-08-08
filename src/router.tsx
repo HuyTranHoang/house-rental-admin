@@ -5,6 +5,7 @@ import Dashboard from './features/dashboard/Dashboard.tsx'
 import Login from './features/auth/Login.tsx'
 import cityRouter from './features/city/cityRouter.tsx'
 import roomTypeRouter from './features/roomType/roomTypeRouter.tsx'
+import amenityRouter from './features/amenity/amenityRouter.tsx'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,8 @@ const router = createBrowserRouter([
           ...cityRouter // /city, /city/add, /city/:id/edit
           ,
           ...roomTypeRouter // /roomType, /roomType/add, /roomType/:id/edit
+          ,
+          ...amenityRouter // /amenity, /amenity/add, /amenity/:id:edit
         ] // End of ProtectedRoute children
       }
     ] // End of AppLayout children
