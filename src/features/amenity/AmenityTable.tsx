@@ -1,10 +1,12 @@
 import React from 'react'
-import { Button, Modal, Space, Table, TablePaginationConfig, TableProps } from 'antd'
+import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { AmenityType } from '../../models/amenity.type.ts'
 import { useNavigate } from 'react-router-dom'
 import { useDeleteAmenity } from './useAmenities.ts'
-import { DeleteOutlined, ExclamationCircleFilled, FormOutlined } from '@ant-design/icons'
+import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
+import TableActions from '../../components/TableActions.tsx'
 
 const { confirm } = Modal
 
@@ -20,7 +22,6 @@ interface AmenityTableProps {
   rowSelection: TableRowSelection<DataSourceType> | undefined
 }
 
-
 function AmenityTable({
                         dataSource,
                         loading,
@@ -33,10 +34,31 @@ function AmenityTable({
 
   const showDeleteConfirm = (record: DataSourceType) => {
 
+    const items: DescriptionsProps['items'] = [
+      {
+        key: '1',
+        label: 'Id',
+        children: <span>{record.id}</span>,
+        span: 3
+      },
+      {
+        key: '2',
+        label: 'Tên tiện nghi',
+        children: <span>{record.name}</span>,
+        span: 3
+      },
+      {
+        key: '3',
+        label: 'Ngày tạo',
+        children: <span>{record.createdAt}</span>,
+        span: 3
+      }
+    ]
+
     confirm({
-      title: 'Bạn có chắc chắn muốn xóa tiện nghi này?',
-      icon: <ExclamationCircleFilled />,
-      content: 'Hành động này không thể hoàn tác',
+      icon: null,
+      title: <ConfirmModalTitle title="Xác nhận xóa tiện nghi" />,
+      content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
       cancelText: 'Hủy',
@@ -75,16 +97,8 @@ function AmenityTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <Space size="middle">
-          <Button icon={<FormOutlined />} onClick={() => navigate(`/amenity/${record.id}/edit`)}>
-            Cập nhật
-          </Button>
-          <Button icon={<DeleteOutlined />} type="default"
-                  onClick={() => showDeleteConfirm(record)}
-                  danger>
-            Xóa
-          </Button>
-        </Space>
+        <TableActions onUpdate={() => navigate(`/amenity/${record.id}/edit`)}
+                      onDelete={() => showDeleteConfirm(record)} />
       )
     }
   ]

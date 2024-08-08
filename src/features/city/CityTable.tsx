@@ -1,17 +1,12 @@
 import { CityType } from '../../models/city.type.ts'
 import React from 'react'
-import {
-  Button,
-  Modal,
-  Space,
-  Table,
-  TablePaginationConfig,
-  TableProps
-} from 'antd'
+import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { DeleteOutlined, ExclamationCircleFilled, FormOutlined } from '@ant-design/icons'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useDeleteCity } from './useCities.ts'
+import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
+import TableActions from '../../components/TableActions.tsx'
 
 const { confirm } = Modal
 
@@ -39,10 +34,31 @@ function CityTable({
 
   const showDeleteConfirm = (record: DataSourceType) => {
 
+    const items: DescriptionsProps['items'] = [
+      {
+        key: '1',
+        label: 'Id',
+        children: <span>{record.id}</span>,
+        span: 3
+      },
+      {
+        key: '2',
+        label: 'Tên thành phố',
+        children: <span>{record.name}</span>,
+        span: 3
+      },
+      {
+        key: '3',
+        label: 'Ngày tạo',
+        children: <span>{record.createdAt}</span>,
+        span: 3
+      }
+    ]
+
     confirm({
-      title: 'Bạn có chắc chắn muốn xóa thành phố này?',
-      icon: <ExclamationCircleFilled />,
-      content: <p>Lưu ý: Hành động này không thể hoàn tác</p>,
+      icon: null,
+      title: <ConfirmModalTitle title="Xác nhận xóa thành phố" />,
+      content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
       cancelText: 'Hủy',
@@ -81,14 +97,8 @@ function CityTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <Space size="middle">
-          <Button icon={<FormOutlined />} onClick={() => navigate(`/city/${record.id}/edit`)}>Cập nhật</Button>
-          <Button icon={<DeleteOutlined />} type="default"
-                  onClick={() => showDeleteConfirm(record)}
-                  danger>
-            Xóa
-          </Button>
-        </Space>
+        <TableActions onUpdate={() => navigate(`/city/${record.id}/edit`)}
+                      onDelete={() => showDeleteConfirm(record)} />
       )
     }
   ]
