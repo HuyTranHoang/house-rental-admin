@@ -1,59 +1,26 @@
 import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
 import { useState } from 'react'
-import { toast } from 'sonner'
-import axios from 'axios'
-import { addRoomType, getRoomTypeById, RoomTypeField, updateRoomType } from '../api/roomType.api.ts'
+import { getRoomTypeById, RoomTypeField } from '../api/roomType.api.ts'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { CityField } from '../api/city.api.ts'
+import { useCreateRoomType, useUpdateRoomType } from './useRoomTypes.ts'
 
 function AddUpdateRoomType() {
   const match = useMatch('/roomType/add')
   const isAddMode = Boolean(match)
   const title = isAddMode ? 'Thêm mới loại phòng' : 'Cập nhật loại phòng'
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
 
   const [error, setError] = useState<string>('')
 
-  const { mutate: addRoomTypeMutate } = useMutation({
-    mutationFn: addRoomType,
-    onSuccess: () => {
-      toast.success('Thêm loại phòng thành công')
-      queryClient.invalidateQueries({ queryKey: ['roomTypes'] })
+  const { addRoomTypeMutate, addRoomTypePening } = useCreateRoomType(setError)
+  const { updateRoomTypeMutate, updateRoomTypePending } = useUpdateRoomType(setError)
 
-      navigate('/roomType')
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
-  })
-
-  const { mutate: updateRoomTypeMutate } = useMutation({
-    mutationFn: updateRoomType,
-    onSuccess: () => {
-      toast.success('Cập nhật loại phòng thành công')
-      queryClient.invalidateQueries({ queryKey: ['roomTypes'] })
-      navigate('/roomType')
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
-  })
 
   const onFinish: FormProps<RoomTypeField>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -120,7 +87,7 @@ function AddUpdateRoomType() {
           name="name"
           rules={[
             { required: true, message: 'Vui lòng nhập tên loại phòng!' },
-            { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự!' },
+            { min: 3, message: 'Tên loại phòng phải có ít nhất 3 ký tự!' }
           ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
@@ -129,8 +96,9 @@ function AddUpdateRoomType() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
-          <Button type="primary" htmlType="submit" style={{ width: 100 }}>
-            Gửi
+          <Button loading={addRoomTypePening || updateRoomTypePending} type="primary" htmlType="submit"
+                  style={{ width: 100 }}>
+            {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>
       </Form>

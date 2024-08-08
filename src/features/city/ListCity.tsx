@@ -1,25 +1,17 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Input, Modal,
-  Space,
-  TableProps,
-  Typography
-} from 'antd'
+import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
-import { ExclamationCircleFilled, PlusCircleOutlined } from '@ant-design/icons'
+import { PlusCircleOutlined } from '@ant-design/icons'
 
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { useCities, useDeleteMultiCity } from './useCities.ts'
 import CityTable from './CityTable.tsx'
 import { City } from '../../models/city.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
+import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
 
 const { Search } = Input
-const { confirm } = Modal
 
 type DataSourceType = City & {
   key: React.Key
@@ -39,22 +31,12 @@ function ListCity() {
   const { data, isLoading, isError } = useCities(search, pageNumber, pageSize, sortBy)
   const { deleteCitiesMutate } = useDeleteMultiCity()
 
-  const showDeleteConfirm = (deleteIdList: number[]) => {
-
-    confirm({
-      title: 'Bạn có chắc chắn muốn xóa các thành phố đã chọn?',
-      icon: <ExclamationCircleFilled />,
-      content: <p>Lưu ý: Hành động này không thể hoàn tác</p>,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteCitiesMutate(deleteIdList)
-        setDeleteIdList([])
-      }
-    })
-  }
+  const handleDelete = () => {
+    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các thành phố', () => {
+      deleteCitiesMutate(deleteIdList);
+      setDeleteIdList([]);
+    });
+  };
 
   const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
     if (Array.isArray(sorter)) {
@@ -106,7 +88,7 @@ function ListCity() {
 
         <Space>
           {deleteIdList.length > 0 &&
-            <Button shape="round" type="primary" danger onClick={() => showDeleteConfirm(deleteIdList)}>Xóa các mục đã chọn</Button>}
+            <Button shape="round" type="primary" danger onClick={handleDelete}>Xóa các mục đã chọn</Button>}
           <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/city/add')}>Thêm
             mới</Button>
         </Space>

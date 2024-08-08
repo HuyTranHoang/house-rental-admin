@@ -1,24 +1,16 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Input, Modal,
-  Space,
-  TableProps,
-  Typography
-} from 'antd'
-import React, { useState } from 'react'
+import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
+import React, { useLayoutEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ExclamationCircleFilled, PlusCircleOutlined } from '@ant-design/icons'
+import { PlusCircleOutlined } from '@ant-design/icons'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb'
 import { useAmenities, useDeleteMultiAmenity } from './useAmenities.ts'
 import AmenityTable from './AmenityTable.tsx'
 import { Amenity } from '../../models/amenity.ts'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
+import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
 
 const { Search } = Input
-const { confirm } = Modal
 
 type DataSourceType = Amenity & {
   key: React.Key
@@ -37,23 +29,12 @@ function ListAmenity() {
   const { data, isLoading, isError } = useAmenities(search, pageNumber, pageSize, sortBy)
   const { deleteAmenitiesMutate } = useDeleteMultiAmenity()
 
-  const showDeleteConfirm = (deleteIdList: number[]) => {
-
-    confirm({
-      title: 'Bạn có chắc chắn muốn xóa các tiện nghi đã chọn?',
-      icon: <ExclamationCircleFilled />,
-      content: <p>Lưu ý: Hành động này không thể hoàn tác</p>,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteAmenitiesMutate(deleteIdList)
-        setDeleteIdList([])
-      }
-    })
-  }
-
+  const handleDelete = () => {
+    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các tiện nghi', () => {
+      deleteAmenitiesMutate(deleteIdList);
+      setDeleteIdList([]);
+    });
+  };
 
   const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
     if (Array.isArray(sorter)) {
@@ -86,7 +67,9 @@ function ListAmenity() {
     { title: <Link to={'/'}>Dashboard</Link> },
     { title: 'Danh sách tiện nghi' }
   ])
+  useLayoutEffect(() => {
 
+  }, [])
   if (isError) {
     return <ErrorFetching />
   }
@@ -106,7 +89,7 @@ function ListAmenity() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape="round" type="primary" danger onClick={() => showDeleteConfirm(deleteIdList)}>
+            <Button shape="round" type="primary" danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           )}

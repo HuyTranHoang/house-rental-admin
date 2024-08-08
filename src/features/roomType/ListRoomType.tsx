@@ -2,20 +2,18 @@ import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { Link, useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
-import { Button, Divider, Flex, Input, Modal, Space, TableProps, Typography } from 'antd'
-import { ExclamationCircleFilled, PlusCircleOutlined } from '@ant-design/icons'
+import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
+import { PlusCircleOutlined } from '@ant-design/icons'
 import { useDeleteRoomTypes, useRoomTypes } from './useRoomTypes.ts'
 import RoomTypeTable from './RoomTypeTable.tsx'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
+import { RoomType } from '../../models/roomType.type.ts'
+import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
 
 const { Search } = Input
-const { confirm } = Modal
 
-interface DataSourceType {
+type DataSourceType = RoomType & {
   key: React.Key
-  id: number
-  name: string
-  createdAt: string
 }
 
 function ListRoomType() {
@@ -32,22 +30,12 @@ function ListRoomType() {
   const { data, isLoading, isError } = useRoomTypes(search, pageNumber, pageSize, sortBy)
   const { deleteRoomTypesMutate } = useDeleteRoomTypes()
 
-  const showDeleteConfirm = (deleteIdList: number[]) => {
-
-    confirm({
-      title: 'Bạn có chắc chắn muốn xóa các loại phòng đã chọn?',
-      icon: <ExclamationCircleFilled />,
-      content: <p>Lưu ý: Hành động này không thể hoàn tác</p>,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteRoomTypesMutate(deleteIdList)
-        setDeleteIdList([])
-      }
-    })
-  }
+  const handleDelete = () => {
+    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các loại phòng', () => {
+      deleteRoomTypesMutate(deleteIdList);
+      setDeleteIdList([]);
+    });
+  };
 
   const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
     if (Array.isArray(sorter)) {
@@ -98,7 +86,7 @@ function ListRoomType() {
 
         <Space>
           {deleteIdList.length > 0 &&
-            <Button shape="round" type="primary" danger onClick={() => showDeleteConfirm(deleteIdList)}>
+            <Button shape="round" type="primary" danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           }
