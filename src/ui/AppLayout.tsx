@@ -6,19 +6,12 @@ import {
   NotificationOutlined,
   SolutionOutlined
 } from '@ant-design/icons'
-import type { MenuProps } from 'antd'
-import { Breadcrumb, Layout, Menu, theme } from 'antd'
+import { Breadcrumb, Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
 import { useSelector } from 'react-redux'
 import { selectUi } from './uiSlice.ts'
 
 const { Header, Content, Sider } = Layout
-
-const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
-  key,
-  label: `nav ${key}`
-}))
-
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
@@ -68,10 +61,11 @@ function AppLayout() {
           label: 'Quản lý lọai phòng',
           onClick: () => navigate('/roomType')
         },
-        { key: 'roomTypeAmenity-amenity', 
+        {
+          key: 'roomTypeAmenity-amenity',
           label: 'Quản lý tiện nghi',
           onClick: () => navigate('/amenity')
-        },
+        }
       ]
     },
     {
@@ -87,7 +81,7 @@ function AppLayout() {
         {
           key: 'reportReview-review',
           label: 'Quản lý đánh giá'
-        },
+        }
       ]
     },
     {
@@ -106,17 +100,16 @@ function AppLayout() {
   return (
     <Layout>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
-        <div className="demo-logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['2']}
-          items={items1}
-          style={{ flex: 1, minWidth: 0 }}
-        />
+        <Flex align='center'>
+          <img src="/logo1.png" alt="Mogu logo" style={{ width: 30 }} />
+          <Typography.Title level={4} style={{ color: 'white', margin: '0 12px' }}>Trang quản lý</Typography.Title>
+        </Flex>
       </Header>
       <Layout>
         <Sider width={260} style={{ background: colorBgContainer }}>
+          <Flex justify='center' align='center' style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
+            <img src="/LOGO_TEXT.png" alt="Mogu logo" style={{ width: 100 }} />
+          </Flex>
           <Menu
             mode="inline"
             defaultSelectedKeys={['dashboard']}
