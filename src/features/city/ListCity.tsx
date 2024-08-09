@@ -7,7 +7,7 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { useCities, useDeleteMultiCity } from './useCities.ts'
 import CityTable from './CityTable.tsx'
-import { City } from '../../models/city.ts'
+import { City } from '../../models/city.type.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { Amenity } from '../../models/amenity.ts'
+import { Amenity } from '../../models/amenity.type.ts'
 import { useNavigate } from 'react-router-dom'
 import { useDeleteAmenity } from './useAmenities.ts'
 import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'

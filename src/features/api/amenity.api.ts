@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Amenity } from '../../models/amenity.ts'
+import { Amenity } from '../../models/amenity.type.ts'
 import { PageInfo } from '../../models/pageInfo.type'
 import { delay } from '../../utils/delay'
 import axiosInstance from '../../axiosInstance'

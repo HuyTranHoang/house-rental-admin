@@ -1,4 +1,4 @@
-import { City } from '../../models/city.ts'
+import { City } from '../../models/city.type.ts'
 import React from 'react'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
