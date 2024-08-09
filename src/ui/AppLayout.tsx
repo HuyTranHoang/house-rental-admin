@@ -102,7 +102,7 @@ function AppLayout() {
       <Header style={{ display: 'flex', alignItems: 'center' }}>
         <Flex align='center'>
           <img src="/logo1.png" alt="Mogu logo" style={{ width: 30 }} />
-          <Typography.Title level={4} style={{ color: 'white', margin: '0 12px' }}>Trang quản lý</Typography.Title>
+          <Typography.Title level={4} style={{ color: 'white', margin: '0 12px' }}>Trang quản trị</Typography.Title>
         </Flex>
       </Header>
       <Layout>

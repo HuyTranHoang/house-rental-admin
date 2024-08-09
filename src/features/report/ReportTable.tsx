@@ -1,6 +1,6 @@
-import { Button, Space, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
+import { Button, ConfigProvider, Space, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
 import React from 'react'
-import { Report as ReportType, ReportStatus } from '../../models/report.type.ts'
+import { Report as ReportType, ReportCategory, ReportStatus } from '../../models/report.type.ts'
 import { Link } from 'react-router-dom'
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { useUpdateReportStatus } from './useReports.ts'
@@ -55,17 +55,41 @@ function ReportTable({
       key: 'reason'
     },
     {
+      title: 'Loại báo cáo',
+      dataIndex: 'category',
+      key: 'category',
+      sorter: true,
+      filters: [
+        { text: 'Lừa đảo', value: ReportCategory.SCAM },
+        { text: 'Nội dung không phù hợp', value: ReportCategory.INAPPROPRIATE_CONTENT },
+        { text: 'Trùng lặp', value: ReportCategory.DUPLICATE },
+        { text: 'Thông tin sai lệch', value: ReportCategory.MISINFORMATION },
+        { text: 'Khác', value: ReportCategory.OTHER }
+      ],
+      render: (category: ReportCategory) => {
+        const categoryMap = {
+          [ReportCategory.SCAM]: ['Lừa đảo', 'magenta'],
+          [ReportCategory.INAPPROPRIATE_CONTENT]: ['Nội dung không phù hợp', 'red'],
+          [ReportCategory.DUPLICATE]: ['Trùng lặp', 'volcano'],
+          [ReportCategory.MISINFORMATION]: ['Thông tin sai lệch', 'orange'],
+          [ReportCategory.OTHER]: ['Khác', 'gold']
+        }
+        const [text, color] = categoryMap[category]
+        return <Tag color={color}>{text}</Tag>
+      }
+    },
+    {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       render: (status: ReportStatus) => {
-        if (status === ReportStatus.PENDING) {
-          return <Tag color="blue">Chờ duyệt</Tag>
-        } else if (status === ReportStatus.APPROVED) {
-          return <Tag color="green">Đã duyệt</Tag>
+        const statusMap = {
+          [ReportStatus.PENDING]: ['Chờ duyệt', 'blue'],
+          [ReportStatus.APPROVED]: ['Đã duyệt', 'green'],
+          [ReportStatus.REJECTED]: ['Đã từ chối', 'red']
         }
-
-        return <Tag color="red">Đã từ chối</Tag>
+        const [text, color] = statusMap[status]
+        return <Tag color={color}>{text}</Tag>
       }
     },
     {
@@ -86,12 +110,20 @@ function ReportTable({
       width: 200,
       render: (_, record) => (
         <Space>
-          <Button loading={updateReportStatusPending}
-                  onClick={() => updateReportStatusMutate({ id: record.id, status: ReportStatus.APPROVED })}
-                  icon={<CheckOutlined />}
-                  type="primary">
-            Duyệt
-          </Button>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#00b96b'
+              }
+            }}
+          >
+            <Button loading={updateReportStatusPending}
+                    onClick={() => updateReportStatusMutate({ id: record.id, status: ReportStatus.APPROVED })}
+                    icon={<CheckOutlined />}
+                    type="primary">
+              Duyệt
+            </Button>
+          </ConfigProvider>
           <Button loading={updateReportStatusPending}
                   onClick={() => updateReportStatusMutate({ id: record.id, status: ReportStatus.REJECTED })}
                   icon={<CloseOutlined />}
@@ -119,7 +151,9 @@ function ReportTable({
       locale={{
         triggerDesc: 'Sắp xếp giảm dần',
         triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp'
+        cancelSort: 'Hủy sắp xếp',
+        filterReset: 'Bỏ lọc',
+        filterConfirm: 'Lọc'
       }}
     />
   )

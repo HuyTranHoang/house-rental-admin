@@ -4,13 +4,14 @@ import { ReportStatus } from '../../models/report.type.ts'
 import { toast } from 'sonner'
 
 export const useReports = (search: string,
+                           category: string,
                            status: ReportStatus,
                            pageNumber: number,
                            pageSize: number,
                            sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['reports', search, status, pageNumber, pageSize, sortBy],
-    queryFn: () => getAllReportsWithPagination(search, status, pageNumber, pageSize, sortBy)
+    queryKey: ['reports', search, category, status, pageNumber, pageSize, sortBy],
+    queryFn: () => getAllReportsWithPagination(search, category, status, pageNumber, pageSize, sortBy)
   })
 
   return { data, isLoading, isError }

@@ -15,6 +15,7 @@ export interface updateReportStatus {
 
 
 export const getAllReportsWithPagination = async (search: string,
+                                                  category: string,
                                                   status: ReportStatus,
                                                   pageNumber: number,
                                                   pageSize: number,
@@ -24,6 +25,7 @@ export const getAllReportsWithPagination = async (search: string,
 
     const params = {
       username: search,
+      category,
       status,
       pageNumber,
       pageSize,

@@ -39,20 +39,20 @@ function ListReport() {
 
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState(ReportStatus.PENDING)
+  const [category, setCategory] = useState('')
   const [sortBy, setSortBy] = useState('IdDesc')
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
   const { data, isLoading, isError }
-    = useReports(search, status, pageNumber, pageSize, sortBy)
+    = useReports(search, category, status, pageNumber, pageSize, sortBy)
 
   const onTabChange = (key: string) => {
-    console.log(key)
     setStatus(key as ReportStatus)
     queryClient.invalidateQueries({ queryKey: ['reports'] })
   }
 
-  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
+  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, filters, sorter) => {
     if (Array.isArray(sorter)) {
       setSortBy('createdAtDesc')
     } else {
@@ -61,9 +61,16 @@ function ListReport() {
         setSortBy(`${sorter.field}${order}`)
       }
     }
+
+    if (filters.category) {
+      const result = filters.category.join(',');
+      setCategory(result)
+    } else {
+      setCategory('')
+    }
   }
 
-  const dataSource = data
+  const dataSource: DataSourceType[] = data
     ? data.data.map((report: ReportType) => ({
       key: report.id,
       id: report.id,
@@ -72,6 +79,7 @@ function ListReport() {
       propertyId: report.propertyId,
       title: report.title,
       reason: report.reason,
+      category: report.category,
       status: report.status,
       createdAt: customFormatDate(report.createdAt)
     }))
