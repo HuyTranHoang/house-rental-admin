@@ -6,7 +6,7 @@ import { CityField, getCityById } from '../api/city.api.ts'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 
 import { useState } from 'react'
-import { useCreateCity, useUpdateCity } from './useCities.ts'
+import { useCreateCity, useUpdateCity } from '../../hooks/useCities.ts'
 
 
 function AddUpdateCity() {

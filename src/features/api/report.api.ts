@@ -1,6 +1,5 @@
 import { PageInfo } from '../../models/pageInfo.type.ts'
 import { Report, ReportStatus } from '../../models/report.type.ts'
-import { delay } from '../../utils/delay.ts'
 import axiosInstance from '../../axiosInstance.ts'
 
 interface ReportsWithPagination {
@@ -34,7 +33,7 @@ export const getAllReportsWithPagination = async (search: string,
 
     const response = await axiosInstance.get<ReportsWithPagination>('/api/reports', { params })
 
-    await delay(300) // Giả delay 300ms để thấy rõ sự chuyển động của loading
+    //await delay(300) // Giả delay 300ms để thấy rõ sự chuyển động của loading
 
     if (response.status === 200) {
       return response.data

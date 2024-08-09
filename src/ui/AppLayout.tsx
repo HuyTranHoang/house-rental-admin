@@ -3,8 +3,7 @@ import {
   BarChartOutlined,
   createFromIconfontCN,
   HomeOutlined,
-  NotificationOutlined,
-  SolutionOutlined
+  SolutionOutlined, UserOutlined
 } from '@ant-design/icons'
 import { Breadcrumb, Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
@@ -31,7 +30,7 @@ function AppLayout() {
   const siderItems: MenuProps['items'] = [
     {
       key: 'dashboard',
-      label: 'Dashboard',
+      label: 'Tổng quan',
       icon: <BarChartOutlined />,
       onClick: () => navigate('/')
     },
@@ -47,7 +46,8 @@ function AppLayout() {
         },
         {
           key: 'cityDistrict-district',
-          label: 'Quản lý quận huyện'
+          label: 'Quản lý quận huyện',
+          onClick: () => alert('Chưa làm')
         }
       ]
     },
@@ -80,19 +80,26 @@ function AppLayout() {
         },
         {
           key: 'reportReview-review',
-          label: 'Quản lý đánh giá'
+          label: 'Quản lý đánh giá',
+          onClick: () => alert('Chưa làm')
         }
       ]
     },
     {
-      key: 'sub3',
-      label: 'subnav 3',
-      icon: <NotificationOutlined />,
+      key: 'userRole',
+      label: 'Người dùng và vai trò',
+      icon: <UserOutlined />,
       children: [
-        { key: '9', label: 'option9' },
-        { key: '10', label: 'option10' },
-        { key: '11', label: 'option11' },
-        { key: '12', label: 'option12' }
+        {
+          key: 'userRole-user',
+          label: 'Quản lý người dùng',
+          onClick: () => alert('Chưa làm')
+        },
+        {
+          key: 'userRole-role',
+          label: 'Quản lý vai trò',
+          onClick: () => navigate('/role')
+        },
       ]
     }
   ]

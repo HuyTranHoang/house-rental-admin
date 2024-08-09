@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { getRoomTypeById, RoomTypeField } from '../api/roomType.api.ts'
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { CityField } from '../api/city.api.ts'
-import { useCreateRoomType, useUpdateRoomType } from './useRoomTypes.ts'
+import { useCreateRoomType, useUpdateRoomType } from '../../hooks/useRoomTypes.ts'
 
 function AddUpdateRoomType() {
   const match = useMatch('/roomType/add')

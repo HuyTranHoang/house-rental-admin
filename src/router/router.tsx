@@ -8,6 +8,7 @@ import amenityRouter from './amenityRouter.tsx'
 import cityRouter from './cityRouter.tsx'
 import roomTypeRouter from './roomTypeRouter.tsx'
 import reportRouter from './reportRouter.tsx'
+import roleRouter from './roleRouter.tsx'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,8 @@ const router = createBrowserRouter([
           ...amenityRouter // /amenity, /amenity/add, /amenity/:id:edit
           ,
           ...reportRouter // /report
+          ,
+          ...roleRouter // /role
         ] // End of ProtectedRoute children
       }
     ] // End of AppLayout children

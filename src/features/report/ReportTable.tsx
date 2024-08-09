@@ -1,20 +1,20 @@
 import {
   Badge,
-  Button,
+  Button, Col,
   ConfigProvider,
   Descriptions,
-  DescriptionsProps,
-  Modal,
+  DescriptionsProps, Image,
+  Modal, Row,
   Space,
   Table,
   TablePaginationConfig,
   TableProps,
-  Tag
+  Tag, Typography
 } from 'antd'
 import React, { useState } from 'react'
-import { Report as ReportType, ReportCategory, ReportStatus } from '../../models/report.type.ts'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
-import { useUpdateReportStatus } from './useReports.ts'
+import { Report, Report as ReportType, ReportCategory, ReportStatus } from '../../models/report.type.ts'
+import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
+import { useUpdateReportStatus } from '../../hooks/useReports.ts'
 import { useQuery } from '@tanstack/react-query'
 import { getPropertyById } from '../api/property.api.ts'
 import { formatCurrency } from '../../utils/formatCurrentcy.ts'
@@ -32,6 +32,14 @@ interface ReportTableProps {
   status: ReportStatus
 }
 
+const categoryMap = {
+  [ReportCategory.SCAM]: ['Lừa đảo', 'magenta'],
+  [ReportCategory.INAPPROPRIATE_CONTENT]: ['Nội dung không phù hợp', 'red'],
+  [ReportCategory.DUPLICATE]: ['Trùng lặp', 'volcano'],
+  [ReportCategory.MISINFORMATION]: ['Thông tin sai lệch', 'orange'],
+  [ReportCategory.OTHER]: ['Khác', 'gold']
+}
+
 function ReportTable({
                        dataSource,
                        loading,
@@ -42,6 +50,7 @@ function ReportTable({
 
 
   const [propertyId, setPropertyId] = useState<number>(0)
+  const [report, setReport] = useState<Report>({} as Report)
   const [open, setOpen] = useState(false)
   const { updateReportStatusMutate, updateReportStatusPending } = useUpdateReportStatus()
 
@@ -51,30 +60,66 @@ function ReportTable({
     enabled: !!propertyId
   })
 
+  const ModalFooter = (
+    <Space>
+      {status === ReportStatus.PENDING && (
+        <>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#00b96b'
+              }
+            }}
+          >
+            <Button loading={updateReportStatusPending}
+                    onClick={() => {
+                      updateReportStatusMutate({ id: report.id, status: ReportStatus.APPROVED })
+                      setOpen(false)
+                    }}
+                    icon={<CheckOutlined />}
+                    type="primary">
+              Duyệt, khóa bài đăng
+            </Button>
+          </ConfigProvider>
+          <Button loading={updateReportStatusPending}
+                  onClick={() => {
+                    updateReportStatusMutate({ id: report.id, status: ReportStatus.REJECTED })
+                    setOpen(false)
+                  }}
+                  icon={<CloseOutlined />}
+                  danger>
+            Từ chối, giữ bài đăng
+          </Button>
+        </>
+      )}
+      <Button onClick={() => setOpen(false)}>Quay lại</Button>
+    </Space>
+  )
+
 
   const modalItems: DescriptionsProps['items'] = [
     {
-      key: '1',
+      key: 'roomType',
       label: 'Loại phòng',
       children: propertyData?.roomTypeName
     },
     {
-      key: '2',
+      key: 'city',
       label: 'Thành phố',
       children: propertyData?.cityName
     },
     {
-      key: '3',
+      key: 'district',
       label: 'Quận huyện',
       children: propertyData?.districtName
     },
     {
-      key: '4',
+      key: 'price',
       label: 'Giá thuê',
       children: propertyData ? formatCurrency(propertyData.price) : ''
     },
     {
-      key: '5',
+      key: 'location',
       label: 'Địa chỉ',
       children: propertyData?.location,
       span: 2
@@ -89,17 +134,17 @@ function ReportTable({
       span: 3
     },
     {
-      key: '7',
+      key: 'area',
       label: 'Diện tích',
       children: `${propertyData?.area} m²`
     },
     {
-      key: '8',
+      key: 'numRooms',
       label: 'Số phòng ngủ',
       children: propertyData?.numRooms
     },
     {
-      key: '9',
+      key: 'createdAt',
       label: 'Thời gian đăng',
       children: customFormatDate(propertyData?.createdAt)
     },
@@ -110,7 +155,7 @@ function ReportTable({
       children: propertyData?.userName
     },
     {
-      key: '10',
+      key: 'amenities',
       label: 'Tiện ích',
       span: 2,
       children: (
@@ -124,16 +169,54 @@ function ReportTable({
       )
     },
     {
-      key: '11',
+      key: 'description',
       label: 'Mô tả',
       span: 3,
-      children: propertyData?.description
+      children: <>
+        <Typography.Title level={5} style={{ margin: '0 0 12px' }}>{propertyData?.title}</Typography.Title>
+        {propertyData?.description}
+      </>
     },
     {
-      key: '12',
-      label: 'Hình ảnh',
-      children: 'Hình ảnh'
+      key: 'images',
+      label: `Hình ảnh (${propertyData?.propertyImages.length})`,
+      children: <Row gutter={[16, 16]}>
+        <Image.PreviewGroup>
+          {propertyData?.propertyImages.map((image, index) => (
+            <Col key={index} span={6}>
+              <Image preview={{ mask: <><EyeOutlined style={{ marginRight: 6 }} /> Chi tiết</> }}
+                     height={200} width={200} src={image} style={{ objectFit: 'cover' }} />
+            </Col>
+          ))}
+        </Image.PreviewGroup>
+      </Row>
     }
+  ]
+
+  const modalReportItems: DescriptionsProps['items'] = [
+    {
+      key: 'usernameReport',
+      label: 'Tên tài khoản',
+      children: report.username
+    },
+    {
+      key: 'category',
+      label: 'Loại báo cáo',
+      children: categoryMap[report.category][0],
+      span: 2
+    },
+    {
+      key: 'reason',
+      label: 'Lý do',
+      children: report.reason,
+      span: 3
+    },
+    {
+      key: 'createdAt',
+      label: 'Thời gian báo cáo',
+      children: report.createdAt
+    }
+
   ]
 
   const columns: TableProps<DataSourceType>['columns'] = [
@@ -159,6 +242,7 @@ function ReportTable({
         <Button onClick={() => {
           setOpen(!open)
           setPropertyId(record.propertyId)
+          setReport(record)
         }} type="link">{text}</Button>
     },
     {
@@ -179,13 +263,6 @@ function ReportTable({
         { text: 'Khác', value: ReportCategory.OTHER }
       ],
       render: (category: ReportCategory) => {
-        const categoryMap = {
-          [ReportCategory.SCAM]: ['Lừa đảo', 'magenta'],
-          [ReportCategory.INAPPROPRIATE_CONTENT]: ['Nội dung không phù hợp', 'red'],
-          [ReportCategory.DUPLICATE]: ['Trùng lặp', 'volcano'],
-          [ReportCategory.MISINFORMATION]: ['Thông tin sai lệch', 'orange'],
-          [ReportCategory.OTHER]: ['Khác', 'gold']
-        }
         const [text, color] = categoryMap[category]
         return <Tag color={color}>{text}</Tag>
       }
@@ -219,29 +296,14 @@ function ReportTable({
       title: 'Hành động',
       key: 'action',
       fixed: 'right',
-      width: 200,
+      width: 120,
       render: (_, record) => (
         <Space>
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: '#00b96b'
-              }
-            }}
-          >
-            <Button loading={updateReportStatusPending}
-                    onClick={() => updateReportStatusMutate({ id: record.id, status: ReportStatus.APPROVED })}
-                    icon={<CheckOutlined />}
-                    type="primary">
-              Duyệt
-            </Button>
-          </ConfigProvider>
-          <Button loading={updateReportStatusPending}
-                  onClick={() => updateReportStatusMutate({ id: record.id, status: ReportStatus.REJECTED })}
-                  icon={<CloseOutlined />}
-                  danger>
-            Từ chối
-          </Button>
+          <Button type="primary" onClick={() => {
+            setOpen(!open)
+            setPropertyId(record.propertyId)
+            setReport(record)
+          }}>Xét duyệt</Button>
         </Space>
       )
     })
@@ -285,12 +347,19 @@ function ReportTable({
       {
         propertyData && <Modal
           open={open}
-          onOk={() => setOpen(false)}
+          footer={ModalFooter}
           onCancel={() => setOpen(false)}
           loading={propertyIsLoading}
           width={1000}
         >
-          <Descriptions title={propertyData.title} bordered items={modalItems} />
+          <Typography.Title level={4}>Chi tiết bài đăng</Typography.Title>
+
+          <Descriptions bordered items={modalItems} />
+
+          <Typography.Title level={4}>Nội dung báo cáo</Typography.Title>
+
+          <Descriptions bordered items={modalReportItems} />
+
         </Modal>
       }
     </>

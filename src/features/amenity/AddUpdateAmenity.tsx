@@ -5,7 +5,7 @@ import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
 import { AmenityField, getAmenityById } from '../api/amenity.api.ts'
 
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb'
-import { useCreateAmenity, useUpdateAmenity } from './useAmenities.ts'
+import { useCreateAmenity, useUpdateAmenity } from '../../hooks/useAmenities.ts'
 
 function AddUpdateAmenity() {
   const match = useMatch('/amenity/add')

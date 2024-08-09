@@ -5,7 +5,7 @@ import {
   deleteRoomTypes,
   getAllRoomTypesWithPagination,
   updateRoomType
-} from '../api/roomType.api.ts'
+} from '../features/api/roomType.api.ts'
 import { toast } from 'sonner'
 import axios from 'axios'
 import React from 'react'

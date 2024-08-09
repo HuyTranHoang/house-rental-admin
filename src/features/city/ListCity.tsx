@@ -5,7 +5,7 @@ import { customFormatDate } from '../../utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 
 import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
-import { useCities, useDeleteMultiCity } from './useCities.ts'
+import { useCities, useDeleteMultiCity } from '../../hooks/useCities.ts'
 import CityTable from './CityTable.tsx'
 import { City } from '../../models/city.type.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'

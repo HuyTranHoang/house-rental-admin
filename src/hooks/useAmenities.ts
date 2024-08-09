@@ -5,7 +5,7 @@ import {
   deleteAmenity,
   getAllAmenitiesWithPagination,
   updateAmenity
-} from '../api/amenity.api.ts'
+} from '../features/api/amenity.api.ts'
 import { toast } from 'sonner'
 import axios from 'axios'
 import React from 'react'
