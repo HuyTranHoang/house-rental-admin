@@ -92,7 +92,6 @@ function ListReport() {
           <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm theo tên tài khoản"
                   style={{ width: 250 }} />
         </Flex>
-
       </Flex>
 
 
