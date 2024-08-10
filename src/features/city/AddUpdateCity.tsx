@@ -30,10 +30,6 @@ function AddUpdateCity() {
     }
   }
 
-  const onFinishFailed: FormProps<CityField>['onFinishFailed'] = (errorInfo) => {
-    console.log('Failed:', errorInfo)
-  }
-
   const { data: cityUpdateData, isLoading } = useQuery({
     queryKey: ['city', id],
     queryFn: () => getCityById(Number(id)),
@@ -64,7 +60,6 @@ function AddUpdateCity() {
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600, marginTop: 32 }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item<CityField>

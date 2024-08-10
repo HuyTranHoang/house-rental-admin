@@ -2,6 +2,12 @@ import { Role } from '../../models/role.type.ts'
 import axiosInstance from '../../axiosInstance.ts'
 import { PageInfo } from '../../models/pageInfo.type.ts'
 
+export interface RoleField {
+  id?: number
+  name: string
+  authorityPrivileges: string[]
+}
+
 interface RolesWithPagination {
   pageInfo: PageInfo
   data: Role[]
@@ -44,4 +50,8 @@ export const getAllRolesWithPagination = async (search: string,
     console.error(error)
     throw new Error('Lấy danh sách vai trò thất bại')
   }
+}
+
+export const addRole = async (values: RoleField) => {
+  await axiosInstance.post('/api/roles', values)
 }
