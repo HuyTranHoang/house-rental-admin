@@ -10,7 +10,7 @@ import roomTypeRouter from './roomTypeRouter.tsx'
 import reportRouter from './reportRouter.tsx'
 import roleRouter from './roleRouter.tsx'
 
-const router = createBrowserRouter([
+export const routerList = [
   {
     element: <AppLayout />,
     children: [
@@ -19,7 +19,8 @@ const router = createBrowserRouter([
         children: [
           {
             path: '/',
-            element: <Dashboard />
+            element: <Dashboard />,
+            breadcrumb: 'Tổng quan'
           },
           ...cityRouter // /city, /city/add, /city/:id/edit
           ,
@@ -42,6 +43,8 @@ const router = createBrowserRouter([
     path: '*',
     element: <div>Page Not Found</div>
   }
-])
+]
+
+const router = createBrowserRouter(routerList)
 
 export default router

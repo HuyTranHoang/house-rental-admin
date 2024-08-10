@@ -3,12 +3,10 @@ import Search from 'antd/lib/input/Search'
 import React, { useState } from 'react'
 import { Report as ReportType, ReportStatus } from '../../models/report.type.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
 import { useReports } from '../../hooks/useReports.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 import ReportTable from './ReportTable.tsx'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { useQueryClient } from '@tanstack/react-query'
 
 type DataSourceType = ReportType & {
@@ -84,11 +82,6 @@ function ListReport() {
       createdAt: customFormatDate(report.createdAt)
     }))
     : []
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: 'Danh sách thành phố' }
-  ])
 
   if (isError) {
     return <ErrorFetching />

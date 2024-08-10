@@ -1,14 +1,8 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import {
-  BarChartOutlined,
-  createFromIconfontCN,
-  HomeOutlined,
-  SolutionOutlined, UserOutlined
-} from '@ant-design/icons'
-import { Breadcrumb, Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
+import { BarChartOutlined, createFromIconfontCN, HomeOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons'
+import { Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
-import { useSelector } from 'react-redux'
-import { selectUi } from './uiSlice.ts'
+import CustomBreadcrumbs from '../components/CustomBreadcrumbs.tsx'
 
 const { Header, Content, Sider } = Layout
 
@@ -20,7 +14,7 @@ const IconFont = createFromIconfontCN({
 function AppLayout() {
 
   const navigate = useNavigate()
-  const { breadcrumb } = useSelector(selectUi)
+
 
   const {
     token: { colorBgContainer, borderRadiusLG }
@@ -99,7 +93,7 @@ function AppLayout() {
           key: 'userRole-role',
           label: 'Quản lý vai trò',
           onClick: () => navigate('/role')
-        },
+        }
       ]
     }
   ]
@@ -107,14 +101,14 @@ function AppLayout() {
   return (
     <Layout>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
-        <Flex align='center'>
+        <Flex align="center">
           <img src="/logo1.png" alt="Mogu logo" style={{ width: 30 }} />
           <Typography.Title level={4} style={{ color: 'white', margin: '0 12px' }}>Trang quản trị</Typography.Title>
         </Flex>
       </Header>
       <Layout>
         <Sider width={260} style={{ background: colorBgContainer }}>
-          <Flex justify='center' align='center' style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
+          <Flex justify="center" align="center" style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
             <img src="/LOGO_TEXT.png" alt="Mogu logo" style={{ width: 100 }} />
           </Flex>
           <Menu
@@ -126,7 +120,7 @@ function AppLayout() {
           />
         </Sider>
         <Layout style={{ padding: '0 24px' }}>
-          <Breadcrumb items={breadcrumb} style={{ margin: '16px 0' }} />
+          <CustomBreadcrumbs />
           <Content
             style={{
               padding: 24,

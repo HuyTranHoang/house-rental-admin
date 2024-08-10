@@ -197,24 +197,24 @@ function ReportTable({
     {
       key: 'usernameReport',
       label: 'Tên tài khoản',
-      children: report.username
+      children: report?.username
     },
     {
       key: 'category',
       label: 'Loại báo cáo',
-      children: categoryMap[report.category][0],
+      children: report.category,
       span: 2
     },
     {
       key: 'reason',
       label: 'Lý do',
-      children: report.reason,
+      children: report?.reason,
       span: 3
     },
     {
       key: 'createdAt',
       label: 'Thời gian báo cáo',
-      children: report.createdAt
+      children: report?.createdAt
     }
 
   ]
@@ -358,7 +358,9 @@ function ReportTable({
 
           <Typography.Title level={4}>Nội dung báo cáo</Typography.Title>
 
-          <Descriptions bordered items={modalReportItems} />
+          {
+            report && <Descriptions bordered items={modalReportItems} />
+          }
 
         </Modal>
       }

@@ -1,9 +1,8 @@
-import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
+import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
 import { useState } from 'react'
 import { getRoomTypeById, RoomTypeField } from '../api/roomType.api.ts'
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { CityField } from '../api/city.api.ts'
 import { useCreateRoomType, useUpdateRoomType } from '../../hooks/useRoomTypes.ts'
 
@@ -44,12 +43,6 @@ function AddUpdateRoomType() {
     form.setFieldValue('id', roomTypeUpdateData.id)
     form.setFieldValue('name', roomTypeUpdateData.name)
   }
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: <Link to={'/roomType'}>Danh sách loại phòng</Link> },
-    { title: title }
-  ])
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />

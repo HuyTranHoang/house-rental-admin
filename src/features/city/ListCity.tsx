@@ -1,10 +1,8 @@
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
-
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 import { useCities, useDeleteMultiCity } from '../../hooks/useCities.ts'
 import CityTable from './CityTable.tsx'
 import { City } from '../../models/city.type.ts'
@@ -66,11 +64,6 @@ function ListCity() {
       setDeleteIdList(selectedIdList)
     }
   }
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: 'Danh sách thành phố' }
-  ])
 
   if (isError) {
     return <ErrorFetching />

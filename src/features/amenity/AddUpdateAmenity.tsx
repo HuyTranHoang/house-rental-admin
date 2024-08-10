@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, FormProps, Input, Spin, Typography } from 'antd'
 import { useState } from 'react'
-import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
+import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { AmenityField, getAmenityById } from '../api/amenity.api.ts'
-
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb'
 import { useCreateAmenity, useUpdateAmenity } from '../../hooks/useAmenities.ts'
 
 function AddUpdateAmenity() {
@@ -40,12 +38,6 @@ function AddUpdateAmenity() {
     form.setFieldValue('id', amenityUpdateData.id)
     form.setFieldValue('name', amenityUpdateData.name)
   }
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: <Link to={'/amenity'}>Danh sách tiện nghi</Link> },
-    { title: title }
-  ])
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />

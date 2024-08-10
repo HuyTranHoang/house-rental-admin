@@ -1,5 +1,4 @@
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
@@ -64,11 +63,6 @@ function ListRoomType() {
       setDeleteIdList(selectedIdList)
     }
   }
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: 'Danh sách loại phòng' }
-  ])
 
   if (isError) {
     return <ErrorFetching />

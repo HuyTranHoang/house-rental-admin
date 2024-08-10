@@ -1,8 +1,7 @@
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
 import React, { useLayoutEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb'
 import { useAmenities, useDeleteMultiAmenity } from '../../hooks/useAmenities.ts'
 import AmenityTable from './AmenityTable.tsx'
 import { Amenity } from '../../models/amenity.type.ts'
@@ -63,10 +62,6 @@ function ListAmenity() {
     }
   }
 
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: 'Danh sách tiện nghi' }
-  ])
   useLayoutEffect(() => {
 
   }, [])

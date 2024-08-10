@@ -1,9 +1,8 @@
-import { Button, Flex, Typography, Form, Input, Spin } from 'antd'
-import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
 import type { FormProps } from 'antd'
+import { Button, Flex, Form, Input, Spin, Typography } from 'antd'
+import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { CityField, getCityById } from '../api/city.api.ts'
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
 
 import { useState } from 'react'
 import { useCreateCity, useUpdateCity } from '../../hooks/useCities.ts'
@@ -45,12 +44,6 @@ function AddUpdateCity() {
     form.setFieldValue('id', cityUpdateData.id)
     form.setFieldValue('name', cityUpdateData.name)
   }
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: <Link to={'/city'}>Danh sách thành phố</Link> },
-    { title: title }
-  ])
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />
