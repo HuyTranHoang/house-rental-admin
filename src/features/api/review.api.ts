@@ -24,11 +24,12 @@ export const getAllReviewsWithPagination = async (
         sortBy
         }
 
-        const response = await axios.get<Review[]>('/api/review', { params })
+        const response = await axios.get<ReviewWithPagination[]>('/api/review', { params })
 
         await delay(300)
 
         if (response.status === 200) {
+            // console.log(response.data)
             return response.data
         }
     } catch (error) {

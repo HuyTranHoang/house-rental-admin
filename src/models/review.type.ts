@@ -5,7 +5,7 @@ export interface Review {
     propertyId: number
     propertyTitle: string
     userId: number
-    username: string
+    userName: string
     // createdAt: string
     // updatedAt: string
 }
