@@ -7,17 +7,17 @@ const amenityRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: '/amenity',
     element: <ListAmenity />,
-    breadcrumb: 'Danh sách tiện ích'
+    breadcrumb: 'Danh sách tiện nghi'
   },
   {
     path: '/amenity/add',
     element: <AddUpdateAmenity />,
-    breadcrumb: 'Thêm mới tiện ích'
+    breadcrumb: 'Thêm mới tiện nghi'
   },
   {
     path: '/amenity/:id/edit',
     element: <AddUpdateAmenity />,
-    breadcrumb: 'Cập nhật tiện ích'
+    breadcrumb: ({match}) => `Cập nhật tiện nghi / ${match.params.id}`
   }
 ]
 

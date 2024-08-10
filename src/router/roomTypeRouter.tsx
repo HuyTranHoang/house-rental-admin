@@ -17,7 +17,7 @@ const roomTypeRouter: RouteObject[] & BreadcrumbsRoute[]  = [
   {
     path: '/roomType/:id/edit',
     element: <AddUpdateRoomType />,
-    breadcrumb: 'Cập nhật loại phòng'
+    breadcrumb: ({match}) => `Cập nhật loại phòng / ${match.params.id}`
   }
 ]
 

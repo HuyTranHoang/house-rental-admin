@@ -17,7 +17,7 @@ const cityRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: '/city/:id/edit',
     element: <AddUpdateCity />,
-    breadcrumb: 'Cập nhật thành phố'
+    breadcrumb: ({match}) => `Cập nhật thành phố / ${match.params.id}`
   }
 ]
 
