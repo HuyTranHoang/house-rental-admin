@@ -1,17 +1,13 @@
 import { Divider, Flex, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import Search from 'antd/lib/input/Search'
-import React, { useState } from 'react'
-import { Report as ReportType, ReportStatus } from '../../models/report.type.ts'
+import { useState } from 'react'
+import { Report as ReportType, ReportDataSource, ReportStatus } from '../../models/report.type.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { useReports } from '../../hooks/useReports.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 import ReportTable from './ReportTable.tsx'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
 import { useQueryClient } from '@tanstack/react-query'
-
-type DataSourceType = ReportType & {
-  key: React.Key
-}
 
 const tabsItem: TabsProps['items'] = [
   {
@@ -50,7 +46,7 @@ function ListReport() {
     queryClient.invalidateQueries({ queryKey: ['reports'] })
   }
 
-  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, filters, sorter) => {
+  const handleTableChange: TableProps<ReportDataSource>['onChange'] = (_, filters, sorter) => {
     if (Array.isArray(sorter)) {
       setSortBy('createdAtDesc')
     } else {
@@ -68,7 +64,7 @@ function ListReport() {
     }
   }
 
-  const dataSource: DataSourceType[] = data
+  const dataSource: ReportDataSource[] = data
     ? data.data.map((report: ReportType) => ({
       key: report.id,
       id: report.id,

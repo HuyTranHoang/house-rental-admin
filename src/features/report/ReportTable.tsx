@@ -1,18 +1,22 @@
 import {
   Badge,
-  Button, Col,
+  Button,
+  Col,
   ConfigProvider,
   Descriptions,
-  DescriptionsProps, Image,
-  Modal, Row,
+  DescriptionsProps,
+  Image,
+  Modal,
+  Row,
   Space,
   Table,
   TablePaginationConfig,
   TableProps,
-  Tag, Typography
+  Tag,
+  Typography
 } from 'antd'
-import React, { useState } from 'react'
-import { Report, Report as ReportType, ReportCategory, ReportStatus } from '../../models/report.type.ts'
+import { useState } from 'react'
+import { Report, ReportCategory, ReportDataSource, ReportStatus } from '../../models/report.type.ts'
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
 import { useUpdateReportStatus } from '../../hooks/useReports.ts'
 import { useQuery } from '@tanstack/react-query'
@@ -20,15 +24,11 @@ import { getPropertyById } from '../api/property.api.ts'
 import { formatCurrency } from '../../utils/formatCurrentcy.ts'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
 
-type DataSourceType = ReportType & {
-  key: React.Key;
-}
-
 interface ReportTableProps {
-  dataSource: DataSourceType[];
+  dataSource: ReportDataSource[];
   loading: boolean;
   paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<DataSourceType>['onChange'];
+  handleTableChange: TableProps<ReportDataSource>['onChange'];
   status: ReportStatus
 }
 
@@ -219,7 +219,7 @@ function ReportTable({
 
   ]
 
-  const columns: TableProps<DataSourceType>['columns'] = [
+  const columns: TableProps<ReportDataSource>['columns'] = [
     {
       title: '#',
       dataIndex: 'id',

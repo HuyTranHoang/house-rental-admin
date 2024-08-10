@@ -1,3 +1,5 @@
+import React from 'react'
+
 export interface Report {
   id: number
   userId: number
@@ -8,6 +10,10 @@ export interface Report {
   category: ReportCategory
   status: ReportStatus
   createdAt: string
+}
+
+export type ReportDataSource = Report & {
+  key: React.Key
 }
 
 export enum ReportStatus {

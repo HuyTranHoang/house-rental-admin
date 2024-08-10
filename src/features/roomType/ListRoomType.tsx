@@ -6,14 +6,11 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { useDeleteRoomTypes, useRoomTypes } from '../../hooks/useRoomTypes.ts'
 import RoomTypeTable from './RoomTypeTable.tsx'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
-import { RoomType } from '../../models/roomType.type.ts'
 import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
+import { RoomTypeDataSource } from '../../models/roomType.type.ts'
+import { TableRowSelection } from 'antd/es/table/interface'
 
 const { Search } = Input
-
-type DataSourceType = RoomType & {
-  key: React.Key
-}
 
 function ListRoomType() {
 
@@ -31,24 +28,20 @@ function ListRoomType() {
 
   const handleDelete = () => {
     showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các loại phòng', () => {
-      deleteRoomTypesMutate(deleteIdList);
-      setDeleteIdList([]);
-    });
-  };
+      deleteRoomTypesMutate(deleteIdList)
+      setDeleteIdList([])
+    })
+  }
 
-  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
-    if (Array.isArray(sorter)) {
-      setSortBy('createdAtDesc')
-    } else {
-      if (sorter.order) {
-        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-        setSortBy(`${sorter.field}${order}`)
-      }
+  const handleTableChange: TableProps<RoomTypeDataSource>['onChange'] = (_, __, sorter) => {
+    if (!Array.isArray(sorter) && sorter.order) {
+      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+      setSortBy(`${sorter.field}${order}`)
     }
   }
 
 
-  const dataSource: DataSourceType[] = data
+  const dataSource: RoomTypeDataSource[] = data
     ? data.data.map((roomType) => ({
       key: roomType.id,
       id: roomType.id,
@@ -57,8 +50,9 @@ function ListRoomType() {
     }))
     : []
 
-  const rowSelection = {
-    onChange: (_selectedRowKeys: React.Key[], selectedRows: DataSourceType[]) => {
+  const rowSelection: TableRowSelection<RoomTypeDataSource> | undefined = {
+    type: 'checkbox',
+    onChange: (_selectedRowKeys: React.Key[], selectedRows: RoomTypeDataSource[]) => {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
@@ -102,10 +96,7 @@ function ListRoomType() {
           onChange: (page) => setPageNumber(page)
         }}
         handleTableChange={handleTableChange}
-        rowSelection={{
-          type: 'checkbox',
-          ...rowSelection
-        }}
+        rowSelection={rowSelection}
       />
     </>
   )

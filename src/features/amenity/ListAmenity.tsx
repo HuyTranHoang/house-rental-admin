@@ -1,19 +1,16 @@
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { useAmenities, useDeleteMultiAmenity } from '../../hooks/useAmenities.ts'
 import AmenityTable from './AmenityTable.tsx'
-import { Amenity } from '../../models/amenity.type.ts'
+import { Amenity, AmenityDataSource } from '../../models/amenity.type.ts'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
+import { TableRowSelection } from 'antd/es/table/interface'
 
 const { Search } = Input
-
-type DataSourceType = Amenity & {
-  key: React.Key
-}
 
 function ListAmenity() {
   const navigate = useNavigate()
@@ -30,23 +27,19 @@ function ListAmenity() {
 
   const handleDelete = () => {
     showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các tiện nghi', () => {
-      deleteAmenitiesMutate(deleteIdList);
-      setDeleteIdList([]);
-    });
-  };
+      deleteAmenitiesMutate(deleteIdList)
+      setDeleteIdList([])
+    })
+  }
 
-  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
-    if (Array.isArray(sorter)) {
-      setSortBy('createdAtDesc')
-    } else {
-      if (sorter.order) {
-        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-        setSortBy(`${sorter.field}${order}`)
-      }
+  const handleTableChange: TableProps<AmenityDataSource>['onChange'] = (_, __, sorter) => {
+    if (!Array.isArray(sorter) && sorter.order) {
+      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+      setSortBy(`${sorter.field}${order}`)
     }
   }
 
-  const dataSource: DataSourceType[] = data
+  const dataSource: AmenityDataSource[] = data
     ? data.data.map((amenity: Amenity) => ({
       key: amenity.id,
       id: amenity.id,
@@ -55,16 +48,14 @@ function ListAmenity() {
     }))
     : []
 
-  const rowSelection = {
-    onChange: (_selectedRowKeys: React.Key[], selectedRows: DataSourceType[]) => {
+  const rowSelection: TableRowSelection<AmenityDataSource> | undefined = {
+    type: 'checkbox',
+    onChange: (_selectedRowKeys: React.Key[], selectedRows: AmenityDataSource[]) => {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
   }
 
-  useLayoutEffect(() => {
-
-  }, [])
   if (isError) {
     return <ErrorFetching />
   }
@@ -106,10 +97,7 @@ function ListAmenity() {
           onChange: (page) => setPageNumber(page)
         }}
         handleTableChange={handleTableChange}
-        rowSelection={{
-          type: 'checkbox',
-          ...rowSelection
-        }}
+        rowSelection={rowSelection}
       />
     </>
   )

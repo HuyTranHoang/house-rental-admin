@@ -1,5 +1,4 @@
-import { City } from '../../models/city.type.ts'
-import React from 'react'
+import { CityDataSource } from '../../models/city.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -10,16 +9,12 @@ import TableActions from '../../components/TableActions.tsx'
 
 const { confirm } = Modal
 
-type DataSourceType = City & {
-  key: React.Key;
-}
-
 interface CityTableProps {
-  dataSource: DataSourceType[];
+  dataSource: CityDataSource[];
   loading: boolean;
   paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<DataSourceType>['onChange'];
-  rowSelection: TableRowSelection<DataSourceType> | undefined
+  handleTableChange: TableProps<CityDataSource>['onChange'];
+  rowSelection: TableRowSelection<CityDataSource> | undefined
 }
 
 function CityTable({
@@ -32,7 +27,7 @@ function CityTable({
   const navigate = useNavigate()
   const { deleteCityMutate } = useDeleteCity()
 
-  const showDeleteConfirm = (record: DataSourceType) => {
+  const showDeleteConfirm = (record: CityDataSource) => {
 
     const items: DescriptionsProps['items'] = [
       {
@@ -69,7 +64,7 @@ function CityTable({
     })
   }
 
-  const columns: TableProps<DataSourceType>['columns'] = [
+  const columns: TableProps<CityDataSource>['columns'] = [
     {
       title: '#',
       dataIndex: 'id',
@@ -107,7 +102,7 @@ function CityTable({
     <Table
       dataSource={dataSource}
       columns={columns}
-      rowSelection={{ ...rowSelection }}
+      rowSelection={rowSelection}
       pagination={{
         position: ['bottomCenter'],
         pageSizeOptions: ['5', '10', '20'],
