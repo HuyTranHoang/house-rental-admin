@@ -1,7 +1,8 @@
 import AddUpdateAmenity from '../features/amenity/AddUpdateAmenity.tsx'
 import ListAmenity from '../features/amenity/ListAmenity.tsx'
+import { RouteObject } from 'react-router-dom'
 
-const amenityRouter = [
+const amenityRouter: RouteObject[] = [
   {
     path: '/amenity',
     element: <ListAmenity />

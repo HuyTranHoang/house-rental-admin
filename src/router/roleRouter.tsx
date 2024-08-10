@@ -1,6 +1,7 @@
 import ListRole from '../features/role/ListRole.tsx'
+import { RouteObject } from 'react-router-dom'
 
-const roleRouter = [
+const roleRouter: RouteObject[] = [
   {
     path: '/role',
     element: <ListRole />

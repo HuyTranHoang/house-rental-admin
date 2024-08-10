@@ -1,7 +1,8 @@
 import ListRoomType from '../features/roomType/ListRoomType.tsx'
 import AddUpdateRoomType from '../features/roomType/AddUpdateRoomType.tsx'
+import { RouteObject } from 'react-router-dom'
 
-const roomTypeRouter = [
+const roomTypeRouter: RouteObject[] = [
   {
     path: '/roomType',
     element: <ListRoomType />
