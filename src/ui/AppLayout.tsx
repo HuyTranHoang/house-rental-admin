@@ -81,7 +81,7 @@ function AppLayout() {
         {
           key: 'reportReview-review',
           label: 'Quản lý đánh giá',
-          onClick: () => alert('Chưa làm')
+          onClick: () => navigate('/review')
         }
       ]
     },
