@@ -7,6 +7,7 @@ import { CityDataSource } from '../../models/city.type.ts'
 import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
 import { authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
+import { useDeleteRole } from '../../hooks/useRoles.ts'
 
 const { confirm } = Modal
 
@@ -26,6 +27,8 @@ function RoleTable({
                      rowSelection
                    }: RoleTableProps) {
   const navigate = useNavigate()
+
+  const { deleteRoleMutate } = useDeleteRole()
 
   const showDeleteConfirm = (record: CityDataSource) => {
 
@@ -59,8 +62,7 @@ function RoleTable({
       cancelText: 'Hủy',
       maskClosable: true,
       onOk() {
-        alert('Chưa có làm =))')
-        // deleteCityMutate(record.id)
+        deleteRoleMutate(record.id)
       }
     })
   }
@@ -106,7 +108,8 @@ function RoleTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(`/role/${record.id}/edit`)}
+        <TableActions disabled={record.name === 'ROLE_ADMIN'}
+                      onUpdate={() => navigate(`/role/${record.id}/edit`)}
                       onDelete={() => showDeleteConfirm(record)} />
       )
     }

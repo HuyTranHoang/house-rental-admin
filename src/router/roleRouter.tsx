@@ -13,6 +13,11 @@ const roleRouter: RouteObject[] & BreadcrumbsRoute[] = [
     path: '/role/add',
     element: <AddUpdateRole />,
     breadcrumb: 'Thêm vai trò'
+  },
+  {
+    path: '/role/:id/edit',
+    element: <AddUpdateRole />,
+    breadcrumb: ({match}) => `Cập nhật vai trò / ${match.params.id}`
   }
 ]
 

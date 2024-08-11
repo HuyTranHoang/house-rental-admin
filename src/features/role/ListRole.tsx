@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import RoleTable from './RoleTable.tsx'
-import { useRoles } from '../../hooks/useRoles.ts'
+import { useDeleteMultiRole, useRoles } from '../../hooks/useRoles.ts'
 import ErrorFetching from '../../components/ErrorFetching.tsx'
 import { customFormatDate } from '../../utils/customFormatDate.ts'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -24,10 +24,11 @@ function ListRole() {
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
   const { data, isLoading, isError } = useRoles(search, authorities, pageNumber, pageSize, sortBy)
+  const { deleteRolesMutate } = useDeleteMultiRole()
 
   const handleDelete = () => {
     showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các vai trò', () => {
-      // deleteCitiesMutate(deleteIdList)
+      deleteRolesMutate(deleteIdList)
       setDeleteIdList([])
     })
   }

@@ -7,10 +7,10 @@ export const authorityPrivilegesMap: { [key: string]: [string, string] } = {
   'property:update': ['Bất động sản: Sửa', 'magenta'],
   'property:create': ['Bất động sản: Thêm', 'magenta'],
   'property:delete': ['Bất động sản: Xóa', 'magenta'],
-  'review:read': ['Đánh giá: Xem', 'red'],
-  'review:update': ['Đánh giá: Sửa', 'red'],
-  'review:create': ['Đánh giá: Thêm', 'red'],
-  'review:delete': ['Đánh giá: Xóa', 'red'],
+  'review:read': ['Đánh giá: Xem', 'purple'],
+  'review:update': ['Đánh giá: Sửa', 'purple'],
+  'review:create': ['Đánh giá: Thêm', 'purple'],
+  'review:delete': ['Đánh giá: Xóa', 'purple'],
   'city:read': ['Thành phố: Xem', 'volcano'],
   'city:update': ['Thành phố: Sửa', 'volcano'],
   'city:create': ['Thành phố: Thêm', 'volcano'],
@@ -30,5 +30,6 @@ export const authorityPrivilegesMap: { [key: string]: [string, string] } = {
   'role:read': ['Vai trò: Xem', 'green'],
   'role:update': ['Vai trò: Sửa', 'green'],
   'role:create': ['Vai trò: Thêm', 'green'],
-  'role:delete': ['Vai trò: Xóa', 'green']
+  'role:delete': ['Vai trò: Xóa', 'green'],
+  'admin:all': ['Quản trị: Toàn quyền', 'red']
 }

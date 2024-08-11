@@ -52,6 +52,40 @@ export const getAllRolesWithPagination = async (search: string,
   }
 }
 
+export const getRoleById = async (id: number) => {
+  try {
+    const response = await axiosInstance.get<Role>(`/api/roles/${id}`)
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    console.error(error)
+    throw new Error('Lấy vai trò thất bại')
+  }
+}
+
 export const addRole = async (values: RoleField) => {
   await axiosInstance.post('/api/roles', values)
+}
+
+export const updateRole = async (values: RoleField) => {
+  await axiosInstance.put(`/api/roles/${values.id}`, values)
+}
+
+export const deleteRole = async (id: number) => {
+  try {
+    await axiosInstance.delete(`/api/roles/${id}`)
+  } catch (error) {
+    console.error(error)
+    throw new Error('Xóa vai trò thất bại')
+  }
+}
+
+export const deleteRoles = async (ids: number[]) => {
+  try {
+    await axiosInstance.delete('/api/roles/delete-multiple', { data: { ids } })
+  } catch (error) {
+    console.error(error)
+    throw new Error('Xóa các vai trò thất bại')
+  }
 }
