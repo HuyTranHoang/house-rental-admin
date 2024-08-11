@@ -4,7 +4,7 @@ import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { CityField, getCityById } from '../api/city.api.ts'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useCreateCity, useUpdateCity } from '../../hooks/useCities.ts'
 
 
@@ -36,10 +36,12 @@ function AddUpdateCity() {
     enabled: !isAddMode
   })
 
-  if (cityUpdateData) {
-    form.setFieldValue('id', cityUpdateData.id)
-    form.setFieldValue('name', cityUpdateData.name)
-  }
+  useEffect(() => {
+    if (cityUpdateData) {
+      form.setFieldValue('id', cityUpdateData.id)
+      form.setFieldValue('name', cityUpdateData.name)
+    }
+  }, [cityUpdateData, form])
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />

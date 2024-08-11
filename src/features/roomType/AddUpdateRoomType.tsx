@@ -1,7 +1,7 @@
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getRoomTypeById, RoomTypeField } from '../api/roomType.api.ts'
 import { CityField } from '../api/city.api.ts'
 import { useCreateRoomType, useUpdateRoomType } from '../../hooks/useRoomTypes.ts'
@@ -39,10 +39,12 @@ function AddUpdateRoomType() {
     enabled: !isAddMode
   })
 
-  if (roomTypeUpdateData) {
-    form.setFieldValue('id', roomTypeUpdateData.id)
-    form.setFieldValue('name', roomTypeUpdateData.name)
-  }
+  useEffect(() => {
+    if (roomTypeUpdateData) {
+      form.setFieldValue('id', roomTypeUpdateData.id)
+      form.setFieldValue('name', roomTypeUpdateData.name)
+    }
+  }, [form, roomTypeUpdateData])
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />

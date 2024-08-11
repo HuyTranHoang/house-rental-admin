@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, FormProps, Input, Spin, Typography } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { AmenityField, getAmenityById } from '../api/amenity.api.ts'
 import { useCreateAmenity, useUpdateAmenity } from '../../hooks/useAmenities.ts'
@@ -34,10 +34,12 @@ function AddUpdateAmenity() {
     enabled: !isAddMode
   })
 
-  if (amenityUpdateData) {
-    form.setFieldValue('id', amenityUpdateData.id)
-    form.setFieldValue('name', amenityUpdateData.name)
-  }
+  useEffect(() => {
+    if (amenityUpdateData) {
+      form.setFieldValue('id', amenityUpdateData.id)
+      form.setFieldValue('name', amenityUpdateData.name)
+    }
+  }, [amenityUpdateData, form])
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />
