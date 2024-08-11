@@ -16,7 +16,7 @@ function ListRole() {
   const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
-  const [authorities] = useState<string>('')
+  const [authorities, setAuthorities] = useState<string>('')
   const [sortBy, setSortBy] = useState('IdDesc')
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
@@ -33,10 +33,16 @@ function ListRole() {
     })
   }
 
-  const handleTableChange: TableProps<RoleDataSource>['onChange'] = (_, __, sorter) => {
+  const handleTableChange: TableProps<RoleDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
       setSortBy(`${sorter.field}${order}`)
+    }
+
+    if (filters.authorityPrivileges) {
+      setAuthorities(filters.authorityPrivileges.join(','))
+    } else {
+      setAuthorities('')
     }
   }
 

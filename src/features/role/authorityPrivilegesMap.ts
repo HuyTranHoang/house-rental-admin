@@ -33,3 +33,33 @@ export const authorityPrivilegesMap: { [key: string]: [string, string] } = {
   'role:delete': ['Vai trò: Xóa', 'green'],
   'admin:all': ['Quản trị: Toàn quyền', 'red']
 }
+
+interface AuthorityPrivilegesFilterMap {
+  text: string;
+  value: string;
+  children?: AuthorityPrivilegesFilterMap[];
+}
+
+
+const convertToFilterMap = (map: { [key: string]: [string, string] }): AuthorityPrivilegesFilterMap[] => {
+  const grouped: { [key: string]: AuthorityPrivilegesFilterMap } = {};
+
+  Object.keys(map).forEach(key => {
+    const [prefix] = map[key][0].split(': ');
+    if (!grouped[prefix]) {
+      grouped[prefix] = {
+        text: prefix,
+        value: prefix.toLowerCase().replace(/\s+/g, '_'),
+        children: []
+      };
+    }
+    grouped[prefix].children!.push({
+      text: map[key][0],
+      value: key
+    });
+  });
+
+  return Object.values(grouped);
+};
+
+export const authorityPrivilegesFilterMap: AuthorityPrivilegesFilterMap[] = convertToFilterMap(authorityPrivilegesMap);

@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom'
 import { CityDataSource } from '../../models/city.type.ts'
 import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
-import { authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
+import { authorityPrivilegesFilterMap, authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
 import { useDeleteRole } from '../../hooks/useRoles.ts'
+
 
 const { confirm } = Modal
 
@@ -85,6 +86,10 @@ function RoleTable({
       title: 'Quyền hạn',
       dataIndex: 'authorityPrivileges',
       key: 'authorityPrivileges',
+      filterSearch: true,
+      filterMode: 'tree',
+      filters: authorityPrivilegesFilterMap,
+      onFilter: (value, record) => record.authorityPrivileges.includes(value as string),
       render: (authorityPrivileges: string[]) => (
         <>
           {authorityPrivileges.map(authorityPrivilege => {
@@ -132,7 +137,11 @@ function RoleTable({
       locale={{
         triggerDesc: 'Sắp xếp giảm dần',
         triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp'
+        cancelSort: 'Hủy sắp xếp',
+        filterReset: 'Bỏ lọc',
+        filterConfirm: 'Lọc',
+        filterSearchPlaceholder: 'Tìm kiếm',
+        filterCheckall: 'Chọn tất cả'
       }}
     />
   )
