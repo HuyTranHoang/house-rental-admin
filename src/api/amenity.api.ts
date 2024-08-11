@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { Amenity } from '../../models/amenity.type.ts'
-import { PageInfo } from '../../models/pageInfo.type'
-import { delay } from '../../utils/delay'
-import axiosInstance from '../../axiosInstance'
+import { Amenity } from '@/models/amenity.type.ts'
+import { PageInfo } from '@/models/pageInfo.type.ts'
+import { delay } from '@/utils/delay.ts'
+import axiosInstance from '@/axiosInstance.ts'
 
 export interface AmenityField {
   id?: number

@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import RoleTable from './RoleTable.tsx'
-import { useDeleteMultiRole, useRoles } from '../../hooks/useRoles.ts'
-import ErrorFetching from '../../components/ErrorFetching.tsx'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
+import { useDeleteMultiRole, useRoles } from '@/hooks/useRoles.ts'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { Role, RoleDataSource } from '../../models/role.type.ts'
-import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
+import { Role, RoleDataSource } from '@/models/role.type.ts'
+import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 
 function ListRole() {
 

@@ -1,15 +1,15 @@
 import { Checkbox, Col, Flex, Form, FormProps, Input, Row, Spin, Typography } from 'antd'
 import { useSelector } from 'react-redux'
 import { loginFailure, loginRequest, loginSuccess, selectAuth } from './authSlice.ts'
-import { useAppDispatch } from '../../store.ts'
+import { useAppDispatch } from '@/store.ts'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { User } from '../../models/user.type.ts'
+import { User } from '@/models/user.type.ts'
 import { toast } from 'sonner'
 import axios from 'axios'
-import GradientButton from '../../components/GradientButton.tsx'
+import GradientButton from '@/components/GradientButton.tsx'
 import { AntDesignOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
-import { delay } from '../../utils/delay.ts'
+import { delay } from '@/utils/delay.ts'
 
 type FieldType = {
   username?: string;

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { IRootState } from '../../store.ts'
-import { User } from '../../models/user.type.ts'
+import { IRootState } from '@/store.ts'
+import { User } from '@/models/user.type.ts'
 
 
 interface IAuthState {

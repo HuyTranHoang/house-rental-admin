@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addRole, deleteRole, deleteRoles, getAllRolesWithPagination, updateRole } from '../features/api/role.api.ts'
+import { addRole, deleteRole, deleteRoles, getAllRolesWithPagination, updateRole } from '@/api/role.api.ts'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'

@@ -1,6 +1,6 @@
-import { Role } from '../../models/role.type.ts'
-import axiosInstance from '../../axiosInstance.ts'
-import { PageInfo } from '../../models/pageInfo.type.ts'
+import { Role } from '@/models/role.type.ts'
+import axiosInstance from '@/axiosInstance.ts'
+import { PageInfo } from '@/models/pageInfo.type.ts'
 
 export interface RoleField {
   id?: number

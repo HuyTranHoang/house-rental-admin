@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import React, { useState } from 'react'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useDeleteRoomTypes, useRoomTypes } from '../../hooks/useRoomTypes.ts'
+import { useDeleteRoomTypes, useRoomTypes } from '@/hooks/useRoomTypes.ts'
 import RoomTypeTable from './RoomTypeTable.tsx'
-import ErrorFetching from '../../components/ErrorFetching.tsx'
-import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
-import { RoomTypeDataSource } from '../../models/roomType.type.ts'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
+import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { TableRowSelection } from 'antd/es/table/interface'
 
 const { Search } = Input

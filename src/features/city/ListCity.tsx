@@ -1,13 +1,13 @@
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useCities, useDeleteMultiCity } from '../../hooks/useCities.ts'
+import { useCities, useDeleteMultiCity } from '@/hooks/useCities.ts'
 import CityTable from './CityTable.tsx'
-import { City, CityDataSource } from '../../models/city.type.ts'
-import ErrorFetching from '../../components/ErrorFetching.tsx'
-import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
+import { City, CityDataSource } from '@/models/city.type.ts'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
 
 const { Search } = Input

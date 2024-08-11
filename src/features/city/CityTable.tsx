@@ -1,11 +1,11 @@
-import { CityDataSource } from '../../models/city.type.ts'
+import { CityDataSource } from '@/models/city.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { useDeleteCity } from '../../hooks/useCities.ts'
-import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
-import TableActions from '../../components/TableActions.tsx'
+import { useDeleteCity } from '@/hooks/useCities.ts'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import TableActions from '@/components/TableActions.tsx'
 
 const { confirm } = Modal
 

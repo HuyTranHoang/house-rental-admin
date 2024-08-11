@@ -2,9 +2,9 @@ import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { getRoomTypeById, RoomTypeField } from '../api/roomType.api.ts'
-import { CityField } from '../api/city.api.ts'
-import { useCreateRoomType, useUpdateRoomType } from '../../hooks/useRoomTypes.ts'
+import { getRoomTypeById, RoomTypeField } from '@/api/roomType.api.ts'
+import { CityField } from '@/api/city.api.ts'
+import { useCreateRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
 
 function AddUpdateRoomType() {
   const match = useMatch('/roomType/add')

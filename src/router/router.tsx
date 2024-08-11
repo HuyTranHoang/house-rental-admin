@@ -1,14 +1,15 @@
 import { createBrowserRouter } from 'react-router-dom'
 import AppLayout from '../ui/AppLayout.tsx'
 import ProtectedRoute from '../components/ProtectedRoute.tsx'
-import Dashboard from '../features/dashboard/Dashboard.tsx'
-import Login from '../features/auth/Login.tsx'
+import Dashboard from '@/features/dashboard/Dashboard.tsx'
+import Login from '@/features/auth/Login.tsx'
 
 import amenityRouter from './amenityRouter.tsx'
 import cityRouter from './cityRouter.tsx'
 import roomTypeRouter from './roomTypeRouter.tsx'
 import reportRouter from './reportRouter.tsx'
 import roleRouter from './roleRouter.tsx'
+import { HomeOutlined } from '@ant-design/icons'
 
 export const routerList = [
   {
@@ -20,7 +21,7 @@ export const routerList = [
           {
             path: '/',
             element: <Dashboard />,
-            breadcrumb: 'Tổng quan'
+            breadcrumb: () => <span><HomeOutlined /> Tổng quan</span>
           },
           ...cityRouter // /city, /city/add, /city/:id/edit
           ,

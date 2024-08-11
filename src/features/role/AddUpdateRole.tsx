@@ -1,12 +1,12 @@
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { Button, Flex, Form, type FormProps, Input, Spin, Transfer, TransferProps, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { useCreateRole, useUpdateRole } from '../../hooks/useRoles.ts'
-import { getRoleById, RoleField } from '../api/role.api.ts'
-import { useAuthorities } from '../../hooks/useAuthorities.ts'
+import { useCreateRole, useUpdateRole } from '@/hooks/useRoles.ts'
+import { getRoleById, RoleField } from '@/api/role.api.ts'
+import { useAuthorities } from '@/hooks/useAuthorities.ts'
 import { authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
 import { useQuery } from '@tanstack/react-query'
-import { Authority } from '../../models/authority.type.ts'
+import { Authority } from '@/models/authority.type.ts'
 
 function AddUpdateRole() {
   const match = useMatch('/role/add')

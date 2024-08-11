@@ -1,5 +1,5 @@
-import AddUpdateAmenity from '../features/amenity/AddUpdateAmenity.tsx'
-import ListAmenity from '../features/amenity/ListAmenity.tsx'
+import AddUpdateAmenity from '@/features/amenity/AddUpdateAmenity.tsx'
+import ListAmenity from '@/features/amenity/ListAmenity.tsx'
 import { RouteObject } from 'react-router-dom'
 import { BreadcrumbsRoute } from 'use-react-router-breadcrumbs'
 
@@ -13,6 +13,10 @@ const amenityRouter: RouteObject[] & BreadcrumbsRoute[] = [
     path: '/amenity/add',
     element: <AddUpdateAmenity />,
     breadcrumb: 'Thêm mới tiện nghi'
+  },
+  {
+    path: '/amenity/:id',
+    breadcrumb: null,
   },
   {
     path: '/amenity/:id/edit',

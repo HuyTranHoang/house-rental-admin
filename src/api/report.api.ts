@@ -1,6 +1,6 @@
-import { PageInfo } from '../../models/pageInfo.type.ts'
-import { Report, ReportStatus } from '../../models/report.type.ts'
-import axiosInstance from '../../axiosInstance.ts'
+import { PageInfo } from '@/models/pageInfo.type.ts'
+import { Report, ReportStatus } from '@/models/report.type.ts'
+import axiosInstance from '@/axiosInstance.ts'
 
 interface ReportsWithPagination {
   pageInfo: PageInfo

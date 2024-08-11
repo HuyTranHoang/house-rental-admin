@@ -2,10 +2,10 @@ import type { FormProps } from 'antd'
 import { Button, Flex, Form, Input, Spin, Typography } from 'antd'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { CityField, getCityById } from '../api/city.api.ts'
+import { CityField, getCityById } from '@/api/city.api.ts'
 
 import { useEffect, useState } from 'react'
-import { useCreateCity, useUpdateCity } from '../../hooks/useCities.ts'
+import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 
 
 function AddUpdateCity() {

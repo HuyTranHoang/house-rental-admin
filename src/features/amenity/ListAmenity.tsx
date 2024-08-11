@@ -2,12 +2,12 @@ import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'ant
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useAmenities, useDeleteMultiAmenity } from '../../hooks/useAmenities.ts'
+import { useAmenities, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
 import AmenityTable from './AmenityTable.tsx'
-import { Amenity, AmenityDataSource } from '../../models/amenity.type.ts'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
-import ErrorFetching from '../../components/ErrorFetching.tsx'
-import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
+import { Amenity, AmenityDataSource } from '@/models/amenity.type.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
 
 const { Search } = Input

@@ -1,11 +1,11 @@
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { RoomTypeDataSource } from '../../models/roomType.type.ts'
+import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { useNavigate } from 'react-router-dom'
-import { useDeleteRoomType } from '../../hooks/useRoomTypes.ts'
-import TableActions from '../../components/TableActions.tsx'
-import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
+import { useDeleteRoomType } from '@/hooks/useRoomTypes.ts'
+import TableActions from '@/components/TableActions.tsx'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 
 const { confirm } = Modal
 

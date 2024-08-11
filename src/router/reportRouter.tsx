@@ -1,4 +1,4 @@
-import ListReport from '../features/report/ListReport.tsx'
+import ListReport from '@/features/report/ListReport.tsx'
 import { RouteObject } from 'react-router-dom'
 import { BreadcrumbsRoute } from 'use-react-router-breadcrumbs'
 

@@ -1,12 +1,12 @@
 import { Divider, Flex, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import Search from 'antd/lib/input/Search'
 import { useState } from 'react'
-import { Report as ReportType, ReportDataSource, ReportStatus } from '../../models/report.type.ts'
+import { Report as ReportType, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import { useReports } from '../../hooks/useReports.ts'
-import ErrorFetching from '../../components/ErrorFetching.tsx'
+import { useReports } from '@/hooks/useReports.ts'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
 import ReportTable from './ReportTable.tsx'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { useQueryClient } from '@tanstack/react-query'
 
 const tabsItem: TabsProps['items'] = [

@@ -1,5 +1,5 @@
-import ListCity from '../features/city/ListCity.tsx'
-import AddUpdateCity from '../features/city/AddUpdateCity.tsx'
+import ListCity from '@/features/city/ListCity.tsx'
+import AddUpdateCity from '@/features/city/AddUpdateCity.tsx'
 import { RouteObject } from 'react-router-dom'
 import { BreadcrumbsRoute } from 'use-react-router-breadcrumbs'
 
@@ -13,6 +13,10 @@ const cityRouter: RouteObject[] & BreadcrumbsRoute[] = [
     path: '/city/add',
     element: <AddUpdateCity />,
     breadcrumb: 'Thêm mới thành phố'
+  },
+  {
+    path: '/city/:id',
+    breadcrumb: null,
   },
   {
     path: '/city/:id/edit',

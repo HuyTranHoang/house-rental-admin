@@ -11,7 +11,7 @@ import { Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
 import CustomBreadcrumbs from '../components/CustomBreadcrumbs.tsx'
 import { useAppDispatch } from '../store.ts'
-import { logout } from '../features/auth/authSlice.ts'
+import { logout } from '@/features/auth/authSlice.ts'
 import { red } from '@ant-design/colors'
 
 const { Header, Content, Sider } = Layout

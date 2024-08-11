@@ -1,11 +1,11 @@
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useNavigate } from 'react-router-dom'
-import { useDeleteAmenity } from '../../hooks/useAmenities.ts'
-import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
-import TableActions from '../../components/TableActions.tsx'
-import { AmenityDataSource } from '../../models/amenity.type.ts'
+import { useDeleteAmenity } from '@/hooks/useAmenities.ts'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import TableActions from '@/components/TableActions.tsx'
+import { AmenityDataSource } from '@/models/amenity.type.ts'
 
 const { confirm } = Modal
 

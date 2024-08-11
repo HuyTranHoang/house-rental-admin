@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { City } from '../../models/city.type.ts'
-import { PageInfo } from '../../models/pageInfo.type.ts'
-import axiosInstance from '../../axiosInstance.ts'
-import { delay } from '../../utils/delay.ts'
+import { City } from '@/models/city.type.ts'
+import { PageInfo } from '@/models/pageInfo.type.ts'
+import axiosInstance from '@/axiosInstance.ts'
+import { delay } from '@/utils/delay.ts'
 
 export interface CityField {
   id?: number

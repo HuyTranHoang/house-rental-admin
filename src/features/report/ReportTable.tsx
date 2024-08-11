@@ -16,13 +16,13 @@ import {
   Typography
 } from 'antd'
 import { useState } from 'react'
-import { Report, ReportCategory, ReportDataSource, ReportStatus } from '../../models/report.type.ts'
+import { Report, ReportCategory, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
-import { useUpdateReportStatus } from '../../hooks/useReports.ts'
+import { useUpdateReportStatus } from '@/hooks/useReports.ts'
 import { useQuery } from '@tanstack/react-query'
-import { getPropertyById } from '../api/property.api.ts'
-import { formatCurrency } from '../../utils/formatCurrentcy.ts'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
+import { getPropertyById } from '@/api/property.api.ts'
+import { formatCurrency } from '@/utils/formatCurrentcy.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 
 interface ReportTableProps {
   dataSource: ReportDataSource[];

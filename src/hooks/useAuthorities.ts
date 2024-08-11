@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { getAllAuthorities } from '../features/api/authority.api.ts'
+import { getAllAuthorities } from '@/api/authority.api.ts'
 
 export const useAuthorities = () => {
 

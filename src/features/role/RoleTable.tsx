@@ -1,13 +1,13 @@
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { RoleDataSource } from '../../models/role.type.ts'
-import TableActions from '../../components/TableActions.tsx'
+import { RoleDataSource } from '@/models/role.type.ts'
+import TableActions from '@/components/TableActions.tsx'
 import { useNavigate } from 'react-router-dom'
-import { CityDataSource } from '../../models/city.type.ts'
-import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
+import { CityDataSource } from '@/models/city.type.ts'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import { authorityPrivilegesFilterMap, authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
-import { useDeleteRole } from '../../hooks/useRoles.ts'
+import { useDeleteRole } from '@/hooks/useRoles.ts'
 
 
 const { confirm } = Modal

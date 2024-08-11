@@ -1,5 +1,5 @@
-import axiosInstance from '../../axiosInstance.ts'
-import { Authority } from '../../models/authority.type.ts'
+import axiosInstance from '@/axiosInstance.ts'
+import { Authority } from '@/models/authority.type.ts'
 
 export const getAllAuthorities= async () => {
   try {

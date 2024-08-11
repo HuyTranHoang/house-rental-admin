@@ -1,5 +1,5 @@
-import ListRoomType from '../features/roomType/ListRoomType.tsx'
-import AddUpdateRoomType from '../features/roomType/AddUpdateRoomType.tsx'
+import ListRoomType from '@/features/roomType/ListRoomType.tsx'
+import AddUpdateRoomType from '@/features/roomType/AddUpdateRoomType.tsx'
 import { RouteObject } from 'react-router-dom'
 import { BreadcrumbsRoute } from 'use-react-router-breadcrumbs'
 
@@ -13,6 +13,10 @@ const roomTypeRouter: RouteObject[] & BreadcrumbsRoute[]  = [
     path: '/roomType/add',
     element: <AddUpdateRoomType />,
     breadcrumb: 'Thêm mới loại phòng'
+  },
+  {
+    path: '/roomType/:id',
+    breadcrumb: null,
   },
   {
     path: '/roomType/:id/edit',

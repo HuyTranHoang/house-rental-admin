@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { PageInfo } from '../../models/pageInfo.type.ts'
-import { RoomType } from '../../models/roomType.type.ts'
-import { delay } from '../../utils/delay.ts'
-import axiosInstance from '../../axiosInstance.ts'
+import { PageInfo } from '@/models/pageInfo.type.ts'
+import { RoomType } from '@/models/roomType.type.ts'
+import { delay } from '@/utils/delay.ts'
+import axiosInstance from '@/axiosInstance.ts'
 
 export interface RoomTypeField {
   id?: number
