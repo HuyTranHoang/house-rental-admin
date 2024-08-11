@@ -1,8 +1,18 @@
 import { Outlet, useNavigate } from 'react-router-dom'
-import { BarChartOutlined, createFromIconfontCN, HomeOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons'
+import {
+  BarChartOutlined,
+  createFromIconfontCN,
+  HomeOutlined,
+  LogoutOutlined,
+  SolutionOutlined,
+  UserOutlined
+} from '@ant-design/icons'
 import { Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
 import CustomBreadcrumbs from '../components/CustomBreadcrumbs.tsx'
+import { useAppDispatch } from '../store.ts'
+import { logout } from '../features/auth/authSlice.ts'
+import { red } from '@ant-design/colors'
 
 const { Header, Content, Sider } = Layout
 
@@ -14,6 +24,7 @@ const IconFont = createFromIconfontCN({
 function AppLayout() {
 
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
 
   const {
@@ -95,6 +106,18 @@ function AppLayout() {
           onClick: () => navigate('/role')
         }
       ]
+    },
+    {
+      type: 'divider',
+      style: { margin: '12px 0' }
+    },
+    {
+      key: 'logout',
+      label: 'Đăng xuất',
+      icon: <LogoutOutlined />,
+      className: 'menu-item-logout',
+      style: { color: red[5] },
+      onClick: () => dispatch(logout())
     }
   ]
 

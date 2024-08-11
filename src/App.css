@@ -1,3 +1,11 @@
 .ant-spin-dot-item {
     background-color: #bae0ff !important;
 }
+
+.menu-item-logout {
+    background-color: #fff1f0;
+}
+
+.menu-item-logout:hover {
+    background-color: #ffccc7 !important; /* Adjust the color as needed */
+}
