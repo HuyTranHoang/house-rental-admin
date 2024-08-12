@@ -98,7 +98,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         {
           key: 'userRole-user',
           label: 'Quản lý người dùng',
-          onClick: () => alert('Chưa làm')
+          onClick: () => navigate('/user')
         },
         {
           key: 'userRole-role',
