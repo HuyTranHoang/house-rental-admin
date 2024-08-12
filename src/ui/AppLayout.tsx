@@ -3,6 +3,7 @@ import {
   BarChartOutlined,
   createFromIconfontCN,
   HomeOutlined,
+  InfoOutlined,
   LogoutOutlined,
   SolutionOutlined,
   UserOutlined
@@ -104,6 +105,28 @@ function AppLayout() {
           key: 'userRole-role',
           label: 'Quản lý vai trò',
           onClick: () => navigate('/role')
+        }
+      ]
+    },
+    {
+      key: 'property',
+      label: 'Quản Lý Đăng Tin',
+      icon: <InfoOutlined />,
+      children: [
+        {
+          key: 'property-approved',
+          label: 'Quản Lý Bài Đăng',
+          onClick: () => navigate('/property/list')
+        },
+        {
+          key: 'property-pending',
+          label: 'Tin Chờ Duyệt',
+          onClick: () => navigate('/property/pending')
+        },
+        {
+          key: 'property-rejected',
+          label: 'Tin Bị Từ Chối',
+          onClick: () => navigate('/property/rejected')
         }
       ]
     },

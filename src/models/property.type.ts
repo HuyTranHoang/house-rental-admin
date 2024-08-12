@@ -20,3 +20,6 @@ export interface Property {
   createdAt: string
   blocked: boolean
 }
+export type PropertyDataSource = Property & {
+  key: React.Key
+}
