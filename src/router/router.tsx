@@ -13,7 +13,7 @@ import { HomeOutlined } from '@ant-design/icons'
 
 export const routerList = [
   {
-    element: <AppLayout />,
+    element: <AppLayout haveBgColor={false} />,
     children: [
       {
         element: <ProtectedRoute />,
@@ -22,7 +22,17 @@ export const routerList = [
             path: '/',
             element: <Dashboard />,
             breadcrumb: () => <span><HomeOutlined /> Tổng quan</span>
-          },
+          }
+        ]
+      }
+    ]
+  },
+  {
+    element: <AppLayout />,
+    children: [
+      {
+        element: <ProtectedRoute />,
+        children: [
           ...cityRouter // /city, /city/add, /city/:id/edit
           ,
           ...roomTypeRouter // /roomType, /roomType/add, /roomType/:id/edit
