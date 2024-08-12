@@ -40,9 +40,10 @@ function ListCity() {
     }
   }
 
-  const dataSource = data
-    ? data.data.map((city: City) => ({
+  const dataSource: CityDataSource[] = data
+    ? data.data.map((city: City, idx) => ({
       key: city.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       id: city.id,
       name: city.name,
       createdAt: customFormatDate(city.createdAt)

@@ -8,4 +8,5 @@ export interface City {
 
 export type CityDataSource = City & {
   key: React.Key
+  index?: number
 }

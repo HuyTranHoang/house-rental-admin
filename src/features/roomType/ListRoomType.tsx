@@ -42,8 +42,9 @@ function ListRoomType() {
 
 
   const dataSource: RoomTypeDataSource[] = data
-    ? data.data.map((roomType) => ({
+    ? data.data.map((roomType, idx) => ({
       key: roomType.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       id: roomType.id,
       name: roomType.name,
       createdAt: customFormatDate(roomType.createdAt)

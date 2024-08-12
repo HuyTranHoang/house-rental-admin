@@ -47,9 +47,10 @@ function ListRole() {
   }
 
   const dataSource: RoleDataSource[] = data
-    ? data.data.map((role: Role) => ({
+    ? data.data.map((role: Role, idx) => ({
       key: role.id,
       id: role.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       name: role.name,
       authorityPrivileges: role.authorityPrivileges,
       createdAt: customFormatDate(role.createdAt)

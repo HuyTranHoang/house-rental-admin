@@ -67,10 +67,10 @@ function CityTable({
   const columns: TableProps<CityDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'index',
+      key: 'index',
       fixed: 'left',
-      width: 50
+      width: 50,
     },
     {
       title: 'Tên thành phố',

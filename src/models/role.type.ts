@@ -10,4 +10,5 @@ export interface Role {
 
 export type RoleDataSource = Role & {
   key: React.Key
+  index?: number
 }
