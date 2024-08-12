@@ -1,6 +1,7 @@
 import { Role } from '@/models/role.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 import { PageInfo } from '@/models/pageInfo.type.ts'
+import axios from 'axios'
 
 export interface RoleField {
   id?: number
@@ -76,7 +77,10 @@ export const deleteRole = async (id: number) => {
   try {
     await axiosInstance.delete(`/api/roles/${id}`)
   } catch (error) {
-    console.error(error)
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      throw new Error(error.response.data.message)
+    }
+
     throw new Error('Xóa vai trò thất bại')
   }
 }
