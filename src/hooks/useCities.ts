@@ -1,9 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addCity, deleteCities, deleteCity, getAllCitiesWithPagination, updateCity } from '@/api/city.api.ts'
+import { addCity, deleteCities, deleteCity, getAllCities, getAllCitiesWithPagination, updateCity } from '@/api/city.api.ts'
 import { toast } from 'sonner'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import React from 'react'
+
+export const useCity = () => {
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ['cities'],
+    queryFn: getAllCities,
+  });
+
+  return { data, isLoading, isError, error };
+};
 
 export const useCities = (search: string,
                           pageNumber: number,

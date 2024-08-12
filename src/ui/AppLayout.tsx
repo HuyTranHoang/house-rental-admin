@@ -20,17 +20,13 @@ const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
 })
 
-
 function AppLayout() {
-
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-
 
   const {
     token: { colorBgContainer, borderRadiusLG }
   } = theme.useToken()
-
 
   const siderItems: MenuProps['items'] = [
     {
@@ -42,7 +38,7 @@ function AppLayout() {
     {
       key: 'cityDistrict',
       label: 'Thành phố và quận huyện',
-      icon: <IconFont type="icon-city" />,
+      icon: <IconFont type='icon-city' />,
       children: [
         {
           key: 'cityDistrict-city',
@@ -52,7 +48,7 @@ function AppLayout() {
         {
           key: 'cityDistrict-district',
           label: 'Quản lý quận huyện',
-          onClick: () => alert('Chưa làm')
+          onClick: () => navigate('/district')
         }
       ]
     },
@@ -124,18 +120,20 @@ function AppLayout() {
   return (
     <Layout>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
-        <Flex align="center">
-          <img src="/logo1.png" alt="Mogu logo" style={{ width: 30 }} />
-          <Typography.Title level={4} style={{ color: 'white', margin: '0 12px' }}>Trang quản trị</Typography.Title>
+        <Flex align='center'>
+          <img src='/logo1.png' alt='Mogu logo' style={{ width: 30 }} />
+          <Typography.Title level={4} style={{ color: 'white', margin: '0 12px' }}>
+            Trang quản trị
+          </Typography.Title>
         </Flex>
       </Header>
       <Layout>
         <Sider width={260} style={{ background: colorBgContainer }}>
-          <Flex justify="center" align="center" style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
-            <img src="/LOGO_TEXT.png" alt="Mogu logo" style={{ width: 100 }} />
+          <Flex justify='center' align='center' style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
+            <img src='/LOGO_TEXT.png' alt='Mogu logo' style={{ width: 100 }} />
           </Flex>
           <Menu
-            mode="inline"
+            mode='inline'
             defaultSelectedKeys={['dashboard']}
             defaultOpenKeys={['sub1']}
             style={{ height: '100%', borderRight: 0 }}

@@ -10,6 +10,7 @@ import roomTypeRouter from './roomTypeRouter.tsx'
 import reportRouter from './reportRouter.tsx'
 import roleRouter from './roleRouter.tsx'
 import { HomeOutlined } from '@ant-design/icons'
+import districtRouter from './districtRouter.tsx'
 
 export const routerList = [
   {
@@ -21,9 +22,14 @@ export const routerList = [
           {
             path: '/',
             element: <Dashboard />,
-            breadcrumb: () => <span><HomeOutlined /> Tổng quan</span>
+            breadcrumb: () => (
+              <span>
+                <HomeOutlined /> Tổng quan
+              </span>
+            )
           },
           ...cityRouter, // /city, /city/add, /city/:id/edit
+          ...districtRouter, // /district, /district/add, /district/:id/edit
           ...roomTypeRouter, // /roomType, /roomType/add, /roomType/:id/edit
           ...amenityRouter, // /amenity, /amenity/add, /amenity/:id:edit
           ...reportRouter, // /report

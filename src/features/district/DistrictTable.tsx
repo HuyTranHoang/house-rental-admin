@@ -1,27 +1,27 @@
-import { CityDataSource } from '@/models/city.type.ts'
+import { DistrictDataSource } from '@/models/district.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { useDeleteCity } from '@/hooks/useCities.ts'
+import { useDeleteDistrict } from '@/hooks/useDistricts.ts'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
 
 const { confirm } = Modal
 
-interface CityTableProps {
-  dataSource: CityDataSource[]
+interface DistrictTableProps {
+  dataSource: DistrictDataSource[]
   loading: boolean
   paginationProps: false | TablePaginationConfig | undefined
-  handleTableChange: TableProps<CityDataSource>['onChange']
-  rowSelection: TableRowSelection<CityDataSource> | undefined
+  handleTableChange: TableProps<DistrictDataSource>['onChange']
+  rowSelection: TableRowSelection<DistrictDataSource> | undefined
 }
 
-function CityTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: CityTableProps) {
+function DistrictTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: DistrictTableProps) {
   const navigate = useNavigate()
-  const { deleteCityMutate } = useDeleteCity()
+  const { deleteDistrictMutate } = useDeleteDistrict()
 
-  const showDeleteConfirm = (record: CityDataSource) => {
+  const showDeleteConfirm = (record: DistrictDataSource) => {
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
@@ -31,12 +31,18 @@ function CityTable({ dataSource, loading, paginationProps, handleTableChange, ro
       },
       {
         key: '2',
-        label: 'Tên thành phố',
+        label: 'Tên quận huyện',
         children: <span>{record.name}</span>,
         span: 3
       },
       {
         key: '3',
+        label: 'Tên thành phố',
+        children: <span>{record.cityName}</span>,
+        span: 3
+      },
+      {
+        key: '4',
         label: 'Ngày tạo',
         children: <span>{record.createdAt}</span>,
         span: 3
@@ -45,19 +51,19 @@ function CityTable({ dataSource, loading, paginationProps, handleTableChange, ro
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa thành phố' />,
+      title: <ConfirmModalTitle title='Xác nhận xóa quận huyện' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
       cancelText: 'Hủy',
       maskClosable: true,
       onOk() {
-        deleteCityMutate(record.id)
+        deleteDistrictMutate(record.id)
       }
     })
   }
 
-  const columns: TableProps<CityDataSource>['columns'] = [
+  const columns: TableProps<DistrictDataSource>['columns'] = [
     {
       title: '#',
       dataIndex: 'id',
@@ -69,6 +75,12 @@ function CityTable({ dataSource, loading, paginationProps, handleTableChange, ro
       title: 'Tên thành phố',
       dataIndex: 'name',
       key: 'name',
+      sorter: true
+    },
+    {
+      title: 'Tên quận huyện',
+      dataIndex: 'cityName',
+      key: 'cityName',
       sorter: true
     },
     {
@@ -85,7 +97,10 @@ function CityTable({ dataSource, loading, paginationProps, handleTableChange, ro
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(`/city/${record.id}/edit`)} onDelete={() => showDeleteConfirm(record)} />
+        <TableActions
+          onUpdate={() => navigate(`/district/${record.id}/edit`)}
+          onDelete={() => showDeleteConfirm(record)}
+        />
       )
     }
   ]
@@ -113,4 +128,4 @@ function CityTable({ dataSource, loading, paginationProps, handleTableChange, ro
   )
 }
 
-export default CityTable
+export default DistrictTable
