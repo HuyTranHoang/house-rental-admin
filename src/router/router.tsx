@@ -23,14 +23,10 @@ export const routerList = [
             element: <Dashboard />,
             breadcrumb: () => <span><HomeOutlined /> Tổng quan</span>
           },
-          ...cityRouter // /city, /city/add, /city/:id/edit
-          ,
-          ...roomTypeRouter // /roomType, /roomType/add, /roomType/:id/edit
-          ,
-          ...amenityRouter // /amenity, /amenity/add, /amenity/:id:edit
-          ,
-          ...reportRouter // /report
-          ,
+          ...cityRouter, // /city, /city/add, /city/:id/edit
+          ...roomTypeRouter, // /roomType, /roomType/add, /roomType/:id/edit
+          ...amenityRouter, // /amenity, /amenity/add, /amenity/:id:edit
+          ...reportRouter, // /report
           ...roleRouter // /role
         ] // End of ProtectedRoute children
       }
