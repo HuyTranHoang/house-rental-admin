@@ -1,107 +1,155 @@
-import { Button, Divider, Flex, Space, TableProps, Typography } from 'antd'
-import Search from 'antd/lib/input/Search'
-import { useNavigate } from 'react-router-dom'
-import React, { useState } from 'react'
-import { PlusCircleOutlined } from '@ant-design/icons'
-import RoleTable from './RoleTable.tsx'
-import { useDeleteMultiRole, useRoles } from '@/hooks/useRoles.ts'
-import ErrorFetching from '@/components/ErrorFetching.tsx'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
-import { TableRowSelection } from 'antd/es/table/interface'
-import { Role, RoleDataSource } from '@/models/role.type.ts'
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
+import {
+  Button,
+  Flex,
+  Form,
+  FormInstance,
+  type FormProps,
+  Input,
+  List,
+  Modal,
+  Space,
+  Spin,
+  Tooltip,
+  Typography
+} from 'antd'
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { blue } from '@ant-design/colors'
+import { useCreateRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
+import { Role } from '@/models/role.type.ts'
+import React, { useEffect, useState } from 'react'
+import { getRoleById, RoleField } from '@/api/role.api.ts'
+import { useQuery } from '@tanstack/react-query'
 
-function ListRole() {
+interface ListRoleProps {
+  form: FormInstance
+  setCurrentRole: React.Dispatch<React.SetStateAction<Role>>
+  currentRole: Role
+}
 
-  const navigate = useNavigate()
+function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [error, setError] = useState<string>('')
+  const [formAddRole] = Form.useForm()
 
-  const [search, setSearch] = useState('')
-  const [authorities, setAuthorities] = useState<string>('')
-  const [sortBy, setSortBy] = useState('IdDesc')
-  const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const [editRole, setEditRole] = useState({} as Role)
 
-  const [deleteIdList, setDeleteIdList] = useState<number[]>([])
+  const { addRoleMutate, addRolePending }
+    = useCreateRole(setError, setIsModalOpen, formAddRole)
+  const { updateRoleMutate, updateRolePending }
+    = useUpdateRole(setError, setIsModalOpen, formAddRole)
 
-  const { data, isLoading, isError } = useRoles(search, authorities, pageNumber, pageSize, sortBy)
-  const { deleteRolesMutate } = useDeleteMultiRole()
+  const { data, isLoading } = useRolesAll()
 
-  const handleDelete = () => {
-    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các vai trò', () => {
-      deleteRolesMutate(deleteIdList)
-      setDeleteIdList([])
-    })
-  }
+  const { data: roleUpdateData } = useQuery({
+    queryKey: ['role', editRole.id],
+    queryFn: () => getRoleById(Number(editRole.id)),
+    enabled: editRole.id !== undefined
+  })
 
-  const handleTableChange: TableProps<RoleDataSource>['onChange'] = (_, filters, sorter) => {
-    if (!Array.isArray(sorter) && sorter.order) {
-      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setSortBy(`${sorter.field}${order}`)
-    }
-
-    if (filters.authorityPrivileges) {
-      setAuthorities(filters.authorityPrivileges.join(','))
+  const onFinishAddRole: FormProps<RoleField>['onFinish'] = (values) => {
+    if (!editRole.id) {
+      values.authorityPrivileges = [
+        'user:read',
+        'user:update'
+      ]
+      addRoleMutate(values)
     } else {
-      setAuthorities('')
+      updateRoleMutate({ ...values, id: editRole.id })
     }
   }
 
-  const dataSource: RoleDataSource[] = data
-    ? data.data.map((role: Role, idx) => ({
-      key: role.id,
-      id: role.id,
-      index: (pageNumber - 1) * pageSize + idx + 1,
-      name: role.name,
-      authorityPrivileges: role.authorityPrivileges,
-      createdAt: customFormatDate(role.createdAt)
-    }))
-    : []
-
-  const rowSelection: TableRowSelection<RoleDataSource> | undefined = {
-    type: 'checkbox',
-    onChange: (_: React.Key[], selectedRows: RoleDataSource[]) => {
-      const selectedIdList = selectedRows.map((row) => row.id)
-      setDeleteIdList(selectedIdList)
+  useEffect(() => {
+    if (roleUpdateData) {
+      formAddRole.setFieldsValue(roleUpdateData)
     }
-  }
+  }, [formAddRole, roleUpdateData])
 
-  if (isError) {
-    return <ErrorFetching />
+  if (isLoading) {
+    return <Spin fullscreen />
   }
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
-          <Typography.Title level={2} style={{ margin: 0 }}>Danh sách vai trò</Typography.Title>
-          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm theo tên vai trò"
-                  style={{ width: 250 }} />
-        </Flex>
-
-        <Space>
-          {deleteIdList.length > 0 &&
-            <Button shape="round" type="primary" danger onClick={handleDelete}>Xóa các mục đã chọn</Button>}
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/role/add')}>
-            Thêm mới
-          </Button>
+      <Typography.Title level={5}>
+        <Space align="center">
+          Danh sách vai trò
+          <Tooltip title="Thêm mới vai trò">
+            <PlusCircleOutlined className="icon-primary" onClick={() => setIsModalOpen(true)} />
+          </Tooltip>
         </Space>
-      </Flex>
+      </Typography.Title>
+      <List
+        bordered
+        size="small"
+        dataSource={data}
+        renderItem={(item) => (
+          <List.Item
+            actions={[
+              <EditOutlined onClick={() => {
+                setEditRole(item)
+                setIsModalOpen(true)
+              }} />,
+              <DeleteOutlined onClick={() => console.log(item)} className="icon-danger" />
+            ]}
+            onClick={() => {
+              if (currentRole.id === item.id) return
 
-      <RoleTable
-        dataSource={dataSource}
-        loading={isLoading}
-        paginationProps={{
-          total: data?.pageInfo.totalElements,
-          pageSize: pageSize,
-          current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} vai trò`,
-          onShowSizeChange: (_, size) => setPageSize(size),
-          onChange: (page) => setPageNumber(page)
-        }}
-        handleTableChange={handleTableChange}
-        rowSelection={rowSelection}
+              form.resetFields()
+              setCurrentRole(item)
+            }}
+            style={{
+              backgroundColor: item.id === currentRole.id ? blue[0] : '#fcfcfc',
+              cursor: 'pointer'
+            }}>
+            {item.name}
+          </List.Item>
+        )}
       />
+
+      <Modal title="Thêm mới vai trò"
+             open={isModalOpen}
+             onCancel={() => setIsModalOpen(false)}
+             footer={false}
+      >
+        <Form
+          form={formAddRole}
+          name="roleFormAddUpdate"
+          onFinish={onFinishAddRole}
+          layout="vertical"
+          autoComplete="off"
+        >
+          <Form.Item<RoleField>
+            label="Tên vai trò"
+            name="name"
+            rules={[
+              { required: true, message: 'Vui lòng nhập tên vai trò' },
+              { min: 3, message: 'Tên vai trò phải có ít nhất 3 ký tự!' }
+            ]}
+            validateStatus={error ? 'error' : undefined}
+            extra={<span style={{ color: 'red' }}>{error}</span>}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item<RoleField>
+            label="Mô tả"
+            name="description"
+          >
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item>
+            <Flex justify="end">
+              <Space>
+                <Button loading={addRolePending || updateRolePending} type="primary" htmlType="submit">
+                  {editRole.id ? 'Cập nhật' : 'Thêm mới'}
+                </Button>
+                <Button onClick={() => setIsModalOpen(false)} danger>
+                  Hủy
+                </Button>
+              </Space>
+            </Flex>
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   )
 }

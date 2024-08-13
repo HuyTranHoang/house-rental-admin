@@ -6,6 +6,7 @@ import axios from 'axios'
 export interface RoleField {
   id?: number
   name: string
+  description: string
   authorityPrivileges: string[]
   authorityPrivilegesObject: { [key: string]: boolean | undefined }
 }
