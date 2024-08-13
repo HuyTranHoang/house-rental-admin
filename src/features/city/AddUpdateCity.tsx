@@ -7,7 +7,6 @@ import { CityField, getCityById } from '@/api/city.api.ts'
 import { useEffect, useState } from 'react'
 import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 
-
 function AddUpdateCity() {
   const match = useMatch('/city/add')
   const isAddMode = Boolean(match)
@@ -49,32 +48,30 @@ function AddUpdateCity() {
 
   return (
     <>
-      <Flex align="center" justify="space-between">
+      <Flex align='center' justify='space-between'>
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button type="primary" onClick={() => navigate('/city')}>Quay lại</Button>
+        <Button type='primary' onClick={() => navigate('/city')}>
+          Quay lại
+        </Button>
       </Flex>
       <Form
         form={form}
-        name="cityForm"
+        name='cityForm'
         labelCol={{ span: 5 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600, marginTop: 32 }}
         onFinish={onFinish}
-        autoComplete="off"
+        autoComplete='off'
       >
-        <Form.Item<CityField>
-          label="Id"
-          name="id"
-          hidden
-        >
+        <Form.Item<CityField> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<CityField>
-          label="Tên thành phố"
-          name="name"
+          label='Tên thành phố'
+          name='name'
           rules={[
             { required: true, message: 'Vui lòng nhập tên thành phố!' },
             { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự!' }
@@ -86,7 +83,7 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
-          <Button loading={addCityPending || updateCityPending} type="primary" htmlType="submit" style={{ width: 100 }}>
+          <Button loading={addCityPending || updateCityPending} type='primary' htmlType='submit' style={{ width: 100 }}>
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>
