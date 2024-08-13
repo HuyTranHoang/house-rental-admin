@@ -32,7 +32,7 @@ export const deleteProperty = async (id: number): Promise<void> => {
 }
 
 export const getAllPropertyWithPagination = async (
-    search : string,
+    search : string ,
     roomType : string,
     numOfDay : number,
     minPrice : number,

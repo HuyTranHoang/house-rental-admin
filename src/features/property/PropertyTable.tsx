@@ -43,7 +43,7 @@ function PropertyTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa bất động sản" />,
+      title: <ConfirmModalTitle title="Xác nhận xóa bài đăng" />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -64,7 +64,15 @@ function PropertyTable({
     { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName' },
     { title: 'Thành phố', dataIndex: 'cityName', key: 'cityName' },
     { title: 'Giá', dataIndex: 'price', key: 'price' },
-    { title: 'Ngày tạo', dataIndex: 'createdAt', key: 'createdAt', sorter: true, fixed: 'right', width: 200 },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      sorter: true,
+      fixed: 'right',
+      width: 200,
+      defaultSortOrder: 'descend', 
+    },
     {
       title: 'Hành động',
       key: 'action',

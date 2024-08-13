@@ -1,13 +1,12 @@
-import { Button, Divider, Flex, Input, Space, TableProps, Tabs, TabsProps, Typography } from 'antd';
+import { Divider, Flex, Input,  TableProps, Tabs, TabsProps, Typography } from 'antd';
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+
 import { Property as PropertyType, PropertyDataSource } from '@/models/property.type';
 import { useProperty } from '@/hooks/useProperties';
 import PropertyTable from './PropertyTable';
 import ErrorFetching from '@/components/ErrorFetching';
 import { customFormatDate } from '@/utils/customFormatDate';
-import { PlusCircleOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
@@ -19,21 +18,20 @@ const tabsItem: TabsProps['items'] = [
 
 function PropertyList() {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const [roomType, setRoomType] = useState('');
   const [numOfDay, setNumOfDay] = useState(0);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(0);
   const [minArea, setMinArea] = useState(5);
-  const [maxArea, setMaxArea] = useState(10);
+  const [maxArea, setMaxArea] = useState(0);
   const [city, setCity] = useState('');
   const [district, setDistrict] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('IdDesc');
-  const [status, setStatus] = useState('APPROVED');
+  const [status, setStatus] = useState('RESOLVED');
 
   const { data, isLoading, isError } = useProperty(
     search, roomType, numOfDay, minPrice, maxPrice, minArea, maxArea, district, city, pageNumber, pageSize, sortBy
@@ -46,11 +44,66 @@ function PropertyList() {
 
   const handleTableChange: TableProps<PropertyDataSource>['onChange'] = (_, filters, sorter) => {
     if (Array.isArray(sorter)) {
-      setSortBy('createdAtDesc');
+      setSortBy('createdAtAsc'); 
     } else {
       if (sorter.order) {
         const order = sorter.order === 'ascend' ? 'Asc' : 'Desc';
         setSortBy(`${sorter.field}${order}`);
+      }
+      if (filters.roomType) {
+        const result = filters.roomType.join(',');
+        setRoomType(result);
+      } else {
+        setRoomType('');
+      }
+    
+      if (filters.numOfDay) {
+        const result = filters.numOfDay.join(',');
+        setNumOfDay(Number(result));
+      } else {
+        setNumOfDay(0);
+      }
+    
+      if (filters.minPrice) {
+        const result = filters.minPrice.join(',');
+        setMinPrice(Number(result)); 
+      } else {
+        setMinPrice(0);
+      }
+    
+      if (filters.maxPrice) {
+        const result = filters.maxPrice.join(',');
+        setMaxPrice(Number(result)); 
+      } else {
+        setMaxPrice(0);
+      }
+    
+      if (filters.minArea) {
+        const result = filters.minArea.join(',');
+        setMinArea(Number(result));
+      } else {
+        setMinArea(0);
+      }
+    
+      if (filters.maxArea) {
+        const result = filters.maxArea.join(',');
+        setMaxArea(Number(result));
+      } else {
+        setMaxArea(0);
+      }
+    
+      if (filters.city) {
+        const result = filters.city.join(',');
+        setCity(result);
+      } else {
+        setCity('');
+      }
+    
+      if (filters.district) {
+        const result = filters.district.join(',');
+        setDistrict(result);
+      } else {
+        setDistrict('');
       }
     }
   };
@@ -87,6 +140,7 @@ function PropertyList() {
 
   return (
     <>
+    
       <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
         <Flex align="center">
           <Typography.Title level={2} style={{ margin: 0 }}>Danh sách bài đăng</Typography.Title>
@@ -99,14 +153,11 @@ function PropertyList() {
           />
         </Flex>
 
-        <Space>
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/property/add')}>
-            Thêm mới
-          </Button>
-        </Space>
+       
       </Flex>
+        
 
-      <Tabs defaultActiveKey="ALL" items={tabsItem} onChange={onTabChange} />
+      <Tabs defaultActiveKey="RESOLVED" items={tabsItem} onChange={onTabChange} />
 
       <PropertyTable
         dataSource={dataSource}
