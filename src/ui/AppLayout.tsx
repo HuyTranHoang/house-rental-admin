@@ -86,7 +86,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         {
           key: 'reportReview-review',
           label: 'Quản lý đánh giá',
-          onClick: () => alert('Chưa làm')
+          onClick: () => navigate('/review')
         }
       ]
     },

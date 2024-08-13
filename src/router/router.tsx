@@ -9,6 +9,7 @@ import cityRouter from './cityRouter.tsx'
 import roomTypeRouter from './roomTypeRouter.tsx'
 import reportRouter from './reportRouter.tsx'
 import roleRouter from './roleRouter.tsx'
+import reviewRouter from './reviewRouter.tsx'
 import { HomeOutlined } from '@ant-design/icons'
 import userRouter from '@/router/userRouter.tsx'
 
@@ -43,6 +44,8 @@ export const routerList = [
           ...reportRouter // /report
           ,
           ...roleRouter // /role
+          ,
+          ...reviewRouter //review
           ,
           ...userRouter // /user
         ] // End of ProtectedRoute children
