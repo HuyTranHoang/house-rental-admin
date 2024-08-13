@@ -54,7 +54,7 @@ function ListReview() {
             id: review.id,
             index: (pageNumber - 1) * pageSize + index + 1,
             userId: review.userId,
-            name: review.userName,
+            username: review.userName,
             propertyId: review.propertyId,
             title: review.propertyTitle,
             rating: review.rating,
@@ -89,7 +89,7 @@ function ListReview() {
                 Danh sách đánh giá
             </Typography.Title>
             <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-            <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm theo username"
+            <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm theo tài khoản"
                     style={{ width: 250 }}
             />
             </Flex>

@@ -149,7 +149,7 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
         }}
       />
 
-      <Modal title='Chi tiết đánh giá' open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
+      <Modal title='Chi tiết đánh giá' open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null} >
         {currentReview && (
           <div>
             <p>
