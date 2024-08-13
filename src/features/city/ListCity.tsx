@@ -1,21 +1,16 @@
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
+import { useNavigate } from 'react-router-dom'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
-
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
-import { useCities, useDeleteMultiCity } from '../../hooks/useCities.ts'
+import { useCities, useDeleteMultiCity } from '@/hooks/useCities.ts'
 import CityTable from './CityTable.tsx'
-import { City } from '../../models/city.type.ts'
-import ErrorFetching from '../../components/ErrorFetching.tsx'
-import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig.tsx'
+import { City, CityDataSource } from '@/models/city.type.ts'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
+import { TableRowSelection } from 'antd/es/table/interface'
 
 const { Search } = Input
-
-type DataSourceType = City & {
-  key: React.Key
-}
 
 function ListCity() {
 
@@ -33,44 +28,35 @@ function ListCity() {
 
   const handleDelete = () => {
     showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các thành phố', () => {
-      deleteCitiesMutate(deleteIdList);
-      setDeleteIdList([]);
-    });
-  };
+      deleteCitiesMutate(deleteIdList)
+      setDeleteIdList([])
+    })
+  }
 
-  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
-    if (Array.isArray(sorter)) {
-      // Handle the case where sorter is an array
-      setSortBy('createdAtDesc')
-    } else {
-      if (sorter.order) {
-        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-        setSortBy(`${sorter.field}${order}`)
-      }
+  const handleTableChange: TableProps<CityDataSource>['onChange'] = (_, __, sorter) => {
+    if (!Array.isArray(sorter) && sorter.order) {
+      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+      setSortBy(`${sorter.field}${order}`)
     }
   }
 
-  const dataSource = data
-    ? data.data.map((city: City) => ({
+  const dataSource: CityDataSource[] = data
+    ? data.data.map((city: City, idx) => ({
       key: city.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       id: city.id,
       name: city.name,
       createdAt: customFormatDate(city.createdAt)
     }))
     : []
 
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: DataSourceType[]) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows)
+  const rowSelection: TableRowSelection<CityDataSource> | undefined = {
+    type: 'checkbox',
+    onChange: (_: React.Key[], selectedRows: CityDataSource[]) => {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
   }
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: 'Danh sách thành phố' }
-  ])
 
   if (isError) {
     return <ErrorFetching />
@@ -106,10 +92,7 @@ function ListCity() {
           onChange: (page) => setPageNumber(page)
         }}
         handleTableChange={handleTableChange}
-        rowSelection={{
-          type: 'checkbox',
-          ...rowSelection
-        }}
+        rowSelection={rowSelection}
       />
     </>
   )

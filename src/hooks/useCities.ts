@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addCity, deleteCities, deleteCity, getAllCitiesWithPagination, updateCity } from '../features/api/city.api.ts'
+import { addCity, deleteCities, deleteCity, getAllCitiesWithPagination, updateCity } from '@/api/city.api.ts'
 import { toast } from 'sonner'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'

@@ -1,11 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, FormProps, Input, Spin, Typography } from 'antd'
-import { useState } from 'react'
-import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
-import { AmenityField, getAmenityById } from '../api/amenity.api.ts'
-
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb'
-import { useCreateAmenity, useUpdateAmenity } from '../../hooks/useAmenities.ts'
+import { useEffect, useState } from 'react'
+import { useMatch, useNavigate, useParams } from 'react-router-dom'
+import { AmenityField, getAmenityById } from '@/api/amenity.api.ts'
+import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
 
 function AddUpdateAmenity() {
   const match = useMatch('/amenity/add')
@@ -36,16 +34,12 @@ function AddUpdateAmenity() {
     enabled: !isAddMode
   })
 
-  if (amenityUpdateData) {
-    form.setFieldValue('id', amenityUpdateData.id)
-    form.setFieldValue('name', amenityUpdateData.name)
-  }
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: <Link to={'/amenity'}>Danh sách tiện nghi</Link> },
-    { title: title }
-  ])
+  useEffect(() => {
+    if (amenityUpdateData) {
+      form.setFieldValue('id', amenityUpdateData.id)
+      form.setFieldValue('name', amenityUpdateData.name)
+    }
+  }, [amenityUpdateData, form])
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />

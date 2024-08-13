@@ -1,19 +1,13 @@
 import { Divider, Flex, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import Search from 'antd/lib/input/Search'
-import React, { useState } from 'react'
-import { Report as ReportType, ReportStatus } from '../../models/report.type.ts'
+import { useState } from 'react'
+import { Report as ReportType, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
-import { useReports } from '../../hooks/useReports.ts'
-import ErrorFetching from '../../components/ErrorFetching.tsx'
+import { useReports } from '@/hooks/useReports.ts'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
 import ReportTable from './ReportTable.tsx'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { useQueryClient } from '@tanstack/react-query'
-
-type DataSourceType = ReportType & {
-  key: React.Key
-}
 
 const tabsItem: TabsProps['items'] = [
   {
@@ -52,7 +46,7 @@ function ListReport() {
     queryClient.invalidateQueries({ queryKey: ['reports'] })
   }
 
-  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, filters, sorter) => {
+  const handleTableChange: TableProps<ReportDataSource>['onChange'] = (_, filters, sorter) => {
     if (Array.isArray(sorter)) {
       setSortBy('createdAtDesc')
     } else {
@@ -70,10 +64,11 @@ function ListReport() {
     }
   }
 
-  const dataSource: DataSourceType[] = data
-    ? data.data.map((report: ReportType) => ({
+  const dataSource: ReportDataSource[] = data
+    ? data.data.map((report: ReportType, idx) => ({
       key: report.id,
       id: report.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       userId: report.userId,
       username: report.username,
       propertyId: report.propertyId,
@@ -84,11 +79,6 @@ function ListReport() {
       createdAt: customFormatDate(report.createdAt)
     }))
     : []
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: 'Danh sách thành phố' }
-  ])
 
   if (isError) {
     return <ErrorFetching />
@@ -103,7 +93,6 @@ function ListReport() {
           <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm theo tên tài khoản"
                   style={{ width: 250 }} />
         </Flex>
-
       </Flex>
 
 

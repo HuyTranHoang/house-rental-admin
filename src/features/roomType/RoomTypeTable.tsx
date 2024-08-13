@@ -1,25 +1,20 @@
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
-import React from 'react'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { RoomType } from '../../models/roomType.type.ts'
+import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { useNavigate } from 'react-router-dom'
-import { useDeleteRoomType } from '../../hooks/useRoomTypes.ts'
-import TableActions from '../../components/TableActions.tsx'
-import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
+import { useDeleteRoomType } from '@/hooks/useRoomTypes.ts'
+import TableActions from '@/components/TableActions.tsx'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 
 const { confirm } = Modal
 
-type DataSourceType = RoomType & {
-  key: React.Key;
-}
-
 interface RoomTypeTableProps {
-  dataSource: DataSourceType[];
+  dataSource: RoomTypeDataSource[];
   loading: boolean;
   paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<DataSourceType>['onChange'];
-  rowSelection: TableRowSelection<DataSourceType> | undefined
+  handleTableChange: TableProps<RoomTypeDataSource>['onChange'];
+  rowSelection: TableRowSelection<RoomTypeDataSource> | undefined
 }
 
 function RoomTypeTable({
@@ -32,7 +27,7 @@ function RoomTypeTable({
   const navigate = useNavigate()
   const { deleteRoomTypeMutate } = useDeleteRoomType()
 
-  const showDeleteConfirm = (record: DataSourceType) => {
+  const showDeleteConfirm = (record: RoomTypeDataSource) => {
 
     const items: DescriptionsProps['items'] = [
       {
@@ -69,11 +64,13 @@ function RoomTypeTable({
     })
   }
 
-  const columns: TableProps<DataSourceType>['columns'] = [
+  const columns: TableProps<RoomTypeDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id'
+      dataIndex: 'index',
+      key: 'index',
+      fixed: 'left',
+      width: 50,
     },
     {
       title: 'Tên loại phòng',
@@ -105,7 +102,7 @@ function RoomTypeTable({
     <Table
       dataSource={dataSource}
       columns={columns}
-      rowSelection={{ ...rowSelection }}
+      rowSelection={rowSelection}
       pagination={{
         position: ['bottomCenter'],
         pageSizeOptions: ['5', '10', '20'],

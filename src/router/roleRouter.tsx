@@ -1,9 +1,27 @@
-import ListRole from '../features/role/ListRole.tsx'
+import ListRole from '@/features/role/ListRole.tsx'
+import { RouteObject } from 'react-router-dom'
+import { BreadcrumbsRoute } from 'use-react-router-breadcrumbs'
+import AddUpdateRole from '@/features/role/AddUpdateRole.tsx'
 
-const roleRouter = [
+const roleRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: '/role',
-    element: <ListRole />
+    element: <ListRole />,
+    breadcrumb: 'Danh sách vai trò'
+  },
+  {
+    path: '/role/add',
+    element: <AddUpdateRole />,
+    breadcrumb: 'Thêm vai trò'
+  },
+  {
+    path: '/role/:id',
+    breadcrumb: null,
+  },
+  {
+    path: '/role/:id/edit',
+    element: <AddUpdateRole />,
+    breadcrumb: ({match}) => `Cập nhật vai trò / ${match.params.id}`
   }
 ]
 

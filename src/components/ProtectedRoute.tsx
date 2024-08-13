@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { selectAuth } from '../features/auth/authSlice.ts'
+import { selectAuth } from '@/features/auth/authSlice.ts'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { useEffect } from 'react'
 

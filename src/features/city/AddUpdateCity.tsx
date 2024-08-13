@@ -1,12 +1,11 @@
-import { Button, Flex, Typography, Form, Input, Spin } from 'antd'
-import { Link, useMatch, useNavigate, useParams } from 'react-router-dom'
 import type { FormProps } from 'antd'
+import { Button, Flex, Form, Input, Spin, Typography } from 'antd'
+import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { CityField, getCityById } from '../api/city.api.ts'
-import { useSetBreadcrumb } from '../../hooks/useSetBreadcrumb.ts'
+import { CityField, getCityById } from '@/api/city.api.ts'
 
-import { useState } from 'react'
-import { useCreateCity, useUpdateCity } from '../../hooks/useCities.ts'
+import { useEffect, useState } from 'react'
+import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 
 
 function AddUpdateCity() {
@@ -31,26 +30,18 @@ function AddUpdateCity() {
     }
   }
 
-  const onFinishFailed: FormProps<CityField>['onFinishFailed'] = (errorInfo) => {
-    console.log('Failed:', errorInfo)
-  }
-
   const { data: cityUpdateData, isLoading } = useQuery({
     queryKey: ['city', id],
     queryFn: () => getCityById(Number(id)),
     enabled: !isAddMode
   })
 
-  if (cityUpdateData) {
-    form.setFieldValue('id', cityUpdateData.id)
-    form.setFieldValue('name', cityUpdateData.name)
-  }
-
-  useSetBreadcrumb([
-    { title: <Link to={'/'}>Dashboard</Link> },
-    { title: <Link to={'/city'}>Danh sách thành phố</Link> },
-    { title: title }
-  ])
+  useEffect(() => {
+    if (cityUpdateData) {
+      form.setFieldValue('id', cityUpdateData.id)
+      form.setFieldValue('name', cityUpdateData.name)
+    }
+  }, [cityUpdateData, form])
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />
@@ -71,7 +62,6 @@ function AddUpdateCity() {
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600, marginTop: 32 }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item<CityField>

@@ -1,31 +1,35 @@
-import { CityDataSource } from '@/models/city.type.ts'
-import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { useDeleteCity } from '@/hooks/useCities.ts'
+import { RoleDataSource } from '@/models/role.type.ts'
+import TableActions from '@/components/TableActions.tsx'
+import { useNavigate } from 'react-router-dom'
+import { CityDataSource } from '@/models/city.type.ts'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
-import TableActions from '@/components/TableActions.tsx'
+import { authorityPrivilegesFilterMap, authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
+import { useDeleteRole } from '@/hooks/useRoles.ts'
+
 
 const { confirm } = Modal
 
-interface CityTableProps {
-  dataSource: CityDataSource[];
+interface RoleTableProps {
+  dataSource: RoleDataSource[];
   loading: boolean;
   paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<CityDataSource>['onChange'];
-  rowSelection: TableRowSelection<CityDataSource> | undefined
+  handleTableChange: TableProps<RoleDataSource>['onChange'];
+  rowSelection: TableRowSelection<RoleDataSource> | undefined
 }
 
-function CityTable({
+function RoleTable({
                      dataSource,
                      loading,
                      paginationProps,
                      handleTableChange,
                      rowSelection
-                   }: CityTableProps) {
+                   }: RoleTableProps) {
   const navigate = useNavigate()
-  const { deleteCityMutate } = useDeleteCity()
+
+  const { deleteRoleMutate } = useDeleteRole()
 
   const showDeleteConfirm = (record: CityDataSource) => {
 
@@ -38,7 +42,7 @@ function CityTable({
       },
       {
         key: '2',
-        label: 'Tên thành phố',
+        label: 'Tên vai trò',
         children: <span>{record.name}</span>,
         span: 3
       },
@@ -52,31 +56,48 @@ function CityTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa thành phố" />,
+      title: <ConfirmModalTitle title="Xác nhận xóa vai trò" />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
       cancelText: 'Hủy',
       maskClosable: true,
       onOk() {
-        deleteCityMutate(record.id)
+        deleteRoleMutate(record.id)
       }
     })
   }
 
-  const columns: TableProps<CityDataSource>['columns'] = [
+  const columns: TableProps<RoleDataSource>['columns'] = [
     {
       title: '#',
       dataIndex: 'index',
       key: 'index',
       fixed: 'left',
-      width: 50,
+      width: 50
     },
     {
-      title: 'Tên thành phố',
+      title: 'Tên vai trò',
       dataIndex: 'name',
       key: 'name',
       sorter: true
+    },
+    {
+      title: 'Quyền hạn',
+      dataIndex: 'authorityPrivileges',
+      key: 'authorityPrivileges',
+      filterSearch: true,
+      filterMode: 'tree',
+      filters: authorityPrivilegesFilterMap,
+      onFilter: (value, record) => record.authorityPrivileges.includes(value as string),
+      render: (authorityPrivileges: string[]) => (
+        <>
+          {authorityPrivileges.map(authorityPrivilege => {
+            const [label, color] = authorityPrivilegesMap[authorityPrivilege] || [authorityPrivilege, 'gray']
+            return <Tag color={color} key={authorityPrivilege}>{label}</Tag>
+          })}
+        </>
+      )
     },
     {
       title: 'Ngày tạo',
@@ -92,7 +113,8 @@ function CityTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(`/city/${record.id}/edit`)}
+        <TableActions disabled={record.name === 'ROLE_ADMIN'}
+                      onUpdate={() => navigate(`/role/${record.id}/edit`)}
                       onDelete={() => showDeleteConfirm(record)} />
       )
     }
@@ -115,10 +137,14 @@ function CityTable({
       locale={{
         triggerDesc: 'Sắp xếp giảm dần',
         triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp'
+        cancelSort: 'Hủy sắp xếp',
+        filterReset: 'Bỏ lọc',
+        filterConfirm: 'Lọc',
+        filterSearchPlaceholder: 'Tìm kiếm',
+        filterCheckall: 'Chọn tất cả'
       }}
     />
   )
 }
 
-export default CityTable
+export default RoleTable

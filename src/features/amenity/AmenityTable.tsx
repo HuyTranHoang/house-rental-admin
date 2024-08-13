@@ -1,25 +1,20 @@
-import React from 'react'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { Amenity } from '../../models/amenity.type.ts'
 import { useNavigate } from 'react-router-dom'
-import { useDeleteAmenity } from '../../hooks/useAmenities.ts'
-import ConfirmModalTitle from '../../components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '../../components/ConfirmModalContent.tsx'
-import TableActions from '../../components/TableActions.tsx'
+import { useDeleteAmenity } from '@/hooks/useAmenities.ts'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import TableActions from '@/components/TableActions.tsx'
+import { AmenityDataSource } from '@/models/amenity.type.ts'
 
 const { confirm } = Modal
 
-type DataSourceType = Amenity & {
-  key: React.Key;
-}
-
 interface AmenityTableProps {
-  dataSource: DataSourceType[];
+  dataSource: AmenityDataSource[];
   loading: boolean;
   paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<DataSourceType>['onChange'];
-  rowSelection: TableRowSelection<DataSourceType> | undefined
+  handleTableChange: TableProps<AmenityDataSource>['onChange'];
+  rowSelection: TableRowSelection<AmenityDataSource> | undefined
 }
 
 function AmenityTable({
@@ -32,7 +27,7 @@ function AmenityTable({
   const navigate = useNavigate()
   const { deleteAmenityMutate } = useDeleteAmenity()
 
-  const showDeleteConfirm = (record: DataSourceType) => {
+  const showDeleteConfirm = (record: AmenityDataSource) => {
 
     const items: DescriptionsProps['items'] = [
       {
@@ -69,11 +64,11 @@ function AmenityTable({
     })
   }
 
-  const columns: TableProps<DataSourceType>['columns'] = [
+  const columns: TableProps<AmenityDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'index',
+      key: 'index',
       fixed: 'left',
       width: 50
     },
@@ -107,7 +102,7 @@ function AmenityTable({
     <Table
       dataSource={dataSource}
       columns={columns}
-      rowSelection={{ ...rowSelection }}
+      rowSelection={rowSelection}
       pagination={{
         position: ['bottomCenter'],
         pageSizeOptions: ['5', '10', '20'],

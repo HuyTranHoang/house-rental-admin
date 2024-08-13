@@ -1,0 +1,30 @@
+.ant-spin-dot-item {
+    background-color: #bae0ff !important;
+}
+
+.menu-item-logout {
+    background-color: #fff1f0;
+}
+
+.menu-item-logout:hover {
+    background-color: #ffccc7 !important;
+}
+
+.login-page-bg {
+    height: 100vh;
+    background: linear-gradient(to right, #29323c, #485563);
+}
+
+.centered-text {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sider-dropdown {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}

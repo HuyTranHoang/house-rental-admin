@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getAllReportsWithPagination, updateReportStatus } from '../features/api/report.api.ts'
+import { getAllReportsWithPagination, updateReportStatus } from '@/api/report.api.ts'
 import { ReportStatus } from '../models/report.type.ts'
 import { toast } from 'sonner'
 

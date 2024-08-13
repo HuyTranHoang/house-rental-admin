@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Property } from '../../models/property.type.ts'
+import { Property } from '@/models/property.type.ts'
 
 export const getPropertyById = async (id: number) => {
   try {

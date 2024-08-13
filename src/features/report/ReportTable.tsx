@@ -1,34 +1,34 @@
 import {
   Badge,
-  Button, Col,
+  Button,
+  Col,
   ConfigProvider,
   Descriptions,
-  DescriptionsProps, Image,
-  Modal, Row,
+  DescriptionsProps,
+  Image,
+  Modal,
+  Row,
   Space,
   Table,
   TablePaginationConfig,
   TableProps,
-  Tag, Typography
+  Tag,
+  Typography
 } from 'antd'
-import React, { useState } from 'react'
-import { Report, Report as ReportType, ReportCategory, ReportStatus } from '../../models/report.type.ts'
+import { useState } from 'react'
+import { Report, ReportCategory, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
-import { useUpdateReportStatus } from '../../hooks/useReports.ts'
+import { useUpdateReportStatus } from '@/hooks/useReports.ts'
 import { useQuery } from '@tanstack/react-query'
-import { getPropertyById } from '../api/property.api.ts'
-import { formatCurrency } from '../../utils/formatCurrentcy.ts'
-import { customFormatDate } from '../../utils/customFormatDate.ts'
-
-type DataSourceType = ReportType & {
-  key: React.Key;
-}
+import { getPropertyById } from '@/api/property.api.ts'
+import { formatCurrency } from '@/utils/formatCurrentcy.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 
 interface ReportTableProps {
-  dataSource: DataSourceType[];
+  dataSource: ReportDataSource[];
   loading: boolean;
   paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<DataSourceType>['onChange'];
+  handleTableChange: TableProps<ReportDataSource>['onChange'];
   status: ReportStatus
 }
 
@@ -197,33 +197,33 @@ function ReportTable({
     {
       key: 'usernameReport',
       label: 'Tên tài khoản',
-      children: report.username
+      children: report?.username
     },
     {
       key: 'category',
       label: 'Loại báo cáo',
-      children: categoryMap[report.category][0],
+      children: report.category,
       span: 2
     },
     {
       key: 'reason',
       label: 'Lý do',
-      children: report.reason,
+      children: report?.reason,
       span: 3
     },
     {
       key: 'createdAt',
       label: 'Thời gian báo cáo',
-      children: report.createdAt
+      children: report?.createdAt
     }
 
   ]
 
-  const columns: TableProps<DataSourceType>['columns'] = [
+  const columns: TableProps<ReportDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'index',
+      key: 'index',
       fixed: 'left',
       width: 50
     },
@@ -358,7 +358,9 @@ function ReportTable({
 
           <Typography.Title level={4}>Nội dung báo cáo</Typography.Title>
 
-          <Descriptions bordered items={modalReportItems} />
+          {
+            report && <Descriptions bordered items={modalReportItems} />
+          }
 
         </Modal>
       }
