@@ -1,20 +1,20 @@
 import { useState } from "react"
 import { Review } from "../../models/review.type"
-import { useReviews } from "../../hooks/useReviews"
-import { Button, Divider, Flex, Space, TableProps, Typography } from "antd"
+import { useDeleteMultiReview, useReviews } from "../../hooks/useReviews"
+import { Button, Divider, Flex, Input, Space, TableProps, Typography } from "antd"
 import { useSetBreadcrumb } from "../../hooks/useSetBreadcrumb"
 import { Link, useNavigate } from "react-router-dom"
 import ErrorFetching from "../../components/ErrorFetching"
-import Search from "antd/es/input/Search"
-import { PlusCircleOutlined } from "@ant-design/icons"
 import ReviewTable from "./ReviewTable"
+import { customFormatDate } from "../../utils/customFormatDate"
+import { showMultipleDeleteConfirm } from "../../components/ConfirmMultipleDeleteConfig"
 
 
 type DataSourceType = Review & {
     key: React.Key
   }
 
-
+const { Search } = Input
   
 function ListReview() {
     const navigate = useNavigate()
@@ -28,6 +28,15 @@ function ListReview() {
 
     const { data, isLoading, isError } = useReviews(search, pageNumber, pageSize, sortBy);
 
+    const { deleteReviewsMutate } = useDeleteMultiReview()
+
+    const handleDelete = () => {
+      showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các đánh giá', () => {
+        deleteReviewsMutate(deleteIdList);
+        setDeleteIdList([]);
+      });
+    };
+
     const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
             if (Array.isArray(sorter)) {
                 setSortBy('createdAtDesc')
@@ -40,17 +49,18 @@ function ListReview() {
         }
 
         const dataSource: DataSourceType[] = data
-            ? data.data.map((review: Review) => ({
+            ? data.data.map((review: Review, index) => ({
             key: review.id,
             id: review.id,
+            index: (pageNumber - 1) * pageSize + index + 1,
             userId: review.userId,
-            username: review.userName,
+            name: review.userName,
             propertyId: review.propertyId,
             title: review.propertyTitle,
             rating: review.rating,
+            createdAt: customFormatDate(review.createdAt),
             comment: review.comment,
 
-        //   createdAt: customFormatDate(amenity.createdAt)
         }))
         : []
 
@@ -86,13 +96,10 @@ function ListReview() {
 
             <Space>
             {deleteIdList.length > 0 && (
-                <Button shape="round" type="primary" danger>
+                <Button shape="round" type="primary" danger onClick={handleDelete}>
                 Xóa các mục đã chọn
                 </Button>
             )}
-            <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/review/add')}>
-                Thêm mới
-            </Button>
             </Space>
             </Flex>
 

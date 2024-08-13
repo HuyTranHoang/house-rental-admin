@@ -6,6 +6,6 @@ export interface Review {
     propertyTitle: string
     userId: number
     userName: string
-    // createdAt: string
+    createdAt: string
     // updatedAt: string
 }
