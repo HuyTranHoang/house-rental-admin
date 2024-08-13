@@ -13,6 +13,7 @@ import reviewRouter from './reviewRouter.tsx'
 import { HomeOutlined } from '@ant-design/icons'
 
 import userRouter from '@/router/userRouter.tsx'
+import districtRouter from '@/router/districtRouter.tsx'
 
 
 export const routerList = [
@@ -38,6 +39,8 @@ export const routerList = [
         element: <ProtectedRoute />,
         children: [
           ...cityRouter // /city, /city/add, /city/:id/edit
+          ,
+          ...districtRouter // /district, /district/add, /district/:id/edit
           ,
           ...roomTypeRouter // /roomType, /roomType/add, /roomType/:id/edit
           ,
