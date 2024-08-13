@@ -7,7 +7,7 @@ export function useDeleteProperty() {
     const mutation = useMutation({
       mutationFn: (id: number) => deleteProperty(id),
       onSuccess: () => {
-        toast.success('Xóa thành phố thành công')
+        toast.success('Xóa bài đăng thành công')
         queryClient.invalidateQueries({ queryKey: ['properies'] })
       },
       onError: (error: Error) => {

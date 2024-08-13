@@ -34,7 +34,7 @@ export const routerList = [
           ,
           ...roleRouter // /role
           ,
-          ...propertyRouter
+          ...propertyRouter // properties
         ] // End of ProtectedRoute children
       }
     ] // End of AppLayout children

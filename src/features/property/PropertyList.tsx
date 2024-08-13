@@ -15,7 +15,6 @@ const tabsItem: TabsProps['items'] = [
   { key: 'APPROVED', label: 'Đã Duyệt' },
   { key: 'PENDING', label: 'Chờ Duyệt' },
   { key: 'REJECTED', label: 'Đã Từ Chối' },
-  
 ];
 
 function PropertyList() {
@@ -23,9 +22,9 @@ function PropertyList() {
   const navigate = useNavigate();
 
   const [roomType, setRoomType] = useState('');
-  const [numOfDay, setNumOfDay] = useState(1);
+  const [numOfDay, setNumOfDay] = useState(0);
   const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(100000000);
+  const [maxPrice, setMaxPrice] = useState(0);
   const [minArea, setMinArea] = useState(5);
   const [maxArea, setMaxArea] = useState(10);
   const [city, setCity] = useState('');
@@ -34,7 +33,7 @@ function PropertyList() {
   const [pageSize, setPageSize] = useState(5);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('IdDesc');
-  const [status, setStatus] = useState('ALL');
+  const [status, setStatus] = useState('APPROVED');
 
   const { data, isLoading, isError } = useProperty(
     search, roomType, numOfDay, minPrice, maxPrice, minArea, maxArea, district, city, pageNumber, pageSize, sortBy
@@ -42,7 +41,7 @@ function PropertyList() {
 
   const onTabChange = (key: string) => {
     setStatus(key);
-    queryClient.invalidateQueries({ queryKey: ['properties'] }); // Sửa đổi ở đây
+    queryClient.invalidateQueries({ queryKey: ['properties'] }); 
   };
 
   const handleTableChange: TableProps<PropertyDataSource>['onChange'] = (_, filters, sorter) => {
@@ -116,7 +115,7 @@ function PropertyList() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} bất động sản`,
+          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} bài đăng`,
           onShowSizeChange: (_, size) => setPageSize(size),
           onChange: (page) => setPageNumber(page),
         }}

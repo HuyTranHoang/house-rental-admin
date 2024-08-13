@@ -23,11 +23,11 @@ export const deleteProperty = async (id: number): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/api/properties/${id}`);
     if (response.status !== 200) {
-      throw new Error('Không thể xóa bất động sản');
+      throw new Error('Không thể xóa bài đăng');
     }
   } catch (error) {
     console.error(error);
-    throw new Error('Xóa bất động sản thất bại');
+    throw new Error('Xóa bài đăng thất bại');
   }
 }
 
@@ -46,7 +46,7 @@ export const getAllPropertyWithPagination = async (
     sortBy : string
 ) => {
 try {
-pageNumber = pageNumber - 1
+    pageNumber = pageNumber - 1
 
 const params = {
     search,
@@ -65,11 +65,11 @@ const params = {
 
 const response = await axiosInstance.get<PropertyWithPagination>('/api/properties/admin', { params })
 
-if (response.status === 200) {
-return response.data
-}
-} catch (error) {
-console.error(error)
-throw new Error('Lấy danh sách bài đăng thất bại')
-}
+  if (response.status === 200) {
+      return response.data
+  }
+  } catch (error) {
+      console.error(error)
+      throw new Error('Lấy danh sách bài đăng thất bại')
+  }
 }

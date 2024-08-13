@@ -118,16 +118,6 @@ function AppLayout() {
           label: 'Quản Lý Bài Đăng',
           onClick: () => navigate('/property/list')
         },
-        {
-          key: 'property-pending',
-          label: 'Tin Chờ Duyệt',
-          onClick: () => navigate('/property/pending')
-        },
-        {
-          key: 'property-rejected',
-          label: 'Tin Bị Từ Chối',
-          onClick: () => navigate('/property/rejected')
-        }
       ]
     },
     {
