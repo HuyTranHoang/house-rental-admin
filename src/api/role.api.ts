@@ -7,6 +7,7 @@ export interface RoleField {
   id?: number
   name: string
   authorityPrivileges: string[]
+  authorityPrivilegesObject: { [key: string]: boolean | undefined }
 }
 
 interface RolesWithPagination {

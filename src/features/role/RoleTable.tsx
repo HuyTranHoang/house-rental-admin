@@ -1,4 +1,4 @@
-import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
+import { DescriptionsProps, Modal, Space, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { RoleDataSource } from '@/models/role.type.ts'
 import TableActions from '@/components/TableActions.tsx'
@@ -91,12 +91,12 @@ function RoleTable({
       filters: authorityPrivilegesFilterMap,
       onFilter: (value, record) => record.authorityPrivileges.includes(value as string),
       render: (authorityPrivileges: string[]) => (
-        <>
+        <Space size='small' wrap>
           {authorityPrivileges.map(authorityPrivilege => {
             const [label, color] = authorityPrivilegesMap[authorityPrivilege] || [authorityPrivilege, 'gray']
             return <Tag color={color} key={authorityPrivilege}>{label}</Tag>
           })}
-        </>
+        </Space>
       )
     },
     {

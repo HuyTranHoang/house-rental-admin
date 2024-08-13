@@ -1,12 +1,42 @@
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
-import { Button, Flex, Form, type FormProps, Input, Spin, Transfer, TransferProps, Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { Button, Checkbox, Flex, Form, type FormProps, Input, Spin, Table, TableProps, Typography } from 'antd'
+import { ReactNode, useEffect, useState } from 'react'
 import { useCreateRole, useUpdateRole } from '@/hooks/useRoles.ts'
 import { getRoleById, RoleField } from '@/api/role.api.ts'
 import { useAuthorities } from '@/hooks/useAuthorities.ts'
-import { authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
 import { useQuery } from '@tanstack/react-query'
 import { Authority } from '@/models/authority.type.ts'
+
+interface GroupedAuthorities {
+  [key: string]: {
+    key: string;
+    privilege: string;
+    read?: ReactNode;
+    create?: ReactNode;
+    delete?: ReactNode;
+    update?: ReactNode;
+  };
+}
+
+interface AuthoritiesTable {
+  key: string;
+  privilege: string;
+  read?: ReactNode;
+  create?: ReactNode;
+  delete?: ReactNode;
+  update?: ReactNode;
+}
+
+const translationMap: { [key: string]: string } = {
+  'user': 'Người dùng',
+  'property': 'Bất động sản',
+  'review': 'Đánh giá',
+  'city': 'Thành phố',
+  'district': 'Quận huyện',
+  'room_type': 'Loại phòng',
+  'amenity': 'Tiện nghi',
+  'role': 'Vai trò'
+}
 
 function AddUpdateRole() {
   const match = useMatch('/role/add')
@@ -19,20 +49,32 @@ function AddUpdateRole() {
 
   const [error, setError] = useState<string>('')
 
-  const [targetKeys, setTargetKeys] = useState<TransferProps['targetKeys']>([])
-
   const { addRoleMutate, addRolePending } = useCreateRole(setError)
   const { updateRoleMutate, updateRolePending } = useUpdateRole(setError)
 
   const { authorities } = useAuthorities()
 
   const onFinish: FormProps<RoleField>['onFinish'] = (values) => {
+    // Chuyển đổi nested object thành mảng các quyền hạn
+    const authorityPrivileges = Object.entries(values.authorityPrivilegesObject).flatMap(([groupKey, actions]) =>
+      Object.entries(actions)
+        .filter(([, isChecked]) => isChecked) // Chỉ giữ những action được chọn (checked)
+        .map(([action]) => `${groupKey}:${action}`) // Kết hợp groupKey và action thành "groupKey:action"
+    )
+
+    // Gán giá trị authorityPrivileges vào values để gửi đi
+    const finalValues = {
+      ...values,
+      authorityPrivileges
+    }
+
     if (isAddMode) {
-      addRoleMutate(values)
+      addRoleMutate(finalValues)
     } else {
-      updateRoleMutate(values)
+      updateRoleMutate(finalValues)
     }
   }
+
 
   const { data: roleUpdateData, isLoading } = useQuery({
     queryKey: ['role', id],
@@ -40,26 +82,114 @@ function AddUpdateRole() {
     enabled: !isAddMode
   })
 
-  const filterOption = (inputValue: string, option: Authority) => {
-    const lowercasedInput = inputValue.toLowerCase()
-    const translatedPrivilege = authorityPrivilegesMap[option.privilege]?.[0].toLowerCase() || ''
-    return (
-      option.privilege.toLowerCase().indexOf(lowercasedInput) > -1 ||
-      translatedPrivilege.indexOf(lowercasedInput) > -1
-    )
+  const columns: TableProps<AuthoritiesTable>['columns'] = [
+    {
+      dataIndex: 'privilege',
+      key: 'privilege',
+      rowScope: 'row'
+    },
+    {
+      title: 'Xem',
+      dataIndex: 'read',
+      key: 'read'
+    },
+    {
+      title: 'Thêm',
+      dataIndex: 'create',
+      key: 'create'
+    },
+    {
+      title: 'Xóa',
+      dataIndex: 'delete',
+      key: 'delete'
+    },
+    {
+      title: 'Sửa',
+      dataIndex: 'update',
+      key: 'update'
+    },
+    {
+      title: 'Khác',
+      dataIndex: 'other',
+      key: 'other',
+      render: (_: undefined, rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => (
+        <Button onClick={() => handleSelectAll(rowIndex)}>Chọn tất cả</Button>
+      )
+    }
+  ]
+
+  const groupBy = (array: Authority[] | undefined): GroupedAuthorities => {
+    if (!array) return {}
+
+    return array.reduce((result: GroupedAuthorities, currentValue: Authority) => {
+      const [groupKey, action] = currentValue.privilege.split(':')
+      if (groupKey === 'admin') return result // Skip 'admin'
+
+      const translatedGroupKey = translationMap[groupKey] || groupKey
+      if (!result[translatedGroupKey]) {
+        result[translatedGroupKey] = {
+          key: translatedGroupKey,
+          privilege: translatedGroupKey.charAt(0).toUpperCase() + translatedGroupKey.slice(1)
+        }
+      }
+      result[translatedGroupKey] = {
+        ...result[translatedGroupKey],
+        [action]: (
+          <Form.Item
+            name={['authorityPrivilegesObject', groupKey, action]}
+            valuePropName="checked"
+            noStyle
+          >
+            <Checkbox />
+          </Form.Item>
+        )
+      }
+      return result
+    }, {} as GroupedAuthorities)
   }
 
-  const handleChange: TransferProps['onChange'] = (newTargetKeys) => {
-    setTargetKeys(newTargetKeys)
+  const handleSelectAll = (rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
+    const originalKey = Object.keys(translationMap)
+      .find(key => translationMap[key] === rowIndex.key) || rowIndex.key
+
+    const values = form.getFieldsValue()
+    const authorityPrivilegesObject = values.authorityPrivilegesObject || {}
+    const actions = ['read', 'create', 'delete', 'update']
+
+    const newAuthorityPrivilegesObject = { ...authorityPrivilegesObject, [originalKey]: {} }
+
+    actions.forEach(action => {
+      newAuthorityPrivilegesObject[originalKey][action] = true
+    })
+
+    form.setFieldsValue({ authorityPrivilegesObject: newAuthorityPrivilegesObject })
   }
+
+
+  const groupedPrivileges = groupBy(authorities)
+  const dataSource = Object.values(groupedPrivileges)
 
   useEffect(() => {
     if (roleUpdateData) {
       form.setFieldValue('id', roleUpdateData.id)
       form.setFieldValue('name', roleUpdateData.name)
-      setTargetKeys(roleUpdateData.authorityPrivileges)
+
+      const existingPrivileges = roleUpdateData.authorityPrivileges.reduce((result, currentValue) => {
+        const [groupKey, action] = currentValue.split(':')
+        if (!result.authorityPrivilegesObject) {
+          result.authorityPrivilegesObject = {}
+        }
+        if (!result.authorityPrivilegesObject[groupKey]) {
+          result.authorityPrivilegesObject[groupKey] = {}
+        }
+        result.authorityPrivilegesObject[groupKey][action] = true
+        return result
+      }, {} as { [key: string]: any })
+
+      form.setFieldsValue(existingPrivileges)
     }
   }, [form, roleUpdateData])
+
 
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />
@@ -76,6 +206,7 @@ function AddUpdateRole() {
       <Form
         form={form}
         name="roleForm"
+        layout="horizontal"
         labelCol={{ span: 4 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 800, marginTop: 32 }}
@@ -105,30 +236,8 @@ function AddUpdateRole() {
 
         <Form.Item<RoleField>
           label="Quyền hạn"
-          name="authorityPrivileges"
-          rules={[
-            { required: true, message: 'Vui lòng chọn quyền cho vai trò này!' }
-          ]}
         >
-          <Transfer
-            showSearch
-            rowKey={(item) => item.privilege}
-            dataSource={authorities}
-            targetKeys={targetKeys}
-            filterOption={filterOption}
-            onChange={handleChange}
-            render={(item) => authorityPrivilegesMap[item.privilege]?.[0] || item.privilege}
-            listStyle={{
-              width: 250,
-              height: 300
-            }}
-            locale={{
-              searchPlaceholder: 'Tìm kiếm quyền',
-              itemUnit: 'quyền',
-              itemsUnit: 'quyền',
-              notFoundContent: 'Không tìm thấy quyền'
-            }}
-          />
+          <Table dataSource={dataSource} columns={columns} pagination={false} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
