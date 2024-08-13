@@ -67,8 +67,10 @@ function RoomTypeTable({
   const columns: TableProps<RoomTypeDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id'
+      dataIndex: 'index',
+      key: 'index',
+      fixed: 'left',
+      width: 50,
     },
     {
       title: 'Tên loại phòng',

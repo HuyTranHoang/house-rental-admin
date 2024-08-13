@@ -71,8 +71,8 @@ function RoleTable({
   const columns: TableProps<RoleDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'index',
+      key: 'index',
       fixed: 'left',
       width: 50
     },

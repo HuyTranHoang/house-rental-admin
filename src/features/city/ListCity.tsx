@@ -39,13 +39,15 @@ function ListCity() {
     }
   }
 
-  const dataSource = data
-    ? data.data.map((city: City) => ({
-        key: city.id,
-        id: city.id,
-        name: city.name,
-        createdAt: customFormatDate(city.createdAt)
-      }))
+
+  const dataSource: CityDataSource[] = data
+    ? data.data.map((city: City, idx) => ({
+      key: city.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
+      id: city.id,
+      name: city.name,
+      createdAt: customFormatDate(city.createdAt)
+    }))
     : []
 
   const rowSelection: TableRowSelection<CityDataSource> | undefined = {

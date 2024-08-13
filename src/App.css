@@ -21,3 +21,10 @@
     flex-direction: column;
     align-items: center;
 }
+
+.sider-dropdown {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}

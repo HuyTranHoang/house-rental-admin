@@ -65,9 +65,10 @@ function ListReport() {
   }
 
   const dataSource: ReportDataSource[] = data
-    ? data.data.map((report: ReportType) => ({
+    ? data.data.map((report: ReportType, idx) => ({
       key: report.id,
       id: report.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       userId: report.userId,
       username: report.username,
       propertyId: report.propertyId,

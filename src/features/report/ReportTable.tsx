@@ -222,8 +222,8 @@ function ReportTable({
   const columns: TableProps<ReportDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'index',
+      key: 'index',
       fixed: 'left',
       width: 50
     },

@@ -40,8 +40,9 @@ function ListAmenity() {
   }
 
   const dataSource: AmenityDataSource[] = data
-    ? data.data.map((amenity: Amenity) => ({
+    ? data.data.map((amenity: Amenity, idx) => ({
       key: amenity.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       id: amenity.id,
       name: amenity.name,
       createdAt: customFormatDate(amenity.createdAt)
