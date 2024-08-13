@@ -89,7 +89,7 @@ function ListReview() {
                 Danh sách đánh giá
             </Typography.Title>
             <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-            <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm đánh giá"
+            <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm theo username"
                     style={{ width: 250 }}
             />
             </Flex>

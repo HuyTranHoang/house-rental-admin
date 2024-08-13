@@ -2,6 +2,7 @@ import axios from "axios";
 import { PageInfo } from "../../models/pageInfo.type";
 import { Review } from "../../models/review.type";
 import { delay } from "../../utils/delay";
+import axiosInstance from "../../axiosInstance";
 
 interface ReviewWithPagination {
     pageInfo: PageInfo
@@ -38,17 +39,17 @@ export const getAllReviewsWithPagination = async (
     }
 }
 
-export const deleteReview =async (id:number) => {
+export const deleteReview = async (id:number) => {
     try {
-        await axios.delete(`/api/review/${id}`)
+        await axiosInstance.delete(`/api/review/${id}`)
     } catch (error) {console.error(error)
         throw new Error('Xóa đánh giá thất bại')
     }
 }
 
-export const deleteReviews =async (ids: number[]) => {
+export const deleteReviews = async (ids: number[]) => {
     try {
-        await axios.delete('/api/review/delete-multiple', { data: { ids } })
+        await axiosInstance.delete('/api/review/delete-multiple', { data: { ids } })
     } catch (error) {console.error(error)
         throw new Error('Xóa các đánh giá thất bại')
     }
