@@ -6,6 +6,7 @@ import { useDeleteDistrict } from '@/hooks/useDistricts.ts'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
+import { useCitiesAll } from '@/hooks/useCities.ts'
 
 const { confirm } = Modal
 
@@ -19,6 +20,8 @@ interface DistrictTableProps {
 
 function DistrictTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: DistrictTableProps) {
   const navigate = useNavigate()
+
+  const { data: cityData, isLoading: cityIsLoading } = useCitiesAll()
   const { deleteDistrictMutate } = useDeleteDistrict()
 
   const showDeleteConfirm = (record: DistrictDataSource) => {
@@ -31,13 +34,13 @@ function DistrictTable({ dataSource, loading, paginationProps, handleTableChange
       },
       {
         key: '2',
-        label: 'Tên quận huyện',
+        label: 'Quận huyện',
         children: <span>{record.name}</span>,
         span: 3
       },
       {
         key: '3',
-        label: 'Tên thành phố',
+        label: 'Thành phố',
         children: <span>{record.cityName}</span>,
         span: 3
       },
@@ -51,7 +54,7 @@ function DistrictTable({ dataSource, loading, paginationProps, handleTableChange
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa quận huyện' />,
+      title: <ConfirmModalTitle title="Xác nhận xóa quận huyện" />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -66,22 +69,26 @@ function DistrictTable({ dataSource, loading, paginationProps, handleTableChange
   const columns: TableProps<DistrictDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'index',
+      key: 'index',
       fixed: 'left',
       width: 50
     },
     {
-      title: 'Tên thành phố',
+      title: 'Quận huyện',
       dataIndex: 'name',
       key: 'name',
       sorter: true
     },
     {
-      title: 'Tên quận huyện',
+      title: 'Thành phố',
       dataIndex: 'cityName',
       key: 'cityName',
-      sorter: true
+      sorter: true,
+      filterMultiple: false,
+      filters: [
+        ...cityData?.map((city) => ({ text: city.name, value: city.id })) || []
+      ]
     },
     {
       title: 'Ngày tạo',
@@ -105,11 +112,14 @@ function DistrictTable({ dataSource, loading, paginationProps, handleTableChange
     }
   ]
 
+
   return (
     <Table
       dataSource={dataSource}
       columns={columns}
       rowSelection={rowSelection}
+      onChange={handleTableChange}
+      loading={loading || cityIsLoading}
       pagination={{
         position: ['bottomCenter'],
         pageSizeOptions: ['5', '10', '20'],
@@ -117,12 +127,12 @@ function DistrictTable({ dataSource, loading, paginationProps, handleTableChange
         showSizeChanger: true,
         ...paginationProps
       }}
-      onChange={handleTableChange}
-      loading={loading}
       locale={{
         triggerDesc: 'Sắp xếp giảm dần',
         triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp'
+        cancelSort: 'Hủy sắp xếp',
+        filterReset: 'Bỏ lọc',
+        filterConfirm: 'Lọc'
       }}
     />
   )

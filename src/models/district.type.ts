@@ -9,5 +9,6 @@ export interface District {
 }
 
 export type DistrictDataSource = District & {
-  key: React.Key
+  key: React.Key,
+  index?: number
 }

@@ -11,10 +11,14 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import React from 'react'
 
-export const useDistricts = (search: string, pageNumber: number, pageSize: number, sortBy: string) => {
+export const useDistricts = (search: string,
+                             cityId: number,
+                             pageNumber: number,
+                             pageSize: number,
+                             sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['districts', search, pageNumber, pageSize, sortBy],
-    queryFn: () => getAllDistrictsWithPagination(search, pageNumber, pageSize, sortBy)
+    queryKey: ['districts', search, cityId, pageNumber, pageSize, sortBy],
+    queryFn: () => getAllDistrictsWithPagination(search, cityId, pageNumber, pageSize, sortBy)
   })
 
   return { data, isLoading, isError }

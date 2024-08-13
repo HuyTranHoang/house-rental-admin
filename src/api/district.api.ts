@@ -29,6 +29,7 @@ export const getAllDistricts = async () => {
 
 export const getAllDistrictsWithPagination = async (
   search: string,
+  cityId: number,
   pageNumber: number,
   pageSize: number,
   sortBy: string
@@ -38,6 +39,7 @@ export const getAllDistrictsWithPagination = async (
 
     const params = {
       name: search,
+      cityId,
       pageNumber,
       pageSize,
       sortBy
