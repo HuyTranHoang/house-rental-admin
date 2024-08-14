@@ -1,6 +1,9 @@
+import { useRolesWithoutParams } from '@/hooks/useRoles'
+import { Role, RoleDataSource } from '@/models/role.type'
 import { UserDataSource } from '@/models/user.type'
-import { CloseCircleOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
+import { CloseCircleOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { Button, Modal, Table, TablePaginationConfig, TableProps, Tag, Form, Input, Checkbox } from 'antd'
+import { TableRowSelection } from 'antd/es/table/interface'
 import { useState } from 'react'
 
 const { confirm } = Modal
@@ -10,16 +13,45 @@ interface UserTableProps {
   loading: boolean
   paginationProps: false | TablePaginationConfig | undefined
   handleTableChange: TableProps<UserDataSource>['onChange']
+  rowSelection: TableRowSelection<UserDataSource> | undefined
   isNonLocked: boolean
 }
 
-function UserTable({ dataSource, loading, paginationProps, handleTableChange }: UserTableProps) {
+function UserTable({
+  dataSource,
+  loading,
+  paginationProps,
+  handleTableChange,
+  rowSelection,
+  isNonLocked
+}: UserTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [currentReview, setCurrentReview] = useState<UserDataSource | null>(null)
+  const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
+  const [form] = Form.useForm()
+
+  const { roleData } = useRolesWithoutParams()
+
+  const roleDataSource: RoleDataSource[] = roleData
+    ? roleData.map((role: Role) => ({
+        key: role.id,
+        id: role.id,
+        name: role.name,
+      }))
+    : []
 
   const handleView = (record: UserDataSource) => {
-    setCurrentReview(record)
+    setCurrentUser(record)
     setIsModalOpen(true)
+  }
+
+  const handleUpdateRoles = (record: UserDataSource) => {
+    setCurrentUser(record)
+    form.setFieldsValue({
+      username: record.username,
+      roles: record.roles
+    })
+    setIsUpdateRolesModalOpen(true)
   }
 
   const handleBlockUser = (record: UserDataSource) => {
@@ -27,8 +59,26 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange }: 
       title: 'Bạn có chắc chắn muốn khóa tài khoản này?',
       onOk() {
         console.log('Khóa người dùng', record.id)
+        //
       }
     })
+  }
+
+  const handleUpdateRolesModalOk = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        console.log('Chỉnh sửa người dùng:', values)
+        setIsUpdateRolesModalOpen(false)
+        //
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info)
+      })
+  }
+
+  const handleUpdateRolesModalCancel = () => {
+    setIsUpdateRolesModalOpen(false)
   }
 
   const columns: TableProps<UserDataSource>['columns'] = [
@@ -52,7 +102,22 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange }: 
     {
       title: 'Vai trò',
       dataIndex: 'roles',
-      key: 'roles'
+      key: 'roles',
+      render: (_, record: UserDataSource) => (
+        <div>
+          {record.roles.map((role, index) => (
+            <Tag key={index} color='blue'>
+              {role}
+            </Tag>
+          ))}
+          <Button
+            icon={<EditOutlined />}
+            type='default'
+            style={{ borderColor: '#1890ff', color: '#1890ff', marginRight: '1rem' }}
+            onClick={() => handleUpdateRoles(record)}
+          />
+        </div>
+      )
     },
     {
       title: 'Ngày tạo',
@@ -73,7 +138,13 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange }: 
             style={{ borderColor: '#1890ff', color: '#1890ff', marginRight: '1rem' }}
             onClick={() => handleView(record)}
           />
-          <Button icon={<CloseCircleOutlined />} type='default' onClick={() => handleBlockUser(record)} danger>
+          <Button
+            icon={<CloseCircleOutlined />}
+            type='default'
+            onClick={() => handleBlockUser(record)}
+            danger
+            disabled={!isNonLocked}
+          >
             Khoá
           </Button>
         </div>
@@ -86,6 +157,7 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange }: 
       <Table
         dataSource={dataSource}
         columns={columns}
+        rowSelection={rowSelection}
         pagination={{
           position: ['bottomCenter'],
           pageSizeOptions: ['5', '10', '20'],
@@ -102,22 +174,48 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange }: 
         }}
       />
 
+      {/* Modal xem chi tiết */}
       <Modal title='Chi tiết tài khoản' open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
-        {currentReview && (
+        {currentUser && (
           <>
             <p>
-              <b>Tài khoản:</b> {currentReview.username}
+              <b>Tài khoản:</b> {currentUser.username}
             </p>
             <p>
-              <b>Email:</b> {currentReview.email}
+              <b>Email:</b> {currentUser.email}
             </p>
             <p>
-              <b>Vai trò:</b> {currentReview.roles}
+              <b>Vai trò:</b> {currentUser.roles.join(', ')}
             </p>
             <p>
-              <b>Ngày tạo:</b> {currentReview.createdAt}
+              <b>Ngày tạo:</b> {currentUser.createdAt}
             </p>
           </>
+        )}
+      </Modal>
+
+      {/* Modal chỉnh sửa */}
+      <Modal
+        title='Cập nhật vai trò'
+        open={isUpdateRolesModalOpen}
+        onCancel={handleUpdateRolesModalCancel}
+        onOk={handleUpdateRolesModalOk}
+      >
+        {currentUser && (
+          <Form form={form} layout='vertical' initialValues={{ username: currentUser.username, roles: currentUser.roles }}>
+            <Form.Item name='username' label='Tài khoản'>
+              <Input disabled />
+            </Form.Item>
+            <Form.Item name='roles' label='Vai trò' rules={[{ required: true, message: 'Vui lòng chọn ít nhất một vai trò!' }]}>
+              <Checkbox.Group>
+                {roleDataSource.map((role) => (
+                  <Checkbox key={role.id} value={role.id}>
+                    {role.name}
+                  </Checkbox>
+                ))}
+              </Checkbox.Group>
+            </Form.Item>
+          </Form>
         )}
       </Modal>
     </>

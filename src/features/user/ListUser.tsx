@@ -1,7 +1,7 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import { useUsers } from '@/hooks/useUsers'
 import { User, UserDataSource } from '@/models/user.type'
-import { CheckCircleOutlined, CloseSquareOutlined} from '@ant-design/icons'
+import { CheckCircleOutlined, CloseSquareOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Divider, Flex, Input, Space, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import Search from 'antd/es/input/Search'
@@ -32,6 +32,8 @@ function ListUser() {
   const [sortBy, setSortBy] = useState('IdDesc')
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
+
+  const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
   const { data, isLoading, isError } = useUsers(search, isNonLocked, roles, pageNumber, pageSize, sortBy)
 
@@ -64,9 +66,16 @@ function ListUser() {
         avatarUrl: user.avatarUrl,
         roles: user.roles,
         authorities: user.authorities,
-        createdAt: customFormatDate(user.createdAt),
+        createdAt: customFormatDate(user.createdAt)
       }))
     : []
+
+  const rowSelection = {
+    onChange: (_selectedRowKeys: React.Key[], selectedRows: UserDataSource[]) => {
+      const selectedIdList = selectedRows.map((row) => row.id)
+      setDeleteIdList(selectedIdList)
+    }
+  }
 
   if (isError) {
     return <ErrorFetching />
@@ -89,7 +98,7 @@ function ListUser() {
         </Flex>
       </Flex>
 
-      <Tabs defaultActiveKey={'isNotBlocked'} items={tabsItem} onChange={onTabChange} />
+      <Tabs defaultActiveKey={'isNonLocked'} items={tabsItem} onChange={onTabChange} />
 
       <UserTable
         dataSource={dataSource}
@@ -104,6 +113,10 @@ function ListUser() {
           onChange: (page) => setPageNumber(page)
         }}
         handleTableChange={handleTableChange}
+        rowSelection={{
+          type: 'checkbox',
+          ...rowSelection
+        }}
       />
     </>
   )

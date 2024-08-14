@@ -1,21 +1,26 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addRole, deleteRole, deleteRoles, getAllRolesWithPagination, updateRole } from '@/api/role.api.ts'
+import { addRole, deleteRole, deleteRoles, getAllRoles, getAllRolesWithPagination, updateRole } from '@/api/role.api.ts'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import axios from 'axios'
 
-export const useRoles = (search: string,
-                         authorities: string,
-                         pageNumber: number,
-                         pageSize: number,
-                         sortBy: string) => {
+export const useRoles = (search: string, authorities: string, pageNumber: number, pageSize: number, sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['roles', search, authorities, pageNumber, pageSize, sortBy],
     queryFn: () => getAllRolesWithPagination(search, authorities, pageNumber, pageSize, sortBy)
   })
 
   return { data, isLoading, isError }
+}
+
+export const useRolesWithoutParams = () => {
+  const { data } = useQuery({
+    queryKey: ['roles'],
+    queryFn: () => getAllRoles()
+  })
+
+  return { data }
 }
 
 export const useCreateRole = (setError: React.Dispatch<React.SetStateAction<string>>) => {
