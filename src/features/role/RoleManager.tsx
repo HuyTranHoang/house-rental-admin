@@ -23,6 +23,7 @@ import { getRoleById, RoleField } from '@/api/role.api.ts'
 import { useQuery } from '@tanstack/react-query'
 import ListRole from '@/features/role/ListRole.tsx'
 import { useUpdateRole } from '@/hooks/useRoles.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
 
 
 interface GroupedAuthorities {
@@ -59,7 +60,8 @@ const translationMap: { [key: string]: string } = {
   'district': 'Quận huyện',
   'room_type': 'Loại phòng',
   'amenity': 'Tiện nghi',
-  'role': 'Vai trò'
+  'role': 'Vai trò',
+  'dashboard': 'Trang quản trị'
 }
 
 
@@ -305,12 +307,10 @@ function RoleManager() {
             {currentRole.id ? `Id: ${currentRole.id}` : 'Chọn một vai trò để xem thông tin chi tiết'}
           </Typography.Paragraph>
           <Typography.Paragraph>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-            scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into
-            electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of
-            Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like
-            Aldus PageMaker including versions of Lorem Ipsum.
+            {currentRole.description ? `Mô tả: ${currentRole.description}` : 'Không có mô tả'}
+          </Typography.Paragraph>
+          <Typography.Paragraph>
+            {currentRole.createdAt ? `Ngày tạo: ${customFormatDate(currentRole.createdAt)}` : ''}
           </Typography.Paragraph>
         </Col>
       </Row>
