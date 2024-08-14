@@ -71,9 +71,9 @@ function RoleManager() {
   const { authorities } = useAuthorities()
 
   const [currentRole, setCurrentRole] = useState({} as Role)
-
-  const [error, setError] = useState<string>('')
-  const { updateRoleMutate, updateRolePending } = useUpdateRole(setError)
+  const [, setError] = useState<string>('')
+  const { updateRoleMutate, updateRolePending } =
+    useUpdateRole(setError, undefined, undefined, setCurrentRole)
 
   const { data: roleUpdateData, isLoading: roleUpdateLoading } = useQuery({
     queryKey: ['role', currentRole.id],
@@ -279,14 +279,18 @@ function RoleManager() {
                 <Typography.Paragraph>Chọn một vai trò để xem quyền hạn</Typography.Paragraph>
               }
               {
-                currentRole.id &&
+                currentRole.id && currentRole.name === 'ROLE_ADMIN' &&
+                <Typography.Paragraph>Vai trò admin có tất cả quyền hạn và không thể thay đổi</Typography.Paragraph>
+              }
+              {
+                currentRole.id && currentRole.name !== 'ROLE_ADMIN' &&
                 <Table dataSource={dataSource} columns={columns} pagination={false} loading={roleUpdateLoading} />
               }
             </Form.Item>
 
             <Form.Item>
               {
-                currentRole.id &&
+                currentRole.id && currentRole.name !== 'ROLE_ADMIN' &&
                 <Button loading={updateRolePending} type="primary" htmlType="submit">
                   Cập nhật quyền hạn cho vai trò
                 </Button>

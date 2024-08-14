@@ -12,7 +12,7 @@ import {
   Tooltip,
   Typography
 } from 'antd'
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { blue } from '@ant-design/colors'
 import { useCreateRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
 import { Role } from '@/models/role.type.ts'
@@ -27,34 +27,33 @@ interface ListRoleProps {
 }
 
 function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
+  const [isAddMode, setIsAddMode] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [error, setError] = useState<string>('')
   const [formAddRole] = Form.useForm()
 
-  const [editRole, setEditRole] = useState({} as Role)
-
   const { addRoleMutate, addRolePending }
     = useCreateRole(setError, setIsModalOpen, formAddRole)
   const { updateRoleMutate, updateRolePending }
-    = useUpdateRole(setError, setIsModalOpen, formAddRole)
+    = useUpdateRole(setError, setIsModalOpen, formAddRole, setCurrentRole)
 
   const { data, isLoading } = useRolesAll()
 
   const { data: roleUpdateData } = useQuery({
-    queryKey: ['role', editRole.id],
-    queryFn: () => getRoleById(Number(editRole.id)),
-    enabled: editRole.id !== undefined
+    queryKey: ['role', currentRole.id],
+    queryFn: () => getRoleById(Number(currentRole.id)),
+    enabled: currentRole.id !== undefined
   })
 
   const onFinishAddRole: FormProps<RoleField>['onFinish'] = (values) => {
-    if (!editRole.id) {
+    if (isAddMode) {
       values.authorityPrivileges = [
         'user:read',
         'user:update'
       ]
       addRoleMutate(values)
     } else {
-      updateRoleMutate({ ...values, id: editRole.id })
+      updateRoleMutate({ ...values, id: currentRole.id })
     }
   }
 
@@ -74,7 +73,11 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
         <Space align="center">
           Danh sách vai trò
           <Tooltip title="Thêm mới vai trò">
-            <PlusCircleOutlined className="icon-primary" onClick={() => setIsModalOpen(true)} />
+            <PlusCircleOutlined className="icon-primary" onClick={() => {
+              formAddRole.resetFields()
+              setIsAddMode(true)
+              setIsModalOpen(true)
+            }} />
           </Tooltip>
         </Space>
       </Typography.Title>
@@ -84,12 +87,17 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
         dataSource={data}
         renderItem={(item) => (
           <List.Item
-            actions={[
+            actions={(item.name !== 'ROLE_ADMIN' && item.name !== 'ROLE_USER') ? [
               <EditOutlined onClick={() => {
-                setEditRole(item)
+                setCurrentRole(item)
+                setIsAddMode(false)
                 setIsModalOpen(true)
               }} />,
               <DeleteOutlined onClick={() => console.log(item)} className="icon-danger" />
+            ] : [
+              <Tooltip title="Vai trò mặc định không thể sửa">
+                <InfoCircleOutlined />
+              </Tooltip>
             ]}
             onClick={() => {
               if (currentRole.id === item.id) return
@@ -106,7 +114,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
         )}
       />
 
-      <Modal title="Thêm mới vai trò"
+      <Modal title={isAddMode ? 'Thêm mới vai trò' : 'Cập nhật vai trò'}
              open={isModalOpen}
              onCancel={() => setIsModalOpen(false)}
              footer={false}
@@ -136,11 +144,18 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
           >
             <Input.TextArea />
           </Form.Item>
+          <Form.Item<RoleField>
+            label="Quyền hạn"
+            name="authorityPrivileges"
+            hidden
+          >
+            <Input />
+          </Form.Item>
           <Form.Item>
             <Flex justify="end">
               <Space>
                 <Button loading={addRolePending || updateRolePending} type="primary" htmlType="submit">
-                  {editRole.id ? 'Cập nhật' : 'Thêm mới'}
+                  {isAddMode ? 'Thêm mới' : 'Cập nhật'}
                 </Button>
                 <Button onClick={() => setIsModalOpen(false)} danger>
                   Hủy

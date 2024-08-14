@@ -72,7 +72,8 @@ export const addRole = async (values: RoleField) => {
 }
 
 export const updateRole = async (values: RoleField) => {
-  await axiosInstance.put(`/api/roles/${values.id}`, values)
+  const response = await axiosInstance.put(`/api/roles/${values.id}`, values)
+  return response.data
 }
 
 export const deleteRole = async (id: number) => {

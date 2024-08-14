@@ -4,6 +4,7 @@ import React from 'react'
 import { toast } from 'sonner'
 import axios from 'axios'
 import { FormInstance } from 'antd'
+import { Role } from '@/models/role.type.ts'
 
 export const useRolesAll = () => {
   const { data, isLoading, isError } = useQuery({
@@ -60,16 +61,18 @@ export const useCreateRole = (
 export const useUpdateRole = (
   setError: React.Dispatch<React.SetStateAction<string>>,
   setIsModalOpen?: React.Dispatch<React.SetStateAction<boolean>>,
-  formAddRole?: FormInstance
+  formAddRole?: FormInstance,
+  setCurrentRole?: React.Dispatch<React.SetStateAction<Role>>
 ) => {
   const queryClient = useQueryClient()
 
   const { mutate: updateRoleMutate, isPending: updateRolePending } = useMutation({
     mutationFn: updateRole,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Cập nhật vai trò thành công')
       queryClient.invalidateQueries({ queryKey: ['roles'] })
-      queryClient.invalidateQueries({ queryKey: ['authorities'] })
+      queryClient.invalidateQueries({ queryKey: ['role', data.id] })
+      setCurrentRole && setCurrentRole(data)
 
       if (setIsModalOpen && formAddRole) {
         setIsModalOpen(false)
