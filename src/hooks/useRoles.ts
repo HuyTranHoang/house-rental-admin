@@ -1,9 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addRole, deleteRole, deleteRoles, getAllRolesWithPagination, updateRole } from '@/api/role.api.ts'
+import { addRole, deleteRole, deleteRoles, getAllRoles, getAllRolesWithPagination, updateRole } from '@/api/role.api.ts'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import axios from 'axios'
+import { FormInstance } from 'antd'
+import { Role } from '@/models/role.type.ts'
+
+export const useRolesAll = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['roles'],
+    queryFn: getAllRoles
+  })
+
+  return { data, isLoading, isError }
+}
 
 export const useRoles = (search: string,
                          authorities: string,
@@ -18,9 +28,12 @@ export const useRoles = (search: string,
   return { data, isLoading, isError }
 }
 
-export const useCreateRole = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useCreateRole = (
+  setError: React.Dispatch<React.SetStateAction<string>>,
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  formAddRole: FormInstance
+) => {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
   const { mutate: addRoleMutate, isPending: addRolePending } = useMutation({
     mutationFn: addRole,
@@ -28,10 +41,17 @@ export const useCreateRole = (setError: React.Dispatch<React.SetStateAction<stri
       toast.success('Thêm vai trò thành công')
       queryClient.invalidateQueries({ queryKey: ['roles'] })
 
-      navigate('/role')
+      setIsModalOpen(false)
+      formAddRole.resetFields()
+      setError('')
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setError(error.response.data.message)
+        return
+      }
+
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
         setError(error.response.data.message)
         return
       }
@@ -43,20 +63,36 @@ export const useCreateRole = (setError: React.Dispatch<React.SetStateAction<stri
   return { addRoleMutate, addRolePending }
 }
 
-export const useUpdateRole = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useUpdateRole = (
+  setError: React.Dispatch<React.SetStateAction<string>>,
+  setIsModalOpen?: React.Dispatch<React.SetStateAction<boolean>>,
+  formAddRole?: FormInstance,
+  setCurrentRole?: React.Dispatch<React.SetStateAction<Role>>
+) => {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
   const { mutate: updateRoleMutate, isPending: updateRolePending } = useMutation({
     mutationFn: updateRole,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success('Cập nhật vai trò thành công')
       queryClient.invalidateQueries({ queryKey: ['roles'] })
+      queryClient.invalidateQueries({ queryKey: ['role', data.id] })
+      setCurrentRole && setCurrentRole(data)
 
-      navigate('/role')
+      if (setIsModalOpen && formAddRole) {
+        setIsModalOpen(false)
+        formAddRole.resetFields()
+      }
+
+      setError('')
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setError(error.response.data.message)
+        return
+      }
+
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
         setError(error.response.data.message)
         return
       }

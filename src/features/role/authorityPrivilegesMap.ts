@@ -34,12 +34,22 @@ export const authorityPrivilegesMap: { [key: string]: [string, string] } = {
   'admin:all': ['Quản trị: Toàn quyền', 'red']
 }
 
+export const RolePrivileges = [
+  'Người dùng',
+  'Bài đăng',
+  'Đánh giá',
+  'Thành phố',
+  'Quận huyện',
+  'Loại phòng',
+  'Tiện nghi',
+  'Vai trò',
+]
+
 interface AuthorityPrivilegesFilterMap {
   text: string;
   value: string;
   children?: AuthorityPrivilegesFilterMap[];
 }
-
 
 const convertToFilterMap = (map: { [key: string]: [string, string] }): AuthorityPrivilegesFilterMap[] => {
   const grouped: { [key: string]: AuthorityPrivilegesFilterMap } = {};
