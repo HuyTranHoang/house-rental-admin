@@ -1,6 +1,111 @@
+import ErrorFetching from '@/components/ErrorFetching'
+import { useUsers } from '@/hooks/useUsers'
+import { User, UserDataSource } from '@/models/user.type'
+import { CheckCircleOutlined, CloseSquareOutlined} from '@ant-design/icons'
+import { useQueryClient } from '@tanstack/react-query'
+import { Button, Divider, Flex, Input, Space, TableProps, Tabs, TabsProps, Typography } from 'antd'
+import Search from 'antd/es/input/Search'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import UserTable from './UserTable'
+import { customFormatDate } from '@/utils/customFormatDate'
+
+const tabsItem: TabsProps['items'] = [
+  {
+    key: 'isNonLocked',
+    label: 'Đang hoạt động',
+    icon: <CheckCircleOutlined />
+  },
+  {
+    key: 'isLocked',
+    label: 'Đã bị khoá',
+    icon: <CloseSquareOutlined />
+  }
+]
+
 function ListUser() {
+  const queryClient = useQueryClient()
+
+  const [search, setSearch] = useState('')
+  const [isNonLocked, setIsNonLocked] = useState(true)
+  const [roles, setRoles] = useState('')
+  const [sortBy, setSortBy] = useState('IdDesc')
+  const [pageNumber, setPageNumber] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
+
+  const { data, isLoading, isError } = useUsers(search, isNonLocked, roles, pageNumber, pageSize, sortBy)
+
+  const onTabChange = (key: string) => {
+    setIsNonLocked(key === 'isNonLocked' ? true : false)
+    queryClient.invalidateQueries({ queryKey: ['users'] })
+  }
+
+  const handleTableChange: TableProps<UserDataSource>['onChange'] = (_, __, sorter) => {
+    if (Array.isArray(sorter)) {
+      setSortBy('createdAtDesc')
+    } else {
+      if (sorter.order) {
+        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+        setSortBy(`${sorter.field}${order}`)
+      }
+    }
+  }
+
+  const dataSource: UserDataSource[] = data
+    ? data.data.map((user: User, idx) => ({
+        key: user.id,
+        id: user.id,
+        index: (pageNumber - 1) * pageSize + idx + 1,
+        username: user.username,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatarUrl: user.avatarUrl,
+        roles: user.roles,
+        authorities: user.authorities,
+        createdAt: customFormatDate(user.createdAt),
+      }))
+    : []
+
+  if (isError) {
+    return <ErrorFetching />
+  }
+
   return (
-    <div>ListUser</div>
+    <>
+      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+        <Flex align='center'>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            Danh sách tài khoản
+          </Typography.Title>
+          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Search
+            allowClear
+            onSearch={(value) => setSearch(value)}
+            placeholder='Tìm kiếm theo tên tài khoản'
+            style={{ width: 250 }}
+          />
+        </Flex>
+      </Flex>
+
+      <Tabs defaultActiveKey={'isNotBlocked'} items={tabsItem} onChange={onTabChange} />
+
+      <UserTable
+        dataSource={dataSource}
+        loading={isLoading}
+        isNonLocked={isNonLocked}
+        paginationProps={{
+          total: data?.pageInfo.totalElements,
+          pageSize: pageSize,
+          current: pageNumber,
+          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} tài khoản`,
+          onShowSizeChange: (_, size) => setPageSize(size),
+          onChange: (page) => setPageNumber(page)
+        }}
+        handleTableChange={handleTableChange}
+      />
+    </>
   )
 }
 

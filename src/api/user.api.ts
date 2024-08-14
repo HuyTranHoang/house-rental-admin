@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { delay } from '@/utils/delay.ts'
 import { User } from '@/models/user.type.ts'
+import axiosInstance from '@/axiosInstance'
 
 interface UsersWithPagination {
   data: User[]
@@ -20,7 +21,7 @@ export const getAllUserWithPagination = async (search: string, isNonLocked: bool
       sortBy
     }
 
-    const response = await axios.get<UsersWithPagination>('/api/user', { params })
+    const response = await axiosInstance.get<UsersWithPagination>('/api/user', { params })
 
     await delay(300) 
 

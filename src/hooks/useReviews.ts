@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { deleteReview, deleteReviews, getAllReviewsWithPagination } from "../features/api/review.api"
+import { deleteReview, deleteReviews, getAllReviewsWithPagination } from "../api/review.api"
 import { toast } from "sonner"
 
 
