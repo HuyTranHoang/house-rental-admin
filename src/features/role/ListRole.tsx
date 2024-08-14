@@ -1,5 +1,6 @@
 import {
   Button,
+  DescriptionsProps,
   Flex,
   Form,
   FormInstance,
@@ -14,11 +15,16 @@ import {
 } from 'antd'
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { blue } from '@ant-design/colors'
-import { useCreateRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
+import { useCreateRole, useDeleteRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
 import { Role } from '@/models/role.type.ts'
 import React, { useEffect, useState } from 'react'
 import { getRoleById, RoleField } from '@/api/role.api.ts'
 import { useQuery } from '@tanstack/react-query'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
+
+const { confirm } = Modal
 
 interface ListRoleProps {
   form: FormInstance
@@ -36,6 +42,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
     = useCreateRole(setError, setIsModalOpen, formAddRole)
   const { updateRoleMutate, updateRolePending }
     = useUpdateRole(setError, setIsModalOpen, formAddRole, setCurrentRole)
+  const { deleteRoleMutate } = useDeleteRole()
 
   const { data, isLoading } = useRolesAll()
 
@@ -55,6 +62,43 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
     } else {
       updateRoleMutate({ ...values, id: currentRole.id })
     }
+  }
+
+  const showDeleteConfirm = (record: Role) => {
+    const items: DescriptionsProps['items'] = [
+      {
+        key: '1',
+        label: 'Id',
+        children: <span>{record.id}</span>,
+        span: 3
+      },
+      {
+        key: '2',
+        label: 'Tên vai trò',
+        children: <span>{record.name}</span>,
+        span: 3
+      },
+      {
+        key: '3',
+        label: 'Ngày tạo',
+        children: <span>{customFormatDate(record.createdAt)}</span>,
+        span: 3
+      }
+    ]
+
+    confirm({
+      icon: null,
+      title: <ConfirmModalTitle title="Xác nhận xóa vai trò" />,
+      content: <ConfirmModalContent items={items} />,
+      okText: 'Xác nhận',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      maskClosable: true,
+      onOk() {
+        deleteRoleMutate(record.id)
+        setCurrentRole({} as Role)
+      }
+    })
   }
 
   useEffect(() => {
@@ -93,7 +137,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
                 setIsAddMode(false)
                 setIsModalOpen(true)
               }} />,
-              <DeleteOutlined onClick={() => console.log(item)} className="icon-danger" />
+              <DeleteOutlined onClick={() => showDeleteConfirm(item)} className="icon-danger" />
             ] : [
               <Tooltip title="Vai trò mặc định không thể sửa">
                 <InfoCircleOutlined />

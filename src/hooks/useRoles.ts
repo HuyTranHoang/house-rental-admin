@@ -51,6 +51,11 @@ export const useCreateRole = (
         return
       }
 
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
+        setError(error.response.data.message)
+        return
+      }
+
       toast.error(error.message)
     }
   })
@@ -83,6 +88,11 @@ export const useUpdateRole = (
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setError(error.response.data.message)
+        return
+      }
+
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
         setError(error.response.data.message)
         return
       }
