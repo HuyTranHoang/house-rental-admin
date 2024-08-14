@@ -36,7 +36,6 @@ function PropertyTable({
       { key: '5', label: 'Số phòng', children: <span>{record.numRooms}</span>, span: 3 },
       { key: '6', label: 'Diện tích', children: <span>{record.area} m²</span>, span: 3 },
       { key: '7', label: 'Quận/Huyện', children: <span>{record.districtName}</span>, span: 3 },
-      { key: '8', label: 'Thành phố', children: <span>{record.cityName}</span>, span: 3 },
       { key: '9', label: 'Giá', children: <span>{record.price} VND</span>, span: 3 },
       { key: '10', label: 'Ngày tạo', children: <span>{record.createdAt}</span>, span: 3 },
     ];
@@ -57,27 +56,26 @@ function PropertyTable({
 
   const columns: TableProps<PropertyDataSource>['columns'] = [
     { title: '#', dataIndex: 'id', key: 'id', fixed: 'left', width: 50 },
-    { title: 'Tiêu đề', dataIndex: 'title', key: 'title', sorter: true },
-    { title: 'Vị trí', dataIndex: 'location', key: 'location' },
+    { title: 'Tiêu đề', dataIndex: 'title', key: 'title', fixed : 'right', width : 100},
+    { title: 'Vị trí', dataIndex: 'location', key: 'location' , fixed : 'right', width : 100 },
     { title: 'Số phòng', dataIndex: 'numRooms', key: 'numRooms' },
-    { title: 'Diện tích', dataIndex: 'area', key: 'area' },
-    { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName' },
-    { title: 'Thành phố', dataIndex: 'cityName', key: 'cityName' },
-    { title: 'Giá', dataIndex: 'price', key: 'price' },
+    { title: 'Diện tích', dataIndex: 'area', key: 'area',sorter: true, },
+    { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName',sorter: true, },
+    { title: 'Giá', dataIndex: 'price', key: 'price',sorter: true, },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
       fixed: 'right',
-      width: 200,
-      defaultSortOrder: 'descend', 
+      width: 150,
+      defaultSortOrder: 'descend',
     },
     {
       title: 'Hành động',
       key: 'action',
       fixed: 'right',
-      width: 200,
+      width: 100,
       render: (_, record) => (
         <TableActions
           onUpdate={() => navigate(`/property/${record.id}/edit`)}

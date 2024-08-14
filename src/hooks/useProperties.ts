@@ -19,36 +19,38 @@ export function useDeleteProperty() {
   }
 
 export const useProperty = (
-search: string, roomType: string, numOfDay: number, minPrice: number, maxPrice: number, minArea: number, maxArea: number, dictrict: string, city: string, pageNumber: number, pageSize: number, sortBy: string) => {
+search: string, roomTypeId: number, numOfDay: number, minPrice: number, maxPrice: number, minArea: number, maxArea: number, dictrictId: number, cityId: number, pageNumber: number, pageSize: number, sortBy: string, status: string) => {
 const { data, isLoading, isError } = useQuery({
 queryKey: ['properties',  
     search,
-    roomType,
+    roomTypeId,
     numOfDay,
     minPrice,
     maxPrice,
     minArea,
     maxArea,
-    dictrict,
-    city,
+    dictrictId,
+    cityId,
     pageNumber,
     pageSize,
-    sortBy
+    sortBy,
+    status,
 
 ],
 queryFn: () => getAllPropertyWithPagination(
     search,
-    roomType,
+    roomTypeId,
     numOfDay,
     minPrice,
     maxPrice,
     minArea,
     maxArea,
-    dictrict,
-    city,
+    dictrictId,
+    cityId,
     pageNumber,
     pageSize,
-    sortBy
+    sortBy,
+    status
 )
 })
 

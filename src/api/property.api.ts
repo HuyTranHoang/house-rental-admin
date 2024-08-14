@@ -33,34 +33,36 @@ export const deleteProperty = async (id: number): Promise<void> => {
 
 export const getAllPropertyWithPagination = async (
     search : string ,
-    roomType : string,
+    roomTypeId : number,
     numOfDay : number,
     minPrice : number,
     maxPrice : number,
     minArea : number,
     maxArea : number,
-    dictrict : string,
-    city : string,
+    dictrictId : number,
+    cityId : number,
     pageNumber : number,
     pageSize : number,
-    sortBy : string
+    sortBy : string,
+    status : string
 ) => {
 try {
     pageNumber = pageNumber - 1
 
 const params = {
     search,
-    roomType,
+    roomTypeId,
     numOfDay,
     minPrice,
     maxPrice,
     minArea,
     maxArea,
-    dictrict,
-    city,
+    dictrictId,
+    cityId,
     pageNumber,
     pageSize,
-    sortBy
+    sortBy,
+    status
 }
 
 const response = await axiosInstance.get<PropertyWithPagination>('/api/properties/admin', { params })
