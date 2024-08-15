@@ -16,7 +16,7 @@ export const useRoles = (search: string, authorities: string, pageNumber: number
 
 export const useRolesWithoutParams = () => {
   const { data } = useQuery({
-    queryKey: ['roles'],
+    queryKey: ['rolesList'],
     queryFn: () => getAllRoles()
   })
 

@@ -1,4 +1,5 @@
 import { useRolesWithoutParams } from '@/hooks/useRoles'
+import { useUpdateUser } from '@/hooks/useUsers'
 import { Role, RoleDataSource } from '@/models/role.type'
 import { UserDataSource } from '@/models/user.type'
 import { CloseCircleOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
@@ -9,34 +10,37 @@ import { useState } from 'react'
 const { confirm } = Modal
 
 interface UserTableProps {
-  dataSource: UserDataSource[]
-  loading: boolean
-  paginationProps: false | TablePaginationConfig | undefined
-  handleTableChange: TableProps<UserDataSource>['onChange']
-  rowSelection: TableRowSelection<UserDataSource> | undefined
-  isNonLocked: boolean
+                          dataSource: UserDataSource[]
+                          loading: boolean
+                          paginationProps: false | TablePaginationConfig | undefined
+                          handleTableChange: TableProps<UserDataSource>['onChange']
+                          rowSelection: TableRowSelection<UserDataSource> | undefined
+                          isNonLocked: boolean
 }
 
 function UserTable({
-  dataSource,
-  loading,
-  paginationProps,
-  handleTableChange,
-  rowSelection,
-  isNonLocked
-}: UserTableProps) {
+                    dataSource,
+                    loading,
+                    paginationProps,
+                    handleTableChange,
+                    rowSelection,
+                    isNonLocked
+                  }: UserTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
   const [form] = Form.useForm()
+  const [error, setError] = useState<string>('')
 
-  const { roleData } = useRolesWithoutParams()
+  const { data } = useRolesWithoutParams()
+  const { updateUserMutate } = useUpdateUser(setError)
 
-  const roleDataSource: RoleDataSource[] = roleData
-    ? roleData.map((role: Role) => ({
+  const roleDataSource: RoleDataSource[] = data
+    ? data.map((role: Role) => ({
         key: role.id,
         id: role.id,
         name: role.name,
+        authorityPrivileges: role.authorityPrivileges
       }))
     : []
 
@@ -68,9 +72,14 @@ function UserTable({
     form
       .validateFields()
       .then((values) => {
-        console.log('Chỉnh sửa người dùng:', values)
+        if (currentUser) {
+          updateUserMutate({ 
+            ...currentUser,
+            roles: values.roles 
+          })
+        }
         setIsUpdateRolesModalOpen(false)
-        //
+        
       })
       .catch((info) => {
         console.log('Validate Failed:', info)
@@ -209,7 +218,7 @@ function UserTable({
             <Form.Item name='roles' label='Vai trò' rules={[{ required: true, message: 'Vui lòng chọn ít nhất một vai trò!' }]}>
               <Checkbox.Group>
                 {roleDataSource.map((role) => (
-                  <Checkbox key={role.id} value={role.id}>
+                  <Checkbox key={role.id} value={role.name}>
                     {role.name}
                   </Checkbox>
                 ))}
