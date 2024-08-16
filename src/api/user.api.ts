@@ -48,7 +48,7 @@ export const getAllUserWithPagination = async (search: string, isNonLocked: bool
   }
 }
 
-export const updateUser = async (values: UserField) => {
-  await axiosInstance.put(`/api/user/${values.id}`, values)
+export const updateRoleForUser = async (id: number, roles: string[]) => {
+  await axiosInstance.put(`/api/user/update-role/${id}`, { roles })
 }
 

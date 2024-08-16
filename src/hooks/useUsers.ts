@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getAllUserWithPagination, updateUser } from '@/api/user.api.ts'
+import { getAllUserWithPagination, updateRoleForUser } from '@/api/user.api.ts'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import axios from 'axios'
@@ -18,12 +18,12 @@ export const useUsers = (search: string,
   return { data, isLoading, isError }
 }
 
-export const useUpdateUser = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useUpdateRoleForUser = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { mutate: updateUserMutate} = useMutation({
-    mutationFn: updateUser,
+  const { mutate: updateRoleForUserMutate} = useMutation({
+    mutationFn: ({ id, roles }: { id: number, roles: string[] }) => updateRoleForUser(id, roles),
     onSuccess: () => {
       toast.success('Cập nhật tài khoản thành công')
       queryClient.invalidateQueries({ queryKey: ['users'] })
@@ -39,5 +39,5 @@ export const useUpdateUser = (setError: React.Dispatch<React.SetStateAction<stri
       toast.error(error.message)
     }
   })
-  return { updateUserMutate}
+  return { updateRoleForUserMutate}
 }
