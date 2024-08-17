@@ -10,4 +10,10 @@ export interface User {
   authorities: string[]
   active: boolean
   nonLocked: boolean
+  createdAt: string
+}
+
+export type UserDataSource = User & {
+  key: React.Key
+  index?: number
 }

@@ -1,8 +1,8 @@
 import axios from "axios";
-import { PageInfo } from '@/models/pageInfo.type.ts';
-import { Review } from '@/models/review.type.ts';
-import { delay } from '@/utils/delay.ts';
-import axiosInstance from "../../axiosInstance";
+import { PageInfo } from "../models/pageInfo.type";
+import { Review } from "../models/review.type";
+import { delay } from "../utils/delay";
+import axiosInstance from "../axiosInstance";
 
 interface ReviewWithPagination {
     pageInfo: PageInfo

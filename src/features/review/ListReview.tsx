@@ -1,15 +1,21 @@
-import React, { useState } from 'react'
-import { Review, ReviewDataSource } from '@/models/review.type.ts'
-import { useDeleteMultiReview, useReviews } from '@/hooks/useReviews.ts'
+import { useState } from 'react'
+import { Review } from '../../models/review.type'
+import { useDeleteMultiReview, useReviews } from '../../hooks/useReviews'
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
+import { useNavigate } from 'react-router-dom'
 import ErrorFetching from '../../components/ErrorFetching'
 import ReviewTable from './ReviewTable'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
+import { customFormatDate } from '../../utils/customFormatDate'
 import { showMultipleDeleteConfirm } from '../../components/ConfirmMultipleDeleteConfig'
+
+type DataSourceType = Review & {
+  key: React.Key
+}
 
 const { Search } = Input
 
 function ListReview() {
+  const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('IdDesc')
@@ -29,7 +35,7 @@ function ListReview() {
     })
   }
 
-  const handleTableChange: TableProps<ReviewDataSource>['onChange'] = (_, __, sorter) => {
+  const handleTableChange: TableProps<DataSourceType>['onChange'] = (_, __, sorter) => {
     if (Array.isArray(sorter)) {
       setSortBy('createdAtDesc')
     } else {
@@ -40,15 +46,23 @@ function ListReview() {
     }
   }
 
-  const dataSource: ReviewDataSource[] = data?.data.map((review: Review, idx) => ({
-    ...review,
-    key: review.id,
-    index: idx + 1,
-    createdAt: customFormatDate(review.createdAt)
-  })) || []
+  const dataSource: DataSourceType[] = data
+    ? data.data.map((review: Review, index) => ({
+        key: review.id,
+        id: review.id,
+        index: (pageNumber - 1) * pageSize + index + 1,
+        userId: review.userId,
+        username: review.userName,
+        propertyId: review.propertyId,
+        title: review.propertyTitle,
+        rating: review.rating,
+        createdAt: customFormatDate(review.createdAt),
+        comment: review.comment
+      }))
+    : []
 
   const rowSelection = {
-    onChange: (_: React.Key[], selectedRows: ReviewDataSource[]) => {
+    onChange: (_selectedRowKeys: React.Key[], selectedRows: DataSourceType[]) => {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
@@ -60,20 +74,23 @@ function ListReview() {
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
+      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+        <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
             Danh sách đánh giá
           </Typography.Title>
-          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm theo tài khoản"
-                  style={{ width: 250 }}
+          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Search
+            allowClear
+            onSearch={(value) => setSearch(value)}
+            placeholder='Tìm kiếm theo tài khoản'
+            style={{ width: 250 }}
           />
         </Flex>
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape="round" type="primary" danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           )}

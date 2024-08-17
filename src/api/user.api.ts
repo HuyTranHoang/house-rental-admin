@@ -1,10 +1,25 @@
-import axios from 'axios'
+
 import { delay } from '@/utils/delay.ts'
 import { User } from '@/models/user.type.ts'
+import axiosInstance from '@/axiosInstance'
 
 interface UsersWithPagination {
   data: User[]
   total: number
+}
+
+export interface UserField {
+  id: number
+  username: string
+  email: string
+  phoneNumber: string
+  firstName: string
+  lastName: string
+  avatarUrl: string
+  roles: string[]
+  authorities: string[]
+  active: boolean
+  nonLocked: boolean
 }
 
 export const getAllUserWithPagination = async (search: string, isNonLocked: boolean, roles:string, pageNumber: number, pageSize: number, sortBy: string) => {
@@ -12,15 +27,15 @@ export const getAllUserWithPagination = async (search: string, isNonLocked: bool
     pageNumber = pageNumber - 1
 
     const params = {
-      search,
-      isNonLocked,
-      roles,
-      pageNumber,
-      pageSize,
-      sortBy
+                    search,
+                    isNonLocked,
+                    roles,
+                    pageNumber,
+                    pageSize,
+                    sortBy
     }
 
-    const response = await axios.get<UsersWithPagination>('/api/user', { params })
+    const response = await axiosInstance.get<UsersWithPagination>('/api/user', { params })
 
     await delay(300) 
 
@@ -32,3 +47,35 @@ export const getAllUserWithPagination = async (search: string, isNonLocked: bool
     throw new Error('Lấy danh sách người dùng thất bại')
   }
 }
+
+export const updateRoleForUser = async (id: number, roles: string[]) => {
+  await axiosInstance.put(`/api/user/update-role/${id}`, { roles })
+}
+
+export const lockUser = async (id: number) => {
+  try {
+    await axiosInstance.put(`/api/user/lock/${id}`)
+  } catch (error) {
+    console.error(error)
+    throw new Error('Khoá tài khoản thất bại')
+  }
+}
+
+export const deleteUser = async (id: number) => {
+  try {
+    await axiosInstance.delete(`/api/user/${id}`)
+  } catch (error) {
+    console.error(error)
+    throw new Error('Xoá tài khoản thất bại')
+  }
+}
+
+export const deleteUsers = async (ids: number[]) => {
+  try {
+    await axiosInstance.delete('/api/user/delete-multiple', { data: { ids } })
+  } catch (error) {
+    console.error(error)
+    throw new Error('Xóa các tài khoản thất bại')
+  }
+}
+

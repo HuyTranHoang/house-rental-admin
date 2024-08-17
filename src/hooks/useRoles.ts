@@ -15,11 +15,7 @@ export const useRolesAll = () => {
   return { data, isLoading, isError }
 }
 
-export const useRoles = (search: string,
-                         authorities: string,
-                         pageNumber: number,
-                         pageSize: number,
-                         sortBy: string) => {
+export const useRoles = (search: string, authorities: string, pageNumber: number, pageSize: number, sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['roles', search, authorities, pageNumber, pageSize, sortBy],
     queryFn: () => getAllRolesWithPagination(search, authorities, pageNumber, pageSize, sortBy)
@@ -28,11 +24,16 @@ export const useRoles = (search: string,
   return { data, isLoading, isError }
 }
 
-export const useCreateRole = (
-  setError: React.Dispatch<React.SetStateAction<string>>,
-  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  formAddRole: FormInstance
-) => {
+export const useRolesWithoutParams = () => {
+  const { data } = useQuery({
+    queryKey: ['rolesList'],
+    queryFn: () => getAllRoles()
+  })
+
+  return { data }
+}
+
+export const useCreateRole = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
 
   const { mutate: addRoleMutate, isPending: addRolePending } = useMutation({
