@@ -1,9 +1,11 @@
+import ConfirmModalContent from '@/components/ConfirmModalContent'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle'
 import { useRolesWithoutParams } from '@/hooks/useRoles'
-import { useUpdateRoleForUser } from '@/hooks/useUsers'
+import { useDeleteUser, useLockUser, useUpdateRoleForUser } from '@/hooks/useUsers'
 import { Role, RoleDataSource } from '@/models/role.type'
 import { UserDataSource } from '@/models/user.type'
-import { CloseCircleOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button, Modal, Table, TablePaginationConfig, TableProps, Tag, Form, Input, Checkbox, Card, Avatar } from 'antd'
+import { CheckOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { Button, Modal, Table, TablePaginationConfig, TableProps, Tag, Form, Input, Checkbox, Card, Avatar, Col, Row, DescriptionsProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useState } from 'react'
 
@@ -19,12 +21,12 @@ interface UserTableProps {
 }
 
 function UserTable({
-  dataSource,
-  loading,
-  paginationProps,
-  handleTableChange,
-  rowSelection,
-  isNonLocked
+                  dataSource,
+                  loading,
+                  paginationProps,
+                  handleTableChange,
+                  rowSelection,
+                  isNonLocked
 }: UserTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
@@ -34,6 +36,9 @@ function UserTable({
 
   const { data } = useRolesWithoutParams()
   const { updateRoleForUserMutate } = useUpdateRoleForUser(setError)
+  const { lockUserMutate } = useLockUser()
+  const { deleteUserMutate } = useDeleteUser()
+
 
   const roleDataSource: RoleDataSource[] = data
     ? data.map((role: Role) => ({
@@ -60,10 +65,12 @@ function UserTable({
 
   const handleBlockUser = (record: UserDataSource) => {
     confirm({
-      title: 'Bạn có chắc chắn muốn khóa tài khoản này?',
+      title: isNonLocked
+        ? 'Bạn có chắc chắn muốn khóa tài khoản này?'
+        : 'Bạn có chắc chắn muốn mở khóa tài khoản này?',
       onOk() {
         console.log('Khóa người dùng', record.id)
-        //
+        lockUserMutate(record.id)
       }
     })
   }
@@ -89,6 +96,49 @@ function UserTable({
     setIsUpdateRolesModalOpen(false)
   }
 
+  const showDeleteConfirm = (record: UserDataSource) => {
+
+    const items: DescriptionsProps['items'] = [
+      {
+        key: '1',
+        label: 'Id',
+        children: <span>{record.id}</span>,
+        span: 3
+      },
+      {
+        key: '2',
+        label: 'Họ',
+        children: <span>{record.firstName}</span>,
+        span: 3
+      },
+      {
+        key: '3',
+        label: 'Tên',
+        children: <span>{record.lastName}</span>,
+        span: 3
+      },
+      {
+        key: '4',
+        label: 'Email',
+        children: <span>{record.email}</span>,
+        span: 3
+      }
+    ]
+
+    confirm({
+      icon: null,
+      title: <ConfirmModalTitle title="Xác nhận xóa tài khoản" />,
+      content: <ConfirmModalContent items={items} />,
+      okText: 'Xác nhận',
+      okType: 'danger',
+      cancelText: 'Hủy',
+      maskClosable: true,
+      onOk() {
+        deleteUserMutate(record.id)
+      }
+    })
+  }
+
   const columns: TableProps<UserDataSource>['columns'] = [
     {
       title: '#',
@@ -100,12 +150,14 @@ function UserTable({
     {
       title: 'Tài khoản',
       dataIndex: 'username',
-      key: 'username'
+      key: 'username',
+      sorter: true
     },
     {
       title: 'Email',
       dataIndex: 'email',
-      key: 'email'
+      key: 'email',
+      sorter: true
     },
     {
       title: 'Vai trò',
@@ -142,15 +194,23 @@ function UserTable({
             type='default'
             style={{ borderColor: '#1890ff', color: '#1890ff', marginRight: '1rem' }}
             onClick={() => handleView(record)}
+            title='Xem nhanh'
           />
           <Button
-            icon={<CloseCircleOutlined />}
+            icon={isNonLocked ? 
+                <CloseCircleOutlined style={{ color: 'red' }} /> : 
+                <CheckOutlined style={{ color: 'green' }} />}
             type='default'
             onClick={() => handleBlockUser(record)}
-            danger
-            disabled={!isNonLocked}
+            style={{
+              marginRight: '1rem',
+              color: isNonLocked ? 'red' : 'green',
+              borderColor: isNonLocked ? 'red' : 'green'
+            }}
+            title={isNonLocked ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
           >
-            Khoá
+          </Button>
+          <Button icon={<DeleteOutlined />} type='default' onClick={() => showDeleteConfirm(record)} danger>
           </Button>
         </div>
       )
@@ -180,13 +240,13 @@ function UserTable({
       />
 
       {/* Modal xem chi tiết */}
-      <Modal title='Chi tiết tài khoản' open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
+      <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
       {currentUser && (
         <div>
           {/* Hàng đầu tiên */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <Row gutter={16} style={{ marginBottom: '20px' }}>
             {/* Cột bên trái */}
-            <div style={{ flex: 1, textAlign: 'center' }}>
+            <Col span={8} style={{ textAlign: 'center' }}>
               <Avatar
                 size={100}
                 src={
@@ -196,36 +256,40 @@ function UserTable({
                 style={{ marginBottom: '16px' }}
               />
               <p><b>{currentUser.username}</b></p>
-            </div>
+            </Col>
 
             {/* Cột bên phải */}
-            <div style={{ flex: 1 }}>
-              <p><b>Họ và Tên:</b> {`${currentUser.firstName} ${currentUser.lastName}`}</p>
-              <p><b>Email:</b> {currentUser.email}</p>
-              <p><b>Số điện thoại:</b> {currentUser.phoneNumber}</p>
-              <p><b>Ngày tạo:</b> {currentUser.createdAt}</p>
-            </div>
-          </div>
+            <Col span={16}>
+              <Row>
+                  <p style={{ marginBottom: '3px' }}><b>Họ và Tên:</b> {`${currentUser.firstName} ${currentUser.lastName}`}</p>
+                  <p style={{ marginBottom: '3px' }}><b>Email:</b> {currentUser.email}</p>
+                  <p style={{ marginBottom: '3px' }}><b>Số điện thoại:</b> {currentUser.phoneNumber}</p>
+                  <p style={{ marginBottom: '3px' }}><b>Ngày tạo:</b> {currentUser.createdAt}</p>
+              </Row>
+            </Col>
+          </Row>
 
           {/* Hàng tiếp theo */}
-          <div>
-            <p>
-              <b>Vai trò:</b>
-              {currentUser.roles.map(role => (
-                <Tag key={role} color='blue' style={{ margin: '4px' }}>
-                  {role}
-                </Tag>
-              ))}
-            </p>
-            <p>
-              <b>Quyền hạn:</b>
-              {currentUser.authorities.map(auth => (
-                <Tag key={auth} color='green' style={{ margin: '4px' }}>
-                  {auth}
-                </Tag>
-              ))}
-            </p>
-          </div>
+          <Row>
+            <Col span={24}>
+              <p>
+                <b>Vai trò:</b>
+                {currentUser.roles.map(role => (
+                  <Tag key={role} color='blue' style={{ margin: '4px' }}>
+                    {role}
+                  </Tag>
+                ))}
+              </p>
+              <p>
+                <b>Quyền hạn:</b>
+                {currentUser.authorities.map(auth => (
+                  <Tag key={auth} color='green' style={{ margin: '4px' }}>
+                    {auth}
+                  </Tag>
+                ))}
+              </p>
+            </Col>
+          </Row>
         </div>
       )}
       </Modal>

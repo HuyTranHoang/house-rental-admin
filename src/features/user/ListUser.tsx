@@ -1,5 +1,5 @@
 import ErrorFetching from '@/components/ErrorFetching'
-import { useUsers } from '@/hooks/useUsers'
+import { useDeleteUsers, useUsers } from '@/hooks/useUsers'
 import { User, UserDataSource } from '@/models/user.type'
 import { CheckCircleOutlined, CloseSquareOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import UserTable from './UserTable'
 import { customFormatDate } from '@/utils/customFormatDate'
+import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig'
 
 const tabsItem: TabsProps['items'] = [
   {
@@ -33,9 +34,17 @@ function ListUser() {
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
 
-  const [deleteIdList, setDeleteIdList] = useState<number[]>([])
-
   const { data, isLoading, isError } = useUsers(search, isNonLocked, roles, pageNumber, pageSize, sortBy)
+
+  const [deleteIdList, setDeleteIdList] = useState<number[]>([])
+  const { deleteUsersMutate } = useDeleteUsers()
+
+  const handleDelete = () => {
+    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các tài khoản', () => {
+      deleteUsersMutate(deleteIdList)
+      setDeleteIdList([])
+    })
+  }
 
   const onTabChange = (key: string) => {
     setIsNonLocked(key === 'isNonLocked' ? true : false)
@@ -96,6 +105,14 @@ function ListUser() {
             style={{ width: 250 }}
           />
         </Flex>
+
+        <Space>
+          {deleteIdList.length > 0 && (
+            <Button shape='round' type='primary' danger onClick={handleDelete}>
+              Xóa các mục đã chọn
+            </Button>
+          )}
+        </Space>
       </Flex>
 
       <Tabs defaultActiveKey={'isNonLocked'} items={tabsItem} onChange={onTabChange} />

@@ -52,3 +52,30 @@ export const updateRoleForUser = async (id: number, roles: string[]) => {
   await axiosInstance.put(`/api/user/update-role/${id}`, { roles })
 }
 
+export const lockUser = async (id: number) => {
+  try {
+    await axiosInstance.put(`/api/user/lock/${id}`)
+  } catch (error) {
+    console.error(error)
+    throw new Error('Khoá tài khoản thất bại')
+  }
+}
+
+export const deleteUser = async (id: number) => {
+  try {
+    await axiosInstance.delete(`/api/user/${id}`)
+  } catch (error) {
+    console.error(error)
+    throw new Error('Xoá tài khoản thất bại')
+  }
+}
+
+export const deleteUsers = async (ids: number[]) => {
+  try {
+    await axiosInstance.delete('/api/user/delete-multiple', { data: { ids } })
+  } catch (error) {
+    console.error(error)
+    throw new Error('Xóa các tài khoản thất bại')
+  }
+}
+
