@@ -33,7 +33,11 @@ export const useRolesWithoutParams = () => {
   return { data }
 }
 
-export const useCreateRole = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useCreateRole = (
+  setError: React.Dispatch<React.SetStateAction<string>>,
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  formAddRole: FormInstance
+) => {
   const queryClient = useQueryClient()
 
   const { mutate: addRoleMutate, isPending: addRolePending } = useMutation({
