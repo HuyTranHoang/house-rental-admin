@@ -4,10 +4,28 @@ import { useRolesWithoutParams } from '@/hooks/useRoles'
 import { useDeleteUser, useLockUser, useUpdateRoleForUser } from '@/hooks/useUsers'
 import { Role, RoleDataSource } from '@/models/role.type'
 import { UserDataSource } from '@/models/user.type'
-import { CheckOutlined, CloseCircleOutlined, DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button, Modal, Table, TablePaginationConfig, TableProps, Tag, Form, Input, Checkbox, Card, Avatar, Col, Row, DescriptionsProps } from 'antd'
-import { TableRowSelection } from 'antd/es/table/interface'
+import { DeleteOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons'
+import {
+  Avatar,
+  Button,
+  Checkbox,
+  Col,
+  DescriptionsProps,
+  Flex,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Table,
+  TablePaginationConfig,
+  TableProps,
+  Tag,
+  Tooltip
+} from 'antd'
 import { useState } from 'react'
+import { TableRowSelection } from 'antd/es/table/interface'
+import { green, volcano } from '@ant-design/colors'
+import styled from 'styled-components'
 
 const { confirm } = Modal
 
@@ -20,19 +38,48 @@ interface UserTableProps {
   isNonLocked: boolean
 }
 
+interface LockButtonProps {
+  isNonLocked: boolean
+  record: UserDataSource
+  handleBlockUser: (record: UserDataSource) => void
+}
+
+const StyledButton = styled(Button)<{ isNonLocked: boolean; isAdmin: boolean }>`
+    color: ${({ isNonLocked, isAdmin }) => 
+            (isAdmin ? 'inherit' : isNonLocked ? volcano.primary : green.primary)};
+    border-color: ${({ isNonLocked, isAdmin }) => 
+            (isAdmin ? 'inherit' : isNonLocked ? volcano.primary : green.primary)};
+`
+
+const LockButton = ({ isNonLocked, record, handleBlockUser }: LockButtonProps) => (
+  <StyledButton
+    icon={
+      isNonLocked ? (
+        <LockOutlined style={{ color: record.username === 'admin' ? 'inherit' : volcano.primary }} />
+      ) : (
+        <UnlockOutlined style={{ color: record.username === 'admin' ? 'inherit' : green.primary }} />
+      )
+    }
+    disabled={record.username === 'admin'}
+    onClick={() => handleBlockUser(record)}
+    isNonLocked={isNonLocked}
+    isAdmin={record.username === 'admin'}
+  />
+)
+
 function UserTable({
-                  dataSource,
-                  loading,
-                  paginationProps,
-                  handleTableChange,
-                  rowSelection,
-                  isNonLocked
-}: UserTableProps) {
+                     dataSource,
+                     loading,
+                     paginationProps,
+                     handleTableChange,
+                     rowSelection,
+                     isNonLocked
+                   }: UserTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
   const [form] = Form.useForm()
-  const [error, setError] = useState<string>('')
+  const [, setError] = useState<string>('')
 
   const { data } = useRolesWithoutParams()
   const { updateRoleForUserMutate } = useUpdateRoleForUser(setError)
@@ -42,11 +89,13 @@ function UserTable({
 
   const roleDataSource: RoleDataSource[] = data
     ? data.map((role: Role) => ({
-        key: role.id,
-        id: role.id,
-        name: role.name,
-        authorityPrivileges: role.authorityPrivileges
-      }))
+      key: role.id,
+      id: role.id,
+      name: role.name,
+      description: role.description,
+      authorityPrivileges: role.authorityPrivileges,
+      createdAt: role.createdAt
+    }))
     : []
 
   const handleView = (record: UserDataSource) => {
@@ -151,36 +200,46 @@ function UserTable({
       title: 'Tài khoản',
       dataIndex: 'username',
       key: 'username',
-      sorter: true
+      sorter: true,
+      fixed: 'left',
+      width: 150
     },
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
-      sorter: true
+      sorter: true,
+      fixed: 'left',
+      width: 200
     },
     {
       title: 'Vai trò',
       dataIndex: 'roles',
       key: 'roles',
       render: (_, record: UserDataSource) => (
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Flex justify="space-between" align="center">
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             {record.roles.map((role, index) => (
-              <Tag key={index} color='blue'>
+              <Tag key={index} color="blue">
                 {role}
               </Tag>
             ))}
           </div>
-          <Button icon={<EditOutlined />} type='default' onClick={() => handleUpdateRoles(record)} />
-        </div>
+          <Tooltip title="Cập nhật vai trò">
+            <Button icon={<EditOutlined />}
+                    disabled={record.username === 'admin'}
+                    onClick={() => handleUpdateRoles(record)} />
+          </Tooltip>
+        </Flex>
       )
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      sorter: true
+      sorter: true,
+      fixed: 'right',
+      width: 150
     },
     {
       title: 'Hành động',
@@ -188,31 +247,30 @@ function UserTable({
       fixed: 'right',
       width: 110,
       render: (_, record: UserDataSource) => (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-          <Button
-            icon={<EyeOutlined />}
-            type='default'
-            style={{ borderColor: '#1890ff', color: '#1890ff', marginRight: '1rem' }}
-            onClick={() => handleView(record)}
-            title='Xem nhanh'
-          />
-          <Button
-            icon={isNonLocked ? 
-                <CloseCircleOutlined style={{ color: 'red' }} /> : 
-                <CheckOutlined style={{ color: 'green' }} />}
-            type='default'
-            onClick={() => handleBlockUser(record)}
-            style={{
-              marginRight: '1rem',
-              color: isNonLocked ? 'red' : 'green',
-              borderColor: isNonLocked ? 'red' : 'green'
-            }}
-            title={isNonLocked ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
-          >
-          </Button>
-          <Button icon={<DeleteOutlined />} type='default' onClick={() => showDeleteConfirm(record)} danger>
-          </Button>
-        </div>
+        <Flex gap={16}>
+          <Tooltip title="Xem nhanh">
+            <Button
+              icon={<EyeOutlined />}
+              disabled={record.username === 'admin'}
+              style={
+                record.username === 'admin'
+                  ? {}
+                  : { borderColor: '#1890ff', color: '#1890ff' }
+              }
+              onClick={() => handleView(record)}
+            />
+          </Tooltip>
+
+          <Tooltip title={isNonLocked ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}>
+            <LockButton isNonLocked={isNonLocked} record={record} handleBlockUser={handleBlockUser} />
+          </Tooltip>
+
+          <Tooltip title="Xóa tài khoản">
+            <Button icon={<DeleteOutlined />}
+                    disabled={record.username === 'admin'}
+                    onClick={() => showDeleteConfirm(record)} danger />
+          </Tooltip>
+        </Flex>
       )
     }
   ]
@@ -241,62 +299,63 @@ function UserTable({
 
       {/* Modal xem chi tiết */}
       <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
-      {currentUser && (
-        <div>
-          {/* Hàng đầu tiên */}
-          <Row gutter={16} style={{ marginBottom: '20px' }}>
-            {/* Cột bên trái */}
-            <Col span={8} style={{ textAlign: 'center' }}>
-              <Avatar
-                size={100}
-                src={
-                  currentUser.avatarUrl ||
-                  `https://robohash.org/${currentUser.username}?set=set4`
-                }
-                style={{ marginBottom: '16px' }}
-              />
-              <p><b>{currentUser.username}</b></p>
-            </Col>
+        {currentUser && (
+          <div>
+            {/* Hàng đầu tiên */}
+            <Row gutter={16} style={{ marginBottom: '20px' }}>
+              {/* Cột bên trái */}
+              <Col span={8} style={{ textAlign: 'center' }}>
+                <Avatar
+                  size={100}
+                  src={
+                    currentUser.avatarUrl ||
+                    `https://robohash.org/${currentUser.username}?set=set4`
+                  }
+                  style={{ marginBottom: '16px' }}
+                />
+                <p><b>{currentUser.username}</b></p>
+              </Col>
 
-            {/* Cột bên phải */}
-            <Col span={16}>
-              <Row>
-                  <p style={{ marginBottom: '3px' }}><b>Họ và Tên:</b> {`${currentUser.firstName} ${currentUser.lastName}`}</p>
+              {/* Cột bên phải */}
+              <Col span={16}>
+                <Row>
+                  <p style={{ marginBottom: '3px' }}><b>Họ và
+                    Tên:</b> {`${currentUser.firstName} ${currentUser.lastName}`}</p>
                   <p style={{ marginBottom: '3px' }}><b>Email:</b> {currentUser.email}</p>
                   <p style={{ marginBottom: '3px' }}><b>Số điện thoại:</b> {currentUser.phoneNumber}</p>
                   <p style={{ marginBottom: '3px' }}><b>Ngày tạo:</b> {currentUser.createdAt}</p>
-              </Row>
-            </Col>
-          </Row>
+                </Row>
+              </Col>
+            </Row>
 
-          {/* Hàng tiếp theo */}
-          <Row>
-            <Col span={24}>
-              <p>
-                <b>Vai trò:</b>
-                {currentUser.roles.map(role => (
-                  <Tag key={role} color='blue' style={{ margin: '4px' }}>
-                    {role}
-                  </Tag>
-                ))}
-              </p>
-              <p>
-                <b>Quyền hạn:</b>
-                {currentUser.authorities.map(auth => (
-                  <Tag key={auth} color='green' style={{ margin: '4px' }}>
-                    {auth}
-                  </Tag>
-                ))}
-              </p>
-            </Col>
-          </Row>
-        </div>
-      )}
+            {/* Hàng tiếp theo */}
+            <Row>
+              <Col span={24}>
+                <p>
+                  <b>Vai trò:</b>
+                  {currentUser.roles.map(role => (
+                    <Tag key={role} color="blue" style={{ margin: '4px' }}>
+                      {role}
+                    </Tag>
+                  ))}
+                </p>
+                <p>
+                  <b>Quyền hạn:</b>
+                  {currentUser.authorities.map(auth => (
+                    <Tag key={auth} color="green" style={{ margin: '4px' }}>
+                      {auth}
+                    </Tag>
+                  ))}
+                </p>
+              </Col>
+            </Row>
+          </div>
+        )}
       </Modal>
 
       {/* Modal chỉnh sửa */}
       <Modal
-        title='Cập nhật vai trò'
+        title="Cập nhật vai trò"
         open={isUpdateRolesModalOpen}
         onCancel={handleUpdateRolesModalCancel}
         onOk={handleUpdateRolesModalOk}
@@ -304,15 +363,15 @@ function UserTable({
         {currentUser && (
           <Form
             form={form}
-            layout='vertical'
+            layout="vertical"
             initialValues={{ username: currentUser.username, roles: currentUser.roles }}
           >
-            <Form.Item name='username' label='Tài khoản'>
+            <Form.Item name="username" label="Tài khoản">
               <Input disabled />
             </Form.Item>
             <Form.Item
-              name='roles'
-              label='Vai trò'
+              name="roles"
+              label="Vai trò"
               rules={[{ required: true, message: 'Vui lòng chọn ít nhất một vai trò!' }]}
             >
               <Checkbox.Group>
