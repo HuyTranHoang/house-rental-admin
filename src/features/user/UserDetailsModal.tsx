@@ -1,7 +1,8 @@
-import { Avatar, Badge, Col, Modal, Row, Space, Tag, Typography } from 'antd'
+import { Avatar, Badge, Button, Col, Modal, Row, Space, Tag, Typography } from 'antd'
 import { UserDataSource } from '@/models/user.type.ts'
 import { authorityPrivilegesMap } from '@/features/role/authorityPrivilegesMap.ts'
 import { gray } from '@ant-design/colors'
+import BlockUserButton from '@/components/BlockUserButton.tsx'
 
 interface UserDetailsModalProps {
   isModalOpen: boolean
@@ -10,12 +11,21 @@ interface UserDetailsModalProps {
 }
 
 function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDetailsModalProps) {
+  const footer = (
+    <>
+      <Button key="close" onClick={() => setIsModalOpen(false)}>
+        Đóng
+      </Button>
+
+      {currentUser && <BlockUserButton record={currentUser} hasText />}
+    </>
+  )
+
   return (
-    <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
-      {currentUser && (
-        <div>
-          {/* Hàng đầu tiên */}
-          <Row gutter={16} style={{ marginBottom: '20px' }}>
+    <>
+      {currentUser &&
+        <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={footer}>
+          <Row gutter={24} style={{ marginBottom: '20px' }}>
             {/* Cột bên trái */}
             <Col span={8} style={{ textAlign: 'center' }}>
               <Avatar
@@ -53,12 +63,9 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
               }
               </Space>
             </Col>
-          </Row>
 
-          {/* Hàng tiếp theo */}
-          <Row>
             <Col span={24}>
-              <div style={{ marginBottom: 16 }}>
+              <div style={{ margin: '16px 0' }}>
                 <Space wrap={true}>
                   <b>Vai trò:</b>
                   <Typography.Text style={{ color: gray.primary }}>
@@ -67,24 +74,30 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
                 </Space>
               </div>
 
-              <div>
+              <b>Quyền hạn:</b>
+              <div style={{
+                height: 80,
+                marginTop: 8,
+                overflowY: 'scroll',
+                backgroundColor: '#fafafa',
+                padding: 8,
+                boxShadow: 'rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset'
+              }}>
                 <Space wrap={true}>
-                  <b>Quyền hạn:</b>
                   {currentUser.authorities.map(authority => {
-                    const [displayName, color] = authorityPrivilegesMap[authority] || [authority, 'blue'];
+                    const [displayName, color] = authorityPrivilegesMap[authority] || [authority, 'blue']
                     return (
                       <Tag key={authority} color={color}>
                         {displayName}
                       </Tag>
-                    );
+                    )
                   })}
                 </Space>
               </div>
             </Col>
           </Row>
-        </div>
-      )}
-    </Modal>
+        </Modal>}
+    </>
   )
 }
 

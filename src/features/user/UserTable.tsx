@@ -1,15 +1,8 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
-import { useDeleteUser, useLockUser } from '@/hooks/useUsers'
+import { useDeleteUser } from '@/hooks/useUsers'
 import { UserDataSource } from '@/models/user.type'
-import {
-  DeleteOutlined,
-  EditOutlined,
-  EyeOutlined,
-  LockOutlined,
-  UnlockOutlined,
-  WarningOutlined
-} from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import {
   Button,
   DescriptionsProps,
@@ -24,10 +17,9 @@ import {
 } from 'antd'
 import { useState } from 'react'
 import { TableRowSelection } from 'antd/es/table/interface'
-import LockButton from '@/components/LockButton.tsx'
 import UserDetailsModal from '@/features/user/UserDetailsModal.tsx'
 import UserUpdateRoleModal from '@/features/user/UserUpdateRoleModal.tsx'
-import { gray, green, red, volcano } from '@ant-design/colors'
+import BlockUserButton from '@/components/BlockUserButton.tsx'
 
 const { confirm } = Modal
 
@@ -37,7 +29,6 @@ interface UserTableProps {
   paginationProps: false | TablePaginationConfig | undefined
   handleTableChange: TableProps<UserDataSource>['onChange']
   rowSelection: TableRowSelection<UserDataSource> | undefined
-  isNonLocked: boolean
 }
 
 function UserTable({
@@ -46,14 +37,12 @@ function UserTable({
                      paginationProps,
                      handleTableChange,
                      rowSelection,
-                     isNonLocked
                    }: UserTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
   const [form] = Form.useForm()
 
-  const { lockUserMutate } = useLockUser()
   const { deleteUserMutate } = useDeleteUser()
 
 
@@ -69,61 +58,6 @@ function UserTable({
       roles: record.roles
     })
     setIsUpdateRolesModalOpen(true)
-  }
-
-  const handleBlockUser = (record: UserDataSource) => {
-    confirm({
-      icon: null,
-      title:
-        <Flex vertical align="center">
-          <Flex justify="center" align="center"
-                style={{
-                  backgroundColor: isNonLocked ? volcano[0] : green[0],
-                  width: 44,
-                  height: 44,
-                  borderRadius: '100%'
-                }}>
-            {isNonLocked
-              ? <LockOutlined style={{ color: volcano.primary, fontSize: 24 }} />
-              : <UnlockOutlined style={{ color: green.primary, fontSize: 24 }} />
-            }
-          </Flex>
-          <span style={{ margin: '6px 0' }}>
-          {isNonLocked ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
-        </span>
-        </Flex>,
-      content: (
-        <Flex vertical gap={8} style={{marginBottom: 16}}>
-          <span>
-            {isNonLocked
-              ? `Bạn có chắc chắn muốn khóa tài khoản `
-              : `Bạn có chắc chắn muốn mở khóa tài khoản `
-            }
-            <b style={{color: gray.primary}}>{record.username}</b> không?
-          </span>
-          <span style={{ color: red.primary }}>
-            <WarningOutlined style={{ color: red.primary }} />{' '}
-            {isNonLocked
-              ? 'Khóa tài khoản sẽ không cho phép người dùng đăng nhập vào hệ thống.'
-              : 'Mở khóa tài khoản sẽ cho phép người dùng đăng nhập vào hệ thống.'
-            }
-          </span>
-        </Flex>
-      ),
-      okText: 'Xác nhận',
-      okType: 'primary',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        lockUserMutate(record.id)
-      },
-      okButtonProps: {
-        style: {
-          backgroundColor: isNonLocked ? volcano.primary : green.primary,
-          borderColor: isNonLocked ? volcano[0] : green[0]
-        }
-      }
-    })
   }
 
   const showDeleteConfirm = (record: UserDataSource) => {
@@ -242,7 +176,7 @@ function UserTable({
             />
           </Tooltip>
 
-          <LockButton isNonLocked={isNonLocked} record={record} handleBlockUser={handleBlockUser} />
+          <BlockUserButton record={record} />
 
           <Tooltip title="Xóa tài khoản">
             <Button icon={<DeleteOutlined />}

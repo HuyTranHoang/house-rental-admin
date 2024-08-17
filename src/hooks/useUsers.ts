@@ -48,7 +48,7 @@ export const useLockUser = () => {
   const { mutate: lockUserMutate } = useMutation({
     mutationFn: lockUser,
     onSuccess: () => {
-      toast.success('Khoá tài khoản thành công')
+      toast.success('Thay đổi trạng thái tài khoản thành công')
       queryClient.invalidateQueries({ queryKey: ['users'] })
     },
     onError: (error) => {

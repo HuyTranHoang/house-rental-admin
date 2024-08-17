@@ -107,7 +107,6 @@ function ListUser() {
       <UserTable
         dataSource={dataSource}
         loading={isLoading}
-        isNonLocked={isNonLocked}
         paginationProps={{
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,

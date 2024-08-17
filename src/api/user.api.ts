@@ -1,4 +1,3 @@
-import { delay } from '@/utils/delay.ts'
 import { User } from '@/models/user.type.ts'
 import axiosInstance from '@/axiosInstance'
 import { PageInfo } from '@/models/pageInfo.type.ts'
@@ -36,8 +35,6 @@ export const getAllUserWithPagination = async (search: string, isNonLocked: bool
     }
 
     const response = await axiosInstance.get<UsersWithPagination>('/api/user', { params })
-
-    await delay(300)
 
     if (response.status === 200) {
       return response.data
