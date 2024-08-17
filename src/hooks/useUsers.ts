@@ -22,7 +22,7 @@ export const useUpdateRoleForUser = (setError: React.Dispatch<React.SetStateActi
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { mutate: updateRoleForUserMutate} = useMutation({
+  const { mutate: updateRoleForUserMutate } = useMutation({
     mutationFn: ({ id, roles }: { id: number, roles: string[] }) => updateRoleForUser(id, roles),
     onSuccess: () => {
       toast.success('Cập nhật tài khoản thành công')
@@ -39,13 +39,13 @@ export const useUpdateRoleForUser = (setError: React.Dispatch<React.SetStateActi
       toast.error(error.message)
     }
   })
-  return { updateRoleForUserMutate}
+  return { updateRoleForUserMutate }
 }
 
 export const useLockUser = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: lockUserMutate} = useMutation({
+  const { mutate: lockUserMutate } = useMutation({
     mutationFn: lockUser,
     onSuccess: () => {
       toast.success('Khoá tài khoản thành công')
@@ -62,7 +62,7 @@ export const useLockUser = () => {
 export const useDeleteUser = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteUserMutate} = useMutation({
+  const { mutate: deleteUserMutate } = useMutation({
     mutationFn: deleteUser,
     onSuccess: () => {
       toast.success('Xóa tài khoản thành công')
@@ -79,7 +79,7 @@ export const useDeleteUser = () => {
 export const useDeleteUsers = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteUsersMutate} = useMutation({
+  const { mutate: deleteUsersMutate } = useMutation({
     mutationFn: deleteUsers,
     onSuccess: () => {
       toast.success('Xóa các tài khoản thành công')

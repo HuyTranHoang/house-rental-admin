@@ -1,11 +1,11 @@
-
 import { delay } from '@/utils/delay.ts'
 import { User } from '@/models/user.type.ts'
 import axiosInstance from '@/axiosInstance'
+import { PageInfo } from '@/models/pageInfo.type.ts'
 
 interface UsersWithPagination {
   data: User[]
-  total: number
+  pageInfo: PageInfo
 }
 
 export interface UserField {
@@ -22,22 +22,22 @@ export interface UserField {
   nonLocked: boolean
 }
 
-export const getAllUserWithPagination = async (search: string, isNonLocked: boolean, roles:string, pageNumber: number, pageSize: number, sortBy: string) => {
+export const getAllUserWithPagination = async (search: string, isNonLocked: boolean, roles: string, pageNumber: number, pageSize: number, sortBy: string) => {
   try {
     pageNumber = pageNumber - 1
 
     const params = {
-                    search,
-                    isNonLocked,
-                    roles,
-                    pageNumber,
-                    pageSize,
-                    sortBy
+      search,
+      isNonLocked,
+      roles,
+      pageNumber,
+      pageSize,
+      sortBy
     }
 
     const response = await axiosInstance.get<UsersWithPagination>('/api/user', { params })
 
-    await delay(300) 
+    await delay(300)
 
     if (response.status === 200) {
       return response.data

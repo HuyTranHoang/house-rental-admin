@@ -1,21 +1,21 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
-import { useRolesWithoutParams } from '@/hooks/useRoles'
-import { useDeleteUser, useLockUser, useUpdateRoleForUser } from '@/hooks/useUsers'
-import { Role, RoleDataSource } from '@/models/role.type'
+import { useDeleteUser, useLockUser } from '@/hooks/useUsers'
 import { UserDataSource } from '@/models/user.type'
-import { DeleteOutlined, EditOutlined, EyeOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons'
 import {
-  Avatar,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
+  LockOutlined,
+  UnlockOutlined,
+  WarningOutlined
+} from '@ant-design/icons'
+import {
   Button,
-  Checkbox,
-  Col,
   DescriptionsProps,
   Flex,
   Form,
-  Input,
   Modal,
-  Row,
   Table,
   TablePaginationConfig,
   TableProps,
@@ -24,8 +24,10 @@ import {
 } from 'antd'
 import { useState } from 'react'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { green, volcano } from '@ant-design/colors'
-import styled from 'styled-components'
+import LockButton from '@/components/LockButton.tsx'
+import UserDetailsModal from '@/features/user/UserDetailsModal.tsx'
+import UserUpdateRoleModal from '@/features/user/UserUpdateRoleModal.tsx'
+import { gray, green, red, volcano } from '@ant-design/colors'
 
 const { confirm } = Modal
 
@@ -37,35 +39,6 @@ interface UserTableProps {
   rowSelection: TableRowSelection<UserDataSource> | undefined
   isNonLocked: boolean
 }
-
-interface LockButtonProps {
-  isNonLocked: boolean
-  record: UserDataSource
-  handleBlockUser: (record: UserDataSource) => void
-}
-
-const StyledButton = styled(Button)<{ isNonLocked: boolean; isAdmin: boolean }>`
-    color: ${({ isNonLocked, isAdmin }) => 
-            (isAdmin ? 'inherit' : isNonLocked ? volcano.primary : green.primary)};
-    border-color: ${({ isNonLocked, isAdmin }) => 
-            (isAdmin ? 'inherit' : isNonLocked ? volcano.primary : green.primary)};
-`
-
-const LockButton = ({ isNonLocked, record, handleBlockUser }: LockButtonProps) => (
-  <StyledButton
-    icon={
-      isNonLocked ? (
-        <LockOutlined style={{ color: record.username === 'admin' ? 'inherit' : volcano.primary }} />
-      ) : (
-        <UnlockOutlined style={{ color: record.username === 'admin' ? 'inherit' : green.primary }} />
-      )
-    }
-    disabled={record.username === 'admin'}
-    onClick={() => handleBlockUser(record)}
-    isNonLocked={isNonLocked}
-    isAdmin={record.username === 'admin'}
-  />
-)
 
 function UserTable({
                      dataSource,
@@ -79,24 +52,10 @@ function UserTable({
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
   const [form] = Form.useForm()
-  const [, setError] = useState<string>('')
 
-  const { data } = useRolesWithoutParams()
-  const { updateRoleForUserMutate } = useUpdateRoleForUser(setError)
   const { lockUserMutate } = useLockUser()
   const { deleteUserMutate } = useDeleteUser()
 
-
-  const roleDataSource: RoleDataSource[] = data
-    ? data.map((role: Role) => ({
-      key: role.id,
-      id: role.id,
-      name: role.name,
-      description: role.description,
-      authorityPrivileges: role.authorityPrivileges,
-      createdAt: role.createdAt
-    }))
-    : []
 
   const handleView = (record: UserDataSource) => {
     setCurrentUser(record)
@@ -114,35 +73,57 @@ function UserTable({
 
   const handleBlockUser = (record: UserDataSource) => {
     confirm({
-      title: isNonLocked
-        ? 'Bạn có chắc chắn muốn khóa tài khoản này?'
-        : 'Bạn có chắc chắn muốn mở khóa tài khoản này?',
+      icon: null,
+      title:
+        <Flex vertical align="center">
+          <Flex justify="center" align="center"
+                style={{
+                  backgroundColor: isNonLocked ? volcano[0] : green[0],
+                  width: 44,
+                  height: 44,
+                  borderRadius: '100%'
+                }}>
+            {isNonLocked
+              ? <LockOutlined style={{ color: volcano.primary, fontSize: 24 }} />
+              : <UnlockOutlined style={{ color: green.primary, fontSize: 24 }} />
+            }
+          </Flex>
+          <span style={{ margin: '6px 0' }}>
+          {isNonLocked ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
+        </span>
+        </Flex>,
+      content: (
+        <Flex vertical gap={8} style={{marginBottom: 16}}>
+          <span>
+            {isNonLocked
+              ? `Bạn có chắc chắn muốn khóa tài khoản `
+              : `Bạn có chắc chắn muốn mở khóa tài khoản `
+            }
+            <b style={{color: gray.primary}}>{record.username}</b> không?
+          </span>
+          <span style={{ color: red.primary }}>
+            <WarningOutlined style={{ color: red.primary }} />{' '}
+            {isNonLocked
+              ? 'Khóa tài khoản sẽ không cho phép người dùng đăng nhập vào hệ thống.'
+              : 'Mở khóa tài khoản sẽ cho phép người dùng đăng nhập vào hệ thống.'
+            }
+          </span>
+        </Flex>
+      ),
+      okText: 'Xác nhận',
+      okType: 'primary',
+      cancelText: 'Hủy',
+      maskClosable: true,
       onOk() {
-        console.log('Khóa người dùng', record.id)
         lockUserMutate(record.id)
+      },
+      okButtonProps: {
+        style: {
+          backgroundColor: isNonLocked ? volcano.primary : green.primary,
+          borderColor: isNonLocked ? volcano[0] : green[0]
+        }
       }
     })
-  }
-
-  const handleUpdateRolesModalOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        if (currentUser) {
-          updateRoleForUserMutate({
-            id: currentUser.id,
-            roles: values.roles
-          })
-        }
-        setIsUpdateRolesModalOpen(false)
-      })
-      .catch((info) => {
-        console.log('Validate Failed:', info)
-      })
-  }
-
-  const handleUpdateRolesModalCancel = () => {
-    setIsUpdateRolesModalOpen(false)
   }
 
   const showDeleteConfirm = (record: UserDataSource) => {
@@ -261,9 +242,7 @@ function UserTable({
             />
           </Tooltip>
 
-          <Tooltip title={isNonLocked ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}>
-            <LockButton isNonLocked={isNonLocked} record={record} handleBlockUser={handleBlockUser} />
-          </Tooltip>
+          <LockButton isNonLocked={isNonLocked} record={record} handleBlockUser={handleBlockUser} />
 
           <Tooltip title="Xóa tài khoản">
             <Button icon={<DeleteOutlined />}
@@ -298,93 +277,15 @@ function UserTable({
       />
 
       {/* Modal xem chi tiết */}
-      <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
-        {currentUser && (
-          <div>
-            {/* Hàng đầu tiên */}
-            <Row gutter={16} style={{ marginBottom: '20px' }}>
-              {/* Cột bên trái */}
-              <Col span={8} style={{ textAlign: 'center' }}>
-                <Avatar
-                  size={100}
-                  src={
-                    currentUser.avatarUrl ||
-                    `https://robohash.org/${currentUser.username}?set=set4`
-                  }
-                  style={{ marginBottom: '16px' }}
-                />
-                <p><b>{currentUser.username}</b></p>
-              </Col>
-
-              {/* Cột bên phải */}
-              <Col span={16}>
-                <Row>
-                  <p style={{ marginBottom: '3px' }}><b>Họ và
-                    Tên:</b> {`${currentUser.firstName} ${currentUser.lastName}`}</p>
-                  <p style={{ marginBottom: '3px' }}><b>Email:</b> {currentUser.email}</p>
-                  <p style={{ marginBottom: '3px' }}><b>Số điện thoại:</b> {currentUser.phoneNumber}</p>
-                  <p style={{ marginBottom: '3px' }}><b>Ngày tạo:</b> {currentUser.createdAt}</p>
-                </Row>
-              </Col>
-            </Row>
-
-            {/* Hàng tiếp theo */}
-            <Row>
-              <Col span={24}>
-                <p>
-                  <b>Vai trò:</b>
-                  {currentUser.roles.map(role => (
-                    <Tag key={role} color="blue" style={{ margin: '4px' }}>
-                      {role}
-                    </Tag>
-                  ))}
-                </p>
-                <p>
-                  <b>Quyền hạn:</b>
-                  {currentUser.authorities.map(auth => (
-                    <Tag key={auth} color="green" style={{ margin: '4px' }}>
-                      {auth}
-                    </Tag>
-                  ))}
-                </p>
-              </Col>
-            </Row>
-          </div>
-        )}
-      </Modal>
+      <UserDetailsModal isModalOpen={isModalOpen}
+                        setIsModalOpen={setIsModalOpen}
+                        currentUser={currentUser} />
 
       {/* Modal chỉnh sửa */}
-      <Modal
-        title="Cập nhật vai trò"
-        open={isUpdateRolesModalOpen}
-        onCancel={handleUpdateRolesModalCancel}
-        onOk={handleUpdateRolesModalOk}
-      >
-        {currentUser && (
-          <Form
-            form={form}
-            layout="vertical"
-            initialValues={{ username: currentUser.username, roles: currentUser.roles }}
-          >
-            <Form.Item name="username" label="Tài khoản">
-              <Input disabled />
-            </Form.Item>
-            <Form.Item
-              name="roles"
-              label="Vai trò"
-              rules={[{ required: true, message: 'Vui lòng chọn ít nhất một vai trò!' }]}
-            >
-              <Checkbox.Group>
-                {roleDataSource.map((role) => (
-                  <Checkbox key={role.id} value={role.name}>
-                    {role.name}
-                  </Checkbox>
-                ))}
-              </Checkbox.Group>
-            </Form.Item>
-          </Form>
-        )}
-      </Modal>
+      <UserUpdateRoleModal isUpdateRolesModalOpen={isUpdateRolesModalOpen}
+                           setIsUpdateRolesModalOpen={setIsUpdateRolesModalOpen}
+                           currentUser={currentUser} />
+
     </>
   )
 }

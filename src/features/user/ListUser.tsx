@@ -3,10 +3,9 @@ import { useDeleteUsers, useUsers } from '@/hooks/useUsers'
 import { User, UserDataSource } from '@/models/user.type'
 import { CheckCircleOutlined, CloseSquareOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
-import { Button, Divider, Flex, Input, Space, TableProps, Tabs, TabsProps, Typography } from 'antd'
+import { Button, Divider, Flex, Space, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import Search from 'antd/es/input/Search'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
 import UserTable from './UserTable'
 import { customFormatDate } from '@/utils/customFormatDate'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig'
@@ -29,7 +28,7 @@ function ListUser() {
 
   const [search, setSearch] = useState('')
   const [isNonLocked, setIsNonLocked] = useState(true)
-  const [roles, setRoles] = useState('')
+  const [roles] = useState('')
   const [sortBy, setSortBy] = useState('IdDesc')
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
@@ -47,36 +46,24 @@ function ListUser() {
   }
 
   const onTabChange = (key: string) => {
-    setIsNonLocked(key === 'isNonLocked' ? true : false)
+    setIsNonLocked(key === 'isNonLocked')
     queryClient.invalidateQueries({ queryKey: ['users'] })
   }
 
   const handleTableChange: TableProps<UserDataSource>['onChange'] = (_, __, sorter) => {
-    if (Array.isArray(sorter)) {
-      setSortBy('createdAtDesc')
-    } else {
-      if (sorter.order) {
-        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-        setSortBy(`${sorter.field}${order}`)
-      }
+    if (!Array.isArray(sorter) && sorter.order) {
+      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+      setSortBy(`${sorter.field}${order}`)
     }
   }
 
   const dataSource: UserDataSource[] = data
     ? data.data.map((user: User, idx) => ({
-        key: user.id,
-        id: user.id,
-        index: (pageNumber - 1) * pageSize + idx + 1,
-        username: user.username,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        avatarUrl: user.avatarUrl,
-        roles: user.roles,
-        authorities: user.authorities,
-        createdAt: customFormatDate(user.createdAt)
-      }))
+      ...user,
+      key: user.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
+      createdAt: customFormatDate(user.createdAt)
+    }))
     : []
 
   const rowSelection = {
@@ -92,23 +79,23 @@ function ListUser() {
 
   return (
     <>
-      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
-        <Flex align='center'>
+      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
+        <Flex align="center">
           <Typography.Title level={2} style={{ margin: 0 }}>
             Danh sách tài khoản
           </Typography.Title>
-          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Search
             allowClear
             onSearch={(value) => setSearch(value)}
-            placeholder='Tìm kiếm theo tên tài khoản'
+            placeholder="Tìm kiếm theo tên tài khoản"
             style={{ width: 250 }}
           />
         </Flex>
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={handleDelete}>
+            <Button shape="round" type="primary" danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           )}

@@ -31,7 +31,8 @@ export const authorityPrivilegesMap: { [key: string]: [string, string] } = {
   'role:update': ['Vai trò: Sửa', 'green'],
   'role:create': ['Vai trò: Thêm', 'green'],
   'role:delete': ['Vai trò: Xóa', 'green'],
-  'admin:all': ['Quản trị: Toàn quyền', 'red']
+  'admin:all': ['Quản trị: Toàn quyền', 'red'],
+  'dashboard:read': ['Dashboard: Xem', 'cyan'],
 }
 
 export const RolePrivileges = [
