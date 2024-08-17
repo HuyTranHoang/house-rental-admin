@@ -3,7 +3,7 @@ import { useUpdateRoleForUser } from '@/hooks/useUsers'
 import { Role, RoleDataSource } from '@/models/role.type'
 import { UserDataSource } from '@/models/user.type'
 import { CloseCircleOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button, Modal, Table, TablePaginationConfig, TableProps, Tag, Form, Input, Checkbox } from 'antd'
+import { Button, Modal, Table, TablePaginationConfig, TableProps, Tag, Form, Input, Checkbox, Descriptions, Card, Avatar } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useState } from 'react'
 
@@ -180,22 +180,39 @@ function UserTable({
       />
 
       {/* Modal xem chi tiết */}
-      <Modal title='Chi tiết tài khoản' open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null}>
-        {currentUser && (
-          <>
-            <p>
-              <b>Tài khoản:</b> {currentUser.username}
-            </p>
-            <p>
-              <b>Email:</b> {currentUser.email}
-            </p>
-            <p>
-              <b>Vai trò:</b> {currentUser.roles.join(', ')}
-            </p>
-            <p>
-              <b>Ngày tạo:</b> {currentUser.createdAt}
-            </p>
-          </>
+      <Modal title='Chi tiết tài khoản' open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={null} style={{width: 800}}>
+      {currentUser && (
+          <Card
+            style={{ width: 450 }}
+            cover={
+              <Avatar
+                size={100}
+                //  Cần thêm api hiển thị avatar
+                src={currentUser.avatarUrl || `https://robohash.org/{currentUser.username}`}
+                style={{ margin: '0 auto', marginBottom: 16 }}
+              />
+            }
+          >
+            <Card.Meta
+              title={currentUser.username}
+              description={
+                <>
+                  <p>
+                    <b>Họ và Tên:</b> {`${currentUser.firstName} ${currentUser.lastName}`}
+                  </p>
+                  <p><b>Email:</b> {currentUser.email}</p>
+                  <p><b>Số điện thoại:</b> {currentUser.phoneNumber}</p>
+                  <p><b>Vai trò:</b> {currentUser.roles.map(role => (
+                    <Tag key={role} color='blue'>{role}</Tag>
+                  ))}</p>
+                  <p><b>Quyền hạn:</b> {currentUser.authorities.map(auth => (
+                    <Tag key={auth} color='green'>{auth}</Tag>
+                  ))}</p>
+                  <p><b>Ngày tạo:</b> {currentUser.createdAt}</p>
+                </>
+              }
+            />
+          </Card>
         )}
       </Modal>
 
