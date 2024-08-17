@@ -23,10 +23,12 @@ const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
 })
 
+
 function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { user } = useSelector(selectAuth)
+
 
   const {
     token: { colorBgContainer, borderRadiusLG }
@@ -42,7 +44,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
     {
       key: 'cityDistrict',
       label: 'Thành phố và quận huyện',
-      icon: <IconFont type="icon-city" />,
+      icon: <IconFont type='icon-city' />,
       children: [
         {
           key: 'cityDistrict-city',
@@ -52,7 +54,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         {
           key: 'cityDistrict-district',
           label: 'Quản lý quận huyện',
-          onClick: () => alert('Chưa làm')
+          onClick: () => navigate('/district')
         }
       ]
     },

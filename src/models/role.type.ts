@@ -3,6 +3,7 @@ import React from 'react'
 export interface Role {
   id: number
   name: string
+  description: string
   authorityPrivileges: string[]
   createdAt: string
 }

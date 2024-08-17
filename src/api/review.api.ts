@@ -25,7 +25,7 @@ export const getAllReviewsWithPagination = async (
         sortBy
         }
 
-        const response = await axios.get<ReviewWithPagination[]>('/api/review', { params })
+        const response = await axios.get<ReviewWithPagination>('/api/review', { params })
 
         await delay(300)
 

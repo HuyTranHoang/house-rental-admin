@@ -28,3 +28,19 @@
     width: 100%;
     text-align: center;
 }
+
+.icon-primary {
+    color: #1890ff;
+}
+
+.icon-primary:hover {
+    color: #69b1ff;
+}
+
+.icon-danger {
+    color: #ff4d4f;
+}
+
+.icon-danger:hover {
+    color: #ff7875;
+}

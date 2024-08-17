@@ -1,39 +1,34 @@
 import { Button, DescriptionsProps, Modal, Rate, Table, TablePaginationConfig, TableProps } from 'antd'
-import { Review } from '../../models/review.type'
+import { ReviewDataSource } from '@/models/review.type.ts'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
-import ConfirmModalTitle from '../../components/ConfirmModalTitle'
-import ConfirmModalContent from '../../components/ConfirmModalContent'
-import { useDeleteReview } from '../../hooks/useReviews'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle'
+import ConfirmModalContent from '@/components/ConfirmModalContent'
+import { useDeleteReview } from '@/hooks/useReviews.ts'
 
 const { confirm } = Modal
 
-type DataSourceType = Review & {
-  key: React.Key
-}
-
 interface ReviewTableProps {
-  dataSource: DataSourceType[]
+  dataSource: ReviewDataSource[]
   loading: boolean
   paginationProps: false | TablePaginationConfig | undefined
-  handleTableChange: TableProps<DataSourceType>['onChange']
-  rowSelection: TableRowSelection<DataSourceType> | undefined
+  handleTableChange: TableProps<ReviewDataSource>['onChange']
+  rowSelection: TableRowSelection<ReviewDataSource> | undefined
 }
 
 function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: ReviewTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [currentReview, setCurrentReview] = useState<DataSourceType | null>(null)
+  const [currentReview, setCurrentReview] = useState<ReviewDataSource | null>(null)
 
-  const handleView = (record: DataSourceType) => {
+  const handleView = (record: ReviewDataSource) => {
     setCurrentReview(record)
     setIsModalOpen(true)
   }
 
   const { deleteReviewMutate } = useDeleteReview()
 
-  const showDeleteConfirm = (record: DataSourceType) => {
+  const showDeleteConfirm = (record: ReviewDataSource) => {
 
     const items: DescriptionsProps['items'] = [
       {
@@ -45,7 +40,7 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
       {
         key: '2',
         label: 'Người đánh giá',
-        children: <span>{record.username}</span>,
+        children: <span>{record.userName}</span>,
         span: 3
       },
       {
@@ -77,18 +72,18 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
   }
 
 
-  const columns: TableProps<DataSourceType>['columns'] = [
+  const columns: TableProps<ReviewDataSource>['columns'] = [
     {
       title: '#',
       dataIndex: 'index',
-      key: 'id',
+      key: 'index',
       fixed: 'left',
       width: 50
     },
     {
       title: 'Tài khoản',
-      dataIndex: 'name',
-      key: 'name'
+      dataIndex: 'userName',
+      key: 'userName'
     },
     {
       title: 'Nội dung',
@@ -113,7 +108,7 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
       key: 'action',
       fixed: 'right',
       width: 110,
-      render: (_, record: DataSourceType) => (
+      render: (_, record: ReviewDataSource) => (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%',  }}>
           <Button icon={<EyeOutlined/>}
                     type='default' style={{ borderColor: '#1890ff', color: '#1890ff', marginRight: "1rem" }}
@@ -153,13 +148,13 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
         {currentReview && (
           <div>
             <p>
-              <strong>Tài khoản:</strong> {currentReview.username}
+              <strong>Tài khoản:</strong> {currentReview.userName}
             </p>
             <p>
               <strong>Ngày đăng:</strong> {currentReview.createdAt}
             </p>
             <p>
-              <strong>Bài đăng:</strong> {currentReview.title}
+              <strong>Bài đăng:</strong> {currentReview.propertyTitle}
             </p>
             <p>
               <strong>Đánh giá:</strong> <Rate disabled value={currentReview.rating} />
