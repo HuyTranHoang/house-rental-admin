@@ -44,7 +44,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
     {
       key: 'cityDistrict',
       label: 'Thành phố và quận huyện',
-      icon: <IconFont type='icon-city' />,
+      icon: <IconFont type="icon-city" />,
       children: [
         {
           key: 'cityDistrict-city',
@@ -198,7 +198,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
                 <Dropdown menu={{ items: dropdownItems, onClick: dropdownOnClick }} placement="top"
                 >
                   <Button
-                    icon={<Avatar src="https://i.pinimg.com/236x/c5/c2/78/c5c27866e134285971505f6984f031f2.jpg" />}
+                    icon={<Avatar src={user?.avatarUrl || `https://robohash.org/${user?.username}?set=set4`} />}
                     size="large"
                     style={{
                       padding: '24px 0',
