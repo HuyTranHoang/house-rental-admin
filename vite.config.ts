@@ -19,7 +19,8 @@ export default defineConfig({
     port: 3100,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080/api',
+        // target: 'http://localhost:8080/api',
+        target: 'https://house-rental-latest.onrender.com/api',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
