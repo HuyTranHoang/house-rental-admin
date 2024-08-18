@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { getRoomTypeById, RoomTypeField } from '@/api/roomType.api.ts'
 import { CityField } from '@/api/city.api.ts'
 import { useCreateRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
+import { LeftCircleOutlined } from '@ant-design/icons'
 
 function AddUpdateRoomType() {
   const match = useMatch('/roomType/add')
@@ -27,10 +28,6 @@ function AddUpdateRoomType() {
     } else {
       updateRoomTypeMutate(values)
     }
-  }
-
-  const onFinishFailed: FormProps<RoomTypeField>['onFinishFailed'] = (errorInfo) => {
-    console.log('Failed:', errorInfo)
   }
 
   const { data: roomTypeUpdateData, isLoading } = useQuery({
@@ -56,17 +53,21 @@ function AddUpdateRoomType() {
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button type="primary" onClick={() => navigate('/roomType')}>Quay lại</Button>
+        <Button icon={<LeftCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/roomType')}>Quay
+          lại</Button>
       </Flex>
       <Form
         form={form}
         name="roomTypeForm"
         labelCol={{ span: 5 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600, marginTop: 32 }}
-        initialValues={{ remember: true }}
+        style={{
+          maxWidth: 600,
+          marginTop: 32,
+          boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #f0f0f0',
+          padding: '32px 32px 0'
+        }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item<CityField>
@@ -90,9 +91,12 @@ function AddUpdateRoomType() {
           <Input onChange={() => setError('')} />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
-          <Button loading={addRoomTypePening || updateRoomTypePending} type="primary" htmlType="submit"
-                  style={{ width: 100 }}>
+        <Form.Item wrapperCol={{ offset: 5 }}>
+          <Button onClick={() => form.resetFields()} style={{ marginRight: 16 }}>
+            Đặt lại
+          </Button>
+
+          <Button loading={addRoomTypePening || updateRoomTypePending} type="primary" htmlType="submit" style={{ width: 100 }}>
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>

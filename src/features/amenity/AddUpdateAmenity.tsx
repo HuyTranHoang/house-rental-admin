@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { AmenityField, getAmenityById } from '@/api/amenity.api.ts'
 import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
+import { LeftCircleOutlined } from '@ant-design/icons'
 
 function AddUpdateAmenity() {
   const match = useMatch('/amenity/add')
@@ -51,14 +52,20 @@ function AddUpdateAmenity() {
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button type="primary" onClick={() => navigate('/amenity')}>Quay lại</Button>
+        <Button icon={<LeftCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/amenity')}>Quay
+          lại</Button>
       </Flex>
       <Form
         form={form}
         name="amenityForm"
         labelCol={{ span: 5 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600, marginTop: 32 }}
+        style={{
+          maxWidth: 600,
+          marginTop: 32,
+          boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #f0f0f0',
+          padding: '32px 32px 0'
+        }}
         onFinish={onFinish}
         autoComplete="off"
       >
@@ -83,7 +90,11 @@ function AddUpdateAmenity() {
           <Input onChange={() => setError('')} />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
+        <Form.Item wrapperCol={{ offset: 5 }}>
+          <Button onClick={() => form.resetFields()} style={{ marginRight: 16 }}>
+            Đặt lại
+          </Button>
+
           <Button loading={addAmenityPending || updateAmenityPending} type="primary" htmlType="submit"
                   style={{ width: 100 }}>
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}

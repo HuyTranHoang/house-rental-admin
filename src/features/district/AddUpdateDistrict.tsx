@@ -7,6 +7,7 @@ import { DistrictField, getDistrictById } from '@/api/district.api'
 import { useEffect, useState } from 'react'
 import { useCreateDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
 import { useCitiesAll } from '@/hooks/useCities.ts'
+import { LeftCircleOutlined } from '@ant-design/icons'
 
 function AddUpdateDistrict() {
   const match = useMatch('/district/add')
@@ -67,16 +68,20 @@ function AddUpdateDistrict() {
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button type="primary" onClick={() => navigate('/district')}>
+        <Button icon={<LeftCircleOutlined />} shape='round' type="primary" onClick={() => navigate('/district')}>
           Quay lại
         </Button>
       </Flex>
       <Form
         form={form}
         name="districtForm"
-        labelCol={{ span: 5 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600, marginTop: 32 }}
+        labelCol={{ span: 6 }}
+        style={{
+          maxWidth: 600,
+          marginTop: 32,
+          boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #f0f0f0',
+          padding: '32px 32px 0' }}
         onFinish={onFinish}
         autoComplete="off"
       >
@@ -107,7 +112,11 @@ function AddUpdateDistrict() {
           <Select options={cityOptions} placeholder="Chọn thành phố" />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 5, span: 16 }}>
+        <Form.Item wrapperCol={{ offset: 6}}>
+          <Button onClick={() => form.resetFields()} style={{ marginRight: 16 }}>
+            Đặt lại
+          </Button>
+
           <Button
             loading={addDistrictPending || updateDistrictPending}
             type="primary"
