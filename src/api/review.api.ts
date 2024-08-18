@@ -20,7 +20,7 @@ export const getAllReviewsWithPagination = async (
     pageNumber = pageNumber - 1
 
     const params = {
-      userName: search,
+      search,
       rating,
       pageNumber,
       pageSize,

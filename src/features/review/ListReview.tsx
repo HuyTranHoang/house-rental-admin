@@ -75,8 +75,8 @@ function ListReview() {
           <Search
             allowClear
             onSearch={(value) => setSearch(value)}
-            placeholder="Tìm kiếm theo tài khoản"
-            style={{ width: 250 }}
+            placeholder="Tìm kiếm theo tài khoản, bài đăng"
+            style={{ width: 300 }}
           />
         </Flex>
 
