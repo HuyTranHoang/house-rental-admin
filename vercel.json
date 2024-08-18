@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://house-rental-latest.onrender.com/api/$1"
+    }
+  ]
+}
