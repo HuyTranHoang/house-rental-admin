@@ -2,7 +2,6 @@ import axios from 'axios'
 import { District } from '@/models/district.type'
 import { PageInfo } from '@/models/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
-import { delay } from '@/utils/delay.ts'
 
 export interface DistrictField {
   id?: number
@@ -46,8 +45,6 @@ export const getAllDistrictsWithPagination = async (
     }
 
     const response = await axios.get<DistrictsWithPagination>('/api/district', { params })
-
-    await delay(300) // Giả delay 300ms để thấy rõ sự chuyển động của loading
 
     if (response.status === 200) {
       return response.data

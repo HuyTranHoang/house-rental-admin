@@ -33,8 +33,6 @@ export const getAllReportsWithPagination = async (search: string,
 
     const response = await axiosInstance.get<ReportsWithPagination>('/api/reports', { params })
 
-    //await delay(300) // Giả delay 300ms để thấy rõ sự chuyển động của loading
-
     if (response.status === 200) {
       return response.data
     }

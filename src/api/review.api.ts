@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { PageInfo } from '../models/pageInfo.type'
 import { Review } from '../models/review.type'
-import { delay } from '../utils/delay'
 import axiosInstance from '../axiosInstance'
 
 interface ReviewWithPagination {
@@ -9,14 +8,13 @@ interface ReviewWithPagination {
   data: Review[]
 }
 
-export const getAllReviewsWithPagination = async (
-  search: string,
-  rating: number,
-  pageNumber: number,
-  pageSize: number,
-  sortBy: string) => {
+export const getAllReviewsWithPagination = async (search: string,
+                                                  rating: number,
+                                                  pageNumber: number,
+                                                  pageSize: number,
+                                                  sortBy: string) => {
 
-    try {
+  try {
     pageNumber = pageNumber - 1
 
     const params = {
@@ -29,10 +27,7 @@ export const getAllReviewsWithPagination = async (
 
     const response = await axios.get<ReviewWithPagination>('/api/review', { params })
 
-    await delay(300)
-
     if (response.status === 200) {
-      // console.log(response.data)
       return response.data
     }
   } catch (error) {

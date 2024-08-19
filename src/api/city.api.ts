@@ -2,7 +2,6 @@ import axios from 'axios'
 import { City } from '@/models/city.type.ts'
 import { PageInfo } from '@/models/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
-import { delay } from '@/utils/delay.ts'
 
 export interface CityField {
   id?: number
@@ -38,8 +37,6 @@ export const getAllCitiesWithPagination = async (search: string, pageNumber: num
     }
 
     const response = await axios.get<CitiesWithPagination>('/api/city', { params })
-
-    await delay(300) // Giả delay 300ms để thấy rõ sự chuyển động của loading
 
     if (response.status === 200) {
       return response.data

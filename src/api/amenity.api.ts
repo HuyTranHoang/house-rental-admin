@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { Amenity } from '@/models/amenity.type.ts'
 import { PageInfo } from '@/models/pageInfo.type.ts'
-import { delay } from '@/utils/delay.ts'
 import axiosInstance from '@/axiosInstance.ts'
 
 export interface AmenityField {
@@ -43,8 +42,6 @@ export const getAllAmenitiesWithPagination = async (
     }
 
     const response = await axios.get<AmenitiesWithPagination>('/api/amenities', { params })
-
-    await delay(300)
 
     if (response.status === 200) {
       return response.data

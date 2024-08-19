@@ -9,7 +9,6 @@ import {
   List,
   Modal,
   Space,
-  Spin,
   Tooltip,
   Typography
 } from 'antd'
@@ -107,9 +106,6 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
     }
   }, [formAddRole, roleUpdateData])
 
-  if (isLoading) {
-    return <Spin fullscreen />
-  }
 
   return (
     <>
@@ -125,9 +121,11 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
           </Tooltip>
         </Space>
       </Typography.Title>
+
       <List
         bordered
         size="small"
+        loading={isLoading}
         dataSource={data}
         renderItem={(item) => (
           <List.Item
