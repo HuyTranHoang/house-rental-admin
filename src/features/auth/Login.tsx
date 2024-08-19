@@ -83,7 +83,7 @@ function Login() {
               width: '400px',
               backgroundColor: 'white',
               borderRadius: '8px',
-              padding: '16px',
+              padding: '32px',
               marginTop: '120px',
               boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px'
             }}

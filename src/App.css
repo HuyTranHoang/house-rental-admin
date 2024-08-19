@@ -12,7 +12,9 @@
 
 .login-page-bg {
     height: 100vh;
-    background: linear-gradient(to right, #29323c, #485563);
+    background-size: cover;
+    background-image: url("background.webp");
+    /*background: linear-gradient(to right, #29323c, #485563);*/
 }
 
 .centered-text {

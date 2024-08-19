@@ -152,6 +152,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         break
       case 'logout':
         dispatch(logout())
+        localStorage.removeItem('jwtToken')
         toast.success('Đăng xuất thành công')
         navigate('/login')
         break
