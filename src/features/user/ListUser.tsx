@@ -28,7 +28,7 @@ function ListUser() {
 
   const [search, setSearch] = useState('')
   const [isNonLocked, setIsNonLocked] = useState(true)
-  const [roles] = useState('')
+  const [roles, setRoles] = useState('')
   const [sortBy, setSortBy] = useState('IdDesc')
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
@@ -50,10 +50,16 @@ function ListUser() {
     queryClient.invalidateQueries({ queryKey: ['users'] })
   }
 
-  const handleTableChange: TableProps<UserDataSource>['onChange'] = (_, __, sorter) => {
+  const handleTableChange: TableProps<UserDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
       setSortBy(`${sorter.field}${order}`)
+    }
+
+    if (filters.roles) {
+      setRoles(filters.roles.join(','))
+    } else {
+      setRoles('')
     }
   }
 
