@@ -6,9 +6,22 @@ import {
   HomeOutlined,
   LogoutOutlined,
   SolutionOutlined,
-  UserOutlined
+  UserOutlined, VerticalAlignTopOutlined
 } from '@ant-design/icons'
-import { Avatar, Button, ConfigProvider, Dropdown, Flex, Layout, Menu, MenuProps, Space, theme, Typography } from 'antd'
+import {
+  Avatar,
+  Button,
+  ConfigProvider,
+  Dropdown,
+  Flex,
+  FloatButton,
+  Layout,
+  Menu,
+  MenuProps,
+  Space,
+  theme,
+  Typography
+} from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
 import CustomBreadcrumbs from '../components/CustomBreadcrumbs.tsx'
 import { useAppDispatch } from '../store.ts'
@@ -17,6 +30,7 @@ import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { toTitleCase } from '@/utils/toTitleCase.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useEffect, useState } from 'react'
 
 const { Header, Content, Sider } = Layout
 
@@ -30,10 +44,15 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
   const dispatch = useAppDispatch()
   const { user } = useSelector(selectAuth)
 
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   const {
-    token: { colorBgContainer, borderRadiusLG }
+    token: { colorBgContainer, borderRadiusLG, colorBgLayout }
   } = theme.useToken()
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const siderItems: MenuProps['items'] = [
     {
@@ -160,6 +179,17 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
     }
   }
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
     <Layout>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
@@ -171,8 +201,8 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         </Flex>
       </Header>
       <Layout>
-        <Sider width={260} style={{ background: colorBgContainer }}>
-          <Layout style={{ height: '100%', background: colorBgContainer }}>
+        <Sider width={260} style={{ background: colorBgLayout }}>
+          <Layout style={{ height: 'calc(100vh - 100px)', background: colorBgContainer }}>
             <Flex justify="center" align="center" style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
               <img src="/LOGO_TEXT.png" alt="Mogu logo" style={{ width: 100 }} />
             </Flex>
@@ -227,10 +257,13 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
             }}
           >
             <Outlet />
+            {showScrollButton && (
+              <FloatButton icon={<VerticalAlignTopOutlined />} onClick={scrollToTop} />
+            )}
           </Content>
         </Layout>
       </Layout>
-      <Footer style={{ textAlign: 'center' }}>Mogu Admin ©2024 Created by Group 2</Footer>
+      <Footer style={{ textAlign: 'center', padding: '10px 0' }}>Mogu Admin ©2024 Created by Group 2</Footer>
     </Layout>
   )
 }
