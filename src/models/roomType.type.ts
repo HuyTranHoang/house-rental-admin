@@ -10,3 +10,10 @@ export type RoomTypeDataSource = RoomType & {
   key: React.Key,
   index?: number
 }
+
+export type RoomTypeFilters = {
+  search?: string
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
+}

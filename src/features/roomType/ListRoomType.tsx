@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
-import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useDeleteRoomTypes, useRoomTypes } from '@/hooks/useRoomTypes.ts'
+import { useDeleteRoomTypes, useRoomTypeFilters, useRoomTypes } from '@/hooks/useRoomTypes.ts'
 import RoomTypeTable from './RoomTypeTable.tsx'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
@@ -13,14 +13,19 @@ import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
+type OnChange = NonNullable<TableProps<RoomTypeDataSource>['onChange']>;
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
+
 function ListRoomType() {
 
   const navigate = useNavigate()
 
-  const [search, setSearch] = useState('')
-  const [sortBy, setSortBy] = useState('IdDesc')
-  const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const { search, sortBy, pageSize, pageNumber, setFilters } = useRoomTypeFilters()
+
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
+
+  const [form] = Form.useForm()
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
@@ -37,7 +42,10 @@ function ListRoomType() {
   const handleTableChange: TableProps<RoomTypeDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setSortBy(`${sorter.field}${order}`)
+      setFilters({ sortBy: `${sorter.field}${order}` })
+    } else {
+      setFilters({ sortBy: '' })
+      setSortedInfo({})
     }
   }
 
@@ -60,6 +68,25 @@ function ListRoomType() {
     }
   }
 
+  useEffect(() => {
+    if (search) {
+      form.setFieldsValue({ search })
+    }
+  }, [form, search])
+
+  useEffect(() => {
+    if (sortBy) {
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/)
+      if (match) {
+        const [, field, order] = match
+        setSortedInfo({
+          field,
+          order: order === 'Asc' ? 'ascend' : 'descend'
+        })
+      }
+    }
+  }, [sortBy])
+
   if (isError) {
     return <ErrorFetching />
   }
@@ -70,8 +97,16 @@ function ListRoomType() {
         <Flex align="center">
           <Typography.Title level={2} style={{ margin: 0 }}>Danh sách loại phòng</Typography.Title>
           <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm tên loại phòng"
-                  style={{ width: 250 }} />
+          <Form form={form} name="searchCityForm" layout="inline">
+            <Form.Item name="search">
+              <Search
+                allowClear
+                onSearch={(value) => setFilters({ search: value })}
+                placeholder="Tìm kiếm tên loại phòng"
+                style={{ width: 250 }}
+              />
+            </Form.Item>
+          </Form>
         </Flex>
 
         <Space>
@@ -95,11 +130,12 @@ function ListRoomType() {
           pageSize: pageSize,
           current: pageNumber,
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} loại phòng`,
-          onShowSizeChange: (_, size) => setPageSize(size),
-          onChange: (page) => setPageNumber(page)
+          onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
+          onChange: (page) => setFilters({ pageNumber: page })
         }}
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
+        sortedInfo={sortedInfo}
       />
     </>
   )

@@ -7,15 +7,17 @@ import TableActions from '@/components/TableActions.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { SorterResult } from 'antd/lib/table/interface'
 
 const { confirm } = Modal
 
 interface RoomTypeTableProps {
-  dataSource: RoomTypeDataSource[];
-  loading: boolean;
-  paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<RoomTypeDataSource>['onChange'];
+  dataSource: RoomTypeDataSource[]
+  loading: boolean
+  paginationProps: false | TablePaginationConfig | undefined
+  handleTableChange: TableProps<RoomTypeDataSource>['onChange']
   rowSelection: TableRowSelection<RoomTypeDataSource> | undefined
+  sortedInfo: SorterResult<RoomTypeDataSource>
 }
 
 function RoomTypeTable({
@@ -23,7 +25,8 @@ function RoomTypeTable({
                          loading,
                          paginationProps,
                          handleTableChange,
-                         rowSelection
+                         rowSelection,
+                         sortedInfo
                        }: RoomTypeTableProps) {
   const navigate = useNavigate()
   const { deleteRoomTypeMutate } = useDeleteRoomType()
@@ -71,19 +74,21 @@ function RoomTypeTable({
       dataIndex: 'index',
       key: 'index',
       fixed: 'left',
-      width: 50,
+      width: 50
     },
     {
       title: 'Tên loại phòng',
       dataIndex: 'name',
       key: 'name',
-      sorter: true
+      sorter: true,
+      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null,
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 300
     },

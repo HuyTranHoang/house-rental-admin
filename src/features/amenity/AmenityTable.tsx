@@ -7,15 +7,17 @@ import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
 import { AmenityDataSource } from '@/models/amenity.type.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { SorterResult } from 'antd/lib/table/interface'
 
 const { confirm } = Modal
 
 interface AmenityTableProps {
-  dataSource: AmenityDataSource[];
-  loading: boolean;
-  paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<AmenityDataSource>['onChange'];
+  dataSource: AmenityDataSource[]
+  loading: boolean
+  paginationProps: false | TablePaginationConfig | undefined
+  handleTableChange: TableProps<AmenityDataSource>['onChange']
   rowSelection: TableRowSelection<AmenityDataSource> | undefined
+  sortedInfo: SorterResult<AmenityDataSource>
 }
 
 function AmenityTable({
@@ -23,7 +25,8 @@ function AmenityTable({
                         loading,
                         paginationProps,
                         handleTableChange,
-                        rowSelection
+                        rowSelection,
+                        sortedInfo
                       }: AmenityTableProps) {
   const navigate = useNavigate()
   const { deleteAmenityMutate } = useDeleteAmenity()
@@ -77,13 +80,15 @@ function AmenityTable({
       title: 'Tên tiện nghi',
       dataIndex: 'name',
       key: 'name',
-      sorter: true
+      sorter: true,
+      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 300
     },
