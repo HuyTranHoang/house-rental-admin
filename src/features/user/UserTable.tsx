@@ -213,7 +213,9 @@ function UserTable({
         locale={{
           triggerDesc: 'Sắp xếp giảm dần',
           triggerAsc: 'Sắp xếp tăng dần',
-          cancelSort: 'Hủy sắp xếp'
+          cancelSort: 'Hủy sắp xếp',
+          filterConfirm: 'Lọc',
+          filterReset: 'Bỏ lọc',
         }}
       />
 
