@@ -20,8 +20,8 @@ export default defineConfig({
     proxy: {
       '/api': {
         // Bỏ comment dòng dưới để chạy ở local
-        target: 'http://localhost:8080/api',
-        // target: 'https://house-rental-latest.onrender.com/api',
+        // target: 'http://localhost:8080/api',
+        target: 'https://house-rental-latest.onrender.com/api',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

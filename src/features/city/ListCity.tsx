@@ -1,6 +1,6 @@
-import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { useCities, useDeleteMultiCity } from '@/hooks/useCities.ts'
@@ -16,10 +16,18 @@ const { Search } = Input
 function ListCity() {
   const navigate = useNavigate()
 
-  const [search, setSearch] = useState('')
-  const [sortBy, setSortBy] = useState('IdDesc')
-  const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const [searchParams, setSearchParams] = useSearchParams({
+    search: '',
+    sortBy: '',
+    pageNumber: '1',
+    pageSize: '5'
+  })
+
+  const [form] = Form.useForm()
+  const search = searchParams.get('search') || ''
+  const sortBy = searchParams.get('sortBy') || ''
+  const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
+  const pageSize = parseInt(searchParams.get('pageSize') || '5')
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
@@ -36,7 +44,11 @@ function ListCity() {
   const handleTableChange: TableProps<CityDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setSortBy(`${sorter.field}${order}`)
+      setSearchParams(prev => {
+        prev.set('sortBy', `${sorter.field}${order}`)
+        prev.set('pageNumber', '1')
+        return prev
+      })
     }
   }
 
@@ -59,33 +71,48 @@ function ListCity() {
     }
   }
 
+  useEffect(() => {
+    if (search) {
+      form.setFieldsValue({ search })
+    }
+  }, [form, search])
+
   if (isError) {
     return <ErrorFetching />
   }
 
   return (
     <>
-      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
-        <Flex align='center'>
+      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
+        <Flex align="center">
           <Typography.Title level={2} style={{ margin: 0 }}>
             Danh sách thành phố
           </Typography.Title>
-          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search
-            allowClear
-            onSearch={(value) => setSearch(value)}
-            placeholder='Tìm kiếm tên thành phố'
-            style={{ width: 250 }}
-          />
+          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Form form={form} name="searchCityForm" layout="inline">
+            <Form.Item name="search">
+              <Search
+                allowClear
+                onSearch={(value) => setSearchParams(prev => {
+                  prev.set('search', value)
+                  prev.set('pageNumber', '1')
+                  return prev
+                })}
+                placeholder="Tìm kiếm tên thành phố"
+                style={{ width: 250 }}
+              />
+            </Form.Item>
+          </Form>
         </Flex>
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={handleDelete}>
+            <Button shape="round" type="primary" danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => navigate(ROUTER_NAMES.ADD_CITY)}>
+          <Button icon={<PlusCircleOutlined />} shape="round" type="primary"
+                  onClick={() => navigate(ROUTER_NAMES.ADD_CITY)}>
             Thêm mới
           </Button>
         </Space>
@@ -99,8 +126,15 @@ function ListCity() {
           pageSize: pageSize,
           current: pageNumber,
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
-          onShowSizeChange: (_, size) => setPageSize(size),
-          onChange: (page) => setPageNumber(page)
+          onShowSizeChange: (_, size) => setSearchParams(prev => {
+            prev.set('pageSize', size.toString())
+            prev.set('pageNumber', '1')
+            return prev
+          }),
+          onChange: (page) => setSearchParams(prev => {
+            prev.set('pageNumber', page.toString())
+            return prev
+          })
         }}
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
