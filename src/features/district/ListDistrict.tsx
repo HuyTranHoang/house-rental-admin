@@ -10,6 +10,8 @@ import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { updateSortParams } from '@/utils/updateSortParams.ts'
+import { updateFilterParams } from '@/utils/updateFilterParams.ts'
 
 const { Search } = Input
 
@@ -53,44 +55,15 @@ function ListDistrict() {
   }
 
   const handleTableChange: TableProps<DistrictDataSource>['onChange'] = (_, filters, sorter) => {
-    if (!Array.isArray(sorter)) {
-      if (sorter.order) {
-        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc';
-        setSearchParams(prev => {
-          prev.set('sortBy', `${sorter.field}${order}`);
-          return prev;
-        }, { replace: true });
-      } else {
-        setSearchParams(prev => {
-          prev.set('sortBy', '');
-          return prev;
-        }, { replace: true });
-        setSortedInfo({});
-      }
-    }
-
-    if (filters.cityName) {
-      const cityId = filters.cityName[0];
-      setSearchParams(prev => {
-        prev.set('cityId', cityId as string);
-        return prev;
-      }, { replace: true });
-    } else {
-      setSearchParams(prev => {
-        prev.set('cityId', '0');
-        return prev;
-      }, { replace: true });
-    }
+    updateSortParams<DistrictDataSource>(sorter, setSearchParams, setSortedInfo)
+    updateFilterParams(filters.cityName, 'cityId', setSearchParams)
   };
 
   const dataSource: DistrictDataSource[] = data
     ? data.data.map((district: District, idx) => ({
+      ...district,
       key: district.id,
-      id: district.id,
       index: (pageNumber - 1) * pageSize + idx + 1,
-      name: district.name,
-      cityId: district.cityId,
-      cityName: district.cityName,
       createdAt: customFormatDate(district.createdAt)
     }))
     : []

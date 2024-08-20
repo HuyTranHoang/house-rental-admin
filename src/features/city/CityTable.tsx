@@ -8,7 +8,6 @@ import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { SorterResult } from 'antd/lib/table/interface'
-import { DistrictDataSource } from '@/models/district.type.ts'
 
 const { confirm } = Modal
 
@@ -18,7 +17,7 @@ interface CityTableProps {
   paginationProps: false | TablePaginationConfig | undefined
   handleTableChange: TableProps<CityDataSource>['onChange']
   rowSelection: TableRowSelection<CityDataSource> | undefined
-  sortedInfo: SorterResult<DistrictDataSource>
+  sortedInfo: SorterResult<CityDataSource>
 }
 
 function CityTable({

@@ -10,11 +10,11 @@ import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-import { DistrictDataSource } from '@/models/district.type.ts'
+import { updateSortParams } from '@/utils/updateSortParams.ts'
 
 const { Search } = Input
 
-type OnChange = NonNullable<TableProps<DistrictDataSource>['onChange']>;
+type OnChange = NonNullable<TableProps<CityDataSource>['onChange']>;
 type GetSingle<T> = T extends (infer U)[] ? U : never;
 type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
@@ -28,7 +28,7 @@ function ListCity() {
     pageSize: '5'
   })
 
-  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const [form] = Form.useForm()
   const search = searchParams.get('search') || ''
@@ -49,22 +49,15 @@ function ListCity() {
   }
 
   const handleTableChange: TableProps<CityDataSource>['onChange'] = (_, __, sorter) => {
-    if (!Array.isArray(sorter) && sorter.order) {
-      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setSearchParams(prev => {
-        prev.set('sortBy', `${sorter.field}${order}`)
-        return prev
-      }, { replace: true })
-    }
+    updateSortParams<CityDataSource>(sorter, setSearchParams, setSortedInfo)
   }
 
 
   const dataSource: CityDataSource[] = data
     ? data.data.map((city: City, idx) => ({
+      ...city,
       key: city.id,
       index: (pageNumber - 1) * pageSize + idx + 1,
-      id: city.id,
-      name: city.name,
       createdAt: customFormatDate(city.createdAt)
     }))
     : []
@@ -85,16 +78,16 @@ function ListCity() {
 
   useEffect(() => {
     if (sortBy) {
-      const match = sortBy.match(/(.*?)(Asc|Desc)$/);
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/)
       if (match) {
-        const [, field, order] = match;
+        const [, field, order] = match
         setSortedInfo({
           field,
           order: order === 'Asc' ? 'ascend' : 'descend'
-        });
+        })
       }
     }
-  }, [sortBy]);
+  }, [sortBy])
 
   if (isError) {
     return <ErrorFetching />
