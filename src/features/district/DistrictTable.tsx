@@ -7,6 +7,7 @@ import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
 import { useCitiesAll } from '@/hooks/useCities.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { confirm } = Modal
 
@@ -105,7 +106,7 @@ function DistrictTable({ dataSource, loading, paginationProps, handleTableChange
       width: 200,
       render: (_, record) => (
         <TableActions
-          onUpdate={() => navigate(`/district/${record.id}/edit`)}
+          onUpdate={() => navigate(ROUTER_NAMES.getDistrictEditPath(record.id))}
           onDelete={() => showDeleteConfirm(record)}
         />
       )

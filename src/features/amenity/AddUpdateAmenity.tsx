@@ -5,9 +5,10 @@ import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { AmenityField, getAmenityById } from '@/api/amenity.api.ts'
 import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 function AddUpdateAmenity() {
-  const match = useMatch('/amenity/add')
+  const match = useMatch(ROUTER_NAMES.ADD_AMENITY)
   const isAddMode = Boolean(match)
   const title = isAddMode ? 'Thêm mới tiện nghi' : 'Cập nhật tiện nghi'
   const navigate = useNavigate()
@@ -52,7 +53,8 @@ function AddUpdateAmenity() {
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button icon={<LeftCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/amenity')}>Quay
+        <Button icon={<LeftCircleOutlined />} shape="round" type="primary"
+                onClick={() => navigate(ROUTER_NAMES.AMENITY)}>Quay
           lại</Button>
       </Flex>
       <Form

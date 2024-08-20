@@ -14,6 +14,7 @@ import { HomeOutlined } from '@ant-design/icons'
 
 import userRouter from '@/router/userRouter.tsx'
 import districtRouter from '@/router/districtRouter.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 
 export const routerList = [
@@ -24,7 +25,7 @@ export const routerList = [
         element: <ProtectedRoute />,
         children: [
           {
-            path: '/',
+            path: ROUTER_NAMES.DASHBOARD,
             element: <Dashboard />,
             breadcrumb: () => <span><HomeOutlined /> Tổng quan</span>
           }
@@ -58,7 +59,7 @@ export const routerList = [
     ] // End of AppLayout children
   },
   {
-    path: '/login',
+    path: ROUTER_NAMES.LOGIN,
     element: <Login />
   },
   {

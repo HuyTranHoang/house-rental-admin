@@ -16,6 +16,7 @@ import { logout, selectAuth } from '@/features/auth/authSlice.ts'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import { toTitleCase } from '@/utils/toTitleCase.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Header, Content, Sider } = Layout
 
@@ -39,7 +40,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
       key: 'dashboard',
       label: 'Tổng quan',
       icon: <BarChartOutlined />,
-      onClick: () => navigate('/')
+      onClick: () => navigate(ROUTER_NAMES.DASHBOARD)
     },
     {
       key: 'cityDistrict',
@@ -49,12 +50,12 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         {
           key: 'cityDistrict-city',
           label: 'Quản lý thành phố',
-          onClick: () => navigate('/city')
+          onClick: () => navigate(ROUTER_NAMES.CITY)
         },
         {
           key: 'cityDistrict-district',
           label: 'Quản lý quận huyện',
-          onClick: () => navigate('/district')
+          onClick: () => navigate(ROUTER_NAMES.DISTRICT)
         }
       ]
     },
@@ -66,12 +67,12 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         {
           key: 'roomTypeAmenity-roomType',
           label: 'Quản lý lọai phòng',
-          onClick: () => navigate('/roomType')
+          onClick: () => navigate(ROUTER_NAMES.ROOM_TYPE)
         },
         {
           key: 'roomTypeAmenity-amenity',
           label: 'Quản lý tiện nghi',
-          onClick: () => navigate('/amenity')
+          onClick: () => navigate(ROUTER_NAMES.AMENITY)
         }
       ]
     },
@@ -83,12 +84,12 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         {
           key: 'reportReview-report',
           label: 'Quản lý báo cáo',
-          onClick: () => navigate('/report')
+          onClick: () => navigate(ROUTER_NAMES.REPORT)
         },
         {
           key: 'reportReview-review',
           label: 'Quản lý đánh giá',
-          onClick: () => navigate('/review')
+          onClick: () => navigate(ROUTER_NAMES.REVIEW)
         }
       ]
     },
@@ -100,12 +101,12 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         {
           key: 'userRole-user',
           label: 'Quản lý người dùng',
-          onClick: () => navigate('/user')
+          onClick: () => navigate(ROUTER_NAMES.USER)
         },
         {
           key: 'userRole-role',
           label: 'Quản lý vai trò',
-          onClick: () => navigate('/role')
+          onClick: () => navigate(ROUTER_NAMES.ROLE)
         }
       ]
     }
@@ -145,7 +146,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
   const dropdownOnClick: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
       case 'home':
-        navigate('/')
+        navigate(ROUTER_NAMES.DASHBOARD)
         break
       case 'profile':
         navigate('/profile')
@@ -154,7 +155,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         dispatch(logout())
         localStorage.removeItem('jwtToken')
         toast.success('Đăng xuất thành công')
-        navigate('/login')
+        navigate(ROUTER_NAMES.LOGIN)
         break
     }
   }

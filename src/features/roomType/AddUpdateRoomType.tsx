@@ -6,9 +6,10 @@ import { getRoomTypeById, RoomTypeField } from '@/api/roomType.api.ts'
 import { CityField } from '@/api/city.api.ts'
 import { useCreateRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 function AddUpdateRoomType() {
-  const match = useMatch('/roomType/add')
+  const match = useMatch(ROUTER_NAMES.ADD_ROOM_TYPE)
   const isAddMode = Boolean(match)
   const title = isAddMode ? 'Thêm mới loại phòng' : 'Cập nhật loại phòng'
   const navigate = useNavigate()
@@ -53,7 +54,8 @@ function AddUpdateRoomType() {
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button icon={<LeftCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/roomType')}>Quay
+        <Button icon={<LeftCircleOutlined />} shape="round" type="primary"
+                onClick={() => navigate(ROUTER_NAMES.ROOM_TYPE)}>Quay
           lại</Button>
       </Flex>
       <Form
@@ -96,7 +98,8 @@ function AddUpdateRoomType() {
             Đặt lại
           </Button>
 
-          <Button loading={addRoomTypePening || updateRoomTypePending} type="primary" htmlType="submit" style={{ width: 100 }}>
+          <Button loading={addRoomTypePening || updateRoomTypePending} type="primary" htmlType="submit"
+                  style={{ width: 100 }}>
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>

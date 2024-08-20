@@ -6,6 +6,7 @@ import { useDeleteRoomType } from '@/hooks/useRoomTypes.ts'
 import TableActions from '@/components/TableActions.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { confirm } = Modal
 
@@ -92,7 +93,7 @@ function RoomTypeTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(`/roomType/${record.id}/edit`)}
+        <TableActions onUpdate={() => navigate(ROUTER_NAMES.getRoomTypeEditPath(record.id))}
                       onDelete={() => showDeleteConfirm(record)} />
       )
     }

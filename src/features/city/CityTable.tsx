@@ -6,6 +6,7 @@ import { useDeleteCity } from '@/hooks/useCities.ts'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { confirm } = Modal
 
@@ -45,7 +46,7 @@ function CityTable({ dataSource, loading, paginationProps, handleTableChange, ro
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa thành phố' />,
+      title: <ConfirmModalTitle title="Xác nhận xóa thành phố" />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -63,7 +64,7 @@ function CityTable({ dataSource, loading, paginationProps, handleTableChange, ro
       dataIndex: 'index',
       key: 'index',
       fixed: 'left',
-      width: 50,
+      width: 50
     },
     {
       title: 'Tên thành phố',
@@ -85,7 +86,8 @@ function CityTable({ dataSource, loading, paginationProps, handleTableChange, ro
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(`/city/${record.id}/edit`)} onDelete={() => showDeleteConfirm(record)} />
+        <TableActions onUpdate={() => navigate(ROUTER_NAMES.getCityEditPath(record.id))}
+                      onDelete={() => showDeleteConfirm(record)} />
       )
     }
   ]

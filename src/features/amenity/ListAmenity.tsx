@@ -9,6 +9,7 @@ import { customFormatDate } from '@/utils/customFormatDate.ts'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
@@ -80,7 +81,7 @@ function ListAmenity() {
               Xóa các mục đã chọn
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/amenity/add')}>
+          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate(ROUTER_NAMES.ADD_AMENITY)}>
             Thêm mới
           </Button>
         </Space>

@@ -6,6 +6,7 @@ import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
 import { AmenityDataSource } from '@/models/amenity.type.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { confirm } = Modal
 
@@ -92,7 +93,7 @@ function AmenityTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(`/amenity/${record.id}/edit`)}
+        <TableActions onUpdate={() => navigate(ROUTER_NAMES.getAmenityEditPath(record.id))}
                       onDelete={() => showDeleteConfirm(record)} />
       )
     }

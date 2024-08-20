@@ -9,6 +9,7 @@ import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { TableRowSelection } from 'antd/es/table/interface'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
@@ -79,7 +80,8 @@ function ListRoomType() {
               Xóa các mục đã chọn
             </Button>
           }
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/roomType/add')}>
+          <Button icon={<PlusCircleOutlined />} shape="round" type="primary"
+                  onClick={() => navigate(ROUTER_NAMES.ADD_ROOM_TYPE)}>
             Thêm mới
           </Button>
         </Space>

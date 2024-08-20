@@ -7,7 +7,7 @@ import { loginFailure, loginSuccess } from './features/auth/authSlice.ts'
 import { Spin } from 'antd'
 import router from './router/router.tsx'
 import axiosInstance from './axiosInstance.ts'
-import CustomIndicator from '@/components/CustomSpinner.tsx'
+import CustomIndicator from '@/components/CustomIndicator.tsx'
 import { delay } from '@/utils/delay.ts'
 
 function App() {

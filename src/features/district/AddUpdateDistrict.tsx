@@ -8,9 +8,10 @@ import { useEffect, useState } from 'react'
 import { useCreateDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 function AddUpdateDistrict() {
-  const match = useMatch('/district/add')
+  const match = useMatch(ROUTER_NAMES.ADD_DISTRICT)
   const isAddMode = Boolean(match)
   const title = isAddMode ? 'Thêm mới quận huyện' : 'Cập nhật quận huyện'
   const navigate = useNavigate()
@@ -68,7 +69,8 @@ function AddUpdateDistrict() {
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button icon={<LeftCircleOutlined />} shape='round' type="primary" onClick={() => navigate('/district')}>
+        <Button icon={<LeftCircleOutlined />} shape="round" type="primary"
+                onClick={() => navigate(ROUTER_NAMES.DISTRICT)}>
           Quay lại
         </Button>
       </Flex>
@@ -81,7 +83,8 @@ function AddUpdateDistrict() {
           marginTop: 32,
           boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)',
           border: '1px solid #f0f0f0',
-          padding: '32px 32px 0' }}
+          padding: '32px 32px 0'
+        }}
         onFinish={onFinish}
         autoComplete="off"
       >
@@ -112,7 +115,7 @@ function AddUpdateDistrict() {
           <Select options={cityOptions} placeholder="Chọn thành phố" />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 6}}>
+        <Form.Item wrapperCol={{ offset: 6 }}>
           <Button onClick={() => form.resetFields()} style={{ marginRight: 16 }}>
             Đặt lại
           </Button>

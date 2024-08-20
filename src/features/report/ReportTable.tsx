@@ -322,7 +322,7 @@ function ReportTable({
           ...paginationProps
         }}
         onChange={handleTableChange}
-        loading={loading}
+        loading={loading || updateReportStatusPending}
         locale={{
           triggerDesc: 'Sắp xếp giảm dần',
           triggerAsc: 'Sắp xếp tăng dần',
