@@ -120,7 +120,7 @@ function UserTable({
       key: 'username',
       sorter: true,
       fixed: 'left',
-      width: 150
+      width: 200
     },
     {
       title: 'Email',
@@ -161,7 +161,7 @@ function UserTable({
       key: 'createdAt',
       sorter: true,
       fixed: 'right',
-      width: 150
+      width: 250
     },
     {
       title: 'Hành động',

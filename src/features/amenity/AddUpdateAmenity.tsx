@@ -2,10 +2,21 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, FormProps, Input, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
-import { AmenityField, getAmenityById } from '@/api/amenity.api.ts'
+import { getAmenityById } from '@/api/amenity.api.ts'
 import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+
+import z from 'zod'
+import { createSchemaFieldRule } from 'antd-zod'
+
+const AmenityFormValidationSchema = z.object({
+  id: z.number().optional(),
+  name: z.string({ message: 'Vui lòng nhập tên thành phố' }).min(3, 'Tên thành phố phải có ít nhất 3 ký tự')
+})
+
+export type AmenityForm = z.infer<typeof AmenityFormValidationSchema>
+const rule = createSchemaFieldRule(AmenityFormValidationSchema)
 
 function AddUpdateAmenity() {
   const match = useMatch(ROUTER_NAMES.ADD_AMENITY)
@@ -22,7 +33,7 @@ function AddUpdateAmenity() {
   const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity(setError)
 
 
-  const onFinish: FormProps<AmenityField>['onFinish'] = (values) => {
+  const onFinish: FormProps<AmenityForm>['onFinish'] = (values) => {
     if (isAddMode) {
       addAmenityMutate(values)
     } else {
@@ -71,21 +82,15 @@ function AddUpdateAmenity() {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<AmenityField>
-          label="Id"
-          name="id"
-          hidden
+        <Form.Item<AmenityForm> label="Id" name="id" rules={[rule]} hidden
         >
           <Input />
         </Form.Item>
 
-        <Form.Item<AmenityField>
+        <Form.Item<AmenityForm>
           label="Tên tiện nghi"
           name="name"
-          rules={[
-            { required: true, message: 'Vui lòng nhập tên tiện nghi!' },
-            { min: 2, message: 'Tên tiện nghi phải có ít nhất 2 ký tự!' }
-          ]}
+          rules={[rule]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
@@ -93,7 +98,10 @@ function AddUpdateAmenity() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>
-          <Button onClick={() => form.resetFields()} style={{ marginRight: 16 }}>
+          <Button onClick={() => {
+            form.resetFields()
+            setError('')
+          }} style={{ marginRight: 16 }}>
             Đặt lại
           </Button>
 

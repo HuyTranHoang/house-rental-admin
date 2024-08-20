@@ -2,11 +2,21 @@ import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { getRoomTypeById, RoomTypeField } from '@/api/roomType.api.ts'
-import { CityField } from '@/api/city.api.ts'
+import { getRoomTypeById } from '@/api/roomType.api.ts'
 import { useCreateRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+
+import z from 'zod'
+import { createSchemaFieldRule } from 'antd-zod'
+
+const RoomTypeFormValidationSchema = z.object({
+  id: z.number().optional(),
+  name: z.string({ message: 'Vui lòng nhập tên loại phòng' }).min(3, 'Tên loại phòng phải có ít nhất 3 ký tự')
+})
+
+export type RoomTypeForm = z.infer<typeof RoomTypeFormValidationSchema>
+const rule = createSchemaFieldRule(RoomTypeFormValidationSchema)
 
 function AddUpdateRoomType() {
   const match = useMatch(ROUTER_NAMES.ADD_ROOM_TYPE)
@@ -23,7 +33,7 @@ function AddUpdateRoomType() {
   const { updateRoomTypeMutate, updateRoomTypePending } = useUpdateRoomType(setError)
 
 
-  const onFinish: FormProps<RoomTypeField>['onFinish'] = (values) => {
+  const onFinish: FormProps<RoomTypeForm>['onFinish'] = (values) => {
     if (isAddMode) {
       addRoomTypeMutate(values)
     } else {
@@ -72,21 +82,14 @@ function AddUpdateRoomType() {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<CityField>
-          label="Id"
-          name="id"
-          hidden
-        >
+        <Form.Item<RoomTypeForm> label="Id" name="id" rules={[rule]} hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item<CityField>
+        <Form.Item<RoomTypeForm>
           label="Tên loại phòng"
           name="name"
-          rules={[
-            { required: true, message: 'Vui lòng nhập tên loại phòng!' },
-            { min: 3, message: 'Tên loại phòng phải có ít nhất 3 ký tự!' }
-          ]}
+          rules={[rule]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
@@ -94,7 +97,10 @@ function AddUpdateRoomType() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>
-          <Button onClick={() => form.resetFields()} style={{ marginRight: 16 }}>
+          <Button onClick={() => {
+            form.resetFields()
+            setError('')
+          }} style={{ marginRight: 16 }}>
             Đặt lại
           </Button>
 

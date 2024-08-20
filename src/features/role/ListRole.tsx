@@ -115,6 +115,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
           <Tooltip title="Thêm mới vai trò">
             <PlusCircleOutlined className="icon-primary" onClick={() => {
               formAddRole.resetFields()
+              setError('')
               setIsAddMode(true)
               setIsModalOpen(true)
             }} />
@@ -196,11 +197,11 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
           <Form.Item>
             <Flex justify="end">
               <Space>
-                <Button loading={addRolePending || updateRolePending} type="primary" htmlType="submit">
-                  {isAddMode ? 'Thêm mới' : 'Cập nhật'}
-                </Button>
                 <Button onClick={() => setIsModalOpen(false)} danger>
                   Hủy
+                </Button>
+                <Button loading={addRolePending || updateRolePending} type="primary" htmlType="submit">
+                  {isAddMode ? 'Thêm mới' : 'Cập nhật'}
                 </Button>
               </Space>
             </Flex>

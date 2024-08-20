@@ -2,12 +2,7 @@ import axios from 'axios'
 import { District } from '@/models/district.type'
 import { PageInfo } from '@/models/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
-
-export interface DistrictField {
-  id?: number
-  name: string
-  cityId: number
-}
+import { DistrictForm } from '@/features/district/AddUpdateDistrict.tsx'
 
 interface DistrictsWithPagination {
   pageInfo: PageInfo
@@ -67,7 +62,7 @@ export const getDistrictById = async (id: number) => {
   }
 }
 
-export const addDistrict = async (values: DistrictField) => {
+export const addDistrict = async (values: DistrictForm) => {
   await axiosInstance.post('/api/district', values)
 }
 
@@ -80,7 +75,7 @@ export const deleteDistrict = async (id: number) => {
   }
 }
 
-export const updateDistrict = async (values: DistrictField) => {
+export const updateDistrict = async (values: DistrictForm) => {
   await axiosInstance.put(`/api/district/${values.id}`, values)
 }
 

@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import axios from 'axios'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 export const useRoomTypes = (search: string,
                              pageNumber: number,
@@ -29,8 +30,8 @@ export const useDeleteRoomType = () => {
   const { mutate: deleteRoomTypeMutate } = useMutation({
     mutationFn: deleteRoomType,
     onSuccess: () => {
-      toast.success('Xóa loại phòng thành công')
       queryClient.invalidateQueries({ queryKey: ['roomTypes'] })
+        .then(() => toast.success('Xóa loại phòng thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -46,8 +47,8 @@ export const useDeleteRoomTypes = () => {
   const { mutate: deleteRoomTypesMutate } = useMutation({
     mutationFn: deleteRoomTypes,
     onSuccess: () => {
-      toast.success('Xóa các loại phòng thành công')
       queryClient.invalidateQueries({ queryKey: ['roomTypes'] })
+        .then(() => toast.success('Xóa các loại phòng thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -64,10 +65,11 @@ export const useCreateRoomType = (setError: React.Dispatch<React.SetStateAction<
   const { mutate: addRoomTypeMutate, isPending: addRoomTypePening } = useMutation({
     mutationFn: addRoomType,
     onSuccess: () => {
-      toast.success('Thêm loại phòng thành công')
       queryClient.invalidateQueries({ queryKey: ['roomTypes'] })
-
-      navigate('/roomType')
+        .then(() => {
+          toast.success('Thêm loại phòng thành công')
+          navigate(ROUTER_NAMES.ROOM_TYPE)
+        })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -89,9 +91,11 @@ export const useUpdateRoomType = (setError: React.Dispatch<React.SetStateAction<
   const { mutate: updateRoomTypeMutate, isPending: updateRoomTypePending } = useMutation({
     mutationFn: updateRoomType,
     onSuccess: () => {
-      toast.success('Cập nhật loại phòng thành công')
       queryClient.invalidateQueries({ queryKey: ['roomTypes'] })
-      navigate('/roomType')
+        .then(() => {
+          toast.success('Cập nhật loại phòng thành công')
+          navigate(ROUTER_NAMES.ROOM_TYPE)
+        })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {

@@ -12,6 +12,7 @@ import axios from 'axios'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import React, { useCallback } from 'react'
 import { CityFilters } from '@/models/city.type.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 export const useCitiesAll = () => {
   const { data, isLoading, isError, error } = useQuery({
@@ -40,8 +41,8 @@ export const useDeleteCity = () => {
   const { mutate: deleteCityMutate } = useMutation({
     mutationFn: deleteCity,
     onSuccess: () => {
-      toast.success('Xóa thành phố thành công')
       queryClient.invalidateQueries({ queryKey: ['cities'] })
+        .then(() => toast.success('Xóa thành phố thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -57,8 +58,8 @@ export const useDeleteMultiCity = () => {
   const { mutate: deleteCitiesMutate } = useMutation({
     mutationFn: deleteCities,
     onSuccess: () => {
-      toast.success('Xóa các thành phố thành công')
       queryClient.invalidateQueries({ queryKey: ['cities'] })
+        .then(() => toast.success('Xóa các thành phố thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -75,10 +76,10 @@ export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<stri
   const { mutate: addCityMutate, isPending: addCityPending } = useMutation({
     mutationFn: addCity,
     onSuccess: () => {
-      toast.success('Thêm thành phố thành công')
       queryClient.invalidateQueries({ queryKey: ['cities'] })
+        .then(() => toast.success('Thêm thành phố thành công'))
 
-      navigate('/city')
+      navigate(ROUTER_NAMES.CITY)
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -100,9 +101,11 @@ export const useUpdateCity = (setError: React.Dispatch<React.SetStateAction<stri
   const { mutate: updateCityMutate, isPending: updateCityPending } = useMutation({
     mutationFn: updateCity,
     onSuccess: () => {
-      toast.success('Cập nhật thành phố thành công')
       queryClient.invalidateQueries({ queryKey: ['cities'] })
-      navigate('/city')
+        .then(() => {
+          toast.success('Cập nhật thành phố thành công')
+          navigate(ROUTER_NAMES.CITY)
+        })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {

@@ -11,6 +11,7 @@ import axios from 'axios'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import React, { useCallback } from 'react'
 import { DistrictFilters } from '@/models/district.type.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 export const useDistricts = (search: string,
                              cityId: number,
@@ -31,8 +32,9 @@ export const useDeleteDistrict = () => {
   const { mutate: deleteDistrictMutate } = useMutation({
     mutationFn: deleteDistrict,
     onSuccess: () => {
-      toast.success('Xóa quận huyện thành công')
       queryClient.invalidateQueries({ queryKey: ['districts'] })
+        .then(() => toast.success('Xóa quận huyện thành công'))
+
     },
     onError: (error) => {
       toast.error(error.message)
@@ -48,8 +50,8 @@ export const useDeleteMultiDistrict = () => {
   const { mutate: deleteDistrictsMutate } = useMutation({
     mutationFn: deleteDistricts,
     onSuccess: () => {
-      toast.success('Xóa các quận huyện thành công')
       queryClient.invalidateQueries({ queryKey: ['districts'] })
+        .then(() => toast.success('Xóa các quận huyện thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -66,10 +68,11 @@ export const useCreateDistrict = (setError: React.Dispatch<React.SetStateAction<
   const { mutate: addDistrictMutate, isPending: addDistrictPending } = useMutation({
     mutationFn: addDistrict,
     onSuccess: () => {
-      toast.success('Thêm quận huyện thành công')
       queryClient.invalidateQueries({ queryKey: ['districts'] })
-
-      navigate('/district')
+        .then(() => {
+          toast.success('Thêm quận huyện thành công')
+          navigate(ROUTER_NAMES.DISTRICT)
+        })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -91,9 +94,11 @@ export const useUpdateDistrict = (setError: React.Dispatch<React.SetStateAction<
   const { mutate: updateDistrictMutate, isPending: updateDistrictPending } = useMutation({
     mutationFn: updateDistrict,
     onSuccess: () => {
-      toast.success('Cập nhật thành phố thành công')
       queryClient.invalidateQueries({ queryKey: ['districts'] })
-      navigate('/district')
+        .then(() => {
+          toast.success('Cập nhật thành phố thành công')
+          navigate(ROUTER_NAMES.DISTRICT)
+        })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {

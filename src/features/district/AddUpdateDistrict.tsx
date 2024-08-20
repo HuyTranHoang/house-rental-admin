@@ -2,13 +2,26 @@ import { FormProps, Select, SelectProps } from 'antd'
 import { Button, Flex, Form, Input, Spin, Typography } from 'antd'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { DistrictField, getDistrictById } from '@/api/district.api'
+import { getDistrictById } from '@/api/district.api'
 
 import { useEffect, useState } from 'react'
 import { useCreateDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+
+import z from 'zod'
+import { createSchemaFieldRule } from 'antd-zod'
+
+const DistrictFormValidationScheme = z.object({
+  id: z.number().optional(),
+  name: z.string({ message: 'Tên quận huyện không được để trống' })
+    .min(3, 'Tên quận huyện phải có ít nhất 3 ký tự'),
+  cityId: z.number({ message: 'Vui lòng chọn thành phố' })
+})
+
+export type DistrictForm = z.infer<typeof DistrictFormValidationScheme>
+const rule = createSchemaFieldRule(DistrictFormValidationScheme)
 
 function AddUpdateDistrict() {
   const match = useMatch(ROUTER_NAMES.ADD_DISTRICT)
@@ -26,7 +39,7 @@ function AddUpdateDistrict() {
   const { addDistrictMutate, addDistrictPending } = useCreateDistrict(setError)
   const { updateDistrictMutate, updateDistrictPending } = useUpdateDistrict(setError)
 
-  const onFinish: FormProps<DistrictField>['onFinish'] = (values) => {
+  const onFinish: FormProps<DistrictForm>['onFinish'] = (values) => {
     if (isAddMode) {
       addDistrictMutate(values)
     } else {
@@ -88,35 +101,33 @@ function AddUpdateDistrict() {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<DistrictField> label="Id" name="id" hidden>
+        <Form.Item<DistrictForm> label="Id" name="id" rules={[rule]} hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item<DistrictField>
+        <Form.Item<DistrictForm>
           label="Tên quận huyện"
           name="name"
-          rules={[
-            { required: true, message: 'Vui lòng nhập tên quận huyện`!' },
-            { min: 3, message: 'Tên quận huyện phải có ít nhất 3 ký tự!' }
-          ]}
+          rules={[rule]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
           <Input onChange={() => setError('')} />
         </Form.Item>
 
-        <Form.Item<DistrictField>
+        <Form.Item<DistrictForm>
           label="Thành phố"
           name="cityId"
-          rules={[
-            { required: true, message: 'Vui lòng chọn thành phố!' }
-          ]}
+          rules={[rule]}
         >
           <Select options={cityOptions} placeholder="Chọn thành phố" />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 6 }}>
-          <Button onClick={() => form.resetFields()} style={{ marginRight: 16 }}>
+          <Button onClick={() => {
+            form.resetFields()
+            setError('')
+          }} style={{ marginRight: 16 }}>
             Đặt lại
           </Button>
 

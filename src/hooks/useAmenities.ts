@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import axios from 'axios'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 export const useAmenities = (search: string,
                              pageNumber: number,
@@ -30,8 +31,8 @@ export const useDeleteAmenity = () => {
   const { mutate: deleteAmenityMutate } = useMutation({
     mutationFn: deleteAmenity,
     onSuccess: () => {
-      toast.success('Xóa tiện nghi thành công')
       queryClient.invalidateQueries({ queryKey: ['amenities'] })
+        .then(() => toast.success('Xóa tiện nghi thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -48,8 +49,8 @@ export const useDeleteMultiAmenity = () => {
   const { mutate: deleteAmenitiesMutate } = useMutation({
     mutationFn: deleteAmenities,
     onSuccess: () => {
-      toast.success('Xóa các tiện nghi thành công')
       queryClient.invalidateQueries({ queryKey: ['amenities'] })
+        .then(() => toast.success('Xóa các tiện nghi thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -66,10 +67,11 @@ export const useCreateAmenity = (setError: React.Dispatch<React.SetStateAction<s
   const { mutate: addAmenityMutate, isPending: addAmenityPending } = useMutation({
     mutationFn: addAmenity,
     onSuccess: () => {
-      toast.success('Thêm tiện nghi thành công')
       queryClient.invalidateQueries({ queryKey: ['amenities'] })
-
-      navigate('/amenity')
+        .then(() => {
+          toast.success('Thêm tiện nghi thành công')
+          navigate(ROUTER_NAMES.AMENITY)
+        })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -91,10 +93,11 @@ export const useUpdateAmenity = (setError: React.Dispatch<React.SetStateAction<s
   const { mutate: updateAmenityMutate, isPending: updateAmenityPending } = useMutation({
     mutationFn: updateAmenity,
     onSuccess: () => {
-      toast.success('Thêm tiện nghi thành công')
       queryClient.invalidateQueries({ queryKey: ['amenities'] })
-
-      navigate('/amenity')
+        .then(() => {
+          toast.success('Thêm tiện nghi thành công')
+          navigate(ROUTER_NAMES.AMENITY)
+        })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {

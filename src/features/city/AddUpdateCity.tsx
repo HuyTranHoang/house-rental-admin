@@ -2,12 +2,23 @@ import type { FormProps } from 'antd'
 import { Button, Flex, Form, Input, Spin, Typography } from 'antd'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { CityField, getCityById } from '@/api/city.api.ts'
+import { getCityById } from '@/api/city.api.ts'
 
 import { useEffect, useState } from 'react'
 import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+
+import z from 'zod'
+import { createSchemaFieldRule } from 'antd-zod'
+
+const CityFormValidationSchema = z.object({
+  id: z.number().optional(),
+  name: z.string({ message: 'Vui lòng nhập tên thành phố' }).min(3, 'Tên thành phố phải có ít nhất 3 ký tự')
+})
+
+export type CityForm = z.infer<typeof CityFormValidationSchema>
+const rule = createSchemaFieldRule(CityFormValidationSchema)
 
 function AddUpdateCity() {
   const match = useMatch(ROUTER_NAMES.ADD_CITY)
@@ -23,7 +34,7 @@ function AddUpdateCity() {
   const { addCityMutate, addCityPending } = useCreateCity(setError)
   const { updateCityMutate, updateCityPending } = useUpdateCity(setError)
 
-  const onFinish: FormProps<CityField>['onFinish'] = (values) => {
+  const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
     if (isAddMode) {
       addCityMutate(values)
     } else {
@@ -72,17 +83,14 @@ function AddUpdateCity() {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<CityField> label="Id" name="id" hidden>
+        <Form.Item<CityForm> label="Id" name="id" rules={[rule]} hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item<CityField>
+        <Form.Item<CityForm>
           label="Tên thành phố"
           name="name"
-          rules={[
-            { required: true, message: 'Vui lòng nhập tên thành phố!' },
-            { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự!' }
-          ]}
+          rules={[rule]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
@@ -90,7 +98,10 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>
-          <Button onClick={() => form.resetFields()} style={{ marginRight: 16 }}>
+          <Button onClick={() => {
+            form.resetFields()
+            setError('')
+          }} style={{ marginRight: 16 }}>
             Đặt lại
           </Button>
 

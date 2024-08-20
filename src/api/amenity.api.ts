@@ -2,11 +2,7 @@ import axios from 'axios'
 import { Amenity } from '@/models/amenity.type.ts'
 import { PageInfo } from '@/models/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
-
-export interface AmenityField {
-  id?: number
-  name: string
-}
+import { AmenityForm } from '@/features/amenity/AddUpdateAmenity.tsx'
 
 export interface AmenitiesWithPagination {
   pageInfo: PageInfo
@@ -64,7 +60,7 @@ export const getAmenityById = async (id: number) => {
   }
 }
 
-export const addAmenity = async (values: AmenityField) => {
+export const addAmenity = async (values: AmenityForm) => {
   await axiosInstance.post('/api/amenities', values)
 }
 
@@ -77,7 +73,7 @@ export const deleteAmenity = async (id: number) => {
   }
 }
 
-export const updateAmenity = async (values: AmenityField) => {
+export const updateAmenity = async (values: AmenityForm) => {
   await axiosInstance.put(`/api/amenities/${values.id}`, values)
 }
 
