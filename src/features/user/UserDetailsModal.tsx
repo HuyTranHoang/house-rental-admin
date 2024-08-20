@@ -1,7 +1,7 @@
 import { Avatar, Badge, Button, Col, Modal, Row, Space, Tag, Typography } from 'antd'
 import { UserDataSource } from '@/models/user.type.ts'
 import { authorityPrivilegesMap } from '@/features/role/authorityPrivilegesMap.ts'
-import { gray } from '@ant-design/colors'
+import { gray, green } from '@ant-design/colors'
 import BlockUserButton from '@/components/BlockUserButton.tsx'
 
 interface UserDetailsModalProps {
@@ -65,6 +65,15 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
             </Col>
 
             <Col span={24}>
+              <div style={{ margin: '16px 0' }}>
+                <Space wrap={true}>
+                  <b>Số dư tài khoản:</b>
+                  <Typography.Text style={{ color: green.primary }}>
+                    {currentUser.balance}
+                  </Typography.Text>
+                </Space>
+              </div>
+
               <div style={{ margin: '16px 0' }}>
                 <Space wrap={true}>
                   <b>Vai trò:</b>

@@ -20,6 +20,7 @@ import { TableRowSelection } from 'antd/es/table/interface'
 import UserDetailsModal from '@/features/user/UserDetailsModal.tsx'
 import UserUpdateRoleModal from '@/features/user/UserUpdateRoleModal.tsx'
 import BlockUserButton from '@/components/BlockUserButton.tsx'
+import { useRolesAll } from '@/hooks/useRoles'
 
 const { confirm } = Modal
 
@@ -42,6 +43,8 @@ function UserTable({
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
   const [form] = Form.useForm()
+
+  const { data: roleData, isLoading: roleIsLoading } = useRolesAll()
 
   const { deleteUserMutate } = useDeleteUser()
 
@@ -131,6 +134,10 @@ function UserTable({
       title: 'Vai trò',
       dataIndex: 'roles',
       key: 'roles',
+      filterMultiple: false,
+      filters: [
+        ...roleData?.map((role) => ({ text: role.name, value: role.name })) || []
+      ],
       render: (_, record: UserDataSource) => (
         <Flex justify="space-between" align="center">
           <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -202,7 +209,7 @@ function UserTable({
           ...paginationProps
         }}
         onChange={handleTableChange}
-        loading={loading}
+        loading={loading || roleIsLoading}
         locale={{
           triggerDesc: 'Sắp xếp giảm dần',
           triggerAsc: 'Sắp xếp tăng dần',
