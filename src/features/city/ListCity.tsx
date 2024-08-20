@@ -1,16 +1,15 @@
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useCities, useDeleteMultiCity } from '@/hooks/useCities.ts'
+import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
 import CityTable from './CityTable.tsx'
 import { City, CityDataSource } from '@/models/city.type.ts'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-import { updateSortParams } from '@/utils/updateSortParams.ts'
 
 const { Search } = Input
 
@@ -21,20 +20,12 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>;
 function ListCity() {
   const navigate = useNavigate()
 
-  const [searchParams, setSearchParams] = useSearchParams({
-    search: '',
-    sortBy: '',
-    pageNumber: '1',
-    pageSize: '5'
-  })
+  const { search, sortBy, pageSize, pageNumber, setFilters } = useCityFilters()
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const [form] = Form.useForm()
-  const search = searchParams.get('search') || ''
-  const sortBy = searchParams.get('sortBy') || ''
-  const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
-  const pageSize = parseInt(searchParams.get('pageSize') || '5')
+
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
@@ -49,9 +40,14 @@ function ListCity() {
   }
 
   const handleTableChange: TableProps<CityDataSource>['onChange'] = (_, __, sorter) => {
-    updateSortParams<CityDataSource>(sorter, setSearchParams, setSortedInfo)
+    if (!Array.isArray(sorter) && sorter.order) {
+      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+      setFilters({ sortBy: `${sorter.field}${order}` })
+    } else {
+      setFilters({ sortBy: '' })
+      setSortedInfo({})
+    }
   }
-
 
   const dataSource: CityDataSource[] = data
     ? data.data.map((city: City, idx) => ({
@@ -105,10 +101,7 @@ function ListCity() {
             <Form.Item name="search">
               <Search
                 allowClear
-                onSearch={(value) => setSearchParams(prev => {
-                  prev.set('search', value)
-                  return prev
-                }, { replace: true })}
+                onSearch={(value) => setFilters({ search: value })}
                 placeholder="Tìm kiếm tên thành phố"
                 style={{ width: 250 }}
               />
@@ -137,14 +130,8 @@ function ListCity() {
           pageSize: pageSize,
           current: pageNumber,
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
-          onShowSizeChange: (_, size) => setSearchParams(prev => {
-            prev.set('pageSize', size.toString())
-            return prev
-          }, { replace: true }),
-          onChange: (page) => setSearchParams(prev => {
-            prev.set('pageNumber', page.toString())
-            return prev
-          }, { replace: true })
+          onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
+          onChange: (page) => setFilters({ pageNumber: page })
         }}
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}

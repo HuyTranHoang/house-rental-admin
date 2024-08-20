@@ -8,8 +8,9 @@ import {
 } from '@/api/district.api'
 import { toast } from 'sonner'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
-import React from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import React, { useCallback } from 'react'
+import { DistrictFilters } from '@/models/district.type.ts'
 
 export const useDistricts = (search: string,
                              cityId: number,
@@ -105,4 +106,54 @@ export const useUpdateDistrict = (setError: React.Dispatch<React.SetStateAction<
   })
 
   return { updateDistrictMutate, updateDistrictPending }
+}
+
+export const useDistrictFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const search = searchParams.get('search') || ''
+  const cityId = parseInt(searchParams.get('cityId') || '0')
+  const sortBy = searchParams.get('sortBy') || ''
+  const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
+  const pageSize = parseInt(searchParams.get('pageSize') || '5')
+
+  const setFilters = useCallback((filters: DistrictFilters) => {
+    setSearchParams((params) => {
+      if (filters.search !== undefined) {
+        if (filters.search) {
+          params.set('search', filters.search)
+        } else {
+          params.delete('search')
+        }
+      }
+
+      if (filters.cityId !== undefined) {
+        if (filters.cityId) {
+          params.set('cityId', String(filters.cityId))
+        } else {
+          params.delete('cityId')
+        }
+      }
+
+      if (filters.sortBy !== undefined) {
+        if (filters.sortBy) {
+          params.set('sortBy', filters.sortBy)
+        } else {
+          params.delete('sortBy')
+        }
+      }
+
+      if (filters.pageNumber !== undefined) {
+        params.set('pageNumber', String(filters.pageNumber))
+      }
+
+      if (filters.pageSize !== undefined) {
+        params.set('pageSize', String(filters.pageSize))
+      }
+
+      return params
+    }, { replace: true })
+  }, [setSearchParams])
+
+  return { search, cityId, sortBy, pageNumber, pageSize, setFilters }
 }

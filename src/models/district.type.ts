@@ -12,3 +12,11 @@ export type DistrictDataSource = District & {
   key: React.Key,
   index?: number
 }
+
+export type DistrictFilters = {
+  search?: string
+  cityId?: number
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
+}
