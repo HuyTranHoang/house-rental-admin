@@ -10,8 +10,13 @@ import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { DistrictDataSource } from '@/models/district.type.ts'
 
 const { Search } = Input
+
+type OnChange = NonNullable<TableProps<DistrictDataSource>['onChange']>;
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
 function ListCity() {
   const navigate = useNavigate()
@@ -22,6 +27,8 @@ function ListCity() {
     pageNumber: '1',
     pageSize: '5'
   })
+
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
   const [form] = Form.useForm()
   const search = searchParams.get('search') || ''
@@ -46,9 +53,8 @@ function ListCity() {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
       setSearchParams(prev => {
         prev.set('sortBy', `${sorter.field}${order}`)
-        prev.set('pageNumber', '1')
         return prev
-      })
+      }, { replace: true })
     }
   }
 
@@ -77,6 +83,19 @@ function ListCity() {
     }
   }, [form, search])
 
+  useEffect(() => {
+    if (sortBy) {
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/);
+      if (match) {
+        const [, field, order] = match;
+        setSortedInfo({
+          field,
+          order: order === 'Asc' ? 'ascend' : 'descend'
+        });
+      }
+    }
+  }, [sortBy]);
+
   if (isError) {
     return <ErrorFetching />
   }
@@ -95,9 +114,8 @@ function ListCity() {
                 allowClear
                 onSearch={(value) => setSearchParams(prev => {
                   prev.set('search', value)
-                  prev.set('pageNumber', '1')
                   return prev
-                })}
+                }, { replace: true })}
                 placeholder="Tìm kiếm tên thành phố"
                 style={{ width: 250 }}
               />
@@ -128,16 +146,16 @@ function ListCity() {
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
           onShowSizeChange: (_, size) => setSearchParams(prev => {
             prev.set('pageSize', size.toString())
-            prev.set('pageNumber', '1')
             return prev
-          }),
+          }, { replace: true }),
           onChange: (page) => setSearchParams(prev => {
             prev.set('pageNumber', page.toString())
             return prev
-          })
+          }, { replace: true })
         }}
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
+        sortedInfo={sortedInfo}
       />
     </>
   )

@@ -1,6 +1,6 @@
-import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { useDeleteMultiDistrict, useDistricts } from '@/hooks/useDistricts.ts'
@@ -13,14 +13,32 @@ import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
+type OnChange = NonNullable<TableProps<DistrictDataSource>['onChange']>;
+type Filters = Parameters<OnChange>[1];
+
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
+
 function ListDistrict() {
   const navigate = useNavigate()
 
-  const [search, setSearch] = useState('')
-  const [cityId, setCityId] = useState(0)
-  const [sortBy, setSortBy] = useState('IdDesc')
-  const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const [searchParams, setSearchParams] = useSearchParams({
+    search: '',
+    cityId: '0',
+    sortBy: '',
+    pageNumber: '1',
+    pageSize: '5'
+  })
+
+  const [filteredInfo, setFilteredInfo] = useState<Filters>({})
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
+
+  const [form] = Form.useForm()
+  const search = searchParams.get('search') || ''
+  const cityId = parseInt(searchParams.get('cityId') || '0')
+  const sortBy = searchParams.get('sortBy') || ''
+  const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
+  const pageSize = parseInt(searchParams.get('pageSize') || '5')
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
@@ -35,17 +53,35 @@ function ListDistrict() {
   }
 
   const handleTableChange: TableProps<DistrictDataSource>['onChange'] = (_, filters, sorter) => {
-    if (!Array.isArray(sorter) && sorter.order) {
-      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setSortBy(`${sorter.field}${order}`)
+    if (!Array.isArray(sorter)) {
+      if (sorter.order) {
+        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc';
+        setSearchParams(prev => {
+          prev.set('sortBy', `${sorter.field}${order}`);
+          return prev;
+        }, { replace: true });
+      } else {
+        setSearchParams(prev => {
+          prev.set('sortBy', '');
+          return prev;
+        }, { replace: true });
+        setSortedInfo({});
+      }
     }
 
     if (filters.cityName) {
-      setCityId(Number(filters.cityName[0]))
+      const cityId = filters.cityName[0];
+      setSearchParams(prev => {
+        prev.set('cityId', cityId as string);
+        return prev;
+      }, { replace: true });
     } else {
-      setCityId(0)
+      setSearchParams(prev => {
+        prev.set('cityId', '0');
+        return prev;
+      }, { replace: true });
     }
-  }
+  };
 
   const dataSource: DistrictDataSource[] = data
     ? data.data.map((district: District, idx) => ({
@@ -67,6 +103,34 @@ function ListDistrict() {
     }
   }
 
+  useEffect(() => {
+    if (search) {
+      form.setFieldsValue({ search })
+    }
+  }, [form, search])
+
+  useEffect(() => {
+    if (cityId) {
+      setFilteredInfo(prev => ({
+        ...prev,
+        cityName: [cityId]
+      }))
+    }
+  }, [cityId])
+
+  useEffect(() => {
+    if (sortBy) {
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/);
+      if (match) {
+        const [, field, order] = match;
+        setSortedInfo({
+          field,
+          order: order === 'Asc' ? 'ascend' : 'descend'
+        });
+      }
+    }
+  }, [sortBy]);
+
   if (isError) {
     return <ErrorFetching />
   }
@@ -79,12 +143,19 @@ function ListDistrict() {
             Danh sách quận huyện
           </Typography.Title>
           <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search
-            allowClear
-            onSearch={(value) => setSearch(value)}
-            placeholder="Tìm kiếm tên quận huyện"
-            style={{ width: 250 }}
-          />
+          <Form form={form} name="searchDistrictForm" layout="inline">
+            <Form.Item name="search">
+              <Search
+                allowClear
+                onSearch={(value) => setSearchParams(prev => {
+                  prev.set('search', value)
+                  return prev
+                }, { replace: true })}
+                placeholder="Tìm kiếm tên quận huyện"
+                style={{ width: 250 }}
+              />
+            </Form.Item>
+          </Form>
         </Flex>
 
         <Space>
@@ -108,11 +179,19 @@ function ListDistrict() {
           pageSize: pageSize,
           current: pageNumber,
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} quận huyện`,
-          onShowSizeChange: (_, size) => setPageSize(size),
-          onChange: (page) => setPageNumber(page)
+          onShowSizeChange: (_, size) => setSearchParams(prev => {
+            prev.set('pageSize', size.toString())
+            return prev
+          }, { replace: true }),
+          onChange: (page) => setSearchParams(prev => {
+            prev.set('pageNumber', page.toString())
+            return prev
+          }, { replace: true })
         }}
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
+        filteredInfo={filteredInfo}
+        sortedInfo={sortedInfo}
       />
     </>
   )

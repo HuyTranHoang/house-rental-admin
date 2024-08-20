@@ -1,13 +1,14 @@
 import { DistrictDataSource } from '@/models/district.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { TableRowSelection } from 'antd/es/table/interface'
+import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
 import { useDeleteDistrict } from '@/hooks/useDistricts.ts'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { SorterResult } from 'antd/lib/table/interface'
 
 const { confirm } = Modal
 
@@ -17,9 +18,19 @@ interface DistrictTableProps {
   paginationProps: false | TablePaginationConfig | undefined
   handleTableChange: TableProps<DistrictDataSource>['onChange']
   rowSelection: TableRowSelection<DistrictDataSource> | undefined
+  filteredInfo: Record<string, FilterValue | null>
+  sortedInfo: SorterResult<DistrictDataSource>
 }
 
-function DistrictTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: DistrictTableProps) {
+function DistrictTable({
+                         dataSource,
+                         loading,
+                         paginationProps,
+                         handleTableChange,
+                         rowSelection,
+                         filteredInfo,
+                         sortedInfo
+                       }: DistrictTableProps) {
   const navigate = useNavigate()
 
   const { data: cityData, isLoading: cityIsLoading } = useCitiesAll()
@@ -79,23 +90,27 @@ function DistrictTable({ dataSource, loading, paginationProps, handleTableChange
       title: 'Quận huyện',
       dataIndex: 'name',
       key: 'name',
-      sorter: true
+      sorter: true,
+      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null,
     },
     {
       title: 'Thành phố',
       dataIndex: 'cityName',
       key: 'cityName',
       sorter: true,
+      sortOrder: sortedInfo.field === 'cityName' ? sortedInfo.order : null,
       filterMultiple: false,
       filters: [
         ...cityData?.map((city) => ({ text: city.name, value: city.id })) || []
-      ]
+      ],
+      filteredValue: filteredInfo.cityName || null
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 300
     },
