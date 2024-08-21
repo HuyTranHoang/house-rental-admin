@@ -168,7 +168,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         navigate(ROUTER_NAMES.DASHBOARD)
         break
       case 'profile':
-        navigate('/profile')
+        toast.info('Chưa có làm uwu!!!')
         break
       case 'logout':
         dispatch(logout())

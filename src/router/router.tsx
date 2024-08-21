@@ -16,43 +16,39 @@ import userRouter from '@/router/userRouter.tsx'
 import districtRouter from '@/router/districtRouter.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 
-
 export const routerList = [
   {
-    element: <AppLayout haveBgColor={false} />,
+    element: <ProtectedRoute />,
     children: [
       {
-        element: <ProtectedRoute />,
+        element: <AppLayout haveBgColor={false} />,
         children: [
           {
             path: ROUTER_NAMES.DASHBOARD,
             element: <Dashboard />,
-            breadcrumb: () => <span><HomeOutlined /> Tổng quan</span>
+            breadcrumb: () => (
+              <span>
+                <HomeOutlined /> Tổng quan
+              </span>
+            )
           }
         ]
       }
     ]
   },
   {
-    element: <AppLayout />,
+    element: <ProtectedRoute />,
     children: [
       {
-        element: <ProtectedRoute />,
+        element: <AppLayout />,
         children: [
-          ...cityRouter // /city, /city/add, /city/:id/edit
-          ,
-          ...districtRouter // /district, /district/add, /district/:id/edit
-          ,
-          ...roomTypeRouter // /roomType, /roomType/add, /roomType/:id/edit
-          ,
-          ...amenityRouter // /amenity, /amenity/add, /amenity/:id:edit
-          ,
-          ...reportRouter // /report
-          ,
-          ...roleRouter // /role
-          ,
-          ...reviewRouter //review
-          ,
+          ...cityRouter, // /city, /city/add, /city/:id/edit
+          ...districtRouter, // /district, /district/add, /district/:id/edit
+          ...roomTypeRouter, // /roomType, /roomType/add, /roomType/:id/edit
+          ...amenityRouter, // /amenity, /amenity/add, /amenity/:id:edit
+          ...reportRouter, // /report
+          ...roleRouter, // /role
+          ...reviewRouter, //review
           ...userRouter // /user
         ] // End of ProtectedRoute children
       }

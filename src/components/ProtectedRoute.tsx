@@ -11,7 +11,7 @@ function ProtectedRoute() {
 
   useEffect(() => {
     if (!isAdmin) {
-      navigate(ROUTER_NAMES.LOGIN, { state: { from: location.pathname } })
+      navigate(ROUTER_NAMES.LOGIN, { state: { from: location.pathname }, replace: true })
     }
   }, [isAdmin, navigate, location.pathname])
 
