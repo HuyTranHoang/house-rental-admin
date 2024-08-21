@@ -2,18 +2,36 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import {
   BarChartOutlined,
   createFromIconfontCN,
+  EditOutlined,
   HomeOutlined,
   InfoOutlined,
   LogoutOutlined,
   SolutionOutlined,
-  UserOutlined
+  UserOutlined, VerticalAlignTopOutlined
 } from '@ant-design/icons'
-import { Flex, Layout, Menu, MenuProps, theme, Typography } from 'antd'
+import {
+  Avatar,
+  Button,
+  ConfigProvider,
+  Dropdown,
+  Flex,
+  FloatButton,
+  Layout,
+  Menu,
+  MenuProps,
+  Space,
+  theme,
+  Typography
+} from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
 import CustomBreadcrumbs from '../components/CustomBreadcrumbs.tsx'
 import { useAppDispatch } from '../store.ts'
-import { logout } from '@/features/auth/authSlice.ts'
-import { red } from '@ant-design/colors'
+import { logout, selectAuth } from '@/features/auth/authSlice.ts'
+import { useSelector } from 'react-redux'
+import { toast } from 'sonner'
+import { toTitleCase } from '@/utils/toTitleCase.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useEffect, useState } from 'react'
 
 const { Header, Content, Sider } = Layout
 
@@ -22,23 +40,27 @@ const IconFont = createFromIconfontCN({
 })
 
 
-function AppLayout() {
-
+function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { user } = useSelector(selectAuth)
 
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   const {
-    token: { colorBgContainer, borderRadiusLG }
+    token: { colorBgContainer, borderRadiusLG, colorBgLayout }
   } = theme.useToken()
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const siderItems: MenuProps['items'] = [
     {
       key: 'dashboard',
       label: 'Tổng quan',
       icon: <BarChartOutlined />,
-      onClick: () => navigate('/')
+      onClick: () => navigate(ROUTER_NAMES.DASHBOARD)
     },
     {
       key: 'cityDistrict',
@@ -48,12 +70,12 @@ function AppLayout() {
         {
           key: 'cityDistrict-city',
           label: 'Quản lý thành phố',
-          onClick: () => navigate('/city')
+          onClick: () => navigate(ROUTER_NAMES.CITY)
         },
         {
           key: 'cityDistrict-district',
           label: 'Quản lý quận huyện',
-          onClick: () => alert('Chưa làm')
+          onClick: () => navigate(ROUTER_NAMES.DISTRICT)
         }
       ]
     },
@@ -65,12 +87,12 @@ function AppLayout() {
         {
           key: 'roomTypeAmenity-roomType',
           label: 'Quản lý lọai phòng',
-          onClick: () => navigate('/roomType')
+          onClick: () => navigate(ROUTER_NAMES.ROOM_TYPE)
         },
         {
           key: 'roomTypeAmenity-amenity',
           label: 'Quản lý tiện nghi',
-          onClick: () => navigate('/amenity')
+          onClick: () => navigate(ROUTER_NAMES.AMENITY)
         }
       ]
     },
@@ -82,12 +104,12 @@ function AppLayout() {
         {
           key: 'reportReview-report',
           label: 'Quản lý báo cáo',
-          onClick: () => navigate('/report')
+          onClick: () => navigate(ROUTER_NAMES.REPORT)
         },
         {
           key: 'reportReview-review',
           label: 'Quản lý đánh giá',
-          onClick: () => alert('Chưa làm')
+          onClick: () => navigate(ROUTER_NAMES.REVIEW)
         }
       ]
     },
@@ -99,16 +121,32 @@ function AppLayout() {
         {
           key: 'userRole-user',
           label: 'Quản lý người dùng',
-          onClick: () => alert('Chưa làm')
+          onClick: () => navigate(ROUTER_NAMES.USER)
         },
         {
           key: 'userRole-role',
           label: 'Quản lý vai trò',
-          onClick: () => navigate('/role')
+          onClick: () => navigate(ROUTER_NAMES.ROLE)
         }
       ]
+    }
+  ]
+
+  const dropdownItems: MenuProps['items'] = [
+    {
+      key: 'username',
+      label: <Flex vertical>
+        <Typography.Text type="secondary">Tài khoản đăng nhập</Typography.Text>
+        <Typography.Text strong>{user?.username}</Typography.Text>
+      </Flex>,
+      disabled: true,
+      style: { padding: '8px 16px', cursor: 'default' }
     },
     {
+      type: 'divider'
+    },
+    {
+
       key: 'property',
       label: 'Quản Lý Đăng Tin',
       icon: <InfoOutlined />,
@@ -125,35 +163,105 @@ function AppLayout() {
       style: { margin: '12px 0' }
     },
     {
+      key: 'home',
+      label: 'Trang chủ',
+      icon: <HomeOutlined />
+    },
+    {
+      key: 'profile',
+      label: 'Thông tin cá nhân',
+      icon: <EditOutlined />
+
+    },
+    {
       key: 'logout',
       label: 'Đăng xuất',
       icon: <LogoutOutlined />,
-      className: 'menu-item-logout',
-      style: { color: red[5] },
-      onClick: () => dispatch(logout())
+      danger: true
     }
   ]
+
+  const dropdownOnClick: MenuProps['onClick'] = ({ key }) => {
+    switch (key) {
+      case 'home':
+        navigate(ROUTER_NAMES.DASHBOARD)
+        break
+      case 'profile':
+        navigate('/profile')
+        break
+      case 'logout':
+        dispatch(logout())
+        localStorage.removeItem('jwtToken')
+        toast.success('Đăng xuất thành công')
+        navigate(ROUTER_NAMES.LOGIN)
+        break
+    }
+  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
     <Layout>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
         <Flex align="center">
           <img src="/logo1.png" alt="Mogu logo" style={{ width: 30 }} />
-          <Typography.Title level={4} style={{ color: 'white', margin: '0 12px' }}>Trang quản trị</Typography.Title>
+          <Typography.Title level={4} style={{ color: 'white', margin: '0 12px' }}>
+            Trang quản trị
+          </Typography.Title>
         </Flex>
       </Header>
       <Layout>
-        <Sider width={260} style={{ background: colorBgContainer }}>
-          <Flex justify="center" align="center" style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
-            <img src="/LOGO_TEXT.png" alt="Mogu logo" style={{ width: 100 }} />
-          </Flex>
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['dashboard']}
-            defaultOpenKeys={['sub1']}
-            style={{ height: '100%', borderRight: 0 }}
-            items={siderItems}
-          />
+        <Sider width={260} style={{ background: colorBgLayout }}>
+          <Layout style={{ height: 'calc(100vh - 100px)', background: colorBgContainer }}>
+            <Flex justify="center" align="center" style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
+              <img src="/LOGO_TEXT.png" alt="Mogu logo" style={{ width: 100 }} />
+            </Flex>
+            <Space direction="vertical" align="center" size="large"
+                   style={{ height: '100%', justifyContent: 'space-between' }}>
+              <Menu
+                mode="inline"
+                defaultSelectedKeys={['dashboard']}
+                defaultOpenKeys={['cityDistrict']}
+                style={{ borderRight: 0 }}
+                items={siderItems}
+              />
+              <ConfigProvider
+                theme={{
+                  components: {
+                    Button: {
+                      defaultBg: '#e0e0e0',
+                      defaultHoverBg: '#d4d4d4',
+                      defaultHoverBorderColor: '#d4d4d4',
+                      defaultHoverColor: 'black'
+                    }
+                  }
+                }}
+              >
+                <Dropdown menu={{ items: dropdownItems, onClick: dropdownOnClick }} placement="top"
+                >
+                  <Button
+                    icon={<Avatar src={user?.avatarUrl || `https://robohash.org/${user?.username}?set=set4`} />}
+                    size="large"
+                    style={{
+                      padding: '24px 0',
+                      width: '200px',
+                      marginBottom: 16
+                    }}>
+                    {toTitleCase(user?.firstName)} {toTitleCase(user?.lastName)}
+                  </Button>
+                </Dropdown>
+              </ConfigProvider>
+            </Space>
+          </Layout>
         </Sider>
         <Layout style={{ padding: '0 24px' }}>
           <CustomBreadcrumbs />
@@ -161,17 +269,20 @@ function AppLayout() {
             style={{
               padding: 24,
               margin: 0,
-              // minHeight: 'calc(100vh - 190px)',
-              minHeight: 260,
-              background: colorBgContainer,
+              minHeight: 'calc(100vh - 185px)',
+              // minHeight: 260,
+              background: haveBgColor ? colorBgContainer : '#F5F5F5',
               borderRadius: borderRadiusLG
             }}
           >
             <Outlet />
+            {showScrollButton && (
+              <FloatButton icon={<VerticalAlignTopOutlined />} onClick={scrollToTop} />
+            )}
           </Content>
         </Layout>
       </Layout>
-      <Footer style={{ textAlign: 'center' }}>Mogu Admin ©2024 Created by Group 2</Footer>
+      <Footer style={{ textAlign: 'center', padding: '10px 0' }}>Mogu Admin ©2024 Created by Group 2</Footer>
     </Layout>
   )
 }

@@ -6,15 +6,18 @@ import { useDeleteCity } from '@/hooks/useCities.ts'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import TableActions from '@/components/TableActions.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { SorterResult } from 'antd/lib/table/interface'
 
 const { confirm } = Modal
 
 interface CityTableProps {
-  dataSource: CityDataSource[];
-  loading: boolean;
-  paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<CityDataSource>['onChange'];
+  dataSource: CityDataSource[]
+  loading: boolean
+  paginationProps: false | TablePaginationConfig | undefined
+  handleTableChange: TableProps<CityDataSource>['onChange']
   rowSelection: TableRowSelection<CityDataSource> | undefined
+  sortedInfo: SorterResult<CityDataSource>
 }
 
 function CityTable({
@@ -22,13 +25,13 @@ function CityTable({
                      loading,
                      paginationProps,
                      handleTableChange,
-                     rowSelection
+                     rowSelection,
+                     sortedInfo
                    }: CityTableProps) {
   const navigate = useNavigate()
   const { deleteCityMutate } = useDeleteCity()
 
   const showDeleteConfirm = (record: CityDataSource) => {
-
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
@@ -67,8 +70,8 @@ function CityTable({
   const columns: TableProps<CityDataSource>['columns'] = [
     {
       title: '#',
-      dataIndex: 'id',
-      key: 'id',
+      dataIndex: 'index',
+      key: 'index',
       fixed: 'left',
       width: 50
     },
@@ -76,13 +79,15 @@ function CityTable({
       title: 'Tên thành phố',
       dataIndex: 'name',
       key: 'name',
-      sorter: true
+      sorter: true,
+      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null,
     },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 300
     },
@@ -92,7 +97,7 @@ function CityTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(`/city/${record.id}/edit`)}
+        <TableActions onUpdate={() => navigate(ROUTER_NAMES.getCityEditPath(record.id))}
                       onDelete={() => showDeleteConfirm(record)} />
       )
     }

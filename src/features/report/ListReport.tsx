@@ -1,13 +1,19 @@
-import { Divider, Flex, TableProps, Tabs, TabsProps, Typography } from 'antd'
-import Search from 'antd/lib/input/Search'
-import { useState } from 'react'
+import { Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } from 'antd'
+import { useEffect, useState } from 'react'
 import { Report as ReportType, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import { useReports } from '@/hooks/useReports.ts'
+import { useReportFilters, useReports } from '@/hooks/useReports.ts'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import ReportTable from './ReportTable.tsx'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { useQueryClient } from '@tanstack/react-query'
+
+const { Search } = Input
+
+type OnChange = NonNullable<TableProps<ReportDataSource>['onChange']>;
+type Filters = Parameters<OnChange>[1];
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
 const tabsItem: TabsProps['items'] = [
   {
@@ -31,53 +37,72 @@ function ListReport() {
 
   const queryClient = useQueryClient()
 
-  const [search, setSearch] = useState('')
-  const [status, setStatus] = useState(ReportStatus.PENDING)
-  const [category, setCategory] = useState('')
-  const [sortBy, setSortBy] = useState('IdDesc')
-  const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const { search, status, category, sortBy, pageNumber, pageSize, setFilters } = useReportFilters()
+
+  const [filteredInfo, setFilteredInfo] = useState<Filters>({})
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
+
+  const [form] = Form.useForm()
 
   const { data, isLoading, isError }
     = useReports(search, category, status, pageNumber, pageSize, sortBy)
 
   const onTabChange = (key: string) => {
-    setStatus(key as ReportStatus)
-    queryClient.invalidateQueries({ queryKey: ['reports'] })
+    setFilters({ status: key as ReportStatus })
+    queryClient.invalidateQueries({ queryKey: ['reports'] }).then()
   }
 
   const handleTableChange: TableProps<ReportDataSource>['onChange'] = (_, filters, sorter) => {
-    if (Array.isArray(sorter)) {
-      setSortBy('createdAtDesc')
+    if (!Array.isArray(sorter) && sorter.order) {
+      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+      setFilters({ sortBy: `${sorter.field}${order}` })
     } else {
-      if (sorter.order) {
-        const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-        setSortBy(`${sorter.field}${order}`)
-      }
+      setFilters({ sortBy: '' })
+      setSortedInfo({})
     }
 
     if (filters.category) {
-      const result = filters.category.join(',');
-      setCategory(result)
-    } else {
-      setCategory('')
+      const result = filters.category.join(',')
+      setFilters({ category: result })
     }
   }
 
   const dataSource: ReportDataSource[] = data
-    ? data.data.map((report: ReportType) => ({
+    ? data.data.map((report: ReportType, idx) => ({
+      ...report,
       key: report.id,
-      id: report.id,
-      userId: report.userId,
-      username: report.username,
-      propertyId: report.propertyId,
-      title: report.title,
-      reason: report.reason,
-      category: report.category,
-      status: report.status,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       createdAt: customFormatDate(report.createdAt)
     }))
     : []
+
+  useEffect(() => {
+    if (search) {
+      form.setFieldsValue({ search })
+    }
+  }, [form, search])
+
+  useEffect(() => {
+    if (category) {
+      setFilteredInfo(prev => ({
+        ...prev,
+        category: category.split(',')
+      }))
+    }
+  }, [category])
+
+  useEffect(() => {
+    if (sortBy) {
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/)
+      if (match) {
+        const [, field, order] = match
+        setSortedInfo({
+          field,
+          order: order === 'Asc' ? 'ascend' : 'descend'
+        })
+      }
+    }
+  }, [sortBy])
 
   if (isError) {
     return <ErrorFetching />
@@ -89,8 +114,16 @@ function ListReport() {
         <Flex align="center">
           <Typography.Title level={2} style={{ margin: 0 }}>Danh sách báo cáo</Typography.Title>
           <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm theo tên tài khoản"
-                  style={{ width: 250 }} />
+          <Form form={form} name="searchReportForm" layout="inline">
+            <Form.Item name="search">
+              <Search
+                allowClear
+                onSearch={(value) => setFilters({ search: value })}
+                placeholder="Tìm kiếm theo tên tài khoản"
+                style={{ width: 250 }}
+              />
+            </Form.Item>
+          </Form>
         </Flex>
       </Flex>
 
@@ -105,10 +138,12 @@ function ListReport() {
           pageSize: pageSize,
           current: pageNumber,
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
-          onShowSizeChange: (_, size) => setPageSize(size),
-          onChange: (page) => setPageNumber(page)
+          onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
+          onChange: (page) => setFilters({ pageNumber: page })
         }}
         handleTableChange={handleTableChange}
+        filteredInfo={filteredInfo}
+        sortedInfo={sortedInfo}
       />
     </>
   )

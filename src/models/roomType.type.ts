@@ -7,5 +7,13 @@ export interface RoomType {
 }
 
 export type RoomTypeDataSource = RoomType & {
-  key: React.Key
+  key: React.Key,
+  index?: number
+}
+
+export type RoomTypeFilters = {
+  search?: string
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
 }

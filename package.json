@@ -17,6 +17,7 @@
     "@tanstack/react-query": "^5.51.11",
     "@tanstack/react-query-devtools": "^5.51.23",
     "antd": "^5.19.3",
+    "antd-zod": "^5.1.0",
     "axios": "^1.7.2",
     "date-fns": "^3.6.0",
     "react": "^18.2.0",
@@ -26,7 +27,8 @@
     "recharts": "^2.12.7",
     "sonner": "^1.5.0",
     "styled-components": "^6.1.12",
-    "use-react-router-breadcrumbs": "^4.0.1"
+    "use-react-router-breadcrumbs": "^4.0.1",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.51.12",

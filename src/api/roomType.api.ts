@@ -1,13 +1,8 @@
 import axios from 'axios'
 import { PageInfo } from '@/models/pageInfo.type.ts'
 import { RoomType } from '@/models/roomType.type.ts'
-import { delay } from '@/utils/delay.ts'
 import axiosInstance from '@/axiosInstance.ts'
-
-export interface RoomTypeField {
-  id?: number
-  name: string
-}
+import { RoomTypeForm } from '@/features/roomType/AddUpdateRoomType.tsx'
 
 interface RoomTypesWithPagination {
   pageInfo: PageInfo
@@ -26,8 +21,6 @@ export const getAllRoomTypesWithPagination = async (search: string, pageNumber: 
     }
 
     const response = await axios.get<RoomTypesWithPagination>('/api/room-type', { params })
-
-    await delay(300) // Giả delay 300ms để thấy rõ sự chuyển động của loading
 
     if (response.status === 200) {
       return response.data
@@ -56,11 +49,11 @@ export const deleteRoomTypes = async (ids: number[]) => {
   }
 }
 
-export const addRoomType = async (values: RoomTypeField) => {
+export const addRoomType = async (values: RoomTypeForm) => {
   await axiosInstance.post('/api/room-type', values)
 }
 
-export const updateRoomType = async (values: RoomTypeField) => {
+export const updateRoomType = async (values: RoomTypeForm) => {
   await axiosInstance.put(`/api/room-type/${values.id}`, values)
 }
 

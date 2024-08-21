@@ -1,24 +1,30 @@
-import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
-import React, { useState } from 'react'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useAmenities, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
+import { useAmenities, useAmenityFilters, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
 import AmenityTable from './AmenityTable.tsx'
 import { Amenity, AmenityDataSource } from '@/models/amenity.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
+
+type OnChange = NonNullable<TableProps<AmenityDataSource>['onChange']>;
+type GetSingle<T> = T extends (infer U)[] ? U : never;
+type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
 function ListAmenity() {
   const navigate = useNavigate()
 
-  const [search, setSearch] = useState('')
-  const [sortBy, setSortBy] = useState('IdDesc')
-  const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const { search, sortBy, pageSize, pageNumber, setFilters } = useAmenityFilters()
+
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
+
+  const [form] = Form.useForm()
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
@@ -35,13 +41,17 @@ function ListAmenity() {
   const handleTableChange: TableProps<AmenityDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setSortBy(`${sorter.field}${order}`)
+      setFilters({ sortBy: `${sorter.field}${order}` })
+    } else {
+      setFilters({ sortBy: '' })
+      setSortedInfo({})
     }
   }
 
   const dataSource: AmenityDataSource[] = data
-    ? data.data.map((amenity: Amenity) => ({
+    ? data.data.map((amenity: Amenity, idx) => ({
       key: amenity.id,
+      index: (pageNumber - 1) * pageSize + idx + 1,
       id: amenity.id,
       name: amenity.name,
       createdAt: customFormatDate(amenity.createdAt)
@@ -56,6 +66,25 @@ function ListAmenity() {
     }
   }
 
+  useEffect(() => {
+    if (search) {
+      form.setFieldsValue({ search })
+    }
+  }, [form, search])
+
+  useEffect(() => {
+    if (sortBy) {
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/)
+      if (match) {
+        const [, field, order] = match
+        setSortedInfo({
+          field,
+          order: order === 'Asc' ? 'ascend' : 'descend'
+        })
+      }
+    }
+  }, [sortBy])
+
   if (isError) {
     return <ErrorFetching />
   }
@@ -68,9 +97,16 @@ function ListAmenity() {
             Danh sách tiện nghi
           </Typography.Title>
           <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search allowClear onSearch={(value) => setSearch(value)} placeholder="Tìm kiếm tên tiện nghi"
-                  style={{ width: 250 }}
-          />
+          <Form form={form} name="searchCityForm" layout="inline">
+            <Form.Item name="search">
+              <Search
+                allowClear
+                onSearch={(value) => setFilters({ search: value })}
+                placeholder="Tìm kiếm tiện nghi"
+                style={{ width: 250 }}
+              />
+            </Form.Item>
+          </Form>
         </Flex>
 
         <Space>
@@ -79,7 +115,7 @@ function ListAmenity() {
               Xóa các mục đã chọn
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate('/amenity/add')}>
+          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate(ROUTER_NAMES.ADD_AMENITY)}>
             Thêm mới
           </Button>
         </Space>
@@ -93,11 +129,12 @@ function ListAmenity() {
           pageSize: pageSize,
           current: pageNumber,
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} tiện nghi`,
-          onShowSizeChange: (_, size) => setPageSize(size),
-          onChange: (page) => setPageNumber(page)
+          onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
+          onChange: (page) => setFilters({ pageNumber: page })
         }}
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
+        sortedInfo={sortedInfo}
       />
     </>
   )

@@ -31,15 +31,26 @@ export const authorityPrivilegesMap: { [key: string]: [string, string] } = {
   'role:update': ['Vai trò: Sửa', 'green'],
   'role:create': ['Vai trò: Thêm', 'green'],
   'role:delete': ['Vai trò: Xóa', 'green'],
-  'admin:all': ['Quản trị: Toàn quyền', 'red']
+  'admin:all': ['Quản trị: Toàn quyền', 'red'],
+  'dashboard:read': ['Dashboard: Xem', 'cyan'],
 }
+
+export const RolePrivileges = [
+  'Người dùng',
+  'Bài đăng',
+  'Đánh giá',
+  'Thành phố',
+  'Quận huyện',
+  'Loại phòng',
+  'Tiện nghi',
+  'Vai trò',
+]
 
 interface AuthorityPrivilegesFilterMap {
   text: string;
   value: string;
   children?: AuthorityPrivilegesFilterMap[];
 }
-
 
 const convertToFilterMap = (map: { [key: string]: [string, string] }): AuthorityPrivilegesFilterMap[] => {
   const grouped: { [key: string]: AuthorityPrivilegesFilterMap } = {};

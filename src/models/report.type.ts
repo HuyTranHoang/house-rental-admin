@@ -14,6 +14,7 @@ export interface Report {
 
 export type ReportDataSource = Report & {
   key: React.Key
+  index?: number
 }
 
 export enum ReportStatus {
@@ -28,4 +29,13 @@ export enum ReportCategory {
   DUPLICATE = 'DUPLICATE',
   MISINFORMATION = 'MISINFORMATION',
   OTHER = 'OTHER',
+}
+
+export type ReportFilters = {
+  search?: string
+  status?: ReportStatus
+  category?: string
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
 }

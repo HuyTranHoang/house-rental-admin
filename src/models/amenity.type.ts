@@ -8,4 +8,5 @@ export interface Amenity {
 
 export type AmenityDataSource = Amenity & {
     key: React.Key
+    index?: number
 }

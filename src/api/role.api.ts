@@ -1,11 +1,14 @@
 import { Role } from '@/models/role.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 import { PageInfo } from '@/models/pageInfo.type.ts'
+import axios from 'axios'
 
 export interface RoleField {
   id?: number
   name: string
+  description: string
   authorityPrivileges: string[]
+  authorityPrivilegesObject: { [key: string]: boolean | undefined }
 }
 
 interface RolesWithPagination {
@@ -69,14 +72,18 @@ export const addRole = async (values: RoleField) => {
 }
 
 export const updateRole = async (values: RoleField) => {
-  await axiosInstance.put(`/api/roles/${values.id}`, values)
+  const response = await axiosInstance.put(`/api/roles/${values.id}`, values)
+  return response.data
 }
 
 export const deleteRole = async (id: number) => {
   try {
     await axiosInstance.delete(`/api/roles/${id}`)
   } catch (error) {
-    console.error(error)
+    if (axios.isAxiosError(error) && error.response?.status === 400) {
+      throw new Error(error.response.data.message)
+    }
+
     throw new Error('Xóa vai trò thất bại')
   }
 }

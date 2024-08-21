@@ -8,4 +8,12 @@ export interface City {
 
 export type CityDataSource = City & {
   key: React.Key
+  index?: number
+}
+
+export type CityFilters = {
+  search?: string
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
 }

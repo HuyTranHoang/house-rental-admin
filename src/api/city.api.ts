@@ -2,12 +2,8 @@ import axios from 'axios'
 import { City } from '@/models/city.type.ts'
 import { PageInfo } from '@/models/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
-import { delay } from '@/utils/delay.ts'
+import { CityForm } from '@/features/city/AddUpdateCity.tsx'
 
-export interface CityField {
-  id?: number
-  name: string
-}
 
 interface CitiesWithPagination {
   pageInfo: PageInfo
@@ -39,8 +35,6 @@ export const getAllCitiesWithPagination = async (search: string, pageNumber: num
 
     const response = await axios.get<CitiesWithPagination>('/api/city', { params })
 
-    await delay(300) // Giả delay 300ms để thấy rõ sự chuyển động của loading
-
     if (response.status === 200) {
       return response.data
     }
@@ -62,7 +56,7 @@ export const getCityById = async (id: number) => {
   }
 }
 
-export const addCity = async (values: CityField) => {
+export const addCity = async (values: CityForm) => {
   await axiosInstance.post('/api/city', values)
 }
 
@@ -75,7 +69,7 @@ export const deleteCity = async (id: number) => {
   }
 }
 
-export const updateCity = async (values: CityField) => {
+export const updateCity = async (values: CityForm) => {
   await axiosInstance.put(`/api/city/${values.id}`, values)
 }
 
