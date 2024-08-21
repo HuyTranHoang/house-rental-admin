@@ -23,13 +23,17 @@ import { useQuery } from '@tanstack/react-query'
 import { getPropertyById } from '@/api/property.api.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
+import { FilterValue } from 'antd/es/table/interface'
+import { SorterResult } from 'antd/lib/table/interface'
 
 interface ReportTableProps {
-  dataSource: ReportDataSource[];
-  loading: boolean;
-  paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<ReportDataSource>['onChange'];
+  dataSource: ReportDataSource[]
+  loading: boolean
+  paginationProps: false | TablePaginationConfig | undefined
+  handleTableChange: TableProps<ReportDataSource>['onChange']
   status: ReportStatus
+  filteredInfo: Record<string, FilterValue | null>
+  sortedInfo: SorterResult<ReportDataSource>
 }
 
 const categoryMap = {
@@ -45,7 +49,9 @@ function ReportTable({
                        loading,
                        status,
                        paginationProps,
-                       handleTableChange
+                       handleTableChange,
+                       filteredInfo,
+                       sortedInfo
                      }: ReportTableProps) {
 
 
@@ -231,13 +237,15 @@ function ReportTable({
       title: 'Tên tài khoản',
       dataIndex: 'username',
       key: 'username',
-      sorter: true
+      sorter: true,
+      sortOrder: sortedInfo.field === 'username' ? sortedInfo.order : null,
     },
     {
       title: 'Bài đăng',
       dataIndex: 'title',
       key: 'title',
       sorter: true,
+      sortOrder: sortedInfo.field === 'title' ? sortedInfo.order : null,
       render: (text, record) =>
         <Button onClick={() => {
           setOpen(!open)
@@ -255,6 +263,7 @@ function ReportTable({
       dataIndex: 'category',
       key: 'category',
       sorter: true,
+      sortOrder: sortedInfo.field === 'category' ? sortedInfo.order : null,
       filters: [
         { text: 'Lừa đảo', value: ReportCategory.SCAM },
         { text: 'Nội dung không phù hợp', value: ReportCategory.INAPPROPRIATE_CONTENT },
@@ -262,6 +271,7 @@ function ReportTable({
         { text: 'Thông tin sai lệch', value: ReportCategory.MISINFORMATION },
         { text: 'Khác', value: ReportCategory.OTHER }
       ],
+      filteredValue: filteredInfo.category || null,
       render: (category: ReportCategory) => {
         const [text, color] = categoryMap[category]
         return <Tag color={color}>{text}</Tag>
@@ -286,6 +296,7 @@ function ReportTable({
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 200
     }

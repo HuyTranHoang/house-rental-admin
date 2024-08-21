@@ -30,3 +30,12 @@ export enum ReportCategory {
   MISINFORMATION = 'MISINFORMATION',
   OTHER = 'OTHER',
 }
+
+export type ReportFilters = {
+  search?: string
+  status?: ReportStatus
+  category?: string
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
+}
