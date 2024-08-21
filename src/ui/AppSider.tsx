@@ -13,7 +13,7 @@ import {
   SolutionOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@/store.ts'
 import { useSelector } from 'react-redux'
 
@@ -24,6 +24,7 @@ const IconFont = createFromIconfontCN({
 function AppSider() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const location = useLocation()
   const { user } = useSelector(selectAuth)
 
   const {
@@ -32,7 +33,7 @@ function AppSider() {
 
   const siderItems: MenuProps['items'] = [
     {
-      key: 'dashboard',
+      key: ROUTER_NAMES.DASHBOARD,
       label: 'Tổng quan',
       icon: <BarChartOutlined />,
       onClick: () => navigate(ROUTER_NAMES.DASHBOARD)
@@ -43,12 +44,12 @@ function AppSider() {
       icon: <IconFont type='icon-city' />,
       children: [
         {
-          key: 'cityDistrict-city',
+          key: ROUTER_NAMES.CITY,
           label: 'Quản lý thành phố',
           onClick: () => navigate(ROUTER_NAMES.CITY)
         },
         {
-          key: 'cityDistrict-district',
+          key: ROUTER_NAMES.DISTRICT,
           label: 'Quản lý quận huyện',
           onClick: () => navigate(ROUTER_NAMES.DISTRICT)
         }
@@ -60,12 +61,12 @@ function AppSider() {
       icon: <HomeOutlined />,
       children: [
         {
-          key: 'roomTypeAmenity-roomType',
+          key: ROUTER_NAMES.ROOM_TYPE,
           label: 'Quản lý lọai phòng',
           onClick: () => navigate(ROUTER_NAMES.ROOM_TYPE)
         },
         {
-          key: 'roomTypeAmenity-amenity',
+          key: ROUTER_NAMES.AMENITY,
           label: 'Quản lý tiện nghi',
           onClick: () => navigate(ROUTER_NAMES.AMENITY)
         }
@@ -77,12 +78,12 @@ function AppSider() {
       icon: <SolutionOutlined />,
       children: [
         {
-          key: 'reportReview-report',
+          key: ROUTER_NAMES.REPORT,
           label: 'Quản lý báo cáo',
           onClick: () => navigate(ROUTER_NAMES.REPORT)
         },
         {
-          key: 'reportReview-review',
+          key: ROUTER_NAMES.REVIEW,
           label: 'Quản lý đánh giá',
           onClick: () => navigate(ROUTER_NAMES.REVIEW)
         }
@@ -94,12 +95,12 @@ function AppSider() {
       icon: <UserOutlined />,
       children: [
         {
-          key: 'userRole-user',
+          key: ROUTER_NAMES.USER,
           label: 'Quản lý người dùng',
           onClick: () => navigate(ROUTER_NAMES.USER)
         },
         {
-          key: 'userRole-role',
+          key: ROUTER_NAMES.ROLE,
           label: 'Quản lý vai trò',
           onClick: () => navigate(ROUTER_NAMES.ROLE)
         }
@@ -173,7 +174,7 @@ function AppSider() {
           </Flex>
           <Menu
             mode='inline'
-            defaultSelectedKeys={['dashboard']}
+            defaultSelectedKeys={[location.pathname]}
             defaultOpenKeys={['cityDistrict']}
             style={{ borderRight: 0 }}
             items={siderItems}
