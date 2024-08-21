@@ -6,17 +6,7 @@ import { getAmenityById } from '@/api/amenity.api.ts'
 import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-
-import z from 'zod'
-import { createSchemaFieldRule } from 'antd-zod'
-
-const AmenityFormValidationSchema = z.object({
-  id: z.number().optional(),
-  name: z.string({ message: 'Vui lòng nhập tên thành phố' }).min(3, 'Tên thành phố phải có ít nhất 3 ký tự')
-})
-
-export type AmenityForm = z.infer<typeof AmenityFormValidationSchema>
-const rule = createSchemaFieldRule(AmenityFormValidationSchema)
+import { AmenityForm } from '@/models/amenity.type.ts'
 
 function AddUpdateAmenity() {
   const match = useMatch(ROUTER_NAMES.ADD_AMENITY)
@@ -75,14 +65,14 @@ function AddUpdateAmenity() {
         style={{
           maxWidth: 600,
           marginTop: 32,
-          boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)',
+          boxShadow: 'rgba(145, 158, 171, 0.3) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px',
           border: '1px solid #f0f0f0',
           padding: '32px 32px 0'
         }}
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<AmenityForm> label="Id" name="id" rules={[rule]} hidden
+        <Form.Item<AmenityForm> label="Id" name="id" hidden
         >
           <Input />
         </Form.Item>
@@ -90,7 +80,11 @@ function AddUpdateAmenity() {
         <Form.Item<AmenityForm>
           label="Tên tiện nghi"
           name="name"
-          rules={[rule]}
+          rules={[
+            { required: true, message: 'Vui lòng nhập tên tiện nghi!' },
+            { min: 3, message: 'Tên tiện nghi phải có ít nhất 3 ký tự!' },
+            { max: 50, message: 'Tên tiện nghi không được vượt quá 50 ký tự!' }
+          ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >

@@ -1,8 +1,7 @@
 import axios from 'axios'
-import { Amenity } from '@/models/amenity.type.ts'
+import { Amenity, AmenityForm } from '@/models/amenity.type.ts'
 import { PageInfo } from '@/models/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
-import { AmenityForm } from '@/features/amenity/AddUpdateAmenity.tsx'
 
 export interface AmenitiesWithPagination {
   pageInfo: PageInfo

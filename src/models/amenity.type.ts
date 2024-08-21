@@ -10,3 +10,8 @@ export type AmenityDataSource = Amenity & {
     key: React.Key
     index?: number
 }
+
+export interface AmenityForm {
+    id?: number
+    name: string
+}

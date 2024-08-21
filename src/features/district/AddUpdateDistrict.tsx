@@ -9,19 +9,7 @@ import { useCreateDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-
-import z from 'zod'
-import { createSchemaFieldRule } from 'antd-zod'
-
-const DistrictFormValidationScheme = z.object({
-  id: z.number().optional(),
-  name: z.string({ message: 'Tên quận huyện không được để trống' })
-    .min(3, 'Tên quận huyện phải có ít nhất 3 ký tự'),
-  cityId: z.number({ message: 'Vui lòng chọn thành phố' })
-})
-
-export type DistrictForm = z.infer<typeof DistrictFormValidationScheme>
-const rule = createSchemaFieldRule(DistrictFormValidationScheme)
+import { DistrictForm } from '@/models/district.type.ts'
 
 function AddUpdateDistrict() {
   const match = useMatch(ROUTER_NAMES.ADD_DISTRICT)
@@ -101,14 +89,18 @@ function AddUpdateDistrict() {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<DistrictForm> label="Id" name="id" rules={[rule]} hidden>
+        <Form.Item<DistrictForm> label="Id" name="id" hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<DistrictForm>
           label="Tên quận huyện"
           name="name"
-          rules={[rule]}
+          rules={[
+            { required: true, message: 'Vui lòng nhập tên quận huyện' },
+            { min: 3, message: 'Tên quận huyện phải có ít nhất 3 ký tự' },
+            { max: 50, message: 'Tên quận huyện không được vượt quá 50 ký tự' }
+          ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
@@ -118,12 +110,14 @@ function AddUpdateDistrict() {
         <Form.Item<DistrictForm>
           label="Thành phố"
           name="cityId"
-          rules={[rule]}
+          rules={[
+            { required: true, message: 'Vui lòng chọn thành phố' }
+          ]}
         >
           <Select options={cityOptions} placeholder="Chọn thành phố" />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 6 }}>
+        <Form.Item wrapperCol={{ offset: 6 }} style={{marginTop: 48}}>
           <Button onClick={() => {
             form.resetFields()
             setError('')

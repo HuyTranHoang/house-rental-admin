@@ -20,3 +20,9 @@ export type DistrictFilters = {
   pageNumber?: number
   pageSize?: number
 }
+
+export interface DistrictForm {
+  id?: number
+  name: string
+  cityId: number
+}
