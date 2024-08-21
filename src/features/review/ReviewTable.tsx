@@ -40,7 +40,6 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
   const { deleteReviewMutate } = useDeleteReview()
 
   const showDeleteConfirm = (record: ReviewDataSource) => {
-
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
@@ -70,7 +69,7 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa đánh giá" />,
+      title: <ConfirmModalTitle title='Xác nhận xóa đánh giá' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -82,7 +81,6 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
     })
   }
 
-
   const columns: TableProps<ReviewDataSource>['columns'] = [
     {
       title: '#',
@@ -93,6 +91,7 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
     },
     {
       title: 'Nguời đánh giá',
+      width: 200,
       dataIndex: 'userName',
       key: 'userName'
     },
@@ -110,15 +109,51 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
     {
       title: 'Đánh giá',
       dataIndex: 'rating',
+      width: 200,
       key: 'rating',
       sorter: true,
       filterMultiple: false,
       filters: [
-        { text: <Space>1 <Rate disabled defaultValue={1} /></Space>, value: 1 },
-        { text: <Space>2 <Rate disabled defaultValue={2} /></Space>, value: 2 },
-        { text: <Space>3 <Rate disabled defaultValue={3} /></Space>, value: 3 },
-        { text: <Space>4 <Rate disabled defaultValue={4} /></Space>, value: 4 },
-        { text: <Space>5 <Rate disabled defaultValue={5} /></Space>, value: 5 }
+        {
+          text: (
+            <Space>
+              1 <Rate disabled defaultValue={1} />
+            </Space>
+          ),
+          value: 1
+        },
+        {
+          text: (
+            <Space>
+              2 <Rate disabled defaultValue={2} />
+            </Space>
+          ),
+          value: 2
+        },
+        {
+          text: (
+            <Space>
+              3 <Rate disabled defaultValue={3} />
+            </Space>
+          ),
+          value: 3
+        },
+        {
+          text: (
+            <Space>
+              4 <Rate disabled defaultValue={4} />
+            </Space>
+          ),
+          value: 4
+        },
+        {
+          text: (
+            <Space>
+              5 <Rate disabled defaultValue={5} />
+            </Space>
+          ),
+          value: 5
+        }
       ],
       render: (rating: number) => <Rate disabled defaultValue={rating} />
     },
@@ -137,13 +172,15 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
       width: 110,
       render: (_, record: ReviewDataSource) => (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-          <Button icon={<EyeOutlined />}
-                  type="default" style={{ borderColor: blue.primary, color: blue.primary, marginRight: '1rem' }}
-                  onClick={() => handleView(record)}
+          <Button
+            icon={<EyeOutlined />}
+            type='default'
+            style={{ borderColor: blue.primary, color: blue.primary, marginRight: '1rem' }}
+            onClick={() => handleView(record)}
           >
             Chi tiết
           </Button>
-          <Button icon={<DeleteOutlined />} type="default" onClick={() => showDeleteConfirm(record)} danger>
+          <Button icon={<DeleteOutlined />} type='default' onClick={() => showDeleteConfirm(record)} danger>
             Xóa
           </Button>
         </div>
@@ -173,7 +210,11 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
     {
       key: '4',
       label: 'Đánh giá',
-      children: <span><Rate disabled defaultValue={currentReview?.rating} /></span>,
+      children: (
+        <span>
+          <Rate disabled defaultValue={currentReview?.rating} />
+        </span>
+      ),
       span: 3
     },
     {
@@ -207,16 +248,20 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
         }}
       />
 
-      <Modal title="Chi tiết đánh giá"
-             open={isModalOpen}
-             onCancel={() => setIsModalOpen(false)}
-             width={700}
-             footer={<>
-               <Button onClick={() => setIsModalOpen(false)}>Đóng</Button>
-               <Button type="primary" danger onClick={() => showDeleteConfirm(currentReview as ReviewDataSource)}>
-                 Xóa
-                </Button>
-             </>}>
+      <Modal
+        title='Chi tiết đánh giá'
+        open={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        width={700}
+        footer={
+          <>
+            <Button onClick={() => setIsModalOpen(false)}>Đóng</Button>
+            <Button type='primary' danger onClick={() => showDeleteConfirm(currentReview as ReviewDataSource)}>
+              Xóa
+            </Button>
+          </>
+        }
+      >
         <Descriptions bordered items={detailItems} />
       </Modal>
     </>
