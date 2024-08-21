@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { selectAuth } from '@/features/auth/authSlice.ts'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { useEffect } from 'react'
-
+import ROUTER_NAMES from '@/constant/routerNames'
 
 function ProtectedRoute() {
   const { isAdmin } = useSelector(selectAuth)
@@ -11,7 +11,7 @@ function ProtectedRoute() {
 
   useEffect(() => {
     if (!isAdmin) {
-      navigate('/login', { state: { from: location.pathname } })
+      navigate(ROUTER_NAMES.LOGIN, { state: { from: location.pathname } })
     }
   }, [isAdmin, navigate, location.pathname])
 
