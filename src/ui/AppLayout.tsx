@@ -50,7 +50,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
             style={{
               padding: 24,
               margin: 0,
-              minHeight: 'calc(100vh - 185px)',
+              minHeight: 'calc(100vh - 155px)',
               // minHeight: 260,
               background: haveBgColor ? colorBgContainer : '#F5F5F5',
               borderRadius: borderRadiusLG

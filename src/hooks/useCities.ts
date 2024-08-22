@@ -23,10 +23,7 @@ export const useCitiesAll = () => {
   return { data, isLoading, isError, error }
 }
 
-export const useCities = (search: string,
-                          pageNumber: number,
-                          pageSize: number,
-                          sortBy: string) => {
+export const useCities = (search: string, pageNumber: number, pageSize: number, sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['cities', search, pageNumber, pageSize, sortBy],
     queryFn: () => getAllCitiesWithPagination(search, pageNumber, pageSize, sortBy)
@@ -38,18 +35,17 @@ export const useCities = (search: string,
 export const useDeleteCity = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteCityMutate } = useMutation({
+  const { mutate: deleteCityMutate, isPending: deleteCityPending } = useMutation({
     mutationFn: deleteCity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success('Xóa thành phố thành công'))
+      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => toast.success('Xóa thành phố thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
     }
   })
 
-  return { deleteCityMutate }
+  return { deleteCityMutate, deleteCityPending }
 }
 
 export const useDeleteMultiCity = () => {
@@ -58,8 +54,7 @@ export const useDeleteMultiCity = () => {
   const { mutate: deleteCitiesMutate } = useMutation({
     mutationFn: deleteCities,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success('Xóa các thành phố thành công'))
+      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => toast.success('Xóa các thành phố thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -76,8 +71,7 @@ export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<stri
   const { mutate: addCityMutate, isPending: addCityPending } = useMutation({
     mutationFn: addCity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success('Thêm thành phố thành công'))
+      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => toast.success('Thêm thành phố thành công'))
 
       navigate(ROUTER_NAMES.CITY)
     },
@@ -101,11 +95,10 @@ export const useUpdateCity = (setError: React.Dispatch<React.SetStateAction<stri
   const { mutate: updateCityMutate, isPending: updateCityPending } = useMutation({
     mutationFn: updateCity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-        .then(() => {
-          toast.success('Cập nhật thành phố thành công')
-          navigate(ROUTER_NAMES.CITY)
-        })
+      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => {
+        toast.success('Cập nhật thành phố thành công')
+        navigate(ROUTER_NAMES.CITY)
+      })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -128,35 +121,41 @@ export const useCityFilters = () => {
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
   const pageSize = parseInt(searchParams.get('pageSize') || '5')
 
-  const setFilters = useCallback((filters: CityFilters) => {
-    setSearchParams((params) => {
-      if (filters.search !== undefined) {
-        if (filters.search) {
-          params.set('search', filters.search)
-        } else {
-          params.delete('search')
-        }
-      }
+  const setFilters = useCallback(
+    (filters: CityFilters) => {
+      setSearchParams(
+        (params) => {
+          if (filters.search !== undefined) {
+            if (filters.search) {
+              params.set('search', filters.search)
+            } else {
+              params.delete('search')
+            }
+          }
 
-      if (filters.pageNumber !== undefined) {
-        params.set('pageNumber', String(filters.pageNumber))
-      }
+          if (filters.pageNumber !== undefined) {
+            params.set('pageNumber', String(filters.pageNumber))
+          }
 
-      if (filters.pageSize !== undefined) {
-        params.set('pageSize', String(filters.pageSize))
-      }
+          if (filters.pageSize !== undefined) {
+            params.set('pageSize', String(filters.pageSize))
+          }
 
-      if (filters.sortBy !== undefined) {
-        if (filters.sortBy) {
-          params.set('sortBy', filters.sortBy)
-        } else {
-          params.delete('sortBy')
-        }
-      }
+          if (filters.sortBy !== undefined) {
+            if (filters.sortBy) {
+              params.set('sortBy', filters.sortBy)
+            } else {
+              params.delete('sortBy')
+            }
+          }
 
-      return params
-    }, { replace: true })
-  }, [setSearchParams])
+          return params
+        },
+        { replace: true }
+      )
+    },
+    [setSearchParams]
+  )
 
   return { search, sortBy, pageNumber, pageSize, setFilters }
 }
