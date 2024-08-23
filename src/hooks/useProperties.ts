@@ -1,5 +1,4 @@
 import { deleteProperty, getAllPropertyWithPagination, getPropertyById, updatePropertyStatus } from '@/api/property.api'
-import { UpdatePropertyStatusVariables } from '@/models/property.type'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
@@ -16,18 +15,20 @@ export const usePropertyById = (id: number) => {
 export function useUpdatePropertyStatus() {
   const queryClient = useQueryClient()
 
-  const mutation = useMutation({
-    mutationFn: (variables: UpdatePropertyStatusVariables) => updatePropertyStatus(variables),
+  const { mutate, isPending } = useMutation({
+    mutationFn: updatePropertyStatus,
     onSuccess: () => {
-      toast.success('Cập nhật trạng thái thành công')
-      queryClient.invalidateQueries({ queryKey: ['properties'] })
+      queryClient
+        .invalidateQueries({ queryKey: ['properties'] })
+        .then(() => toast.success('Cập nhật trạng thái thành công'))
     },
+
     onError: (error) => {
       toast.error(error.message)
     }
   })
 
-  return mutation
+  return { updatePropertyStatus: mutate, updatePropertyStatusIsPending: isPending }
 }
 
 export function useDeleteProperty() {
@@ -35,8 +36,7 @@ export function useDeleteProperty() {
   const { mutate, isPending } = useMutation({
     mutationFn: (id: number) => deleteProperty(id),
     onSuccess: () => {
-      toast.success('Xóa bài đăng thành công')
-      queryClient.invalidateQueries({ queryKey: ['properties'] })
+      queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => toast.success('Xóa bài đăng thành công'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -44,6 +44,7 @@ export function useDeleteProperty() {
   })
   return { deleteProperty: mutate, deletePropertyIsPending: isPending }
 }
+
 export const useProperty = (search: string, pageNumber: number, pageSize: number, sortBy: string, status: string) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['properties', search, pageNumber, pageSize, sortBy, status],

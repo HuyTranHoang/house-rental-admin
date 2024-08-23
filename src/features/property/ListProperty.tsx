@@ -8,7 +8,6 @@ import PropertyTable from './PropertyTable'
 import ErrorFetching from '@/components/ErrorFetching'
 import { customFormatDate } from '@/utils/customFormatDate'
 import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
-import { formatCurrency } from '@/utils/formatCurrentcy'
 
 const { Search } = Input
 
@@ -18,7 +17,7 @@ const tabsItem: TabsProps['items'] = [
   { key: PropertyStatus.REJECTED, label: 'Đã từ chối', icon: <CloseSquareOutlined /> }
 ]
 
-function PropertyList() {
+function ListProperty() {
   const queryClient = useQueryClient()
   const [pageNumber, setPageNumber] = useState(1)
   const [pageSize, setPageSize] = useState(5)
@@ -66,8 +65,8 @@ function PropertyList() {
           <Search
             allowClear
             onSearch={(value) => setSearch(value)}
-            placeholder='Tìm kiếm theo tiêu đề'
-            style={{ width: 250 }}
+            placeholder='Tiêu đề, thành phố, quận huyện, địa chỉ...'
+            style={{ width: 330 }}
           />
         </Flex>
       </Flex>
@@ -75,6 +74,7 @@ function PropertyList() {
       <Tabs defaultActiveKey={PropertyStatus.PENDING} items={tabsItem} onChange={onTabChange} />
 
       <PropertyTable
+        status={status}
         dataSource={dataSource}
         loading={isLoading}
         paginationProps={{
@@ -91,4 +91,4 @@ function PropertyList() {
   )
 }
 
-export default PropertyList
+export default ListProperty

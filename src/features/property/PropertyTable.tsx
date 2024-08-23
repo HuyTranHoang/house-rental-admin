@@ -1,23 +1,49 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
-import { useDeleteProperty } from '@/hooks/useProperties'
-import { PropertyDataSource } from '@/models/property.type'
+import { useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties'
+import { Property, PropertyDataSource, PropertyStatus } from '@/models/property.type'
 import { formatCurrency } from '@/utils/formatCurrentcy'
 import { blue } from '@ant-design/colors'
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button, DescriptionsProps, Flex, Modal, Space, Table, TableProps, Tooltip } from 'antd'
+import { CheckOutlined, CloseOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
+import {
+  Badge,
+  Button,
+  Col,
+  ConfigProvider,
+  Descriptions,
+  DescriptionsProps,
+  Flex,
+  Image,
+  Modal,
+  Row,
+  Space,
+  Switch,
+  Table,
+  TableProps,
+  Tag,
+  Tooltip,
+  Typography
+} from 'antd'
+import { useState } from 'react'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
+import DOMPurify from 'dompurify'
 
 const { confirm } = Modal
 
 interface PropertyTableProps {
+  status: PropertyStatus
   dataSource: PropertyDataSource[]
   loading: boolean
   paginationProps: false | TableProps<PropertyDataSource>['pagination']
   handleTableChange: TableProps<PropertyDataSource>['onChange']
 }
 
-function PropertyTable({ dataSource, loading, paginationProps, handleTableChange }: PropertyTableProps) {
+function PropertyTable({ status, dataSource, loading, paginationProps, handleTableChange }: PropertyTableProps) {
+  const [open, setOpen] = useState(false)
+  const [currentProperty, setCurrentProperty] = useState<Property | undefined>(undefined)
+
   const { deleteProperty } = useDeleteProperty()
+  const { updatePropertyStatus, updatePropertyStatusIsPending } = useUpdatePropertyStatus()
 
   const showDeleteConfirm = (record: PropertyDataSource) => {
     const items: DescriptionsProps['items'] = [
@@ -41,34 +67,181 @@ function PropertyTable({ dataSource, loading, paginationProps, handleTableChange
     })
   }
 
-  // const handleUpdateStatus = (id: number) => {
-  //   setCurrentPropertyId(id)
-  //   setUpdateStatusVisible(true)
-  // }
+  const ModalFooter = (
+    <Space>
+      {status === PropertyStatus.PENDING && (
+        <>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#00b96b'
+              }
+            }}
+          >
+            <Button
+              loading={updatePropertyStatusIsPending}
+              onClick={() => {
+                updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.APPROVED })
+                setOpen(false)
+              }}
+              icon={<CheckOutlined />}
+              type='primary'
+            >
+              Duyệt, bài đăng hợp lệ
+            </Button>
+          </ConfigProvider>
+          <Button
+            loading={updatePropertyStatusIsPending}
+            onClick={() => {
+              updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.REJECTED })
+              setOpen(false)
+            }}
+            icon={<CloseOutlined />}
+            danger
+          >
+            Từ chối, bài đăng không hợp lệ
+          </Button>
+        </>
+      )}
+      <Button onClick={() => setOpen(false)}>Quay lại</Button>
+    </Space>
+  )
 
-  // const handleOk = () => {
-  //   form
-  //     .validateFields()
-  //     .then((values) => {
-  //       if (currentPropertyId) {
-  //         updatePropertyStatusMutate({ id: currentPropertyId, status: values.status })
-  //         setUpdateStatusVisible(false)
-  //         form.resetFields()
-  //       }
-  //     })
-  //     .catch((info) => {
-  //       console.log('Validate Failed:', info)
-  //     })
-  // }
-
-  // const handleCancel = () => {
-  //   setUpdateStatusVisible(false)
-  //   form.resetFields()
-  // }
+  const modalItems: DescriptionsProps['items'] = [
+    {
+      key: 'roomType',
+      label: 'Loại phòng',
+      children: currentProperty?.roomTypeName
+    },
+    {
+      key: 'city',
+      label: 'Thành phố',
+      children: currentProperty?.cityName
+    },
+    {
+      key: 'district',
+      label: 'Quận huyện',
+      children: currentProperty?.districtName
+    },
+    {
+      key: 'price',
+      label: 'Giá thuê',
+      children: currentProperty ? formatCurrency(currentProperty.price) : ''
+    },
+    {
+      key: 'location',
+      label: 'Địa chỉ',
+      children: currentProperty?.location,
+      span: 2
+    },
+    {
+      key: 'blocked',
+      label: 'Blocked',
+      children: (
+        <Badge
+          status={currentProperty?.blocked ? 'error' : 'success'}
+          text={currentProperty?.blocked ? 'Khóa' : 'Hoạt động'}
+        />
+      ),
+      span: 3
+    },
+    {
+      key: 'area',
+      label: 'Diện tích',
+      children: `${currentProperty?.area} m²`
+    },
+    {
+      key: 'numRooms',
+      label: 'Số phòng ngủ',
+      children: currentProperty?.numRooms
+    },
+    {
+      key: 'createdAt',
+      label: 'Thời gian đăng',
+      children: customFormatDate(currentProperty?.createdAt)
+    },
+    {
+      key: 'username',
+      label: 'Người đăng',
+      span: 1,
+      children: currentProperty?.userName
+    },
+    {
+      key: 'amenities',
+      label: 'Tiện ích',
+      span: 2,
+      children: (
+        <>
+          {currentProperty?.amenities.map((amenity, index) => (
+            <Tag key={index} color='blue'>
+              {amenity}
+            </Tag>
+          ))}
+        </>
+      )
+    },
+    {
+      key: 'description',
+      label: 'Mô tả',
+      span: 3,
+      children: (
+        <>
+          <Typography.Title level={5} style={{ margin: '0 0 12px' }}>
+            {currentProperty?.title}
+          </Typography.Title>
+          <div
+            dangerouslySetInnerHTML={{ __html: currentProperty ? DOMPurify.sanitize(currentProperty.description) : '' }}
+          />
+        </>
+      )
+    },
+    {
+      key: 'images',
+      label: `Hình ảnh (${currentProperty?.propertyImages.length})`,
+      children: (
+        <Row gutter={[16, 16]}>
+          <Image.PreviewGroup>
+            {currentProperty?.propertyImages.map((image, index) => (
+              <Col key={index} span={6}>
+                <Image
+                  preview={{
+                    mask: (
+                      <>
+                        <EyeOutlined style={{ marginRight: 6 }} /> Chi tiết
+                      </>
+                    )
+                  }}
+                  height={200}
+                  width={200}
+                  src={image}
+                  style={{ objectFit: 'cover' }}
+                />
+              </Col>
+            ))}
+          </Image.PreviewGroup>
+        </Row>
+      )
+    }
+  ]
 
   const columns: TableProps<PropertyDataSource>['columns'] = [
-    { title: '#', dataIndex: 'id', key: 'id', fixed: 'left', width: 50 },
-    { title: 'Tiêu đề', dataIndex: 'title', key: 'title' },
+    { title: '#', dataIndex: 'index', key: 'index', fixed: 'left', width: 50 },
+    {
+      title: 'Tiêu đề',
+      dataIndex: 'title',
+      key: 'title',
+      render: (_ ,record) => (
+        <Button
+          type='link'
+          onClick={() => {
+            setCurrentProperty(record)
+            setOpen(true)
+          }}
+        >
+          {record.title}
+        </Button>
+      )
+    },
     { title: 'Vị trí', dataIndex: 'location', key: 'location' },
     { title: 'Số phòng', dataIndex: 'numRooms', key: 'numRooms', width: 100 },
     {
@@ -79,7 +252,7 @@ function PropertyTable({ dataSource, loading, paginationProps, handleTableChange
       width: 120,
       render: (record) => `${record} m²`
     },
-    { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName', sorter: true, width: 150 },
+    { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName', width: 150 },
     {
       title: 'Giá',
       dataIndex: 'price',
@@ -87,6 +260,20 @@ function PropertyTable({ dataSource, loading, paginationProps, handleTableChange
       sorter: true,
       width: 60,
       render: (record) => formatCurrency(record)
+    },
+    {
+      title: 'Bị khóa',
+      dataIndex: 'blocked',
+      key: 'blocked',
+      width: 130,
+      render: (record) => (
+        <Switch
+          checkedChildren='Khóa'
+          unCheckedChildren='Hoạt động'
+          defaultChecked={record}
+          onChange={(e) => console.log(e)}
+        />
+      )
     },
     {
       title: 'Ngày tạo',
@@ -103,15 +290,15 @@ function PropertyTable({ dataSource, loading, paginationProps, handleTableChange
       width: 110,
       render: (_, record) => (
         <Flex gap={16}>
-          <Tooltip title='Chỉnh sửa'>
-            <Button icon={<EditOutlined />} />
-          </Tooltip>
-          <Tooltip title='Xem chi tiết'>
+          <Tooltip title='Xem và duyệt'>
             <Button
               icon={<EyeOutlined />}
               type='default'
               style={{ borderColor: blue.primary, color: blue.primary }}
-              onClick={() => console.log('View detail')}
+              onClick={() => {
+                setCurrentProperty(record)
+                setOpen(true)
+              }}
             />
           </Tooltip>
           <Tooltip title='Xóa'>
@@ -121,6 +308,10 @@ function PropertyTable({ dataSource, loading, paginationProps, handleTableChange
       )
     }
   ]
+
+  if (status === PropertyStatus.PENDING || status === PropertyStatus.REJECTED) {
+    columns.splice(7, 1)
+  }
 
   return (
     <>
@@ -143,15 +334,13 @@ function PropertyTable({ dataSource, loading, paginationProps, handleTableChange
         }}
       />
 
-      <Modal
-        title='Cập nhật trạng thái'
-        // onOk={handleOk}
-        // onCancel={handleCancel}
-        okText='Cập nhật'
-        cancelText='Hủy'
-      >
-        place holder
-      </Modal>
+      {currentProperty && (
+        <Modal open={open} footer={ModalFooter} onCancel={() => setOpen(false)} width={1000}>
+          <Typography.Title level={4}>Chi tiết bài đăng</Typography.Title>
+
+          <Descriptions bordered items={modalItems} />
+        </Modal>
+      )}
     </>
   )
 }

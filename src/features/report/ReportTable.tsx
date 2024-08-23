@@ -25,6 +25,7 @@ import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { FilterValue } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
+import DOMPurify from 'dompurify'
 
 interface ReportTableProps {
   dataSource: ReportDataSource[]
@@ -45,22 +46,24 @@ const categoryMap = {
 }
 
 function ReportTable({
-                       dataSource,
-                       loading,
-                       status,
-                       paginationProps,
-                       handleTableChange,
-                       filteredInfo,
-                       sortedInfo
-                     }: ReportTableProps) {
-
-
+  dataSource,
+  loading,
+  status,
+  paginationProps,
+  handleTableChange,
+  filteredInfo,
+  sortedInfo
+}: ReportTableProps) {
   const [propertyId, setPropertyId] = useState<number>(0)
   const [report, setReport] = useState<Report>({} as Report)
   const [open, setOpen] = useState(false)
   const { updateReportStatusMutate, updateReportStatusPending } = useUpdateReportStatus()
 
-  const { data: propertyData, isLoading: propertyIsLoading, isError: propertyIsError } = useQuery({
+  const {
+    data: propertyData,
+    isLoading: propertyIsLoading,
+    isError: propertyIsError
+  } = useQuery({
     queryKey: ['property', propertyId],
     queryFn: () => getPropertyById(propertyId),
     enabled: !!propertyId
@@ -77,23 +80,27 @@ function ReportTable({
               }
             }}
           >
-            <Button loading={updateReportStatusPending}
-                    onClick={() => {
-                      updateReportStatusMutate({ id: report.id, status: ReportStatus.APPROVED })
-                      setOpen(false)
-                    }}
-                    icon={<CheckOutlined />}
-                    type="primary">
+            <Button
+              loading={updateReportStatusPending}
+              onClick={() => {
+                updateReportStatusMutate({ id: report.id, status: ReportStatus.APPROVED })
+                setOpen(false)
+              }}
+              icon={<CheckOutlined />}
+              type='primary'
+            >
               Duyệt, khóa bài đăng
             </Button>
           </ConfigProvider>
-          <Button loading={updateReportStatusPending}
-                  onClick={() => {
-                    updateReportStatusMutate({ id: report.id, status: ReportStatus.REJECTED })
-                    setOpen(false)
-                  }}
-                  icon={<CloseOutlined />}
-                  danger>
+          <Button
+            loading={updateReportStatusPending}
+            onClick={() => {
+              updateReportStatusMutate({ id: report.id, status: ReportStatus.REJECTED })
+              setOpen(false)
+            }}
+            icon={<CloseOutlined />}
+            danger
+          >
             Từ chối, giữ bài đăng
           </Button>
         </>
@@ -101,7 +108,6 @@ function ReportTable({
       <Button onClick={() => setOpen(false)}>Quay lại</Button>
     </Space>
   )
-
 
   const modalItems: DescriptionsProps['items'] = [
     {
@@ -134,8 +140,10 @@ function ReportTable({
       key: 'blocked',
       label: 'Blocked',
       children: (
-        <Badge status={propertyData?.blocked ? 'error' : 'success'}
-               text={propertyData?.blocked ? 'Khóa' : 'Hoạt động'} />
+        <Badge
+          status={propertyData?.blocked ? 'error' : 'success'}
+          text={propertyData?.blocked ? 'Khóa' : 'Hoạt động'}
+        />
       ),
       span: 3
     },
@@ -167,7 +175,7 @@ function ReportTable({
       children: (
         <>
           {propertyData?.amenities.map((amenity, index) => (
-            <Tag key={index} color="blue">
+            <Tag key={index} color='blue'>
               {amenity}
             </Tag>
           ))}
@@ -178,24 +186,41 @@ function ReportTable({
       key: 'description',
       label: 'Mô tả',
       span: 3,
-      children: <>
-        <Typography.Title level={5} style={{ margin: '0 0 12px' }}>{propertyData?.title}</Typography.Title>
-        {propertyData?.description}
-      </>
+      children: (
+        <>
+          <Typography.Title level={5} style={{ margin: '0 0 12px' }}>
+            {propertyData?.title}
+          </Typography.Title>
+          <div dangerouslySetInnerHTML={{ __html: propertyData ? DOMPurify.sanitize(propertyData.description) : '' }} />
+        </>
+      )
     },
     {
       key: 'images',
       label: `Hình ảnh (${propertyData?.propertyImages.length})`,
-      children: <Row gutter={[16, 16]}>
-        <Image.PreviewGroup>
-          {propertyData?.propertyImages.map((image, index) => (
-            <Col key={index} span={6}>
-              <Image preview={{ mask: <><EyeOutlined style={{ marginRight: 6 }} /> Chi tiết</> }}
-                     height={200} width={200} src={image} style={{ objectFit: 'cover' }} />
-            </Col>
-          ))}
-        </Image.PreviewGroup>
-      </Row>
+      children: (
+        <Row gutter={[16, 16]}>
+          <Image.PreviewGroup>
+            {propertyData?.propertyImages.map((image, index) => (
+              <Col key={index} span={6}>
+                <Image
+                  preview={{
+                    mask: (
+                      <>
+                        <EyeOutlined style={{ marginRight: 6 }} /> Chi tiết
+                      </>
+                    )
+                  }}
+                  height={200}
+                  width={200}
+                  src={image}
+                  style={{ objectFit: 'cover' }}
+                />
+              </Col>
+            ))}
+          </Image.PreviewGroup>
+        </Row>
+      )
     }
   ]
 
@@ -222,7 +247,6 @@ function ReportTable({
       label: 'Thời gian báo cáo',
       children: report?.createdAt
     }
-
   ]
 
   const columns: TableProps<ReportDataSource>['columns'] = [
@@ -238,7 +262,7 @@ function ReportTable({
       dataIndex: 'username',
       key: 'username',
       sorter: true,
-      sortOrder: sortedInfo.field === 'username' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.field === 'username' ? sortedInfo.order : null
     },
     {
       title: 'Bài đăng',
@@ -246,12 +270,18 @@ function ReportTable({
       key: 'title',
       sorter: true,
       sortOrder: sortedInfo.field === 'title' ? sortedInfo.order : null,
-      render: (text, record) =>
-        <Button onClick={() => {
-          setOpen(!open)
-          setPropertyId(record.propertyId)
-          setReport(record)
-        }} type="link">{text}</Button>
+      render: (text, record) => (
+        <Button
+          onClick={() => {
+            setOpen(!open)
+            setPropertyId(record.propertyId)
+            setReport(record)
+          }}
+          type='link'
+        >
+          {text}
+        </Button>
+      )
     },
     {
       title: 'Lý do',
@@ -310,11 +340,16 @@ function ReportTable({
       width: 120,
       render: (_, record) => (
         <Space>
-          <Button type="primary" onClick={() => {
-            setOpen(!open)
-            setPropertyId(record.propertyId)
-            setReport(record)
-          }}>Xét duyệt</Button>
+          <Button
+            type='primary'
+            onClick={() => {
+              setOpen(!open)
+              setPropertyId(record.propertyId)
+              setReport(record)
+            }}
+          >
+            Xét duyệt
+          </Button>
         </Space>
       )
     })
@@ -343,20 +378,14 @@ function ReportTable({
         }}
       />
 
-      {
-        propertyIsError && <Modal
-          title="Error"
-          open={open}
-          onOk={() => setOpen(false)}
-          onCancel={() => setOpen(false)}
-          width={1000}
-        >
+      {propertyIsError && (
+        <Modal title='Error' open={open} onOk={() => setOpen(false)} onCancel={() => setOpen(false)} width={1000}>
           <p>Something went wrong</p>
         </Modal>
-      }
+      )}
 
-      {
-        propertyData && <Modal
+      {propertyData && (
+        <Modal
           open={open}
           footer={ModalFooter}
           onCancel={() => setOpen(false)}
@@ -369,12 +398,9 @@ function ReportTable({
 
           <Typography.Title level={4}>Nội dung báo cáo</Typography.Title>
 
-          {
-            report && <Descriptions bordered items={modalReportItems} />
-          }
-
+          {report && <Descriptions bordered items={modalReportItems} />}
         </Modal>
-      }
+      )}
     </>
   )
 }

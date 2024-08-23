@@ -1,10 +1,15 @@
-import { Property, UpdatePropertyStatusVariables } from '@/models/property.type.ts'
+import { Property, PropertyStatus } from '@/models/property.type.ts'
 import axiosInstance from '@/axiosInstance'
 import { PageInfo } from '@/models/pageInfo.type'
 
 interface PropertyWithPagination {
   pageInfo: PageInfo
   data: Property[]
+}
+
+export interface UpdatePropertyStatus {
+  id: number
+  status: PropertyStatus
 }
 
 export const getPropertyById = async (id: number) => {
@@ -18,10 +23,12 @@ export const getPropertyById = async (id: number) => {
     throw new Error('Lấy thông tin bài đăng thất bại')
   }
 }
-export const updatePropertyStatus = async (variables: UpdatePropertyStatusVariables) => {
-  const response = await axiosInstance.put(`/api/properties/${variables.id}`, { status: variables.status })
+
+export const updatePropertyStatus = async ({id, status} :UpdatePropertyStatus) => {
+  const response = await axiosInstance.put<Property>(`/api/properties/status/${id}?status=${status}`)
   return response.data
 }
+
 export const deleteProperty = async (id: number) => {
   try {
     await axiosInstance.delete(`/api/properties/${id}`)

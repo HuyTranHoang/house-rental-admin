@@ -21,11 +21,6 @@ export interface Property {
   blocked: boolean
 }
 
-export interface UpdatePropertyStatusVariables {
-  id: number
-  status: string
-}
-
 export type PropertyDataSource = Property & {
   key: React.Key
   index?: number
