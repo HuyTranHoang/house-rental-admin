@@ -20,7 +20,7 @@ function AddUpdateDistrict() {
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
 
-  const { data: cityData, isLoading: cityLoading } = useCitiesAll()
+  const { cityData, cityIsLoading } = useCitiesAll()
 
   const [error, setError] = useState<string>('')
   const [cityError, setCityError] = useState<string>('')
@@ -70,7 +70,7 @@ function AddUpdateDistrict() {
     }
   }, [cityData, districtUpdateData, form])
 
-  if (cityLoading || districtIsLoading) {
+  if (cityIsLoading || districtIsLoading) {
     return <Spin spinning={true} fullscreen />
   }
 
