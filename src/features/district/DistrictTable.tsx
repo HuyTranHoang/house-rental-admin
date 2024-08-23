@@ -23,17 +23,17 @@ interface DistrictTableProps {
 }
 
 function DistrictTable({
-                         dataSource,
-                         loading,
-                         paginationProps,
-                         handleTableChange,
-                         rowSelection,
-                         filteredInfo,
-                         sortedInfo
-                       }: DistrictTableProps) {
+  dataSource,
+  loading,
+  paginationProps,
+  handleTableChange,
+  rowSelection,
+  filteredInfo,
+  sortedInfo
+}: DistrictTableProps) {
   const navigate = useNavigate()
 
-  const { data: cityData, isLoading: cityIsLoading } = useCitiesAll()
+  const { cityData, cityIsLoading } = useCitiesAll()
   const { deleteDistrictMutate } = useDeleteDistrict()
 
   const showDeleteConfirm = (record: DistrictDataSource) => {
@@ -66,7 +66,7 @@ function DistrictTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa quận huyện" />,
+      title: <ConfirmModalTitle title='Xác nhận xóa quận huyện' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -91,7 +91,7 @@ function DistrictTable({
       dataIndex: 'name',
       key: 'name',
       sorter: true,
-      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null
     },
     {
       title: 'Thành phố',
@@ -100,9 +100,7 @@ function DistrictTable({
       sorter: true,
       sortOrder: sortedInfo.field === 'cityName' ? sortedInfo.order : null,
       filterMultiple: false,
-      filters: [
-        ...cityData?.map((city) => ({ text: city.name, value: city.id })) || []
-      ],
+      filters: [...(cityData?.map((city) => ({ text: city.name, value: city.id })) || [])],
       filteredValue: filteredInfo.cityName || null
     },
     {
@@ -127,7 +125,6 @@ function DistrictTable({
       )
     }
   ]
-
 
   return (
     <Table

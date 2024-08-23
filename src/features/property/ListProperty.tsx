@@ -1,15 +1,28 @@
-import { Divider, Flex, Input, TableProps, Tabs, TabsProps, Typography } from 'antd'
-import { useState } from 'react'
+import { Cascader, Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { Property as PropertyType, PropertyDataSource, PropertyStatus } from '@/models/property.type'
-import { useProperty } from '@/hooks/useProperties'
+import { useProperties, usePropertyFilters } from '@/hooks/useProperties'
 import PropertyTable from './PropertyTable'
 import ErrorFetching from '@/components/ErrorFetching'
 import { customFormatDate } from '@/utils/customFormatDate'
 import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { useCitiesAll } from '@/hooks/useCities.ts'
+import { useDistrictsAll } from '@/hooks/useDistricts.ts'
+import { useEffect, useState } from 'react'
+import { GeoIcon } from '@/components/FilterIcons.tsx'
 
 const { Search } = Input
+
+interface Option {
+  value: string
+  label: string
+  children?: Option[]
+}
+
+type OnChange = NonNullable<TableProps<PropertyDataSource>['onChange']>
+type GetSingle<T> = T extends (infer U)[] ? U : never
+type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 const tabsItem: TabsProps['items'] = [
   { key: PropertyStatus.PENDING, label: 'Chờ xử lý', icon: <ExclamationCircleOutlined /> },
@@ -18,24 +31,58 @@ const tabsItem: TabsProps['items'] = [
 ]
 
 function ListProperty() {
+  const [form] = Form.useForm()
   const queryClient = useQueryClient()
-  const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
-  const [search, setSearch] = useState('')
-  const [sortBy, setSortBy] = useState('IdDesc')
-  const [status, setStatus] = useState(PropertyStatus.PENDING)
 
-  const { data, isLoading, isError } = useProperty(search, pageNumber, pageSize, sortBy, status)
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
+
+  const { search, cityId, districtId, status, pageNumber, pageSize, sortBy, setFilters } = usePropertyFilters()
+
+  const { data, isLoading, isError } = useProperties(search, cityId, districtId, status, pageNumber, pageSize, sortBy)
+  const { cityData, cityIsLoading } = useCitiesAll()
+  const { districtData, districtIsLoading } = useDistrictsAll()
+
+  const cityDistrictOptions: Option[] = [{ value: '0', label: 'Toàn Quốc' }]
+
+  if (cityData && districtData) {
+    const cityMap = cityData.map((city) => ({
+      value: city.id.toString(),
+      label: city.name,
+      children: [
+        { value: '0', label: 'Tất cả' },
+        ...districtData
+          .filter((district) => district.cityId === city.id)
+          .map((district) => ({
+            value: district.id.toString(),
+            label: district.name
+          }))
+      ]
+    }))
+    cityDistrictOptions.push(...cityMap)
+  }
+
+  const handleCityDistrictChange = (value: string[]) => {
+    console.log(value)
+
+    if (value.length === 2) {
+      setFilters({ cityId: parseInt(value[0]), districtId: parseInt(value[1]) })
+    } else {
+      setFilters({ cityId: 0, districtId: 0 })
+    }
+  }
 
   const onTabChange = (key: string) => {
-    setStatus(key as PropertyType['status'])
+    setFilters({ status: key as PropertyType['status'] })
     queryClient.invalidateQueries({ queryKey: ['properties'] })
   }
 
   const handleTableChange: TableProps<PropertyDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setSortBy(`${sorter.field}${order}`)
+      setFilters({ sortBy: `${sorter.field}${order}` })
+    } else {
+      setFilters({ sortBy: '' })
+      setSortedInfo({})
     }
   }
 
@@ -50,6 +97,25 @@ function ListProperty() {
         }))
     : []
 
+  useEffect(() => {
+    if (search) {
+      form.setFieldsValue({ search })
+    }
+  }, [form, search])
+
+  useEffect(() => {
+    if (sortBy) {
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/)
+      if (match) {
+        const [, field, order] = match
+        setSortedInfo({
+          field,
+          order: order === 'Asc' ? 'ascend' : 'descend'
+        })
+      }
+    }
+  }, [sortBy])
+
   if (isError) {
     return <ErrorFetching />
   }
@@ -62,12 +128,31 @@ function ListProperty() {
             Danh sách bài đăng
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search
-            allowClear
-            onSearch={(value) => setSearch(value)}
-            placeholder='Tiêu đề, thành phố, quận huyện, địa chỉ...'
-            style={{ width: 330 }}
-          />
+          <Form form={form} name='searchCityForm' layout='inline'>
+            <Form.Item name='search'>
+              <Search
+                allowClear
+                onSearch={(value) => setFilters({ search: value })}
+                placeholder='Tiêu đề, thành phố, quận huyện, địa chỉ..'
+                style={{ width: 330 }}
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Cascader
+                style={{ width: 250 }}
+                options={cityDistrictOptions}
+                onChange={handleCityDistrictChange}
+                allowClear={false}
+                loading={cityIsLoading || districtIsLoading}
+                placeholder='Chọn quận huyện'
+                suffixIcon={<GeoIcon />}
+                defaultValue={
+                  cityId && districtId ? [cityId.toString(), districtId.toString()] : cityId ? [cityId.toString(), '0'] : []
+                }
+              />
+            </Form.Item>
+          </Form>
         </Flex>
       </Flex>
 
@@ -82,10 +167,11 @@ function ListProperty() {
           pageSize: pageSize,
           current: pageNumber,
           showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} bất động sản`,
-          onShowSizeChange: (_, size) => setPageSize(size),
-          onChange: (page) => setPageNumber(page)
+          onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
+          onChange: (page) => setFilters({ pageNumber: page })
         }}
         handleTableChange={handleTableChange}
+        sortedInfo={sortedInfo}
       />
     </>
   )

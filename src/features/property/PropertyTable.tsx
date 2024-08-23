@@ -27,6 +27,7 @@ import {
 import { useState } from 'react'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import DOMPurify from 'dompurify'
+import { SorterResult } from 'antd/lib/table/interface'
 
 const { confirm } = Modal
 
@@ -36,9 +37,17 @@ interface PropertyTableProps {
   loading: boolean
   paginationProps: false | TableProps<PropertyDataSource>['pagination']
   handleTableChange: TableProps<PropertyDataSource>['onChange']
+  sortedInfo: SorterResult<PropertyDataSource>
 }
 
-function PropertyTable({ status, dataSource, loading, paginationProps, handleTableChange }: PropertyTableProps) {
+function PropertyTable({
+  status,
+  dataSource,
+  loading,
+  paginationProps,
+  handleTableChange,
+  sortedInfo
+}: PropertyTableProps) {
   const [open, setOpen] = useState(false)
   const [currentProperty, setCurrentProperty] = useState<Property | undefined>(undefined)
 
@@ -229,28 +238,24 @@ function PropertyTable({ status, dataSource, loading, paginationProps, handleTab
     {
       title: 'Tiêu đề',
       dataIndex: 'title',
-      key: 'title',
-      render: (_ ,record) => (
-        <Button
-          type='link'
-          onClick={() => {
-            setCurrentProperty(record)
-            setOpen(true)
-          }}
-        >
-          {record.title}
-        </Button>
-      )
+      key: 'title'
     },
     { title: 'Vị trí', dataIndex: 'location', key: 'location' },
-    { title: 'Số phòng', dataIndex: 'numRooms', key: 'numRooms', width: 100 },
     {
       title: 'Diện tích',
       dataIndex: 'area',
       key: 'area',
       sorter: true,
+      sortOrder: sortedInfo.field === 'area' ? sortedInfo.order : null,
       width: 120,
       render: (record) => `${record} m²`
+    },
+    { title: 'Loại phòng', dataIndex: 'roomTypeName', key: 'roomTypeName', width: 150 },
+    {
+      title: 'Thành phố',
+      dataIndex: 'cityName',
+      key: 'cityName',
+      width: 150
     },
     { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName', width: 150 },
     {
@@ -258,6 +263,7 @@ function PropertyTable({ status, dataSource, loading, paginationProps, handleTab
       dataIndex: 'price',
       key: 'price',
       sorter: true,
+      sortOrder: sortedInfo.field === 'price' ? sortedInfo.order : null,
       width: 60,
       render: (record) => formatCurrency(record)
     },
@@ -271,7 +277,7 @@ function PropertyTable({ status, dataSource, loading, paginationProps, handleTab
           checkedChildren='Khóa'
           unCheckedChildren='Hoạt động'
           defaultChecked={record}
-          onChange={(e) => console.log(e)}
+          onChange={(e) => alert('Chưa implement, Khóa: ' + e)}
         />
       )
     },
@@ -281,6 +287,7 @@ function PropertyTable({ status, dataSource, loading, paginationProps, handleTab
       key: 'createdAt',
       fixed: 'right',
       sorter: true,
+      sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
       width: 150
     },
     {
@@ -310,7 +317,7 @@ function PropertyTable({ status, dataSource, loading, paginationProps, handleTab
   ]
 
   if (status === PropertyStatus.PENDING || status === PropertyStatus.REJECTED) {
-    columns.splice(7, 1)
+    columns.splice(8, 1)
   }
 
   return (
@@ -330,7 +337,9 @@ function PropertyTable({ status, dataSource, loading, paginationProps, handleTab
         locale={{
           triggerDesc: 'Sắp xếp giảm dần',
           triggerAsc: 'Sắp xếp tăng dần',
-          cancelSort: 'Hủy sắp xếp'
+          cancelSort: 'Hủy sắp xếp',
+          filterConfirm: 'Lọc',
+          filterReset: 'Bỏ lọc'
         }}
       />
 

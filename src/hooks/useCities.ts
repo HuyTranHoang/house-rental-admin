@@ -15,12 +15,12 @@ import { CityFilters } from '@/models/city.type.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 export const useCitiesAll = () => {
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['cities', 'all'],
     queryFn: getAllCities
   })
 
-  return { data, isLoading, isError, error }
+  return { cityData: data, cityIsLoading: isLoading, isError }
 }
 
 export const useCities = (search: string, pageNumber: number, pageSize: number, sortBy: string) => {

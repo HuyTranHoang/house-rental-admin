@@ -1,3 +1,5 @@
+import React from 'react'
+
 export interface Property {
   id: number
   title: string
@@ -30,4 +32,14 @@ export enum PropertyStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
+}
+
+export type PropertyFilters = {
+  search?: string
+  status?: PropertyStatus
+  cityId?: number
+  districtId?: number
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
 }

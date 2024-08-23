@@ -24,7 +24,7 @@ export const getPropertyById = async (id: number) => {
   }
 }
 
-export const updatePropertyStatus = async ({id, status} :UpdatePropertyStatus) => {
+export const updatePropertyStatus = async ({ id, status }: UpdatePropertyStatus) => {
   const response = await axiosInstance.put<Property>(`/api/properties/status/${id}?status=${status}`)
   return response.data
 }
@@ -40,20 +40,24 @@ export const deleteProperty = async (id: number) => {
 
 export const getAllPropertyWithPagination = async (
   search: string,
+  cityId: number,
+  districtId: number,
+  status: string,
   pageNumber: number,
   pageSize: number,
-  sortBy: string,
-  status: string
+  sortBy: string
 ) => {
   try {
     pageNumber = pageNumber - 1
 
     const params = {
       search,
+      cityId,
+      districtId,
+      status,
       pageNumber,
       pageSize,
-      sortBy,
-      status
+      sortBy
     }
 
     const response = await axiosInstance.get<PropertyWithPagination>('/api/properties/admin', { params })
