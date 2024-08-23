@@ -20,3 +20,10 @@ export interface Property {
   createdAt: string
   blocked: boolean
 }
+export interface UpdatePropertyStatusVariables {
+  id: number;     
+  status: string;   
+}
+export type PropertyDataSource = Property & {
+  key: React.Key
+}

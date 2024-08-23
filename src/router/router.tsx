@@ -11,6 +11,7 @@ import reportRouter from './reportRouter.tsx'
 import roleRouter from './roleRouter.tsx'
 import reviewRouter from './reviewRouter.tsx'
 import { HomeOutlined } from '@ant-design/icons'
+import propertyRouter from './propertyRouter.tsx'
 
 import userRouter from '@/router/userRouter.tsx'
 import districtRouter from '@/router/districtRouter.tsx'
@@ -49,7 +50,8 @@ export const routerList = [
           ...reportRouter, // /report
           ...roleRouter, // /role
           ...reviewRouter, //review
-          ...userRouter // /user
+          ...userRouter, // /user
+          ...propertyRouter // properties
         ] // End of ProtectedRoute children
       }
     ] // End of AppLayout children
