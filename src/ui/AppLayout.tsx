@@ -41,7 +41,6 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         </Flex>
       </Header>
       <Layout>
-
         <AppSider />
 
         <Layout style={{ padding: '0 24px' }}>

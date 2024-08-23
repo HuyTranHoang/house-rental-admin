@@ -6,7 +6,7 @@ export interface Property {
   price: number
   area: number
   numRooms: number
-  status: string
+  status: PropertyStatus
   userId: number
   userName: string
   cityId: number
@@ -20,10 +20,19 @@ export interface Property {
   createdAt: string
   blocked: boolean
 }
+
 export interface UpdatePropertyStatusVariables {
-  id: number;     
-  status: string;   
+  id: number
+  status: string
 }
+
 export type PropertyDataSource = Property & {
   key: React.Key
+  index?: number
+}
+
+export enum PropertyStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED'
 }

@@ -10,6 +10,7 @@ import {
   EditOutlined,
   HomeOutlined,
   LogoutOutlined,
+  ScheduleOutlined,
   SolutionOutlined,
   UserOutlined
 } from '@ant-design/icons'
@@ -37,6 +38,12 @@ function AppSider() {
       label: 'Tổng quan',
       icon: <BarChartOutlined />,
       onClick: () => navigate(ROUTER_NAMES.DASHBOARD)
+    },
+    {
+      key: 'property',
+      label: 'Bất động sản',
+      icon: <ScheduleOutlined />,
+      onClick: () => navigate(ROUTER_NAMES.PROPERTY)
     },
     {
       key: 'cityDistrict',

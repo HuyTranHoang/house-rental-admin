@@ -1,93 +1,54 @@
-import { deleteProperty, getAllPropertyWithPagination, getPropertyById, updatePropertyStatus } from "@/api/property.api"
-import { Property, UpdatePropertyStatusVariables } from "@/models/property.type";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner";
+import { deleteProperty, getAllPropertyWithPagination, getPropertyById, updatePropertyStatus } from '@/api/property.api'
+import { UpdatePropertyStatusVariables } from '@/models/property.type'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 export const usePropertyById = (id: number) => {
-  return useQuery<Property, Error>({
-    queryKey: ['property', id], 
+  const { data, isLoading } = useQuery({
+    queryKey: ['property', id],
     queryFn: () => getPropertyById(id),
-    enabled: !!id, 
-    retry: false, 
-  });
-};
+    enabled: !!id
+  })
+
+  return { propertyData: data, propertyIsLoading: isLoading }
+}
+
 export function useUpdatePropertyStatus() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const mutation = useMutation({
     mutationFn: (variables: UpdatePropertyStatusVariables) => updatePropertyStatus(variables),
     onSuccess: () => {
-      toast.success('Cập nhật trạng thái thành công');
-      queryClient.invalidateQueries({ queryKey: ['properties'] });
+      toast.success('Cập nhật trạng thái thành công')
+      queryClient.invalidateQueries({ queryKey: ['properties'] })
     },
-    onError: (error: unknown) => {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error('Đã xảy ra lỗi không xác định.');
-      }
+    onError: (error) => {
+      toast.error(error.message)
     }
-  });
+  })
 
-  return mutation;
+  return mutation
 }
 
 export function useDeleteProperty() {
-    const queryClient = useQueryClient()
-    const mutation = useMutation({
-      mutationFn: (id: number) => deleteProperty(id),
-      onSuccess: () => {
-        toast.success('Xóa bài đăng thành công')
-        queryClient.invalidateQueries({ queryKey: ['properies'] })
-      },
-      onError: (error: Error) => {
-        toast.error('Xóa bài đăng thất bại' + error.message)
-      },
-    });
-    return mutation;
-  }
-export const useProperty = (
-search: string, roomTypeId: number, numOfDay: number, minPrice: number, maxPrice: number, minArea: number, maxArea: number, dictrictId: number, cityId: number, pageNumber: number, pageSize: number, sortBy: string, status: string) => {
-const { data, isLoading, isError } = useQuery({
-queryKey: ['properties',  
-    search,
-    roomTypeId,
-    numOfDay,
-    minPrice,
-    maxPrice,
-    minArea,
-    maxArea,
-    dictrictId,
-    cityId,
-    pageNumber,
-    pageSize,
-    sortBy,
-    status,
+  const queryClient = useQueryClient()
+  const { mutate, isPending } = useMutation({
+    mutationFn: (id: number) => deleteProperty(id),
+    onSuccess: () => {
+      toast.success('Xóa bài đăng thành công')
+      queryClient.invalidateQueries({ queryKey: ['properies'] })
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    }
+  })
+  return { deleteProperty: mutate, deletePropertyIsPending: isPending }
+}
+export const useProperty = (search: string, pageNumber: number, pageSize: number, sortBy: string, status: string) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['properties', search, pageNumber, pageSize, sortBy, status],
+    queryFn: () => getAllPropertyWithPagination(search, pageNumber, pageSize, sortBy, status)
+  })
 
-],
-queryFn: () => getAllPropertyWithPagination(
-    search,
-    roomTypeId,
-    numOfDay,
-    minPrice,
-    maxPrice,
-    minArea,
-    maxArea,
-    dictrictId,
-    cityId,
-    pageNumber,
-    pageSize,
-    sortBy,
-    status
-)
-
-})
-
-
-
-
-return { data, isLoading, isError }
-
-
-
+  return { data, isLoading, isError }
 }
