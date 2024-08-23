@@ -36,7 +36,7 @@ export function useDeleteProperty() {
     mutationFn: (id: number) => deleteProperty(id),
     onSuccess: () => {
       toast.success('Xóa bài đăng thành công')
-      queryClient.invalidateQueries({ queryKey: ['properies'] })
+      queryClient.invalidateQueries({ queryKey: ['properties'] })
     },
     onError: (error) => {
       toast.error(error.message)

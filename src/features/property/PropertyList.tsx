@@ -8,6 +8,7 @@ import PropertyTable from './PropertyTable'
 import ErrorFetching from '@/components/ErrorFetching'
 import { customFormatDate } from '@/utils/customFormatDate'
 import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { formatCurrency } from '@/utils/formatCurrentcy'
 
 const { Search } = Input
 
