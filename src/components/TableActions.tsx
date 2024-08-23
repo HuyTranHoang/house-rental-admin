@@ -15,5 +15,5 @@ function TableActions(props: { onUpdate: () => void, onDelete: () => void, disab
     </Button>
   </Space>
 }
-
 export default TableActions
+

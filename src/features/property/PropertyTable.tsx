@@ -1,13 +1,15 @@
-import { Table, TableProps, Modal, DescriptionsProps } from 'antd';
+import React from 'react';
+import { Table, TableProps, Modal, DescriptionsProps, Select, Form } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { TableRowSelection } from 'antd/es/table/interface';
-import { useDeleteProperty } from '@/hooks/useProperties';
+import { useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties';
 import ConfirmModalTitle from '@/components/ConfirmModalTitle';
 import ConfirmModalContent from '@/components/ConfirmModalContent';
-import TableActions from '@/components/TableActions';
 import { PropertyDataSource } from '@/models/property.type';
+import TablePropertyAction from '@/components/TablePropertyAction';
 
 const { confirm } = Modal;
+const { Option } = Select;
 
 interface PropertyTableProps {
   dataSource: PropertyDataSource[];
@@ -26,6 +28,11 @@ function PropertyTable({
 }: PropertyTableProps) {
   const navigate = useNavigate();
   const { mutate: deletePropertyMutate } = useDeleteProperty();
+  const { mutate: updatePropertyStatusMutate } = useUpdatePropertyStatus();
+
+  const [form] = Form.useForm();
+  const [updateStatusVisible, setUpdateStatusVisible] = React.useState<boolean>(false);
+  const [currentPropertyId, setCurrentPropertyId] = React.useState<number | null>(null);
 
   const showDeleteConfirm = (record: PropertyDataSource) => {
     const items: DescriptionsProps['items'] = [
@@ -53,15 +60,39 @@ function PropertyTable({
       }
     });
   };
+  const handleUpdateStatus = (id: number) => {
+    setCurrentPropertyId(id);
+    setUpdateStatusVisible(true);
+  };
+
+  const handleOk = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        if (currentPropertyId) {
+          updatePropertyStatusMutate({ id: currentPropertyId, status: values.status });
+          setUpdateStatusVisible(false);
+          form.resetFields();
+        }
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info);
+      });
+  };
+
+  const handleCancel = () => {
+    setUpdateStatusVisible(false);
+    form.resetFields();
+  };
 
   const columns: TableProps<PropertyDataSource>['columns'] = [
     { title: '#', dataIndex: 'id', key: 'id', fixed: 'left', width: 50 },
-    { title: 'Tiêu đề', dataIndex: 'title', key: 'title', fixed : 'right', width : 100},
-    { title: 'Vị trí', dataIndex: 'location', key: 'location' , fixed : 'right', width : 100 },
+    { title: 'Tiêu đề', dataIndex: 'title', key: 'title', fixed: 'right', width: 100 },
+    { title: 'Vị trí', dataIndex: 'location', key: 'location', fixed: 'right', width: 100 },
     { title: 'Số phòng', dataIndex: 'numRooms', key: 'numRooms' },
-    { title: 'Diện tích', dataIndex: 'area', key: 'area',sorter: true, },
-    { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName',sorter: true, },
-    { title: 'Giá', dataIndex: 'price', key: 'price',sorter: true, },
+    { title: 'Diện tích', dataIndex: 'area', key: 'area', sorter: true },
+    { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName', sorter: true },
+    { title: 'Giá', dataIndex: 'price', key: 'price', sorter: true },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
@@ -75,36 +106,67 @@ function PropertyTable({
       title: 'Hành động',
       key: 'action',
       fixed: 'right',
-      width: 100,
+      width: 300,
       render: (_, record) => (
-        <TableActions
-          onUpdate={() => navigate(`/property/${record.id}/edit`)}
-          onDelete={() => showDeleteConfirm(record)}
-        />
+        <div style={{ margin :'20px' , display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <TablePropertyAction
+              onDetail={() => navigate(`/property/${record.id}`)}
+              onDelete={() => showDeleteConfirm(record)}
+              onSetStatus={() => handleUpdateStatus(record.id) }
+            />
+          </div>
+        </div>
       ),
     }
+
+    
   ];
 
   return (
-    <Table
-      dataSource={dataSource}
-      columns={columns}
-      rowSelection={rowSelection}
-      pagination={{
-        position: ['bottomCenter'],
-        pageSizeOptions: ['5', '10', '20'],
-        locale: { items_per_page: '/ trang' },
-        showSizeChanger: true,
-        ...paginationProps
-      }}
-      onChange={handleTableChange}
-      loading={loading}
-      locale={{
-        triggerDesc: 'Sắp xếp giảm dần',
-        triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp'
-      }}
-    />
+    <>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        rowSelection={rowSelection}
+        pagination={{
+          position: ['bottomCenter'],
+          pageSizeOptions: ['5', '10', '20'],
+          locale: { items_per_page: '/ trang' },
+          showSizeChanger: true,
+          ...paginationProps
+        }}
+        onChange={handleTableChange}
+        loading={loading}
+        locale={{
+          triggerDesc: 'Sắp xếp giảm dần',
+          triggerAsc: 'Sắp xếp tăng dần',
+          cancelSort: 'Hủy sắp xếp'
+        }}
+      />
+      <Modal
+        title="Cập nhật trạng thái"
+        visible={updateStatusVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="Cập nhật"
+        cancelText="Hủy"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="status"
+            label="Trạng thái"
+            rules={[{ required: true, message: 'Vui lòng chọn trạng thái!' }]}
+          >
+            <Select placeholder="Chọn trạng thái">
+              <Option value="PENDING">CHỜ DUYỆT</Option>
+              <Option value="APPROVED">ĐÃ DUYỆT</Option>
+              <Option value="REJECTED">TỪ CHỐI</Option>
+            </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   );
 }
 

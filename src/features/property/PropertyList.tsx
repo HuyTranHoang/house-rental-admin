@@ -11,7 +11,7 @@ import { customFormatDate } from '@/utils/customFormatDate';
 const { Search } = Input;
 
 const tabsItem: TabsProps['items'] = [
-  { key: 'RESOLVED', label: 'Đã Duyệt' },
+  { key: 'APPROVED', label: 'Đã Duyệt' },
   { key: 'PENDING', label: 'Chờ Duyệt' },
   { key: 'REJECTED', label: 'Đã Từ Chối' },
 ];
@@ -31,7 +31,7 @@ function PropertyList() {
   const [pageSize, setPageSize] = useState(5);
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('IdDesc');
-  const [status, setStatus] = useState('RESOLVED');
+  const [status, setStatus] = useState('APPROVED');
 
   const { data, isLoading, isError } = useProperty(
     search, roomTypeId, numOfDay, minPrice, maxPrice, minArea, maxArea, districtId, cityId, pageNumber, pageSize, sortBy , status
@@ -160,7 +160,7 @@ function PropertyList() {
       </Flex>
         
 
-      <Tabs defaultActiveKey="RESOLVED" items={tabsItem} onChange={onTabChange} />
+      <Tabs defaultActiveKey="APPROVED" items={tabsItem} onChange={onTabChange} />
 
       <PropertyTable
         dataSource={dataSource}

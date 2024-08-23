@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Property } from '@/models/property.type.ts'
+import { Property, UpdatePropertyStatusVariables } from '@/models/property.type.ts'
 import axiosInstance from '@/axiosInstance'
 import { PageInfo } from '@/models/pageInfo.type'
 
@@ -8,17 +8,37 @@ interface PropertyWithPagination {
   data: Property[]
 }
 
-export const getPropertyById = async (id: number) => {
+export const getPropertyById = async (id: number): Promise<Property> => {
   try {
-    const response = await axios.get<Property>(`/api/properties/${id}`)
+    const response = await axiosInstance.get<Property>(`/api/properties/${id}`);
     if (response.status === 200) {
-      return response.data
+      return response.data;
+    } else {
+      throw new Error('Không thể lấy thông tin bài đăng');
     }
   } catch (error) {
-    console.error(error)
-    throw new Error('Lấy thông tin bài đăng thất bại')
+    console.error(error);
+    throw new Error('Lấy thông tin bài đăng thất bại');
   }
-}
+};
+export const updatePropertyStatus = async (variables: UpdatePropertyStatusVariables) => {
+  try {
+    const response = await axiosInstance.put(
+      `/api/properties/${variables.id}`, 
+      { status: variables.status },
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('API Error:', error.response?.data || error.message);
+      throw error;
+    } else {
+      console.error('Unexpected Error:', error);
+      throw new Error('An unexpected error occurred.');
+    }
+  }
+};
 export const deleteProperty = async (id: number): Promise<void> => {
   try {
     const response = await axiosInstance.delete(`/api/properties/${id}`);
