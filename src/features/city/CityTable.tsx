@@ -21,13 +21,13 @@ interface CityTableProps {
 }
 
 function CityTable({
-                     dataSource,
-                     loading,
-                     paginationProps,
-                     handleTableChange,
-                     rowSelection,
-                     sortedInfo
-                   }: CityTableProps) {
+  dataSource,
+  loading,
+  paginationProps,
+  handleTableChange,
+  rowSelection,
+  sortedInfo
+}: CityTableProps) {
   const navigate = useNavigate()
   const { deleteCityMutate } = useDeleteCity()
 
@@ -55,7 +55,7 @@ function CityTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa thành phố" />,
+      title: <ConfirmModalTitle title='Xác nhận xóa thành phố' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -80,7 +80,7 @@ function CityTable({
       dataIndex: 'name',
       key: 'name',
       sorter: true,
-      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null
     },
     {
       title: 'Ngày tạo',
@@ -97,8 +97,10 @@ function CityTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(ROUTER_NAMES.getCityEditPath(record.id))}
-                      onDelete={() => showDeleteConfirm(record)} />
+        <TableActions
+          onUpdate={() => navigate(ROUTER_NAMES.getCityEditPath(record.id))}
+          onDelete={() => showDeleteConfirm(record)}
+        />
       )
     }
   ]

@@ -9,19 +9,7 @@ import { useCreateDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-
-import z from 'zod'
-import { createSchemaFieldRule } from 'antd-zod'
-
-const DistrictFormValidationScheme = z.object({
-  id: z.number().optional(),
-  name: z.string({ message: 'Tên quận huyện không được để trống' })
-    .min(3, 'Tên quận huyện phải có ít nhất 3 ký tự'),
-  cityId: z.number({ message: 'Vui lòng chọn thành phố' })
-})
-
-export type DistrictForm = z.infer<typeof DistrictFormValidationScheme>
-const rule = createSchemaFieldRule(DistrictFormValidationScheme)
+import { DistrictForm } from '@/models/district.type.ts'
 
 function AddUpdateDistrict() {
   const match = useMatch(ROUTER_NAMES.ADD_DISTRICT)
@@ -35,6 +23,7 @@ function AddUpdateDistrict() {
   const { data: cityData, isLoading: cityLoading } = useCitiesAll()
 
   const [error, setError] = useState<string>('')
+  const [cityError, setCityError] = useState<string>('')
 
   const { addDistrictMutate, addDistrictPending } = useCreateDistrict(setError)
   const { updateDistrictMutate, updateDistrictPending } = useUpdateDistrict(setError)
@@ -68,9 +57,18 @@ function AddUpdateDistrict() {
     if (districtUpdateData) {
       form.setFieldValue('id', districtUpdateData.id)
       form.setFieldValue('name', districtUpdateData.name)
-      form.setFieldValue('cityId', districtUpdateData.cityId)
+
+      const cityExists = cityData?.some((city) => city.id === districtUpdateData.cityId)
+      if (cityExists) {
+        form.setFieldValue('cityId', districtUpdateData.cityId)
+      } else {
+        form.setFieldValue('cityId', null)
+        setCityError(
+          `Thành phố '${districtUpdateData.cityName}' không còn tồn tại, vui lòng chọn thành phố khác nếu bạn muốn cập nhật!`
+        )
+      }
     }
-  }, [districtUpdateData, form])
+  }, [cityData, districtUpdateData, form])
 
   if (cityLoading || districtIsLoading) {
     return <Spin spinning={true} fullscreen />
@@ -78,18 +76,22 @@ function AddUpdateDistrict() {
 
   return (
     <>
-      <Flex align="center" justify="space-between">
+      <Flex align='center' justify='space-between'>
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button icon={<LeftCircleOutlined />} shape="round" type="primary"
-                onClick={() => navigate(ROUTER_NAMES.DISTRICT)}>
+        <Button
+          icon={<LeftCircleOutlined />}
+          shape='round'
+          type='primary'
+          onClick={() => navigate(ROUTER_NAMES.DISTRICT)}
+        >
           Quay lại
         </Button>
       </Flex>
       <Form
         form={form}
-        name="districtForm"
+        name='districtForm'
         labelCol={{ span: 6 }}
         style={{
           maxWidth: 600,
@@ -99,16 +101,20 @@ function AddUpdateDistrict() {
           padding: '32px 32px 0'
         }}
         onFinish={onFinish}
-        autoComplete="off"
+        autoComplete='off'
       >
-        <Form.Item<DistrictForm> label="Id" name="id" rules={[rule]} hidden>
+        <Form.Item<DistrictForm> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<DistrictForm>
-          label="Tên quận huyện"
-          name="name"
-          rules={[rule]}
+          label='Tên quận huyện'
+          name='name'
+          rules={[
+            { required: true, message: 'Vui lòng nhập tên quận huyện' },
+            { min: 3, message: 'Tên quận huyện phải có ít nhất 3 ký tự' },
+            { max: 50, message: 'Tên quận huyện không được vượt quá 50 ký tự' }
+          ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
@@ -116,25 +122,35 @@ function AddUpdateDistrict() {
         </Form.Item>
 
         <Form.Item<DistrictForm>
-          label="Thành phố"
-          name="cityId"
-          rules={[rule]}
+          label='Thành phố'
+          name='cityId'
+          rules={[{ required: true, message: 'Vui lòng chọn thành phố' }]}
         >
-          <Select options={cityOptions} placeholder="Chọn thành phố" />
+          <Select options={cityOptions} placeholder='Chọn thành phố' onChange={() => setCityError('')} />
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 6 }}>
-          <Button onClick={() => {
-            form.resetFields()
-            setError('')
-          }} style={{ marginRight: 16 }}>
+        {cityError && (
+          <Form.Item wrapperCol={{ offset: 6 }}>
+            <Typography.Text type='danger'>{cityError}</Typography.Text>
+          </Form.Item>
+        )}
+
+        <Form.Item wrapperCol={{ offset: 6 }} style={{ marginTop: 48 }}>
+          <Button
+            onClick={() => {
+              form.resetFields()
+              setError('')
+              setCityError('')
+            }}
+            style={{ marginRight: 16 }}
+          >
             Đặt lại
           </Button>
 
           <Button
             loading={addDistrictPending || updateDistrictPending}
-            type="primary"
-            htmlType="submit"
+            type='primary'
+            htmlType='submit'
             style={{ width: 100 }}
           >
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}

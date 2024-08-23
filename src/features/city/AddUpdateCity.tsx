@@ -8,17 +8,7 @@ import { useEffect, useState } from 'react'
 import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-
-import z from 'zod'
-import { createSchemaFieldRule } from 'antd-zod'
-
-const CityFormValidationSchema = z.object({
-  id: z.number().optional(),
-  name: z.string({ message: 'Vui lòng nhập tên thành phố' }).min(3, 'Tên thành phố phải có ít nhất 3 ký tự')
-})
-
-export type CityForm = z.infer<typeof CityFormValidationSchema>
-const rule = createSchemaFieldRule(CityFormValidationSchema)
+import { CityForm } from '@/models/city.type.ts'
 
 function AddUpdateCity() {
   const match = useMatch(ROUTER_NAMES.ADD_CITY)
@@ -83,14 +73,18 @@ function AddUpdateCity() {
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<CityForm> label="Id" name="id" rules={[rule]} hidden>
+        <Form.Item<CityForm> label="Id" name="id" hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<CityForm>
           label="Tên thành phố"
           name="name"
-          rules={[rule]}
+          rules={[
+            { required: true, message: 'Vui lòng nhập tên thành phố' },
+            { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự' },
+            { max: 50, message: 'Tên thành phố không được vượt quá 50 ký tự' }
+          ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >

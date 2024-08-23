@@ -6,17 +6,7 @@ import { getRoomTypeById } from '@/api/roomType.api.ts'
 import { useCreateRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-
-import z from 'zod'
-import { createSchemaFieldRule } from 'antd-zod'
-
-const RoomTypeFormValidationSchema = z.object({
-  id: z.number().optional(),
-  name: z.string({ message: 'Vui lòng nhập tên loại phòng' }).min(3, 'Tên loại phòng phải có ít nhất 3 ký tự')
-})
-
-export type RoomTypeForm = z.infer<typeof RoomTypeFormValidationSchema>
-const rule = createSchemaFieldRule(RoomTypeFormValidationSchema)
+import { RoomTypeForm } from '@/models/roomType.type.ts'
 
 function AddUpdateRoomType() {
   const match = useMatch(ROUTER_NAMES.ADD_ROOM_TYPE)
@@ -75,21 +65,25 @@ function AddUpdateRoomType() {
         style={{
           maxWidth: 600,
           marginTop: 32,
-          boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)',
+          boxShadow: 'rgba(145, 158, 171, 0.3) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px',
           border: '1px solid #f0f0f0',
           padding: '32px 32px 0'
         }}
         onFinish={onFinish}
         autoComplete="off"
       >
-        <Form.Item<RoomTypeForm> label="Id" name="id" rules={[rule]} hidden>
+        <Form.Item<RoomTypeForm> label="Id" name="id" hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<RoomTypeForm>
           label="Tên loại phòng"
           name="name"
-          rules={[rule]}
+          rules={[
+            { required: true, message: 'Vui lòng nhập tên loại phòng!' },
+            { min: 3, message: 'Tên loại phòng phải có ít nhất 3 ký tự!' },
+            { max: 50, message: 'Tên loại phòng không được quá 50 ký tự!' }
+          ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >

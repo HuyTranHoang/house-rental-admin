@@ -1,8 +1,7 @@
 import axios from 'axios'
 import { PageInfo } from '@/models/pageInfo.type.ts'
-import { RoomType } from '@/models/roomType.type.ts'
+import { RoomType, RoomTypeForm } from '@/models/roomType.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
-import { RoomTypeForm } from '@/features/roomType/AddUpdateRoomType.tsx'
 
 interface RoomTypesWithPagination {
   pageInfo: PageInfo
