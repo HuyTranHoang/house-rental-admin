@@ -1,4 +1,10 @@
-import { deleteProperty, getAllPropertyWithPagination, getPropertyById, updatePropertyStatus } from '@/api/property.api'
+import {
+  blockProperty,
+  deleteProperty,
+  getAllPropertyWithPagination,
+  getPropertyById,
+  updatePropertyStatus
+} from '@/api/property.api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useSearchParams } from 'react-router-dom'
@@ -65,6 +71,30 @@ export const useProperties = (
   })
 
   return { data, isLoading, isError }
+}
+
+export const useBlockProperty = () => {
+  const queryClient = useQueryClient()
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: blockProperty,
+    onSuccess: (property) => {
+      queryClient
+        .invalidateQueries({ queryKey: ['properties'] })
+        .then(() => {
+          toast.success(
+            `Bài đăng ${
+              property.blocked ? 'đã bị chặn' : 'đã được mở chặn'
+            } thành công`
+          )
+        })
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    }
+  })
+
+  return { blockProperty: mutate, blockPropertyIsPending: isPending }
 }
 
 export const usePropertyFilters = () => {

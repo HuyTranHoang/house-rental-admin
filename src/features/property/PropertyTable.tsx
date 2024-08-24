@@ -1,6 +1,6 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
-import { useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties'
+import { useBlockProperty, useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties'
 import { Property, PropertyDataSource, PropertyStatus } from '@/models/property.type'
 import { formatCurrency } from '@/utils/formatCurrentcy'
 import { blue } from '@ant-design/colors'
@@ -53,6 +53,7 @@ function PropertyTable({
 
   const { deleteProperty } = useDeleteProperty()
   const { updatePropertyStatus, updatePropertyStatusIsPending } = useUpdatePropertyStatus()
+  const { blockProperty } = useBlockProperty()
 
   const showDeleteConfirm = (record: PropertyDataSource) => {
     const items: DescriptionsProps['items'] = [
@@ -268,16 +269,19 @@ function PropertyTable({
       render: (record) => formatCurrency(record)
     },
     {
-      title: 'Bị khóa',
+      title: 'Bị chặn',
       dataIndex: 'blocked',
       key: 'blocked',
       width: 130,
-      render: (record) => (
+      render: (blocked, record) => (
         <Switch
-          checkedChildren='Khóa'
+          checkedChildren='Chặn'
           unCheckedChildren='Hoạt động'
-          defaultChecked={record}
-          onChange={(e) => alert('Chưa implement, Khóa: ' + e)}
+          defaultChecked={blocked}
+          onChange={(e) => {
+            const status = e ? 'block' : 'unblock'
+            blockProperty({ id: record.id, status })
+          }}
         />
       )
     },

@@ -13,12 +13,11 @@ import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
-type OnChange = NonNullable<TableProps<RoomTypeDataSource>['onChange']>;
-type GetSingle<T> = T extends (infer U)[] ? U : never;
-type Sorts = GetSingle<Parameters<OnChange>[2]>;
+type OnChange = NonNullable<TableProps<RoomTypeDataSource>['onChange']>
+type GetSingle<T> = T extends (infer U)[] ? U : never
+type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListRoomType() {
-
   const navigate = useNavigate()
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useRoomTypeFilters()
@@ -49,15 +48,14 @@ function ListRoomType() {
     }
   }
 
-
   const dataSource: RoomTypeDataSource[] = data
     ? data.data.map((roomType, idx) => ({
-      key: roomType.id,
-      index: (pageNumber - 1) * pageSize + idx + 1,
-      id: roomType.id,
-      name: roomType.name,
-      createdAt: customFormatDate(roomType.createdAt)
-    }))
+        key: roomType.id,
+        index: (pageNumber - 1) * pageSize + idx + 1,
+        id: roomType.id,
+        name: roomType.name,
+        createdAt: customFormatDate(roomType.createdAt)
+      }))
     : []
 
   const rowSelection: TableRowSelection<RoomTypeDataSource> | undefined = {
@@ -67,12 +65,6 @@ function ListRoomType() {
       setDeleteIdList(selectedIdList)
     }
   }
-
-  useEffect(() => {
-    if (search) {
-      form.setFieldsValue({ search })
-    }
-  }, [form, search])
 
   useEffect(() => {
     if (sortBy) {
@@ -93,16 +85,25 @@ function ListRoomType() {
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
-          <Typography.Title level={2} style={{ margin: 0 }}>Danh sách loại phòng</Typography.Title>
-          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Form form={form} name="searchCityForm" layout="inline">
-            <Form.Item name="search">
+      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+        <Flex align='center'>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            Danh sách loại phòng
+          </Typography.Title>
+          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Form
+            form={form}
+            name='searchCityForm'
+            initialValues={{
+              search: search
+            }}
+            layout='inline'
+          >
+            <Form.Item name='search'>
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder="Tìm kiếm tên loại phòng"
+                placeholder='Tìm kiếm tên loại phòng'
                 style={{ width: 250 }}
               />
             </Form.Item>
@@ -110,13 +111,17 @@ function ListRoomType() {
         </Flex>
 
         <Space>
-          {deleteIdList.length > 0 &&
-            <Button shape="round" type="primary" danger onClick={handleDelete}>
+          {deleteIdList.length > 0 && (
+            <Button shape='round' type='primary' danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
-          }
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary"
-                  onClick={() => navigate(ROUTER_NAMES.ADD_ROOM_TYPE)}>
+          )}
+          <Button
+            icon={<PlusCircleOutlined />}
+            shape='round'
+            type='primary'
+            onClick={() => navigate(ROUTER_NAMES.ADD_ROOM_TYPE)}
+          >
             Thêm mới
           </Button>
         </Space>

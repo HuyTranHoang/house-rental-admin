@@ -13,9 +13,9 @@ import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
-type OnChange = NonNullable<TableProps<AmenityDataSource>['onChange']>;
-type GetSingle<T> = T extends (infer U)[] ? U : never;
-type Sorts = GetSingle<Parameters<OnChange>[2]>;
+type OnChange = NonNullable<TableProps<AmenityDataSource>['onChange']>
+type GetSingle<T> = T extends (infer U)[] ? U : never
+type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListAmenity() {
   const navigate = useNavigate()
@@ -50,12 +50,12 @@ function ListAmenity() {
 
   const dataSource: AmenityDataSource[] = data
     ? data.data.map((amenity: Amenity, idx) => ({
-      key: amenity.id,
-      index: (pageNumber - 1) * pageSize + idx + 1,
-      id: amenity.id,
-      name: amenity.name,
-      createdAt: customFormatDate(amenity.createdAt)
-    }))
+        key: amenity.id,
+        index: (pageNumber - 1) * pageSize + idx + 1,
+        id: amenity.id,
+        name: amenity.name,
+        createdAt: customFormatDate(amenity.createdAt)
+      }))
     : []
 
   const rowSelection: TableRowSelection<AmenityDataSource> | undefined = {
@@ -65,12 +65,6 @@ function ListAmenity() {
       setDeleteIdList(selectedIdList)
     }
   }
-
-  useEffect(() => {
-    if (search) {
-      form.setFieldsValue({ search })
-    }
-  }, [form, search])
 
   useEffect(() => {
     if (sortBy) {
@@ -91,18 +85,25 @@ function ListAmenity() {
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
+      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+        <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
             Danh sách tiện nghi
           </Typography.Title>
-          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Form form={form} name="searchCityForm" layout="inline">
-            <Form.Item name="search">
+          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Form
+            form={form}
+            name='searchCityForm'
+            initialValues={{
+              search: search
+            }}
+            layout='inline'
+          >
+            <Form.Item name='search'>
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder="Tìm kiếm tiện nghi"
+                placeholder='Tìm kiếm tiện nghi'
                 style={{ width: 250 }}
               />
             </Form.Item>
@@ -111,11 +112,16 @@ function ListAmenity() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape="round" type="primary" danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary" onClick={() => navigate(ROUTER_NAMES.ADD_AMENITY)}>
+          <Button
+            icon={<PlusCircleOutlined />}
+            shape='round'
+            type='primary'
+            onClick={() => navigate(ROUTER_NAMES.ADD_AMENITY)}
+          >
             Thêm mới
           </Button>
         </Space>

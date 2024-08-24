@@ -122,12 +122,6 @@ function ListProperty() {
     : []
 
   useEffect(() => {
-    if (search) {
-      form.setFieldsValue({ search })
-    }
-  }, [form, search])
-
-  useEffect(() => {
     if (sortBy) {
       const match = sortBy.match(/(.*?)(Asc|Desc)$/)
       if (match) {
@@ -152,7 +146,16 @@ function ListProperty() {
             Danh sách bài đăng
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Form form={form} name='searchCityForm' layout='inline'>
+          <Form
+            form={form}
+            name='searchCityForm'
+            initialValues={{
+              search: search,
+              cityDisitrct: cityId && districtId ? [cityId.toString(), districtId.toString()] : cityId ? [cityId.toString(), '0'] : [],
+              roomType: roomTypeId.toString()
+            }}
+            layout='inline'
+          >
             <Form.Item name='search'>
               <Search
                 allowClear
@@ -171,13 +174,6 @@ function ListProperty() {
                 loading={cityIsLoading || districtIsLoading}
                 placeholder='Chọn quận huyện'
                 suffixIcon={<GeoIcon />}
-                defaultValue={
-                  cityId && districtId
-                    ? [cityId.toString(), districtId.toString()]
-                    : cityId
-                      ? [cityId.toString(), '0']
-                      : []
-                }
               />
             </Form.Item>
 

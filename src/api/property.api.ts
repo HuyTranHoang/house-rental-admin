@@ -12,6 +12,11 @@ export interface UpdatePropertyStatus {
   status: PropertyStatus
 }
 
+export interface BlockProperty {
+  id: number
+  status: string
+}
+
 export const getPropertyById = async (id: number) => {
   try {
     const response = await axiosInstance.get<Property>(`/api/properties/${id}`)
@@ -35,6 +40,16 @@ export const deleteProperty = async (id: number) => {
   } catch (error) {
     console.error(error)
     throw new Error('Xóa bài đăng thất bại')
+  }
+}
+
+export const blockProperty = async ({ id, status }: BlockProperty) => {
+  try {
+    const response = await axiosInstance.put<Property>(`/api/properties/block/${id}?status=${status}`)
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw new Error('Thay đổi trạng thái bất động sản thất bại')
   }
 }
 

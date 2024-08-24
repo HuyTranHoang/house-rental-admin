@@ -13,11 +13,11 @@ import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
-type OnChange = NonNullable<TableProps<DistrictDataSource>['onChange']>;
-type Filters = Parameters<OnChange>[1];
+type OnChange = NonNullable<TableProps<DistrictDataSource>['onChange']>
+type Filters = Parameters<OnChange>[1]
 
-type GetSingle<T> = T extends (infer U)[] ? U : never;
-type Sorts = GetSingle<Parameters<OnChange>[2]>;
+type GetSingle<T> = T extends (infer U)[] ? U : never
+type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListDistrict() {
   const navigate = useNavigate()
@@ -58,11 +58,11 @@ function ListDistrict() {
 
   const dataSource: DistrictDataSource[] = data
     ? data.data.map((district: District, idx) => ({
-      ...district,
-      key: district.id,
-      index: (pageNumber - 1) * pageSize + idx + 1,
-      createdAt: customFormatDate(district.createdAt)
-    }))
+        ...district,
+        key: district.id,
+        index: (pageNumber - 1) * pageSize + idx + 1,
+        createdAt: customFormatDate(district.createdAt)
+      }))
     : []
 
   const rowSelection: TableRowSelection<DistrictDataSource> | undefined = {
@@ -74,14 +74,8 @@ function ListDistrict() {
   }
 
   useEffect(() => {
-    if (search) {
-      form.setFieldsValue({ search })
-    }
-  }, [form, search])
-
-  useEffect(() => {
     if (cityId) {
-      setFilteredInfo(prev => ({
+      setFilteredInfo((prev) => ({
         ...prev,
         cityName: [cityId]
       }))
@@ -107,18 +101,25 @@ function ListDistrict() {
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
+      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+        <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
             Danh sách quận huyện
           </Typography.Title>
-          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Form form={form} name="searchDistrictForm" layout="inline">
-            <Form.Item name="search">
+          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Form
+            form={form}
+            name='searchDistrictForm'
+            initialValues={{
+              search: search
+            }}
+            layout='inline'
+          >
+            <Form.Item name='search'>
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder="Tìm kiếm tên quận huyện"
+                placeholder='Tìm kiếm tên quận huyện'
                 style={{ width: 250 }}
               />
             </Form.Item>
@@ -127,12 +128,16 @@ function ListDistrict() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape="round" type="primary" danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape="round" type="primary"
-                  onClick={() => navigate(ROUTER_NAMES.ADD_DISTRICT)}>
+          <Button
+            icon={<PlusCircleOutlined />}
+            shape='round'
+            type='primary'
+            onClick={() => navigate(ROUTER_NAMES.ADD_DISTRICT)}
+          >
             Thêm mới
           </Button>
         </Space>
