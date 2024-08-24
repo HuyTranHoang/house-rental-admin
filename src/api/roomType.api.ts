@@ -8,6 +8,16 @@ interface RoomTypesWithPagination {
   data: RoomType[]
 }
 
+export const getAllRoomTypes = async () => {
+  try {
+    const response = await axiosInstance.get<RoomType[]>('/api/room-type/all')
+    return response.data
+  } catch (error) {
+    console.error(error)
+    throw new Error('Lấy danh sách loại phòng thất bại')
+  }
+}
+
 export const getAllRoomTypesWithPagination = async (search: string, pageNumber: number, pageSize: number, sortBy: string) => {
   try {
     pageNumber = pageNumber - 1

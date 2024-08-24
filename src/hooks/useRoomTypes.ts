@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   addRoomType,
   deleteRoomType,
-  deleteRoomTypes,
+  deleteRoomTypes, getAllRoomTypes,
   getAllRoomTypesWithPagination,
   updateRoomType
 } from '@/api/roomType.api.ts'
@@ -12,6 +12,15 @@ import React, { useCallback } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { RoomTypeFilters } from '@/models/roomType.type.ts'
+
+export const useRoomTypesAll = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['roomTypes', 'all'],
+    queryFn: getAllRoomTypes
+  })
+
+  return { roomTypeData: data, roomTypeIsLoading: isLoading }
+}
 
 export const useRoomTypes = (search: string,
                              pageNumber: number,

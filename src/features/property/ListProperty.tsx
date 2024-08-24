@@ -1,4 +1,4 @@
-import { Cascader, Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } from 'antd'
+import { Cascader, Divider, Flex, Form, Input, Select, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { Property as PropertyType, PropertyDataSource, PropertyStatus } from '@/models/property.type'
@@ -10,7 +10,8 @@ import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } f
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { useDistrictsAll } from '@/hooks/useDistricts.ts'
 import { useEffect, useState } from 'react'
-import { GeoIcon } from '@/components/FilterIcons.tsx'
+import { GeoIcon, HomeIcon } from '@/components/FilterIcons.tsx'
+import { useRoomTypesAll } from '@/hooks/useRoomTypes.ts'
 
 const { Search } = Input
 
@@ -36,14 +37,24 @@ function ListProperty() {
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
-  const { search, cityId, districtId, status, pageNumber, pageSize, sortBy, setFilters } = usePropertyFilters()
+  const { search, cityId, districtId, roomTypeId, status, pageNumber, pageSize, sortBy, setFilters } =
+    usePropertyFilters()
 
-  const { data, isLoading, isError } = useProperties(search, cityId, districtId, status, pageNumber, pageSize, sortBy)
+  const { data, isLoading, isError } = useProperties(
+    search,
+    cityId,
+    districtId,
+    roomTypeId,
+    status,
+    pageNumber,
+    pageSize,
+    sortBy
+  )
+
+  // Start City and District
   const { cityData, cityIsLoading } = useCitiesAll()
   const { districtData, districtIsLoading } = useDistrictsAll()
-
   const cityDistrictOptions: Option[] = [{ value: '0', label: 'Toàn Quốc' }]
-
   if (cityData && districtData) {
     const cityMap = cityData.map((city) => ({
       value: city.id.toString(),
@@ -60,7 +71,6 @@ function ListProperty() {
     }))
     cityDistrictOptions.push(...cityMap)
   }
-
   const handleCityDistrictChange = (value: string[]) => {
     console.log(value)
 
@@ -70,6 +80,20 @@ function ListProperty() {
       setFilters({ cityId: 0, districtId: 0 })
     }
   }
+  // End City and District
+
+  // Start Room Type
+  const { roomTypeData, roomTypeIsLoading } = useRoomTypesAll()
+  const roomTypeOptions: Option[] = [{ value: '0', label: 'Tất cả' }]
+  if (roomTypeData) {
+    roomTypeOptions.push(
+      ...roomTypeData.map((roomType) => ({
+        value: roomType.id.toString(),
+        label: roomType.name
+      }))
+    )
+  }
+  // End Room Type
 
   const onTabChange = (key: string) => {
     setFilters({ status: key as PropertyType['status'] })
@@ -138,7 +162,7 @@ function ListProperty() {
               />
             </Form.Item>
 
-            <Form.Item>
+            <Form.Item name='cityDisitrct'>
               <Cascader
                 style={{ width: 250 }}
                 options={cityDistrictOptions}
@@ -148,8 +172,23 @@ function ListProperty() {
                 placeholder='Chọn quận huyện'
                 suffixIcon={<GeoIcon />}
                 defaultValue={
-                  cityId && districtId ? [cityId.toString(), districtId.toString()] : cityId ? [cityId.toString(), '0'] : []
+                  cityId && districtId
+                    ? [cityId.toString(), districtId.toString()]
+                    : cityId
+                      ? [cityId.toString(), '0']
+                      : []
                 }
+              />
+            </Form.Item>
+
+            <Form.Item name='roomType'>
+              <Select
+                style={{ width: 150 }}
+                onChange={(value) => setFilters({ roomTypeId: parseInt(value) })}
+                loading={roomTypeIsLoading}
+                placeholder={'Loại phòng'}
+                suffixIcon={<HomeIcon />}
+                options={roomTypeOptions}
               />
             </Form.Item>
           </Form>

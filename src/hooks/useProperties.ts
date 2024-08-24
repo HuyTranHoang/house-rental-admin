@@ -52,14 +52,16 @@ export const useProperties = (
   search: string,
   cityId: number,
   districtId: number,
+  roomTypeId: number,
   status: PropertyStatus,
   pageNumber: number,
   pageSize: number,
   sortBy: string
 ) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['properties', search, cityId, districtId, status, pageNumber, pageSize, sortBy],
-    queryFn: () => getAllPropertyWithPagination(search, cityId, districtId, status, pageNumber, pageSize, sortBy)
+    queryKey: ['properties', search, cityId, districtId, roomTypeId, status, pageNumber, pageSize, sortBy],
+    queryFn: () =>
+      getAllPropertyWithPagination(search, cityId, districtId, roomTypeId, status, pageNumber, pageSize, sortBy)
   })
 
   return { data, isLoading, isError }
@@ -71,6 +73,7 @@ export const usePropertyFilters = () => {
   const search = searchParams.get('search') || ''
   const cityId = parseInt(searchParams.get('cityId') || '0')
   const districtId = parseInt(searchParams.get('districtId') || '0')
+  const roomTypeId = parseInt(searchParams.get('roomTypeId') || '0')
   const status = (searchParams.get('status') as PropertyStatus) || PropertyStatus.PENDING
   const sortBy = searchParams.get('sortBy') || ''
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
@@ -95,6 +98,11 @@ export const usePropertyFilters = () => {
 
           if (filters.districtId !== undefined) {
             params.set('districtId', String(filters.districtId))
+            params.set('pageNumber', '1')
+          }
+
+          if (filters.roomTypeId !== undefined) {
+            params.set('roomTypeId', String(filters.roomTypeId))
             params.set('pageNumber', '1')
           }
 
@@ -126,5 +134,5 @@ export const usePropertyFilters = () => {
     [setSearchParams]
   )
 
-  return { search, cityId, districtId, status, sortBy, pageNumber, pageSize, setFilters }
+  return { search, cityId, districtId, roomTypeId, status, sortBy, pageNumber, pageSize, setFilters }
 }

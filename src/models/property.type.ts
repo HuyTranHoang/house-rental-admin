@@ -39,6 +39,7 @@ export type PropertyFilters = {
   status?: PropertyStatus
   cityId?: number
   districtId?: number
+  roomTypeId?: number
   sortBy?: string
   pageNumber?: number
   pageSize?: number
