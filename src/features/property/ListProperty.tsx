@@ -151,7 +151,7 @@ function ListProperty() {
             name='searchCityForm'
             initialValues={{
               search: search,
-              cityDisitrct: cityId && districtId ? [cityId.toString(), districtId.toString()] : cityId ? [cityId.toString(), '0'] : [],
+              cityDistrict: cityId && districtId ? [cityId.toString(), districtId.toString()] : cityId ? [cityId.toString(), '0'] : [],
               roomType: roomTypeId.toString()
             }}
             layout='inline'
@@ -165,7 +165,7 @@ function ListProperty() {
               />
             </Form.Item>
 
-            <Form.Item name='cityDisitrct'>
+            <Form.Item name='cityDistrict'>
               <Cascader
                 style={{ width: 250 }}
                 options={cityDistrictOptions}
