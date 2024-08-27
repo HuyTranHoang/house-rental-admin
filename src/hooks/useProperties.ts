@@ -55,19 +55,11 @@ export function useDeleteProperty() {
 }
 
 export const useProperties = (
-  search: string,
-  cityId: number,
-  districtId: number,
-  roomTypeId: number,
-  status: PropertyStatus,
-  pageNumber: number,
-  pageSize: number,
-  sortBy: string
-) => {
+search: string, cityId: number, districtId: number, roomTypeId: number, minPrice: number, maxPrice: number, minArea: number, maxArea: number, numOfDays: number, status: PropertyStatus, pageNumber: number, pageSize: number, sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['properties', search, cityId, districtId, roomTypeId, status, pageNumber, pageSize, sortBy],
     queryFn: () =>
-      getAllPropertyWithPagination(search, cityId, districtId, roomTypeId, status, pageNumber, pageSize, sortBy)
+      getAllPropertyWithPagination(search, cityId, districtId, roomTypeId, minPrice, maxPrice, minArea , maxArea , numOfDays, status, pageNumber, pageSize, sortBy)
   })
 
   return { data, isLoading, isError }
@@ -104,6 +96,11 @@ export const usePropertyFilters = () => {
   const cityId = parseInt(searchParams.get('cityId') || '0')
   const districtId = parseInt(searchParams.get('districtId') || '0')
   const roomTypeId = parseInt(searchParams.get('roomTypeId') || '0')
+  const minPrice = parseInt(searchParams.get('minPrice') || '0')
+  const maxPrice = parseInt(searchParams.get('maxPrice') || '0')
+  const minArea = parseInt(searchParams.get('minArea') || '0')
+  const maxArea = parseInt(searchParams.get('maxArea') || '0')
+  const numOfDays = parseInt(searchParams.get('numOfDays') || '0')
   const status = (searchParams.get('status') as PropertyStatus) || PropertyStatus.PENDING
   const sortBy = searchParams.get('sortBy') || ''
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
@@ -135,6 +132,29 @@ export const usePropertyFilters = () => {
             params.set('roomTypeId', String(filters.roomTypeId))
             params.set('pageNumber', '1')
           }
+          if (filters.minPrice !== undefined) {
+            params.set('minPrice', String(filters.minPrice))
+            params.set('pageNumber', '1')
+          }
+
+          if (filters.maxPrice !== undefined) {
+            params.set('maxPrice', String(filters.maxPrice))
+            params.set('pageNumber', '1')
+          }
+          if (filters.minArea !== undefined) {
+            params.set('minArea', String(filters.minArea))
+            params.set('pageNumber', '1')
+          }
+
+          if (filters.maxArea !== undefined) {
+            params.set('maxArea', String(filters.maxArea))
+            params.set('pageNumber', '1')
+          }
+
+          if (filters.numOfDays !== undefined) {
+            params.set('numOfDays', String(filters.numOfDays))
+            params.set('pageNumber', '1')
+          }
 
           if (filters.status !== undefined) {
             params.set('status', filters.status)
@@ -164,5 +184,5 @@ export const usePropertyFilters = () => {
     [setSearchParams]
   )
 
-  return { search, cityId, districtId, roomTypeId, status, sortBy, pageNumber, pageSize, setFilters }
+  return { search, cityId, districtId, roomTypeId,minPrice,maxPrice,minArea,maxArea,numOfDays, status, sortBy, pageNumber, pageSize, setFilters }
 }

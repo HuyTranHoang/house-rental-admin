@@ -49,7 +49,7 @@ export const blockProperty = async ({ id, status }: BlockProperty) => {
     return response.data
   } catch (error) {
     console.error(error)
-    throw new Error('Thay đổi trạng thái bất động sản thất bại')
+    throw new Error('Thay đổi trạng thái bài đăng thất bại')
   }
 }
 
@@ -58,6 +58,11 @@ export const getAllPropertyWithPagination = async (
   cityId: number,
   districtId: number,
   roomTypeId: number,
+  minPrice : number,
+  maxPrice : number,
+  minArea : number,
+  maxArea : number,
+  numOfDays : number,
   status: string,
   pageNumber: number,
   pageSize: number,
@@ -71,6 +76,11 @@ export const getAllPropertyWithPagination = async (
       cityId,
       districtId,
       roomTypeId,
+      minPrice ,
+      maxPrice ,
+      minArea ,
+      maxArea ,
+      numOfDays ,
       status,
       pageNumber,
       pageSize,
