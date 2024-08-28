@@ -1,15 +1,15 @@
-import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
+import { City, CityDataSource } from '@/models/city.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
-import CityTable from './CityTable.tsx'
-import { City, CityDataSource } from '@/models/city.type.ts'
-import ErrorFetching from '@/components/ErrorFetching.tsx'
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import CityTable from './CityTable.tsx'
 
 const { Search } = Input
 
@@ -84,12 +84,12 @@ function ListCity() {
 
   return (
     <>
-      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+      <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
-          <Typography.Title level={2} style={{ margin: 0 }}>
+          <Typography.Title level={2} className='m-0'>
             Danh sách thành phố
           </Typography.Title>
-          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
             form={form}
             name='searchCityForm'
@@ -102,8 +102,8 @@ function ListCity() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder='Tìm kiếm tên thành phố'
-                style={{ width: 250 }}
+                placeholder='Tìm kiếm thành phố'
+                className='w-64'
               />
             </Form.Item>
           </Form>

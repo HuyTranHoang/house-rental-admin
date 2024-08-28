@@ -1,14 +1,14 @@
+import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig'
 import ErrorFetching from '@/components/ErrorFetching'
 import { useDeleteUsers, useUsers } from '@/hooks/useUsers'
 import { User, UserDataSource } from '@/models/user.type'
+import { customFormatDate } from '@/utils/customFormatDate'
 import { CheckCircleOutlined, CloseSquareOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Divider, Flex, Space, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import Search from 'antd/es/input/Search'
 import React, { useState } from 'react'
 import UserTable from './UserTable'
-import { customFormatDate } from '@/utils/customFormatDate'
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig'
 
 const tabsItem: TabsProps['items'] = [
   {
@@ -65,11 +65,11 @@ function ListUser() {
 
   const dataSource: UserDataSource[] = data
     ? data.data.map((user: User, idx) => ({
-      ...user,
-      key: user.id,
-      index: (pageNumber - 1) * pageSize + idx + 1,
-      createdAt: customFormatDate(user.createdAt)
-    }))
+        ...user,
+        key: user.id,
+        index: (pageNumber - 1) * pageSize + idx + 1,
+        createdAt: customFormatDate(user.createdAt)
+      }))
     : []
 
   const rowSelection = {
@@ -85,23 +85,23 @@ function ListUser() {
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
-          <Typography.Title level={2} style={{ margin: 0 }}>
+      <Flex align='center' justify='space-between' className='mb-3'>
+        <Flex align='center'>
+          <Typography.Title level={2} className='m-0'>
             Danh sách tài khoản
           </Typography.Title>
-          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Search
             allowClear
             onSearch={(value) => setSearch(value)}
-            placeholder="Tìm kiếm theo tên tài khoản"
-            style={{ width: 250 }}
+            placeholder='Tìm kiếm theo tên tài khoản'
+            className='w-64'
           />
         </Flex>
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape="round" type="primary" danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           )}

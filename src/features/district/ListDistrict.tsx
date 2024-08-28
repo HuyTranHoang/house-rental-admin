@@ -101,15 +101,15 @@ function ListDistrict() {
 
   return (
     <>
-      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+      <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
-          <Typography.Title level={2} style={{ margin: 0 }}>
+          <Typography.Title level={2} className='m-0'>
             Danh sách quận huyện
           </Typography.Title>
-          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
             form={form}
-            name='searchDistrictForm'
+            name='searchCityForm'
             initialValues={{
               search: search
             }}
@@ -119,8 +119,8 @@ function ListDistrict() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder='Tìm kiếm tên quận huyện'
-                style={{ width: 250 }}
+                placeholder='Tìm kiếm quận huyện'
+                className='w-64'
               />
             </Form.Item>
           </Form>

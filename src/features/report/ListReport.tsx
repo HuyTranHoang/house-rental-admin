@@ -1,19 +1,19 @@
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { useReportFilters, useReports } from '@/hooks/useReports.ts'
+import { ReportDataSource, ReportStatus, Report as ReportType } from '@/models/report.type.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
+import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import { useQueryClient } from '@tanstack/react-query'
 import { Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { Report as ReportType, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
-import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import { useReportFilters, useReports } from '@/hooks/useReports.ts'
-import ErrorFetching from '@/components/ErrorFetching.tsx'
 import ReportTable from './ReportTable.tsx'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
-import { useQueryClient } from '@tanstack/react-query'
 
 const { Search } = Input
 
-type OnChange = NonNullable<TableProps<ReportDataSource>['onChange']>;
-type Filters = Parameters<OnChange>[1];
-type GetSingle<T> = T extends (infer U)[] ? U : never;
-type Sorts = GetSingle<Parameters<OnChange>[2]>;
+type OnChange = NonNullable<TableProps<ReportDataSource>['onChange']>
+type Filters = Parameters<OnChange>[1]
+type GetSingle<T> = T extends (infer U)[] ? U : never
+type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 const tabsItem: TabsProps['items'] = [
   {
@@ -34,7 +34,6 @@ const tabsItem: TabsProps['items'] = [
 ]
 
 function ListReport() {
-
   const queryClient = useQueryClient()
 
   const { search, status, category, sortBy, pageNumber, pageSize, setFilters } = useReportFilters()
@@ -44,8 +43,7 @@ function ListReport() {
 
   const [form] = Form.useForm()
 
-  const { data, isLoading, isError }
-    = useReports(search, category, status, pageNumber, pageSize, sortBy)
+  const { data, isLoading, isError } = useReports(search, category, status, pageNumber, pageSize, sortBy)
 
   const onTabChange = (key: string) => {
     setFilters({ status: key as ReportStatus })
@@ -69,11 +67,11 @@ function ListReport() {
 
   const dataSource: ReportDataSource[] = data
     ? data.data.map((report: ReportType, idx) => ({
-      ...report,
-      key: report.id,
-      index: (pageNumber - 1) * pageSize + idx + 1,
-      createdAt: customFormatDate(report.createdAt)
-    }))
+        ...report,
+        key: report.id,
+        index: (pageNumber - 1) * pageSize + idx + 1,
+        createdAt: customFormatDate(report.createdAt)
+      }))
     : []
 
   useEffect(() => {
@@ -84,7 +82,7 @@ function ListReport() {
 
   useEffect(() => {
     if (category) {
-      setFilteredInfo(prev => ({
+      setFilteredInfo((prev) => ({
         ...prev,
         category: category.split(',')
       }))
@@ -110,23 +108,31 @@ function ListReport() {
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
-          <Typography.Title level={2} style={{ margin: 0 }}>Danh sách báo cáo</Typography.Title>
-          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Form form={form} name="searchReportForm" layout="inline">
-            <Form.Item name="search">
+      <Flex align='center' justify='space-between' className='mb-3'>
+        <Flex align='center'>
+          <Typography.Title level={2} className='m-0'>
+            Danh sách báo cáo
+          </Typography.Title>
+          <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
+          <Form
+            form={form}
+            name='searchCityForm'
+            initialValues={{
+              search: search
+            }}
+            layout='inline'
+          >
+            <Form.Item name='search'>
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder="Tìm kiếm theo tên tài khoản"
-                style={{ width: 250 }}
+                placeholder='Tìm kiếm tài khoản'
+                className='w-64'
               />
             </Form.Item>
           </Form>
         </Flex>
       </Flex>
-
 
       <Tabs defaultActiveKey={ReportStatus.PENDING} items={tabsItem} onChange={onTabChange} />
       <ReportTable

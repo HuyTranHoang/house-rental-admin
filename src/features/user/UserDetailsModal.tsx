@@ -3,6 +3,7 @@ import { UserDataSource } from '@/models/user.type.ts'
 import { authorityPrivilegesMap } from '@/features/role/authorityPrivilegesMap.ts'
 import { gray, green } from '@ant-design/colors'
 import BlockUserButton from '@/components/BlockUserButton.tsx'
+import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 
 interface UserDetailsModalProps {
   isModalOpen: boolean
@@ -69,7 +70,7 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
                 <Space wrap={true}>
                   <b>Số dư tài khoản:</b>
                   <Typography.Text style={{ color: green.primary }}>
-                    {currentUser.balance}
+                    {formatCurrency(currentUser.balance)}
                   </Typography.Text>
                 </Space>
               </div>

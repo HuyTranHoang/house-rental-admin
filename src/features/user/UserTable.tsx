@@ -1,5 +1,9 @@
+import BlockUserButton from '@/components/BlockUserButton.tsx'
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
+import UserDetailsModal from '@/features/user/UserDetailsModal.tsx'
+import UserUpdateRoleModal from '@/features/user/UserUpdateRoleModal.tsx'
+import { useRolesAll } from '@/hooks/useRoles'
 import { useDeleteUser } from '@/hooks/useUsers'
 import { UserDataSource } from '@/models/user.type'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
@@ -9,18 +13,15 @@ import {
   Flex,
   Form,
   Modal,
+  Space,
   Table,
   TablePaginationConfig,
   TableProps,
   Tag,
   Tooltip
 } from 'antd'
-import { useState } from 'react'
 import { TableRowSelection } from 'antd/es/table/interface'
-import UserDetailsModal from '@/features/user/UserDetailsModal.tsx'
-import UserUpdateRoleModal from '@/features/user/UserUpdateRoleModal.tsx'
-import BlockUserButton from '@/components/BlockUserButton.tsx'
-import { useRolesAll } from '@/hooks/useRoles'
+import { useState } from 'react'
 
 const { confirm } = Modal
 
@@ -32,13 +33,7 @@ interface UserTableProps {
   rowSelection: TableRowSelection<UserDataSource> | undefined
 }
 
-function UserTable({
-                     dataSource,
-                     loading,
-                     paginationProps,
-                     handleTableChange,
-                     rowSelection,
-                   }: UserTableProps) {
+function UserTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: UserTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
@@ -47,7 +42,6 @@ function UserTable({
   const { data: roleData, isLoading: roleIsLoading } = useRolesAll()
 
   const { deleteUserMutate } = useDeleteUser()
-
 
   const handleView = (record: UserDataSource) => {
     setCurrentUser(record)
@@ -64,7 +58,6 @@ function UserTable({
   }
 
   const showDeleteConfirm = (record: UserDataSource) => {
-
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
@@ -94,7 +87,7 @@ function UserTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa tài khoản" />,
+      title: <ConfirmModalTitle title='Xác nhận xóa tài khoản' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -135,22 +128,22 @@ function UserTable({
       dataIndex: 'roles',
       key: 'roles',
       filterMultiple: false,
-      filters: [
-        ...roleData?.map((role) => ({ text: role.name, value: role.name })) || []
-      ],
+      filters: [...(roleData?.map((role) => ({ text: role.name, value: role.name })) || [])],
       render: (_, record: UserDataSource) => (
-        <Flex justify="space-between" align="center">
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <Flex justify='space-between' align='center'>
+          <Space>
             {record.roles.map((role, index) => (
-              <Tag key={index} color="blue">
+              <Tag key={index} color='blue'>
                 {role}
               </Tag>
             ))}
-          </div>
-          <Tooltip title="Cập nhật vai trò">
-            <Button icon={<EditOutlined />}
-                    disabled={record.username === 'admin'}
-                    onClick={() => handleUpdateRoles(record)} />
+          </Space>
+          <Tooltip title='Cập nhật vai trò'>
+            <Button
+              icon={<EditOutlined />}
+              disabled={record.username === 'admin'}
+              onClick={() => handleUpdateRoles(record)}
+            />
           </Tooltip>
         </Flex>
       )
@@ -170,25 +163,24 @@ function UserTable({
       width: 110,
       render: (_, record: UserDataSource) => (
         <Flex gap={16}>
-          <Tooltip title="Xem nhanh">
+          <Tooltip title='Xem nhanh'>
             <Button
               icon={<EyeOutlined />}
               disabled={record.username === 'admin'}
-              style={
-                record.username === 'admin'
-                  ? {}
-                  : { borderColor: '#1890ff', color: '#1890ff' }
-              }
+              className={record.username === 'admin' ? 'disabled' : 'border-blue-500 text-blue-500'}
               onClick={() => handleView(record)}
             />
           </Tooltip>
 
           <BlockUserButton record={record} />
 
-          <Tooltip title="Xóa tài khoản">
-            <Button icon={<DeleteOutlined />}
-                    disabled={record.username === 'admin'}
-                    onClick={() => showDeleteConfirm(record)} danger />
+          <Tooltip title='Xóa tài khoản'>
+            <Button
+              icon={<DeleteOutlined />}
+              disabled={record.username === 'admin'}
+              onClick={() => showDeleteConfirm(record)}
+              danger
+            />
           </Tooltip>
         </Flex>
       )
@@ -215,20 +207,19 @@ function UserTable({
           triggerAsc: 'Sắp xếp tăng dần',
           cancelSort: 'Hủy sắp xếp',
           filterConfirm: 'Lọc',
-          filterReset: 'Bỏ lọc',
+          filterReset: 'Bỏ lọc'
         }}
       />
 
       {/* Modal xem chi tiết */}
-      <UserDetailsModal isModalOpen={isModalOpen}
-                        setIsModalOpen={setIsModalOpen}
-                        currentUser={currentUser} />
+      <UserDetailsModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} currentUser={currentUser} />
 
       {/* Modal chỉnh sửa */}
-      <UserUpdateRoleModal isUpdateRolesModalOpen={isUpdateRolesModalOpen}
-                           setIsUpdateRolesModalOpen={setIsUpdateRolesModalOpen}
-                           currentUser={currentUser} />
-
+      <UserUpdateRoleModal
+        isUpdateRolesModalOpen={isUpdateRolesModalOpen}
+        setIsUpdateRolesModalOpen={setIsUpdateRolesModalOpen}
+        currentUser={currentUser}
+      />
     </>
   )
 }
