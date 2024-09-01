@@ -1,9 +1,8 @@
-import { Avatar, Button, ConfigProvider, Dropdown, Flex, Layout, Menu, MenuProps, Space, theme, Typography } from 'antd'
-import { toTitleCase } from '@/utils/toTitleCase.ts'
+import axiosInstance from '@/axiosInstance.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-import { toast } from 'sonner'
 import { logout, selectAuth } from '@/features/auth/authSlice.ts'
-import Sider from 'antd/es/layout/Sider'
+import { useAppDispatch } from '@/store.ts'
+import { toTitleCase } from '@/utils/toTitleCase.ts'
 import {
   BarChartOutlined,
   createFromIconfontCN,
@@ -14,9 +13,11 @@ import {
   SolutionOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '@/store.ts'
+import { Avatar, Button, ConfigProvider, Dropdown, Flex, Layout, Menu, MenuProps, Space, theme, Typography } from 'antd'
+import Sider from 'antd/es/layout/Sider'
 import { useSelector } from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
@@ -159,8 +160,10 @@ function AppSider() {
       case 'logout':
         dispatch(logout())
         localStorage.removeItem('jwtToken')
-        toast.success('Đăng xuất thành công')
-        navigate(ROUTER_NAMES.LOGIN)
+        axiosInstance.post('/api/auth/logout', {}, { withCredentials: true }).then(() => {
+          navigate(ROUTER_NAMES.LOGIN)
+          toast.success('Đăng xuất thành công')
+        })
         break
     }
   }

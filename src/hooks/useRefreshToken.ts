@@ -7,10 +7,15 @@ import axiosInstance from '@/axiosInstance.ts'
 const useRefreshToken = () => {
   const [isLoading, setIsLoading] = useState(true)
   const dispatch = useDispatch()
+  const accessToken = localStorage.getItem('jwtToken')
 
   useEffect(() => {
     const refresh = async () => {
       try {
+        if (!accessToken) {
+          return
+        }
+
         setIsLoading(true)
         const response = await axiosInstance.post<User>('/api/auth/refresh-token', {}, { withCredentials: true })
         const user = response.data
@@ -28,7 +33,7 @@ const useRefreshToken = () => {
     }
 
     refresh()
-  }, [dispatch])
+  }, [accessToken, dispatch])
 
   return isLoading
 }
