@@ -159,9 +159,9 @@ function AppSider() {
         break
       case 'logout':
         dispatch(logout())
+        navigate(ROUTER_NAMES.LOGIN)
         localStorage.removeItem('jwtToken')
         axiosInstance.post('/api/auth/logout', {}, { withCredentials: true }).then(() => {
-          navigate(ROUTER_NAMES.LOGIN)
           toast.success('Đăng xuất thành công')
         })
         break
