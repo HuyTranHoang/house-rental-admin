@@ -1,56 +1,48 @@
-import './App.css'
+import CustomIndicator from '@/components/CustomIndicator.tsx'
+import { Spin } from 'antd'
+import { useEffect, useState } from 'react'
 import { RouterProvider } from 'react-router-dom'
 import { Toaster } from 'sonner'
-import { useAppDispatch } from './store.ts'
-import { useEffect, useState } from 'react'
-import { loginFailure, loginSuccess } from './features/auth/authSlice.ts'
-import { Spin } from 'antd'
-import router from './router/router.tsx'
+import './App.css'
 import axiosInstance from './axiosInstance.ts'
-import CustomIndicator from '@/components/CustomIndicator.tsx'
-import { delay } from '@/utils/delay.ts'
+import { loginFailure, loginSuccess } from './features/auth/authSlice.ts'
+import router from './router/router.tsx'
+import { useAppDispatch } from './store.ts'
+import { User } from '@/models/user.type.ts'
 
 function App() {
   const dispatch = useAppDispatch()
-  const [spinning, setSpinning] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const refresh = async () => {
-      const token = localStorage.getItem('jwtToken')
-      if (token) {
-        try {
-          const response = await axiosInstance.get('/api/auth/refresh-token')
-          const payload = {
-            user: response.data,
-            token: response.headers['jwt-token']
-          }
-          dispatch(loginSuccess(payload))
-        } catch (error) {
-          dispatch(loginFailure())
-          localStorage.removeItem('jwtToken')
-        } finally {
-          await delay(500)
-          setSpinning(false)
-        }
-      } else {
-        await delay(500)
-        setSpinning(false)
+      try {
+        setIsLoading(true)
+        const response = await axiosInstance.post<User>('/api/auth/refresh-token', {}, { withCredentials: true })
+        const user = response.data
+        const newJwtToken = response.headers['jwt-token']
+
+        localStorage.setItem('jwtToken', newJwtToken)
+        dispatch(loginSuccess({ user, token: newJwtToken }))
+      } catch (error) {
+        console.error('Refresh token failed:', error)
+        dispatch(loginFailure())
+        localStorage.removeItem('jwtToken')
+      } finally {
+        setIsLoading(false)
       }
     }
 
     refresh().then(() => console.log('>>>APP.JSX', 'App is mounted'))
   }, [dispatch])
 
-  if (spinning) {
-    return <Spin indicator={<CustomIndicator />}
-                 spinning={spinning}
-                 tip={'Đang tải dữ liệu...Vui lòng đợi trong giây lát!!!'}
-                 fullscreen />
+  if (isLoading) {
+    return <Spin indicator={<CustomIndicator />} tip={'Đang tải dữ liệu...Vui lòng đợi trong giây lát!!!'} fullscreen />
   }
 
   return (
     <>
-      <Toaster richColors={true} position="bottom-center" />
+      <Toaster richColors={true} position='bottom-center' />
       <RouterProvider router={router} />
     </>
   )
