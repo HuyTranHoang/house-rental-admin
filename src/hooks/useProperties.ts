@@ -5,11 +5,11 @@ import {
   getPropertyById,
   updatePropertyStatus
 } from '@/api/property.api'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
-import { useSearchParams } from 'react-router-dom'
-import { useCallback } from 'react'
 import { PropertyFilters, PropertyStatus } from '@/models/property.type.ts'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 export const useProperty = (id: number) => {
   const { data, isLoading } = useQuery({
@@ -55,11 +55,53 @@ export function useDeleteProperty() {
 }
 
 export const useProperties = (
-search: string, cityId: number, districtId: number, roomTypeId: number, minPrice: number, maxPrice: number, minArea: number, maxArea: number, numOfDays: number, status: PropertyStatus, pageNumber: number, pageSize: number, sortBy: string) => {
+  search: string,
+  cityId: number,
+  districtId: number,
+  roomTypeId: number,
+  minPrice: number,
+  maxPrice: number,
+  minArea: number,
+  maxArea: number,
+  numOfDays: number,
+  status: PropertyStatus,
+  pageNumber: number,
+  pageSize: number,
+  sortBy: string
+) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['properties', search, cityId, districtId, roomTypeId, status, pageNumber, pageSize, sortBy],
+    queryKey: [
+      'properties',
+      search,
+      cityId,
+      districtId,
+      roomTypeId,
+      minPrice,
+      maxPrice,
+      minArea,
+      maxArea,
+      numOfDays,
+      status,
+      pageNumber,
+      pageSize,
+      sortBy
+    ],
     queryFn: () =>
-      getAllPropertyWithPagination(search, cityId, districtId, roomTypeId, minPrice, maxPrice, minArea , maxArea , numOfDays, status, pageNumber, pageSize, sortBy)
+      getAllPropertyWithPagination(
+        search,
+        cityId,
+        districtId,
+        roomTypeId,
+        minPrice,
+        maxPrice,
+        minArea,
+        maxArea,
+        numOfDays,
+        status,
+        pageNumber,
+        pageSize,
+        sortBy
+      )
   })
 
   return { data, isLoading, isError }
@@ -71,15 +113,9 @@ export const useBlockProperty = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: blockProperty,
     onSuccess: (property) => {
-      queryClient
-        .invalidateQueries({ queryKey: ['properties'] })
-        .then(() => {
-          toast.success(
-            `Bài đăng ${
-              property.blocked ? 'đã bị chặn' : 'đã được mở chặn'
-            } thành công`
-          )
-        })
+      queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => {
+        toast.success(`Bài đăng ${property.blocked ? 'đã bị chặn' : 'đã được mở chặn'} thành công`)
+      })
     },
     onError: (error) => {
       toast.error(error.message)
@@ -135,29 +171,41 @@ export const usePropertyFilters = () => {
           if (filters.minPrice !== undefined) {
             params.set('minPrice', String(filters.minPrice))
             params.set('pageNumber', '1')
+          } else {
+            params.delete('minPrice')
           }
 
           if (filters.maxPrice !== undefined) {
             params.set('maxPrice', String(filters.maxPrice))
             params.set('pageNumber', '1')
+          } else {
+            params.delete('maxPrice')
           }
+
           if (filters.minArea !== undefined) {
             params.set('minArea', String(filters.minArea))
             params.set('pageNumber', '1')
+          } else {
+            params.delete('minArea')
           }
 
           if (filters.maxArea !== undefined) {
             params.set('maxArea', String(filters.maxArea))
             params.set('pageNumber', '1')
+          } else {
+            params.delete('maxArea')
           }
 
           if (filters.numOfDays !== undefined) {
             params.set('numOfDays', String(filters.numOfDays))
             params.set('pageNumber', '1')
+          } else {
+            params.delete('numOfDays')
           }
 
           if (filters.status !== undefined) {
             params.set('status', filters.status)
+            params.set('pageNumber', '1')
           }
 
           if (filters.pageNumber !== undefined) {
@@ -184,5 +232,20 @@ export const usePropertyFilters = () => {
     [setSearchParams]
   )
 
-  return { search, cityId, districtId, roomTypeId,minPrice,maxPrice,minArea,maxArea,numOfDays, status, sortBy, pageNumber, pageSize, setFilters }
+  return {
+    search,
+    cityId,
+    districtId,
+    roomTypeId,
+    minPrice,
+    maxPrice,
+    minArea,
+    maxArea,
+    numOfDays,
+    status,
+    sortBy,
+    pageNumber,
+    pageSize,
+    setFilters
+  }
 }

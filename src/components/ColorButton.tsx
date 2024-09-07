@@ -13,15 +13,15 @@ interface configButton {
 type ColorButtonProps = GetProps<typeof Button> & configButton
 
 function ColorButton({
-                       linkHover,
-                       fontWeight,
-                       borderHoverColor,
-                       defaultHover,
-                       borderColor,
-                       lineWidth,
-                       children,
-                       ...props
-                     }: ColorButtonProps) {
+  linkHover,
+  fontWeight,
+  borderHoverColor,
+  defaultHover,
+  borderColor,
+  lineWidth,
+  children,
+  ...props
+}: ColorButtonProps) {
   return (
     <ConfigProvider
       theme={{
@@ -46,6 +46,5 @@ function ColorButton({
     </ConfigProvider>
   )
 }
-
 
 export default ColorButton

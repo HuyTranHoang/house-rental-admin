@@ -22,7 +22,6 @@ function AddUpdateAmenity() {
   const { addAmenityMutate, addAmenityPending } = useCreateAmenity(setError)
   const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity(setError)
 
-
   const onFinish: FormProps<AmenityForm>['onFinish'] = (values) => {
     if (isAddMode) {
       addAmenityMutate(values)
@@ -50,17 +49,22 @@ function AddUpdateAmenity() {
 
   return (
     <>
-      <Flex align="center" justify="space-between">
+      <Flex align='center' justify='space-between'>
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button icon={<LeftCircleOutlined />} shape="round" type="primary"
-                onClick={() => navigate(ROUTER_NAMES.AMENITY)}>Quay
-          lại</Button>
+        <Button
+          icon={<LeftCircleOutlined />}
+          shape='round'
+          type='primary'
+          onClick={() => navigate(ROUTER_NAMES.AMENITY)}
+        >
+          Quay lại
+        </Button>
       </Flex>
       <Form
         form={form}
-        name="amenityForm"
+        name='amenityForm'
         labelCol={{ span: 5 }}
         style={{
           maxWidth: 600,
@@ -70,16 +74,15 @@ function AddUpdateAmenity() {
           padding: '32px 32px 0'
         }}
         onFinish={onFinish}
-        autoComplete="off"
+        autoComplete='off'
       >
-        <Form.Item<AmenityForm> label="Id" name="id" hidden
-        >
+        <Form.Item<AmenityForm> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<AmenityForm>
-          label="Tên tiện nghi"
-          name="name"
+          label='Tên tiện nghi'
+          name='name'
           rules={[
             { required: true, message: 'Vui lòng nhập tên tiện nghi!' },
             { min: 3, message: 'Tên tiện nghi phải có ít nhất 3 ký tự!' },
@@ -92,15 +95,22 @@ function AddUpdateAmenity() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>
-          <Button onClick={() => {
-            form.resetFields()
-            setError('')
-          }} style={{ marginRight: 16 }}>
+          <Button
+            onClick={() => {
+              form.resetFields()
+              setError('')
+            }}
+            style={{ marginRight: 16 }}
+          >
             Đặt lại
           </Button>
 
-          <Button loading={addAmenityPending || updateAmenityPending} type="primary" htmlType="submit"
-                  style={{ width: 100 }}>
+          <Button
+            loading={addAmenityPending || updateAmenityPending}
+            type='primary'
+            htmlType='submit'
+            style={{ width: 100 }}
+          >
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>

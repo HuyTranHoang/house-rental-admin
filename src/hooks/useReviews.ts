@@ -2,13 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteReview, deleteReviews, getAllReviewsWithPagination } from '../api/review.api'
 import { toast } from 'sonner'
 
-
-export const useReviews = (search: string,
-                           rating: number,
-                           pageNumber: number,
-                           pageSize: number,
-                           sortBy: string) => {
-
+export const useReviews = (search: string, rating: number, pageNumber: number, pageSize: number, sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['reviews', search, rating, pageNumber, pageSize, sortBy],
     queryFn: () => getAllReviewsWithPagination(search, rating, pageNumber, pageSize, sortBy)

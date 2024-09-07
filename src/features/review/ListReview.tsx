@@ -7,11 +7,9 @@ import ReviewTable from './ReviewTable'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig'
 
-
 const { Search } = Input
 
 function ListReview() {
-
   const [search, setSearch] = useState('')
   const [rating, setRating] = useState(0)
   const [sortBy, setSortBy] = useState('IdDesc')
@@ -46,11 +44,11 @@ function ListReview() {
 
   const dataSource: ReviewDataSource[] = data
     ? data.data.map((review: Review, idx) => ({
-      ...review,
-      key: review.id,
-      index: (pageNumber - 1) * pageSize + idx + 1,
-      createdAt: customFormatDate(review.createdAt)
-    }))
+        ...review,
+        key: review.id,
+        index: (pageNumber - 1) * pageSize + idx + 1,
+        createdAt: customFormatDate(review.createdAt)
+      }))
     : []
 
   const rowSelection = {
@@ -66,23 +64,23 @@ function ListReview() {
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
+      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+        <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
             Danh sách đánh giá
           </Typography.Title>
-          <Divider type="vertical" style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
+          <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Search
             allowClear
             onSearch={(value) => setSearch(value)}
-            placeholder="Tìm kiếm theo tài khoản, bài đăng"
+            placeholder='Tìm kiếm theo tài khoản, bài đăng'
             style={{ width: 300 }}
           />
         </Flex>
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape="round" type="primary" danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={handleDelete}>
               Xóa các mục đã chọn
             </Button>
           )}

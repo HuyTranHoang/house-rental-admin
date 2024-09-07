@@ -21,18 +21,17 @@ interface AmenityTableProps {
 }
 
 function AmenityTable({
-                        dataSource,
-                        loading,
-                        paginationProps,
-                        handleTableChange,
-                        rowSelection,
-                        sortedInfo
-                      }: AmenityTableProps) {
+  dataSource,
+  loading,
+  paginationProps,
+  handleTableChange,
+  rowSelection,
+  sortedInfo
+}: AmenityTableProps) {
   const navigate = useNavigate()
   const { deleteAmenityMutate } = useDeleteAmenity()
 
   const showDeleteConfirm = (record: AmenityDataSource) => {
-
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
@@ -56,7 +55,7 @@ function AmenityTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa tiện nghi" />,
+      title: <ConfirmModalTitle title='Xác nhận xóa tiện nghi' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -98,8 +97,10 @@ function AmenityTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(ROUTER_NAMES.getAmenityEditPath(record.id))}
-                      onDelete={() => showDeleteConfirm(record)} />
+        <TableActions
+          onUpdate={() => navigate(ROUTER_NAMES.getAmenityEditPath(record.id))}
+          onDelete={() => showDeleteConfirm(record)}
+        />
       )
     }
   ]

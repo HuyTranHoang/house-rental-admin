@@ -1,12 +1,12 @@
-import { useMatch, useNavigate, useParams } from 'react-router-dom'
+import { getRoomTypeById } from '@/api/roomType.api.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useCreateRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
+import { RoomTypeForm } from '@/models/roomType.type.ts'
+import { LeftCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
-import { getRoomTypeById } from '@/api/roomType.api.ts'
-import { useCreateRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
-import { LeftCircleOutlined } from '@ant-design/icons'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
-import { RoomTypeForm } from '@/models/roomType.type.ts'
+import { useMatch, useNavigate, useParams } from 'react-router-dom'
 
 function AddUpdateRoomType() {
   const match = useMatch(ROUTER_NAMES.ADD_ROOM_TYPE)
@@ -21,7 +21,6 @@ function AddUpdateRoomType() {
 
   const { addRoomTypeMutate, addRoomTypePening } = useCreateRoomType(setError)
   const { updateRoomTypeMutate, updateRoomTypePending } = useUpdateRoomType(setError)
-
 
   const onFinish: FormProps<RoomTypeForm>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -50,17 +49,22 @@ function AddUpdateRoomType() {
 
   return (
     <>
-      <Flex align="center" justify="space-between">
+      <Flex align='center' justify='space-between'>
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button icon={<LeftCircleOutlined />} shape="round" type="primary"
-                onClick={() => navigate(ROUTER_NAMES.ROOM_TYPE)}>Quay
-          lại</Button>
+        <Button
+          icon={<LeftCircleOutlined />}
+          shape='round'
+          type='primary'
+          onClick={() => navigate(ROUTER_NAMES.ROOM_TYPE)}
+        >
+          Quay lại
+        </Button>
       </Flex>
       <Form
         form={form}
-        name="roomTypeForm"
+        name='roomTypeForm'
         labelCol={{ span: 5 }}
         style={{
           maxWidth: 600,
@@ -70,15 +74,15 @@ function AddUpdateRoomType() {
           padding: '32px 32px 0'
         }}
         onFinish={onFinish}
-        autoComplete="off"
+        autoComplete='off'
       >
-        <Form.Item<RoomTypeForm> label="Id" name="id" hidden>
+        <Form.Item<RoomTypeForm> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<RoomTypeForm>
-          label="Tên loại phòng"
-          name="name"
+          label='Tên loại phòng'
+          name='name'
           rules={[
             { required: true, message: 'Vui lòng nhập tên loại phòng!' },
             { min: 3, message: 'Tên loại phòng phải có ít nhất 3 ký tự!' },
@@ -91,15 +95,22 @@ function AddUpdateRoomType() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>
-          <Button onClick={() => {
-            form.resetFields()
-            setError('')
-          }} style={{ marginRight: 16 }}>
+          <Button
+            onClick={() => {
+              form.resetFields()
+              setError('')
+            }}
+            style={{ marginRight: 16 }}
+          >
             Đặt lại
           </Button>
 
-          <Button loading={addRoomTypePening || updateRoomTypePending} type="primary" htmlType="submit"
-                  style={{ width: 100 }}>
+          <Button
+            loading={addRoomTypePening || updateRoomTypePending}
+            type='primary'
+            htmlType='submit'
+            style={{ width: 100 }}
+          >
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>

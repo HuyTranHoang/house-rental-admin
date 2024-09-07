@@ -1,21 +1,17 @@
-import { Modal, DescriptionsProps } from 'antd';
-import ConfirmModalTitle from '../components/ConfirmModalTitle';
-import ConfirmModalContent from '../components/ConfirmModalContent';
+import { DescriptionsProps, Modal } from 'antd'
+import ConfirmModalTitle from '../components/ConfirmModalTitle'
+import ConfirmModalContent from '../components/ConfirmModalContent'
 
-const { confirm } = Modal;
+const { confirm } = Modal
 
-export const showMultipleDeleteConfirm = (
-  deleteIdList: number[],
-  title: string,
-  onOk: () => void
-) => {
+export const showMultipleDeleteConfirm = (deleteIdList: number[], title: string, onOk: () => void) => {
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'Số lượng đã chọn',
       children: <span>{deleteIdList.length}</span>
     }
-  ];
+  ]
 
   confirm({
     icon: null,
@@ -26,5 +22,5 @@ export const showMultipleDeleteConfirm = (
     cancelText: 'Hủy',
     maskClosable: true,
     onOk
-  });
-};
+  })
+}

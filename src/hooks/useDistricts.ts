@@ -1,11 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   addDistrict,
-  deleteDistricts,
   deleteDistrict,
+  deleteDistricts,
+  getAllDistricts,
   getAllDistrictsWithPagination,
-  updateDistrict,
-  getAllDistricts
+  updateDistrict
 } from '@/api/district.api'
 import { toast } from 'sonner'
 import axios from 'axios'

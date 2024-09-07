@@ -21,7 +21,14 @@ export interface UserField {
   nonLocked: boolean
 }
 
-export const getAllUserWithPagination = async (search: string, isNonLocked: boolean, roles: string, pageNumber: number, pageSize: number, sortBy: string) => {
+export const getAllUserWithPagination = async (
+  search: string,
+  isNonLocked: boolean,
+  roles: string,
+  pageNumber: number,
+  pageSize: number,
+  sortBy: string
+) => {
   try {
     pageNumber = pageNumber - 1
 
@@ -75,4 +82,3 @@ export const deleteUsers = async (ids: number[]) => {
     throw new Error('Xóa các tài khoản thất bại')
   }
 }
-

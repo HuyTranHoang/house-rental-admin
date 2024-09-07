@@ -20,7 +20,12 @@ export const getAllCities = async () => {
   }
 }
 
-export const getAllCitiesWithPagination = async (search: string, pageNumber: number, pageSize: number, sortBy: string) => {
+export const getAllCitiesWithPagination = async (
+  search: string,
+  pageNumber: number,
+  pageSize: number,
+  sortBy: string
+) => {
   try {
     pageNumber = pageNumber - 1
 

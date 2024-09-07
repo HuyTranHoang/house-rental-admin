@@ -7,7 +7,7 @@ export interface RoomType {
 }
 
 export type RoomTypeDataSource = RoomType & {
-  key: React.Key,
+  key: React.Key
   index?: number
 }
 

@@ -1,13 +1,13 @@
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import TableActions from '@/components/TableActions.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useDeleteRoomType } from '@/hooks/useRoomTypes.ts'
+import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { RoomTypeDataSource } from '@/models/roomType.type.ts'
-import { useNavigate } from 'react-router-dom'
-import { useDeleteRoomType } from '@/hooks/useRoomTypes.ts'
-import TableActions from '@/components/TableActions.tsx'
-import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { SorterResult } from 'antd/lib/table/interface'
+import { useNavigate } from 'react-router-dom'
 
 const { confirm } = Modal
 
@@ -21,18 +21,17 @@ interface RoomTypeTableProps {
 }
 
 function RoomTypeTable({
-                         dataSource,
-                         loading,
-                         paginationProps,
-                         handleTableChange,
-                         rowSelection,
-                         sortedInfo
-                       }: RoomTypeTableProps) {
+  dataSource,
+  loading,
+  paginationProps,
+  handleTableChange,
+  rowSelection,
+  sortedInfo
+}: RoomTypeTableProps) {
   const navigate = useNavigate()
   const { deleteRoomTypeMutate } = useDeleteRoomType()
 
   const showDeleteConfirm = (record: RoomTypeDataSource) => {
-
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
@@ -56,7 +55,7 @@ function RoomTypeTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa loại phòng" />,
+      title: <ConfirmModalTitle title='Xác nhận xóa loại phòng' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -81,7 +80,7 @@ function RoomTypeTable({
       dataIndex: 'name',
       key: 'name',
       sorter: true,
-      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null,
+      sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null
     },
     {
       title: 'Ngày tạo',
@@ -98,8 +97,10 @@ function RoomTypeTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions onUpdate={() => navigate(ROUTER_NAMES.getRoomTypeEditPath(record.id))}
-                      onDelete={() => showDeleteConfirm(record)} />
+        <TableActions
+          onUpdate={() => navigate(ROUTER_NAMES.getRoomTypeEditPath(record.id))}
+          onDelete={() => showDeleteConfirm(record)}
+        />
       )
     }
   ]

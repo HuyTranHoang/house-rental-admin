@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { selectAuth } from '@/features/auth/authSlice.ts'
-import { useNavigate, useLocation, Outlet } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import ROUTER_NAMES from '@/constant/routerNames'
 

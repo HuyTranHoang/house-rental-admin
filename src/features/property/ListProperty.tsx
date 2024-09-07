@@ -1,19 +1,21 @@
-import { Cascader, Divider, Flex, Form, Input, Select, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import { useQueryClient } from '@tanstack/react-query'
+import { Cascader, Divider, Flex, Form, Input, Select, TableProps, Tabs, TabsProps, Typography } from 'antd'
 
-import { Property as PropertyType, PropertyDataSource, PropertyStatus } from '@/models/property.type'
-import { useProperties, usePropertyFilters } from '@/hooks/useProperties'
-import PropertyTable from './PropertyTable'
 import ErrorFetching from '@/components/ErrorFetching'
-import { customFormatDate } from '@/utils/customFormatDate'
-import { CheckCircleOutlined, CloseSquareOutlined, DashOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { DollarIcon, GeoIcon, HomeIcon } from '@/components/FilterIcons.tsx'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { useDistrictsAll } from '@/hooks/useDistricts.ts'
-import { useEffect, useState } from 'react'
-import { DollarIcon, GeoIcon, HomeIcon } from '@/components/FilterIcons.tsx'
+import { useProperties, usePropertyFilters } from '@/hooks/useProperties'
 import { useRoomTypesAll } from '@/hooks/useRoomTypes.ts'
+import { PropertyDataSource, PropertyStatus, Property as PropertyType } from '@/models/property.type'
+import { customFormatDate } from '@/utils/customFormatDate'
+import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { useEffect, useState } from 'react'
+import PropertyTable from './PropertyTable'
 
 const { Search } = Input
+
+const milion = 1000000
 
 interface Option {
   value: string
@@ -37,7 +39,7 @@ function ListProperty() {
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
-  const { 
+  const {
     search,
     cityId,
     districtId,
@@ -51,8 +53,8 @@ function ListProperty() {
     pageNumber,
     pageSize,
     sortBy,
-    setFilters } =
-    usePropertyFilters()
+    setFilters
+  } = usePropertyFilters()
 
   const { data, isLoading, isError } = useProperties(
     search,
@@ -114,55 +116,29 @@ function ListProperty() {
   }
   // End Room Type
 
-  // Started Price
+  // Start Filter
   const handlePriceChange = (value: string) => {
     const [min, max] = value.split(',')
-
-    const milion = 1000000
-
-    if (min === '0' && max === '0') {
-      setFilters({ minPrice: 0, maxPrice: 0 })
-    } else if (min === '0') {
-      setFilters({ minPrice: 0, maxPrice: Number(max) * milion })
-    } else if (max === '0') {
-      setFilters({ minPrice: Number(min) * milion, maxPrice: 0 })
-    } else {
-      setFilters({ minPrice: Number(min) * milion, maxPrice: Number(max) * milion })
-    }
+    setFilters({
+      minPrice: Number(min || '0') * milion,
+      maxPrice: Number(max || '0') * milion
+    })
   }
+  const handleAreaChange = (value: string) => {
+    const [minArea, maxArea] = value.split(',')
 
-  // End Price
-
-   // Started Area
-   const handleAreaChange = (value: string) => {
-    const [min, max] = value.split(',');
-
-    if (min === '0' && max === '0') {
-      setFilters({ minArea: 0, maxArea: 0 });
-    } else if (min === '0') {
-      setFilters({ minArea: 0, maxArea: Number(max) });
-    } else if (max === '0') {
-      setFilters({ minArea: Number(min), maxArea: 0 });
-    } else {
-      setFilters({ minArea: Number(min), maxArea: Number(max) });
-    }
-  };
-
-  // End Area
-
-  // Started Num Of Days
-
-  const handleNumOfDaysChange = (value: string) => {
-    setFilters({ numOfDays: parseInt(value) });
-  };
-
-  // End Num Of Days
+    setFilters({
+      minArea: parseInt(minArea) * 10,
+      maxArea: parseInt(maxArea) * 10
+    })
+  }
 
   const onTabChange = (key: string) => {
     setFilters({ status: key as PropertyType['status'] })
     queryClient.invalidateQueries({ queryKey: ['properties'] })
   }
 
+  // End Filter
   const handleTableChange: TableProps<PropertyDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
@@ -172,9 +148,7 @@ function ListProperty() {
       setSortedInfo({})
     }
   }
-  
-  // St
- 
+
   const dataSource: PropertyDataSource[] = data
     ? data.data
         .filter((property) => property.status === status)
@@ -199,11 +173,6 @@ function ListProperty() {
     }
   }, [sortBy])
 
-  // Tự động load lại dữ liệu khi filter
-  useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ['properties'] });
-  }, [search, cityId, districtId, roomTypeId, minPrice, maxPrice, minArea, maxArea, numOfDays, status, pageNumber, pageSize, sortBy, queryClient]);
-
   if (isError) {
     return <ErrorFetching />
   }
@@ -221,23 +190,30 @@ function ListProperty() {
             name='searchCityForm'
             initialValues={{
               search: search,
-              cityDistrict: cityId && districtId ? [cityId.toString(), districtId.toString()] : cityId ? [cityId.toString(), '0'] : [],
-              roomType: roomTypeId.toString()
+              cityDistrict:
+                cityId && districtId
+                  ? [cityId.toString(), districtId.toString()]
+                  : cityId
+                    ? [cityId.toString(), '0']
+                    : [],
+              roomType: roomTypeId ? roomTypeId.toString() : undefined,
+              price: minPrice || maxPrice ? `${minPrice / milion},${maxPrice / milion}` : undefined,
+              area: minArea || maxArea ? `${minArea / 10},${maxArea / 10}` : undefined
             }}
             layout='inline'
           >
             <Form.Item name='search'>
               <Search
                 allowClear
+                className='w-72'
                 onSearch={(value) => setFilters({ search: value })}
                 placeholder='Tiêu đề, thành phố, quận huyện, địa chỉ..'
-                style={{ width: 330 }}
               />
             </Form.Item>
 
             <Form.Item name='cityDistrict'>
               <Cascader
-                style={{ width: 250 }}
+                className='w-48'
                 options={cityDistrictOptions}
                 onChange={handleCityDistrictChange}
                 allowClear={false}
@@ -249,7 +225,7 @@ function ListProperty() {
 
             <Form.Item name='roomType'>
               <Select
-                style={{ width: 150 }}
+                className='w-48'
                 onChange={(value) => setFilters({ roomTypeId: parseInt(value) })}
                 loading={roomTypeIsLoading}
                 placeholder={'Loại phòng'}
@@ -259,9 +235,9 @@ function ListProperty() {
             </Form.Item>
             <Form.Item name='price'>
               <Select
-                size='large'
+                className='w-48'
                 onChange={handlePriceChange}
-                placeholder={'Giá thuê'}
+                placeholder='Giá thuê'
                 suffixIcon={<DollarIcon />}
                 options={[
                   { value: '0,0', label: 'Tất cả' },
@@ -274,40 +250,20 @@ function ListProperty() {
             </Form.Item>
             <Form.Item name='area'>
               <Select
-                size='large'
+                className='w-48'
                 onChange={handleAreaChange}
-                placeholder={'Diện tích'}
+                placeholder='Diện tích'
                 suffixIcon={<HomeIcon />}
                 options={[
                   { value: '0,0', label: 'Tất cả' },
-                  { value: '0,30', label: '< 30 m2' },
-                  { value: '30,50', label: '30 - 50 m2' },
-                  { value: '50,70', label: '50 - 70 m2' },
-                  { value: '70,100', label: '70 - 100 m2' },
-                  { value: '100,0', label: '> 100 m2' }
+                  { value: '0,3', label: '< 30 m2' },
+                  { value: '3,5', label: '30 - 50 m2' },
+                  { value: '5,7', label: '50 - 70 m2' },
+                  { value: '7,10', label: '70 - 100 m2' },
+                  { value: '10,0', label: '> 100 m2' }
                 ]}
               />
             </Form.Item>
-
-            <Form.Item name='numOfDays'>
-              <Select
-                size='large'
-                onChange={handleNumOfDaysChange}
-                placeholder={'Số ngày đăng'}
-                suffixIcon={<DashOutlined />}
-                options={[
-                  { value: '0', label: 'Tất cả' },
-                  { value: '1', label: 'Cách đây 1 ngày' },
-                  { value: '3', label: 'Cách đây 3 ngày' },
-                  { value: '7', label: 'Cách đây 7 ngày' },
-                  { value: '15', label: 'Cách đây 15 ngày' },
-                  { value: '30', label: 'Cách đây 30 ngày' }
-                ]}
-              />
-            </Form.Item>
-            
-
-        
           </Form>
         </Flex>
       </Flex>

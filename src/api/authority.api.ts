@@ -1,7 +1,7 @@
 import axiosInstance from '@/axiosInstance.ts'
 import { Authority } from '@/models/authority.type.ts'
 
-export const getAllAuthorities= async () => {
+export const getAllAuthorities = async () => {
   try {
     const response = await axiosInstance.get<Authority[]>('/api/authorities/all')
     if (response.status === 200) {

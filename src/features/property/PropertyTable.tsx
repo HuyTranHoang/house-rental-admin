@@ -24,10 +24,9 @@ import {
   Tooltip,
   Typography
 } from 'antd'
-import { useState } from 'react'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
-import DOMPurify from 'dompurify'
 import { SorterResult } from 'antd/lib/table/interface'
+import DOMPurify from 'dompurify'
+import { useState } from 'react'
 
 const { confirm } = Modal
 
@@ -146,7 +145,7 @@ function PropertyTable({
     },
     {
       key: 'blocked',
-      label: 'Blocked',
+      label: 'Trạng thái',
       children: (
         <Badge
           status={currentProperty?.blocked ? 'error' : 'success'}
@@ -168,7 +167,7 @@ function PropertyTable({
     {
       key: 'createdAt',
       label: 'Thời gian đăng',
-      children: customFormatDate(currentProperty?.createdAt)
+      children: currentProperty?.createdAt
     },
     {
       key: 'username',
@@ -209,7 +208,7 @@ function PropertyTable({
       key: 'images',
       label: `Hình ảnh (${currentProperty?.propertyImages.length})`,
       children: (
-        <Row gutter={[16, 16]}>
+        <Row gutter={[8, 8]}>
           <Image.PreviewGroup>
             {currentProperty?.propertyImages.map((image, index) => (
               <Col key={index} span={6}>
@@ -221,10 +220,8 @@ function PropertyTable({
                       </>
                     )
                   }}
-                  height={200}
-                  width={200}
                   src={image}
-                  style={{ objectFit: 'cover' }}
+                  className='size-48 object-cover p-2'
                 />
               </Col>
             ))}

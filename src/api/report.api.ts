@@ -12,13 +12,14 @@ export interface updateReportStatus {
   status: ReportStatus
 }
 
-
-export const getAllReportsWithPagination = async (search: string,
-                                                  category: string,
-                                                  status: ReportStatus,
-                                                  pageNumber: number,
-                                                  pageSize: number,
-                                                  sortBy: string) => {
+export const getAllReportsWithPagination = async (
+  search: string,
+  category: string,
+  status: ReportStatus,
+  pageNumber: number,
+  pageSize: number,
+  sortBy: string
+) => {
   try {
     pageNumber = pageNumber - 1
 

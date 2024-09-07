@@ -1,38 +1,30 @@
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import TableActions from '@/components/TableActions.tsx'
+import { useDeleteRole } from '@/hooks/useRoles.ts'
+import { CityDataSource } from '@/models/city.type.ts'
+import { RoleDataSource } from '@/models/role.type.ts'
 import { DescriptionsProps, Modal, Space, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { RoleDataSource } from '@/models/role.type.ts'
-import TableActions from '@/components/TableActions.tsx'
 import { useNavigate } from 'react-router-dom'
-import { CityDataSource } from '@/models/city.type.ts'
-import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import { authorityPrivilegesFilterMap, authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
-import { useDeleteRole } from '@/hooks/useRoles.ts'
-
 
 const { confirm } = Modal
 
 interface RoleTableProps {
-  dataSource: RoleDataSource[];
-  loading: boolean;
-  paginationProps: false | TablePaginationConfig | undefined;
-  handleTableChange: TableProps<RoleDataSource>['onChange'];
+  dataSource: RoleDataSource[]
+  loading: boolean
+  paginationProps: false | TablePaginationConfig | undefined
+  handleTableChange: TableProps<RoleDataSource>['onChange']
   rowSelection: TableRowSelection<RoleDataSource> | undefined
 }
 
-function RoleTable({
-                     dataSource,
-                     loading,
-                     paginationProps,
-                     handleTableChange,
-                     rowSelection
-                   }: RoleTableProps) {
+function RoleTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: RoleTableProps) {
   const navigate = useNavigate()
 
   const { deleteRoleMutate } = useDeleteRole()
 
   const showDeleteConfirm = (record: CityDataSource) => {
-
     const items: DescriptionsProps['items'] = [
       {
         key: '1',
@@ -56,7 +48,7 @@ function RoleTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title="Xác nhận xóa vai trò" />,
+      title: <ConfirmModalTitle title='Xác nhận xóa vai trò' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
@@ -92,9 +84,13 @@ function RoleTable({
       onFilter: (value, record) => record.authorityPrivileges.includes(value as string),
       render: (authorityPrivileges: string[]) => (
         <Space size='small' wrap>
-          {authorityPrivileges.map(authorityPrivilege => {
+          {authorityPrivileges.map((authorityPrivilege) => {
             const [label, color] = authorityPrivilegesMap[authorityPrivilege] || [authorityPrivilege, 'gray']
-            return <Tag color={color} key={authorityPrivilege}>{label}</Tag>
+            return (
+              <Tag color={color} key={authorityPrivilege}>
+                {label}
+              </Tag>
+            )
           })}
         </Space>
       )
@@ -113,9 +109,11 @@ function RoleTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions disabled={record.name === 'ROLE_ADMIN'}
-                      onUpdate={() => navigate(`/role/${record.id}/edit`)}
-                      onDelete={() => showDeleteConfirm(record)} />
+        <TableActions
+          disabled={record.name === 'ROLE_ADMIN'}
+          onUpdate={() => navigate(`/role/${record.id}/edit`)}
+          onDelete={() => showDeleteConfirm(record)}
+        />
       )
     }
   ]

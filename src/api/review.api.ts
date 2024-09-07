@@ -8,12 +8,13 @@ interface ReviewWithPagination {
   data: Review[]
 }
 
-export const getAllReviewsWithPagination = async (search: string,
-                                                  rating: number,
-                                                  pageNumber: number,
-                                                  pageSize: number,
-                                                  sortBy: string) => {
-
+export const getAllReviewsWithPagination = async (
+  search: string,
+  rating: number,
+  pageNumber: number,
+  pageSize: number,
+  sortBy: string
+) => {
   try {
     pageNumber = pageNumber - 1
 

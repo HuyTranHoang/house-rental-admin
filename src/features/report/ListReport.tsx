@@ -1,6 +1,6 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { useReportFilters, useReports } from '@/hooks/useReports.ts'
-import { ReportDataSource, ReportStatus, Report as ReportType } from '@/models/report.type.ts'
+import { Report as ReportType, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'

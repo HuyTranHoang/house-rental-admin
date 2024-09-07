@@ -1,5 +1,4 @@
-import { FormProps, Select, SelectProps } from 'antd'
-import { Button, Flex, Form, Input, Spin, Typography } from 'antd'
+import { Button, Flex, Form, FormProps, Input, Select, SelectProps, Spin, Typography } from 'antd'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { getDistrictById } from '@/api/district.api'

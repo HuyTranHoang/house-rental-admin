@@ -1,3 +1,13 @@
+import { getRoleById, RoleField } from '@/api/role.api.ts'
+import ListRole from '@/features/role/ListRole.tsx'
+import { useAuthorities } from '@/hooks/useAuthorities.ts'
+import { useUpdateRole } from '@/hooks/useRoles.ts'
+import { Authority } from '@/models/authority.type.ts'
+import { Role } from '@/models/role.type.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
+import { blue, red } from '@ant-design/colors'
+import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons'
+import { useQuery } from '@tanstack/react-query'
 import {
   Button,
   Checkbox,
@@ -13,69 +23,54 @@ import {
   Tooltip,
   Typography
 } from 'antd'
-import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons'
-import { blue, red } from '@ant-design/colors'
 import { ReactNode, useEffect, useState } from 'react'
-import { Role } from '@/models/role.type.ts'
-import { useAuthorities } from '@/hooks/useAuthorities.ts'
-import { Authority } from '@/models/authority.type.ts'
-import { getRoleById, RoleField } from '@/api/role.api.ts'
-import { useQuery } from '@tanstack/react-query'
-import ListRole from '@/features/role/ListRole.tsx'
-import { useUpdateRole } from '@/hooks/useRoles.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
-
 
 interface GroupedAuthorities {
   [key: string]: {
-    key: string;
-    privilege: string;
-    read?: ReactNode;
-    create?: ReactNode;
-    delete?: ReactNode;
-    update?: ReactNode;
-  };
+    key: string
+    privilege: string
+    read?: ReactNode
+    create?: ReactNode
+    delete?: ReactNode
+    update?: ReactNode
+  }
 }
 
 interface AuthoritiesTable {
-  key: string;
-  privilege: string;
-  read?: ReactNode;
-  create?: ReactNode;
-  delete?: ReactNode;
-  update?: ReactNode;
+  key: string
+  privilege: string
+  read?: ReactNode
+  create?: ReactNode
+  delete?: ReactNode
+  update?: ReactNode
 }
 
 interface AuthorityPrivileges {
   [key: string]: {
-    [action: string]: boolean;
-  };
+    [action: string]: boolean
+  }
 }
 
 const translationMap: { [key: string]: string } = {
-  'user': 'Người dùng',
-  'property': 'Bất động sản',
-  'review': 'Đánh giá',
-  'city': 'Thành phố',
-  'district': 'Quận huyện',
-  'room_type': 'Loại phòng',
-  'amenity': 'Tiện nghi',
-  'role': 'Vai trò',
-  'dashboard': 'Trang quản trị'
+  user: 'Người dùng',
+  property: 'Bất động sản',
+  review: 'Đánh giá',
+  city: 'Thành phố',
+  district: 'Quận huyện',
+  room_type: 'Loại phòng',
+  amenity: 'Tiện nghi',
+  role: 'Vai trò',
+  dashboard: 'Trang quản trị'
 }
 
-
 function RoleManager() {
-
   const [form] = Form.useForm()
-
 
   const { authorities } = useAuthorities()
 
   const [currentRole, setCurrentRole] = useState({} as Role)
   const [, setError] = useState<string>('')
-  const { updateRoleMutate, updateRolePending } =
-    useUpdateRole(setError, undefined, undefined, setCurrentRole)
+  const { updateRoleMutate, updateRolePending } = useUpdateRole(setError, undefined, undefined, setCurrentRole)
 
   const { data: roleUpdateData, isLoading: roleUpdateLoading } = useQuery({
     queryKey: ['role', currentRole.id],
@@ -116,17 +111,16 @@ function RoleManager() {
       render: (_, rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
         return (
           <Space>
-            <Tooltip title="Chọn tất cả">
+            <Tooltip title='Chọn tất cả'>
               <PlusSquareOutlined onClick={() => selectAll(rowIndex)} />
             </Tooltip>
-            <Tooltip title="Bỏ chọn tất cả">
+            <Tooltip title='Bỏ chọn tất cả'>
               <MinusSquareOutlined onClick={() => unselectAll(rowIndex)} style={{ color: red.primary }} />
             </Tooltip>
           </Space>
         )
       }
     }
-
   ]
 
   const groupBy = (array: Authority[] | undefined): GroupedAuthorities => {
@@ -146,11 +140,7 @@ function RoleManager() {
       result[translatedGroupKey] = {
         ...result[translatedGroupKey],
         [action]: (
-          <Form.Item
-            name={['authorityPrivilegesObject', groupKey, action]}
-            valuePropName="checked"
-            noStyle
-          >
+          <Form.Item name={['authorityPrivilegesObject', groupKey, action]} valuePropName='checked' noStyle>
             <Checkbox />
           </Form.Item>
         )
@@ -160,49 +150,55 @@ function RoleManager() {
   }
 
   const selectAll = (rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
-    const originalKey = Object.keys(translationMap).find(key => translationMap[key] === rowIndex.key) || rowIndex.key
+    const originalKey = Object.keys(translationMap).find((key) => translationMap[key] === rowIndex.key) || rowIndex.key
     const values = form.getFieldsValue()
     const authorityPrivilegesObject = values.authorityPrivilegesObject || {}
     const actions = ['read', 'create', 'delete', 'update']
 
     const newAuthorityPrivilegesObject = {
       ...authorityPrivilegesObject,
-      [originalKey]: actions.reduce((acc, action) => {
-        acc[action] = true
-        return acc
-      }, {} as Record<string, boolean>)
+      [originalKey]: actions.reduce(
+        (acc, action) => {
+          acc[action] = true
+          return acc
+        },
+        {} as Record<string, boolean>
+      )
     }
 
     form.setFieldsValue({ authorityPrivilegesObject: newAuthorityPrivilegesObject })
   }
 
   const unselectAll = (rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
-    const originalKey = Object.keys(translationMap).find(key => translationMap[key] === rowIndex.key) || rowIndex.key
+    const originalKey = Object.keys(translationMap).find((key) => translationMap[key] === rowIndex.key) || rowIndex.key
     const values = form.getFieldsValue()
     const authorityPrivilegesObject = values.authorityPrivilegesObject || {}
     const actions = ['read', 'create', 'delete', 'update']
 
     const newAuthorityPrivilegesObject = {
       ...authorityPrivilegesObject,
-      [originalKey]: actions.reduce((acc, action) => {
-        acc[action] = false
-        return acc
-      }, {} as Record<string, boolean>)
+      [originalKey]: actions.reduce(
+        (acc, action) => {
+          acc[action] = false
+          return acc
+        },
+        {} as Record<string, boolean>
+      )
     }
 
     form.setFieldsValue({ authorityPrivilegesObject: newAuthorityPrivilegesObject })
   }
-
 
   const onFinish: FormProps<RoleField>['onFinish'] = (values) => {
     // Ensure authorityPrivilegesObject is defined and has the correct structure
     const authorityPrivilegesObject = values.authorityPrivilegesObject || {}
 
     // Chuyển đổi nested object thành mảng các quyền hạn
-    const authorityPrivileges = Object.entries(authorityPrivilegesObject).flatMap(([groupKey, actions]) =>
-      Object.entries(actions as unknown as { [key: string]: boolean })
-        .filter(([, isChecked]) => isChecked) // Chỉ giữ những action được chọn (checked)
-        .map(([action]) => `${groupKey}:${action}`) // Kết hợp groupKey và action thành "groupKey:action"
+    const authorityPrivileges = Object.entries(authorityPrivilegesObject).flatMap(
+      ([groupKey, actions]) =>
+        Object.entries(actions as unknown as { [key: string]: boolean })
+          .filter(([, isChecked]) => isChecked) // Chỉ giữ những action được chọn (checked)
+          .map(([action]) => `${groupKey}:${action}`) // Kết hợp groupKey và action thành "groupKey:action"
     )
 
     // Gán giá trị authorityPrivileges vào values để gửi đi
@@ -237,9 +233,11 @@ function RoleManager() {
 
   return (
     <>
-      <Flex align="center" justify="space-between" style={{ marginBottom: 12 }}>
-        <Flex align="center">
-          <Typography.Title level={2} style={{ margin: 0 }}>Quản lý vai trò</Typography.Title>
+      <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
+        <Flex align='center'>
+          <Typography.Title level={2} style={{ margin: 0 }}>
+            Quản lý vai trò
+          </Typography.Title>
         </Flex>
       </Flex>
 
@@ -252,51 +250,31 @@ function RoleManager() {
           <Typography.Title level={5}>
             Quyền hạn vai trò <span style={{ color: blue[5] }}>{currentRole.name}</span>
           </Typography.Title>
-          <Form
-            form={form}
-            name="roleForm"
-            onFinish={onFinish}
-            layout="horizontal"
-            autoComplete="off"
-          >
-            <Form.Item<RoleField>
-              label="Id"
-              name="id"
-              hidden
-            >
+          <Form form={form} name='roleForm' onFinish={onFinish} layout='horizontal' autoComplete='off'>
+            <Form.Item<RoleField> label='Id' name='id' hidden>
               <Input />
             </Form.Item>
 
-            <Form.Item<RoleField>
-              label="Tên vai trò"
-              name="name"
-              hidden
-            >
+            <Form.Item<RoleField> label='Tên vai trò' name='name' hidden>
               <Input />
             </Form.Item>
 
             <Form.Item<RoleField>>
-              {
-                !currentRole.id &&
-                <Typography.Paragraph>Chọn một vai trò để xem quyền hạn</Typography.Paragraph>
-              }
-              {
-                currentRole.id && currentRole.name === 'ROLE_ADMIN' &&
+              {!currentRole.id && <Typography.Paragraph>Chọn một vai trò để xem quyền hạn</Typography.Paragraph>}
+              {currentRole.id && currentRole.name === 'ROLE_ADMIN' && (
                 <Typography.Paragraph>Vai trò admin có tất cả quyền hạn và không thể thay đổi</Typography.Paragraph>
-              }
-              {
-                currentRole.id && currentRole.name !== 'ROLE_ADMIN' &&
+              )}
+              {currentRole.id && currentRole.name !== 'ROLE_ADMIN' && (
                 <Table dataSource={dataSource} columns={columns} pagination={false} loading={roleUpdateLoading} />
-              }
+              )}
             </Form.Item>
 
             <Form.Item>
-              {
-                currentRole.id && currentRole.name !== 'ROLE_ADMIN' &&
-                <Button loading={updateRolePending} type="primary" htmlType="submit">
+              {currentRole.id && currentRole.name !== 'ROLE_ADMIN' && (
+                <Button loading={updateRolePending} type='primary' htmlType='submit'>
                   Cập nhật quyền hạn cho vai trò
                 </Button>
-              }
+              )}
             </Form.Item>
           </Form>
         </Col>
@@ -314,7 +292,6 @@ function RoleManager() {
           </Typography.Paragraph>
         </Col>
       </Row>
-
     </>
   )
 }

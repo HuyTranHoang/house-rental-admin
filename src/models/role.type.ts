@@ -8,7 +8,6 @@ export interface Role {
   createdAt: string
 }
 
-
 export type RoleDataSource = Role & {
   key: React.Key
   index?: number

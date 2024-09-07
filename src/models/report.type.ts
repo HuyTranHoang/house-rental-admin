@@ -20,7 +20,7 @@ export type ReportDataSource = Report & {
 export enum ReportStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
+  REJECTED = 'REJECTED'
 }
 
 export enum ReportCategory {
@@ -28,7 +28,7 @@ export enum ReportCategory {
   INAPPROPRIATE_CONTENT = 'INAPPROPRIATE_CONTENT',
   DUPLICATE = 'DUPLICATE',
   MISINFORMATION = 'MISINFORMATION',
-  OTHER = 'OTHER',
+  OTHER = 'OTHER'
 }
 
 export type ReportFilters = {

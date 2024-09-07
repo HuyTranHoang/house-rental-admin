@@ -51,17 +51,17 @@ function AddUpdateCity() {
 
   return (
     <>
-      <Flex align="center" justify="space-between">
+      <Flex align='center' justify='space-between'>
         <Typography.Title level={2} style={{ marginTop: 0 }}>
           {title}
         </Typography.Title>
-        <Button icon={<LeftCircleOutlined />} shape="round" type="primary" onClick={() => navigate(ROUTER_NAMES.CITY)}>
+        <Button icon={<LeftCircleOutlined />} shape='round' type='primary' onClick={() => navigate(ROUTER_NAMES.CITY)}>
           Quay lại
         </Button>
       </Flex>
       <Form
         form={form}
-        name="cityForm"
+        name='cityForm'
         labelCol={{ span: 5 }}
         style={{
           maxWidth: 600,
@@ -71,15 +71,15 @@ function AddUpdateCity() {
           padding: '32px 32px 0'
         }}
         onFinish={onFinish}
-        autoComplete="off"
+        autoComplete='off'
       >
-        <Form.Item<CityForm> label="Id" name="id" hidden>
+        <Form.Item<CityForm> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<CityForm>
-          label="Tên thành phố"
-          name="name"
+          label='Tên thành phố'
+          name='name'
           rules={[
             { required: true, message: 'Vui lòng nhập tên thành phố' },
             { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự' },
@@ -92,14 +92,17 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>
-          <Button onClick={() => {
-            form.resetFields()
-            setError('')
-          }} style={{ marginRight: 16 }}>
+          <Button
+            onClick={() => {
+              form.resetFields()
+              setError('')
+            }}
+            style={{ marginRight: 16 }}
+          >
             Đặt lại
           </Button>
 
-          <Button loading={addCityPending || updateCityPending} type="primary" htmlType="submit" style={{ width: 100 }}>
+          <Button loading={addCityPending || updateCityPending} type='primary' htmlType='submit' style={{ width: 100 }}>
             {isAddMode ? 'Thêm mới' : 'Cập nhật'}
           </Button>
         </Form.Item>

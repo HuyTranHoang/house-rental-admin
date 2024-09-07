@@ -1,7 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
-import { IRootState } from '@/store.ts'
 import { User } from '@/models/user.type.ts'
-
+import { IRootState } from '@/store.ts'
+import { createSlice } from '@reduxjs/toolkit'
 
 interface IAuthState {
   user: User | null
@@ -41,12 +40,7 @@ const authSlice = createSlice({
   }
 })
 
-export const {
-  loginRequest,
-  loginSuccess,
-  loginFailure,
-  logout
-} = authSlice.actions
+export const { loginRequest, loginSuccess, loginFailure, logout } = authSlice.actions
 
 export default authSlice.reducer
 

@@ -28,11 +28,13 @@ export const getAllRoles = async () => {
   }
 }
 
-export const getAllRolesWithPagination = async (search: string,
-                                                authorities: string,
-                                                pageNumber: number,
-                                                pageSize: number,
-                                                sortBy: string) => {
+export const getAllRolesWithPagination = async (
+  search: string,
+  authorities: string,
+  pageNumber: number,
+  pageSize: number,
+  sortBy: string
+) => {
   try {
     pageNumber = pageNumber - 1
 

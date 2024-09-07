@@ -18,7 +18,12 @@ export const getAllRoomTypes = async () => {
   }
 }
 
-export const getAllRoomTypesWithPagination = async (search: string, pageNumber: number, pageSize: number, sortBy: string) => {
+export const getAllRoomTypesWithPagination = async (
+  search: string,
+  pageNumber: number,
+  pageSize: number,
+  sortBy: string
+) => {
   try {
     pageNumber = pageNumber - 1
 
