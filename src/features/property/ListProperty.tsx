@@ -6,11 +6,11 @@ import { useProperties, usePropertyFilters } from '@/hooks/useProperties'
 import PropertyTable from './PropertyTable'
 import ErrorFetching from '@/components/ErrorFetching'
 import { customFormatDate } from '@/utils/customFormatDate'
-import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { CheckCircleOutlined, CloseSquareOutlined, DashOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { useDistrictsAll } from '@/hooks/useDistricts.ts'
 import { useEffect, useState } from 'react'
-import { GeoIcon, HomeIcon } from '@/components/FilterIcons.tsx'
+import { DollarIcon, GeoIcon, HomeIcon } from '@/components/FilterIcons.tsx'
 import { useRoomTypesAll } from '@/hooks/useRoomTypes.ts'
 
 const { Search } = Input
@@ -37,7 +37,21 @@ function ListProperty() {
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
-  const { search, cityId, districtId, roomTypeId, status, pageNumber, pageSize, sortBy, setFilters } =
+  const { 
+    search,
+    cityId,
+    districtId,
+    roomTypeId,
+    minPrice,
+    maxPrice,
+    minArea,
+    maxArea,
+    numOfDays,
+    status,
+    pageNumber,
+    pageSize,
+    sortBy,
+    setFilters } =
     usePropertyFilters()
 
   const { data, isLoading, isError } = useProperties(
@@ -45,6 +59,11 @@ function ListProperty() {
     cityId,
     districtId,
     roomTypeId,
+    minPrice,
+    maxPrice,
+    minArea,
+    maxArea,
+    numOfDays,
     status,
     pageNumber,
     pageSize,
@@ -95,6 +114,50 @@ function ListProperty() {
   }
   // End Room Type
 
+  // Started Price
+  const handlePriceChange = (value: string) => {
+    const [min, max] = value.split(',')
+
+    const milion = 1000000
+
+    if (min === '0' && max === '0') {
+      setFilters({ minPrice: 0, maxPrice: 0 })
+    } else if (min === '0') {
+      setFilters({ minPrice: 0, maxPrice: Number(max) * milion })
+    } else if (max === '0') {
+      setFilters({ minPrice: Number(min) * milion, maxPrice: 0 })
+    } else {
+      setFilters({ minPrice: Number(min) * milion, maxPrice: Number(max) * milion })
+    }
+  }
+
+  // End Price
+
+   // Started Area
+   const handleAreaChange = (value: string) => {
+    const [min, max] = value.split(',');
+
+    if (min === '0' && max === '0') {
+      setFilters({ minArea: 0, maxArea: 0 });
+    } else if (min === '0') {
+      setFilters({ minArea: 0, maxArea: Number(max) });
+    } else if (max === '0') {
+      setFilters({ minArea: Number(min), maxArea: 0 });
+    } else {
+      setFilters({ minArea: Number(min), maxArea: Number(max) });
+    }
+  };
+
+  // End Area
+
+  // Started Num Of Days
+
+  const handleNumOfDaysChange = (value: string) => {
+    setFilters({ numOfDays: parseInt(value) });
+  };
+
+  // End Num Of Days
+
   const onTabChange = (key: string) => {
     setFilters({ status: key as PropertyType['status'] })
     queryClient.invalidateQueries({ queryKey: ['properties'] })
@@ -109,7 +172,9 @@ function ListProperty() {
       setSortedInfo({})
     }
   }
-
+  
+  // St
+ 
   const dataSource: PropertyDataSource[] = data
     ? data.data
         .filter((property) => property.status === status)
@@ -133,6 +198,11 @@ function ListProperty() {
       }
     }
   }, [sortBy])
+
+  // Tự động load lại dữ liệu khi filter
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ['properties'] });
+  }, [search, cityId, districtId, roomTypeId, minPrice, maxPrice, minArea, maxArea, numOfDays, status, pageNumber, pageSize, sortBy, queryClient]);
 
   if (isError) {
     return <ErrorFetching />
@@ -187,6 +257,57 @@ function ListProperty() {
                 options={roomTypeOptions}
               />
             </Form.Item>
+            <Form.Item name='price'>
+              <Select
+                size='large'
+                onChange={handlePriceChange}
+                placeholder={'Giá thuê'}
+                suffixIcon={<DollarIcon />}
+                options={[
+                  { value: '0,0', label: 'Tất cả' },
+                  { value: '0,3', label: 'Dưới 3 triệu' },
+                  { value: '3,7', label: '3 đến 7 triệu' },
+                  { value: '7,10', label: '7 đến 10 triệu' },
+                  { value: '10,0', label: 'Trên 10 triệu' }
+                ]}
+              />
+            </Form.Item>
+            <Form.Item name='area'>
+              <Select
+                size='large'
+                onChange={handleAreaChange}
+                placeholder={'Diện tích'}
+                suffixIcon={<HomeIcon />}
+                options={[
+                  { value: '0,0', label: 'Tất cả' },
+                  { value: '0,30', label: '< 30 m2' },
+                  { value: '30,50', label: '30 - 50 m2' },
+                  { value: '50,70', label: '50 - 70 m2' },
+                  { value: '70,100', label: '70 - 100 m2' },
+                  { value: '100,0', label: '> 100 m2' }
+                ]}
+              />
+            </Form.Item>
+
+            <Form.Item name='numOfDays'>
+              <Select
+                size='large'
+                onChange={handleNumOfDaysChange}
+                placeholder={'Số ngày đăng'}
+                suffixIcon={<DashOutlined />}
+                options={[
+                  { value: '0', label: 'Tất cả' },
+                  { value: '1', label: 'Cách đây 1 ngày' },
+                  { value: '3', label: 'Cách đây 3 ngày' },
+                  { value: '7', label: 'Cách đây 7 ngày' },
+                  { value: '15', label: 'Cách đây 15 ngày' },
+                  { value: '30', label: 'Cách đây 30 ngày' }
+                ]}
+              />
+            </Form.Item>
+            
+
+        
           </Form>
         </Flex>
       </Flex>
@@ -201,7 +322,7 @@ function ListProperty() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} bất động sản`,
+          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} bất bài đăng`,
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}

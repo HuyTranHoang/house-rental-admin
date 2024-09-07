@@ -42,7 +42,7 @@ function AppSider() {
     },
     {
       key: 'property',
-      label: 'Bất động sản',
+      label: 'Danh Sách Bài Đăng',
       icon: <ScheduleOutlined />,
       onClick: () => navigate(ROUTER_NAMES.PROPERTY)
     },

@@ -35,7 +35,7 @@ const ROUTER_NAMES = {
 
   USER: '/nguoi-dung',
 
-  PROPERTY: '/bat-dong-san',
+  PROPERTY: '/bai-dang',
 
   getCityEditPath: (id: string | number) => `${CITY_BASE}/${id}/cap-nhat`,
   getDistrictEditPath: (id: string | number) => `${DISTRICT_BASE}/${id}/cap-nhat`,

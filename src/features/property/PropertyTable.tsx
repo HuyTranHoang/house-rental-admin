@@ -65,7 +65,7 @@ function PropertyTable({
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa bất động sản' />,
+      title: <ConfirmModalTitle title='Xác nhận xóa bất bài đăng' />,
       content: <ConfirmModalContent items={items} />,
       okText: 'Xác nhận',
       okType: 'danger',
