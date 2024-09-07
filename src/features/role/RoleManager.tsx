@@ -244,7 +244,7 @@ function RoleManager() {
       </Flex>
 
       <Row gutter={24}>
-        <Col span={4}>
+        <Col span={5}>
           <ListRole form={form} setCurrentRole={setCurrentRole} currentRole={currentRole} />
         </Col>
 
@@ -285,7 +285,7 @@ function RoleManager() {
           </Form>
         </Col>
 
-        <Col span={8}>
+        <Col span={7}>
           {currentRole.id && (
             <>
               <Typography.Title level={5}>Thông tin chi tiết</Typography.Title>
