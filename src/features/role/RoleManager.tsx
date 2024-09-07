@@ -4,7 +4,6 @@ import { useAuthorities } from '@/hooks/useAuthorities.ts'
 import { useUpdateRole } from '@/hooks/useRoles.ts'
 import { Authority } from '@/models/authority.type.ts'
 import { Role } from '@/models/role.type.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { blue, red } from '@ant-design/colors'
 import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
@@ -24,6 +23,7 @@ import {
   Typography
 } from 'antd'
 import { ReactNode, useEffect, useState } from 'react'
+import { formatDate } from 'date-fns/format'
 
 interface GroupedAuthorities {
   [key: string]: {
@@ -213,10 +213,12 @@ function RoleManager() {
   const groupedPrivileges = groupBy(authorities)
   const dataSource = Object.values(groupedPrivileges)
 
+  // Set initial values for form
   useEffect(() => {
     if (roleUpdateData) {
       form.setFieldValue('id', roleUpdateData.id)
       form.setFieldValue('name', roleUpdateData.name)
+      form.setFieldValue('description', roleUpdateData.description)
 
       const existingPrivileges = roleUpdateData.authorityPrivileges.reduce((result, currentValue) => {
         const [groupKey, action] = currentValue.split(':')
@@ -259,6 +261,10 @@ function RoleManager() {
               <Input />
             </Form.Item>
 
+            <Form.Item<RoleField> label='Mô tả' name='description' hidden>
+              <Input />
+            </Form.Item>
+
             <Form.Item<RoleField>>
               {!currentRole.id && <Typography.Paragraph>Chọn một vai trò để xem quyền hạn</Typography.Paragraph>}
               {currentRole.id && currentRole.name === 'ROLE_ADMIN' && (
@@ -280,16 +286,17 @@ function RoleManager() {
         </Col>
 
         <Col span={8}>
-          <Typography.Title level={5}>Thông tin chi tiết</Typography.Title>
-          <Typography.Paragraph>
-            {currentRole.id ? `Id: ${currentRole.id}` : 'Chọn một vai trò để xem thông tin chi tiết'}
-          </Typography.Paragraph>
-          <Typography.Paragraph>
-            {currentRole.description ? `Mô tả: ${currentRole.description}` : 'Không có mô tả'}
-          </Typography.Paragraph>
-          <Typography.Paragraph>
-            {currentRole.createdAt ? `Ngày tạo: ${customFormatDate(currentRole.createdAt)}` : ''}
-          </Typography.Paragraph>
+          {currentRole.id && (
+            <>
+              <Typography.Title level={5}>Thông tin chi tiết</Typography.Title>
+              <Typography.Paragraph>
+                {currentRole.description ? `Mô tả: ${currentRole.description}` : 'Không có mô tả'}
+              </Typography.Paragraph>
+              <Typography.Paragraph>
+                {currentRole.createdAt ? `Ngày tạo: ${formatDate(currentRole.createdAt, 'dd-MM-yyyy hh:mm a')}` : ''}
+              </Typography.Paragraph>
+            </>
+          )}
         </Col>
       </Row>
     </>
