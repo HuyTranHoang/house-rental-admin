@@ -3,8 +3,8 @@ import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import { useCreateRole, useDeleteRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
 import { Role } from '@/models/role.type.ts'
+import { selectIsDarkMode } from '@/ui/appSlice.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
-import { blue } from '@ant-design/colors'
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -21,7 +21,9 @@ import {
   Tooltip,
   Typography
 } from 'antd'
+import { clsx } from 'clsx'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 const { confirm } = Modal
 
@@ -36,6 +38,8 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [error, setError] = useState<string>('')
   const [formAddRole] = Form.useForm()
+
+  const isDarkMode = useSelector(selectIsDarkMode)
 
   const { addRoleMutate, addRolePending } = useCreateRole(setError, setIsModalOpen, formAddRole)
   const { updateRoleMutate, updateRolePending } = useUpdateRole(setError, setIsModalOpen, formAddRole, setCurrentRole)
@@ -123,6 +127,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
       <List
         bordered
         size='small'
+        className='rounded-none'
         loading={isLoading}
         dataSource={data}
         renderItem={(item) => (
@@ -151,10 +156,14 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
               form.resetFields()
               setCurrentRole(item)
             }}
-            style={{
-              backgroundColor: item.id === currentRole.id ? blue[0] : '#fcfcfc',
-              cursor: 'pointer'
-            }}
+            className={clsx('cursor-pointer', {
+              'bg-gray-100': !isDarkMode,
+              'bg-gray-800': isDarkMode,
+              'bg-blue-200': !isDarkMode && item.id === currentRole.id,
+              'bg-blue-950': isDarkMode && item.id === currentRole.id,
+              'hover:bg-gray-100': !isDarkMode && item.id !== currentRole.id,
+              'hover:bg-gray-700': isDarkMode && item.id !== currentRole.id
+            })}
           >
             {item.name}
           </List.Item>

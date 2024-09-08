@@ -23,7 +23,7 @@ const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
 })
 
-function AppSider() {
+function AppSider({ darkMode }: { darkMode: boolean }) {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const location = useLocation()
@@ -180,7 +180,7 @@ function AppSider() {
           }}
         >
           <Flex justify='center' align='center' style={{ height: 50, background: colorBgContainer, margin: '8px 0' }}>
-            <img src='/LOGO_TEXT.png' alt='Mogu logo' style={{ width: 100 }} />
+            <img src={darkMode ? '/LOGO_TEXT_DARK.png' : '/LOGO_TEXT.png'} alt='Mogu logo' style={{ width: 100 }} />
           </Flex>
           <Menu
             mode='inline'
@@ -200,10 +200,10 @@ function AppSider() {
             theme={{
               components: {
                 Button: {
-                  defaultBg: '#e0e0e0',
-                  defaultHoverBg: '#d4d4d4',
-                  defaultHoverBorderColor: '#d4d4d4',
-                  defaultHoverColor: 'black'
+                  defaultBg: darkMode ? '#333' : '#e0e0e0',
+                  defaultHoverBg: darkMode ? '#444' : '#d4d4d4',
+                  defaultHoverBorderColor: darkMode ? '#444' : '#d4d4d4',
+                  defaultHoverColor: darkMode ? 'white' : 'black'
                 }
               }
             }}
