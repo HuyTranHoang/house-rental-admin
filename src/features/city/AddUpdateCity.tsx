@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 function AddUpdateCity() {
   const match = useMatch(ROUTER_NAMES.ADD_CITY)
   const isAddMode = Boolean(match)
-  const { t } = useTranslation()
+  const { t } = useTranslation(['enLang', 'enLangCity'])
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
@@ -24,7 +24,7 @@ function AddUpdateCity() {
   const { addCityMutate, addCityPending } = useCreateCity(setError)
   const { updateCityMutate, updateCityPending } = useUpdateCity(setError)
 
-  const title = isAddMode ? t('city.form.addForm') : t('city.form.editForm')
+  const title = isAddMode ? t('city.form.addForm', { ns: 'enLangCity' }) : t('city.form.editForm', { ns: 'enLangCity' })
 
   const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -80,7 +80,7 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item<CityForm>
-          label={t('city.form.name')}
+          label={t('city.form.name', { ns: 'enLangCity' })}
           name='name'
           rules={[
             { required: true, message: 'Vui lòng nhập tên thành phố' },

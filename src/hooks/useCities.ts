@@ -35,7 +35,7 @@ export const useCities = (search: string, pageNumber: number, pageSize: number, 
 
 export const useDeleteCity = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation()
+  const { t } = useTranslation('enLangCity')
 
   const { mutate: deleteCityMutate, isPending: deleteCityPending } = useMutation({
     mutationFn: deleteCity,
@@ -71,7 +71,7 @@ export const useDeleteMultiCity = () => {
 export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { t } = useTranslation()
+  const { t } = useTranslation('enLangCity')
 
   const { mutate: addCityMutate, isPending: addCityPending } = useMutation({
     mutationFn: addCity,
@@ -98,7 +98,7 @@ export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<stri
 export const useUpdateCity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { t } = useTranslation()
+  const { t } = useTranslation('enLangCity')
 
   const { mutate: updateCityMutate, isPending: updateCityPending } = useMutation({
     mutationFn: updateCity,

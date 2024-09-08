@@ -9,25 +9,25 @@ import viLang from '@/utils/i18n/locales/vi/vi.json'
 // the translations
 // (tip move them in a JSON file and import them,
 // or even better, manage them separated from your code: https://react.i18next.com/guides/multiple-translation-files)
+
+export const defaultNS = 'enLang'
 export const resources = {
   en: {
-    translation: {
-      ...enLang,
-      ...enLangCity
-    }
+    enLang,
+    enLangCity
   },
   vi: {
-    translation: {
-      ...viLang,
-      ...viLangCity
-    }
+    viLang,
+    viLangCity
   }
-}
+} as const
 
 i18n.use(initReactI18next).init({
   resources,
+  defaultNS,
   fallbackLng: ['en', 'vi'],
   lng: 'en',
+  ns: ['enLang', 'enLangCity', 'viLang', 'viLangCity'],
   interpolation: {
     escapeValue: false
   }

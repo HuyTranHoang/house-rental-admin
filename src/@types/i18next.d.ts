@@ -1,17 +1,9 @@
-// import the original type declarations
 import 'i18next'
-// import all namespaces (for the default language, only)
-import engLang from '@/utils/i18n/locales/en/en.json'
+import { defaultNS, resources } from '@/utils/i18n/i18n.ts'
 
 declare module 'i18next' {
-  // Extend CustomTypeOptions
   interface CustomTypeOptions {
-    // custom namespace type, if you changed it
-    defaultNS: 'engLang'
-    // custom resources type
-    resources: {
-      engLang: typeof engLang
-    }
-    // other
+    defaultNS: typeof defaultNS;
+    resources: typeof resources["en"];
   }
 }
