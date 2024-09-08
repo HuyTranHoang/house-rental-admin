@@ -1,15 +1,14 @@
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import TableActions from '@/components/TableActions.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useDeleteAmenity } from '@/hooks/useAmenities.ts'
+import { AmenityDataSource } from '@/models/amenity.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { useNavigate } from 'react-router-dom'
-import { useDeleteAmenity } from '@/hooks/useAmenities.ts'
-import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
-import TableActions from '@/components/TableActions.tsx'
-import { AmenityDataSource } from '@/models/amenity.type.ts'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { SorterResult } from 'antd/lib/table/interface'
-
-const { confirm } = Modal
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface AmenityTableProps {
   dataSource: AmenityDataSource[]
@@ -29,43 +28,32 @@ function AmenityTable({
   sortedInfo
 }: AmenityTableProps) {
   const navigate = useNavigate()
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentRecord, setCurrentRecord] = useState<AmenityDataSource | null>(null)
+
   const { deleteAmenityMutate } = useDeleteAmenity()
 
-  const showDeleteConfirm = (record: AmenityDataSource) => {
-    const items: DescriptionsProps['items'] = [
-      {
-        key: '1',
-        label: 'Id',
-        children: <span>{record.id}</span>,
-        span: 3
-      },
-      {
-        key: '2',
-        label: 'Tên tiện nghi',
-        children: <span>{record.name}</span>,
-        span: 3
-      },
-      {
-        key: '3',
-        label: 'Ngày tạo',
-        children: <span>{record.createdAt}</span>,
-        span: 3
-      }
-    ]
-
-    confirm({
-      icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa tiện nghi' />,
-      content: <ConfirmModalContent items={items} />,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteAmenityMutate(record.id)
-      }
-    })
-  }
+  const items: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'Id',
+      children: <span>{currentRecord?.id}</span>,
+      span: 3
+    },
+    {
+      key: '2',
+      label: 'Tên tiện nghi',
+      children: <span>{currentRecord?.name}</span>,
+      span: 3
+    },
+    {
+      key: '3',
+      label: 'Ngày tạo',
+      children: <span>{currentRecord?.createdAt}</span>,
+      span: 3
+    }
+  ]
 
   const columns: TableProps<AmenityDataSource>['columns'] = [
     {
@@ -99,32 +87,53 @@ function AmenityTable({
       render: (_, record) => (
         <TableActions
           onUpdate={() => navigate(ROUTER_NAMES.getAmenityEditPath(record.id))}
-          onDelete={() => showDeleteConfirm(record)}
+          onDelete={() => {
+            setCurrentRecord(record)
+            setIsModalOpen(true)
+          }}
         />
       )
     }
   ]
 
   return (
-    <Table
-      dataSource={dataSource}
-      columns={columns}
-      rowSelection={rowSelection}
-      pagination={{
-        position: ['bottomCenter'],
-        pageSizeOptions: ['5', '10', '20'],
-        locale: { items_per_page: '/ trang' },
-        showSizeChanger: true,
-        ...paginationProps
-      }}
-      onChange={handleTableChange}
-      loading={loading}
-      locale={{
-        triggerDesc: 'Sắp xếp giảm dần',
-        triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp'
-      }}
-    />
+    <>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        rowSelection={rowSelection}
+        pagination={{
+          position: ['bottomCenter'],
+          pageSizeOptions: ['5', '10', '20'],
+          locale: { items_per_page: '/ trang' },
+          showSizeChanger: true,
+          ...paginationProps
+        }}
+        onChange={handleTableChange}
+        loading={loading}
+        locale={{
+          triggerDesc: 'Sắp xếp giảm dần',
+          triggerAsc: 'Sắp xếp tăng dần',
+          cancelSort: 'Hủy sắp xếp'
+        }}
+      />
+
+      <Modal
+        open={isModalOpen}
+        className='w-96'
+        title={<ConfirmModalTitle title='Xác nhận xóa tiện nghi' />}
+        onCancel={() => setIsModalOpen(false)}
+        onOk={() => {
+          deleteAmenityMutate(currentRecord!.id)
+          setIsModalOpen(false)
+        }}
+        okText='Xác nhận'
+        okType='danger'
+        cancelText='Hủy'
+      >
+        <ConfirmModalContent items={items} />
+      </Modal>
+    </>
   )
 }
 
