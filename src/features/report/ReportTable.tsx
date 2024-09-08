@@ -199,7 +199,7 @@ function ReportTable({
       key: 'images',
       label: `Hình ảnh (${propertyData?.propertyImages.length})`,
       children: (
-        <Row gutter={[16, 16]}>
+        <Row gutter={[8, 8]}>
           <Image.PreviewGroup>
             {propertyData?.propertyImages.map((image, index) => (
               <Col key={index} span={6}>
@@ -211,10 +211,8 @@ function ReportTable({
                       </>
                     )
                   }}
-                  height={200}
-                  width={200}
                   src={image}
-                  style={{ objectFit: 'cover' }}
+                  className='size-48 object-cover p-2'
                 />
               </Col>
             ))}
