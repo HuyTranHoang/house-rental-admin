@@ -1,5 +1,6 @@
+import { HomeOutlined } from '@ant-design/icons'
 import { Breadcrumb } from 'antd'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 import useBreadcrumbs from 'use-react-router-breadcrumbs'
@@ -10,7 +11,7 @@ const CustomBreadcrumbs = () => {
   const { t } = useTranslation()
 
   const breadcrumbItems = breadcrumbs.map(({ match, breadcrumb }) => {
-    let breadcrumbText = ''
+    let breadcrumbText
 
     if (breadcrumb) {
       if (typeof breadcrumb === 'string') {
@@ -18,7 +19,11 @@ const CustomBreadcrumbs = () => {
         // @ts-expect-error
         breadcrumbText = t(breadcrumb)
       } else if (React.isValidElement(breadcrumb) && breadcrumb.key === '/') {
-        breadcrumbText = t('sidebar.dashboard')
+        breadcrumbText = (
+          <>
+            <HomeOutlined /> {t('sidebar.dashboard')}
+          </>
+        )
       } else if (React.isValidElement(breadcrumb)) {
         const element = breadcrumb as React.ReactElement<{ children: string }>
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -28,7 +33,7 @@ const CustomBreadcrumbs = () => {
     }
 
     return {
-      title: <NavLink to={match.pathname}>{breadcrumbText}</NavLink>,
+      title: <NavLink to={match.pathname}>{breadcrumbText as ReactNode}</NavLink>,
       key: match.pathname
     }
   })

@@ -19,5 +19,28 @@
     "home": "Home",
     "logout": "Logout",
     "profile": "Profile"
+  },
+  "common": {
+    "add": "Add",
+    "edit": "Edit",
+    "update": "Update",
+    "delete": "Delete",
+    "reset": "Reset",
+    "back": "Back",
+    "ok": "Ok",
+    "cancel": "Cancel",
+    "table": {
+      "action": "Actions",
+      "createdAt": "Created at",
+      "triggerDesc": "Sort by descending",
+      "triggerAsc": "Sort by ascending",
+      "cancelSort": "Cancel sort"
+    },
+    "pagination": {
+      "itemsPerPage": "page"
+    },
+    "deleteModal": {
+      "note": "Note: This action cannot be undone!"
+    }
   }
 }

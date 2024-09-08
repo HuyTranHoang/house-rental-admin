@@ -1,4 +1,3 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   addCity,
   deleteCities,
@@ -7,12 +6,14 @@ import {
   getAllCitiesWithPagination,
   updateCity
 } from '@/api/city.api.ts'
-import { toast } from 'sonner'
-import axios from 'axios'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import React, { useCallback } from 'react'
-import { CityFilters } from '@/models/city.type.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { CityFilters } from '@/models/city.type.ts'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import React, { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 export const useCitiesAll = () => {
   const { data, isLoading, isError } = useQuery({
@@ -34,11 +35,14 @@ export const useCities = (search: string, pageNumber: number, pageSize: number, 
 
 export const useDeleteCity = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const { mutate: deleteCityMutate, isPending: deleteCityPending } = useMutation({
     mutationFn: deleteCity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => toast.success('Xóa thành phố thành công'))
+      queryClient
+        .invalidateQueries({ queryKey: ['cities'] })
+        .then(() => toast.success(t('city.notification.deleteSuccess')))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -67,11 +71,14 @@ export const useDeleteMultiCity = () => {
 export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const { mutate: addCityMutate, isPending: addCityPending } = useMutation({
     mutationFn: addCity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => toast.success('Thêm thành phố thành công'))
+      queryClient
+        .invalidateQueries({ queryKey: ['cities'] })
+        .then(() => toast.success(t('city.notification.addSuccess')))
 
       navigate(ROUTER_NAMES.CITY)
     },
@@ -91,12 +98,13 @@ export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<stri
 export const useUpdateCity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const { mutate: updateCityMutate, isPending: updateCityPending } = useMutation({
     mutationFn: updateCity,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => {
-        toast.success('Cập nhật thành phố thành công')
+        toast.success(t('city.notification.editSuccess'))
         navigate(ROUTER_NAMES.CITY)
       })
     },

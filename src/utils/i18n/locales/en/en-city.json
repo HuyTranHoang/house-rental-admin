@@ -1,0 +1,25 @@
+{
+  "city": {
+    "title": "City Management",
+    "searchPlaceholder": "Search city",
+    "table": {
+      "name": "City name"
+    },
+    "form": {
+      "addForm": "Add city",
+      "editForm": "Edit city",
+      "name": "City name"
+    },
+    "pagination": {
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} in {{total}} cities"
+    },
+    "notification": {
+      "addSuccess": "Add city successfully",
+      "editSuccess": "Edit city successfully",
+      "deleteSuccess": "Delete city successfully"
+    },
+    "deleteModal": {
+      "title": "Confirm city deletion"
+    }
+  }
+}

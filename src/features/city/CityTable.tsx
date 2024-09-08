@@ -8,6 +8,7 @@ import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } fr
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 interface CityTableProps {
@@ -28,6 +29,9 @@ function CityTable({
   sortedInfo
 }: CityTableProps) {
   const navigate = useNavigate()
+
+  const { t } = useTranslation()
+
   const { deleteCityMutate } = useDeleteCity()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -35,20 +39,14 @@ function CityTable({
 
   const items: DescriptionsProps['items'] = [
     {
-      key: '1',
-      label: 'Id',
-      children: <span>{currentRecord?.id}</span>,
-      span: 3
-    },
-    {
       key: '2',
-      label: 'Tên thành phố',
+      label: t('city.table.name'),
       children: <span>{currentRecord?.name}</span>,
       span: 3
     },
     {
       key: '3',
-      label: 'Ngày tạo',
+      label: t('common.table.createdAt'),
       children: <span>{currentRecord?.createdAt}</span>,
       span: 3
     }
@@ -63,14 +61,14 @@ function CityTable({
       width: 50
     },
     {
-      title: 'Tên thành phố',
+      title: t('city.table.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null
     },
     {
-      title: 'Ngày tạo',
+      title: t('common.table.createdAt'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
@@ -79,7 +77,7 @@ function CityTable({
       width: 300
     },
     {
-      title: 'Hành động',
+      title: t('common.table.action'),
       key: 'action',
       fixed: 'right',
       width: 200,
@@ -104,31 +102,31 @@ function CityTable({
         pagination={{
           position: ['bottomCenter'],
           pageSizeOptions: ['5', '10', '20'],
-          locale: { items_per_page: '/ trang' },
+          locale: { items_per_page: `/ ${t('common.pagination.itemsPerPage')}` },
           showSizeChanger: true,
           ...paginationProps
         }}
         onChange={handleTableChange}
         loading={loading}
         locale={{
-          triggerDesc: 'Sắp xếp giảm dần',
-          triggerAsc: 'Sắp xếp tăng dần',
-          cancelSort: 'Hủy sắp xếp'
+          triggerDesc: t('common.table.triggerDesc'),
+          triggerAsc: t('common.table.triggerAsc'),
+          cancelSort: t('common.table.cancelSort')
         }}
       />
 
       <Modal
         open={isModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title='Xác nhận xóa thành phố' />}
+        title={<ConfirmModalTitle title={t('city.deleteModal.title')} />}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
           deleteCityMutate(currentRecord!.id)
           setIsModalOpen(false)
         }}
-        okText='Xác nhận'
+        okText={t('common.ok')}
         okType='danger'
-        cancelText='Hủy'
+        cancelText={t('common.cancel')}
       >
         <ConfirmModalContent items={items} />
       </Modal>

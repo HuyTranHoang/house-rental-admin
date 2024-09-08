@@ -1,7 +1,9 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+import enLangCity from '@/utils/i18n/locales/en/en-city.json'
 import enLang from '@/utils/i18n/locales/en/en.json'
+import viLangCity from '@/utils/i18n/locales/vi/vi-city.json'
 import viLang from '@/utils/i18n/locales/vi/vi.json'
 
 // the translations
@@ -9,10 +11,16 @@ import viLang from '@/utils/i18n/locales/vi/vi.json'
 // or even better, manage them separated from your code: https://react.i18next.com/guides/multiple-translation-files)
 export const resources = {
   en: {
-    translation: enLang
+    translation: {
+      ...enLang,
+      ...enLangCity
+    }
   },
   vi: {
-    translation: viLang
+    translation: {
+      ...viLang,
+      ...viLangCity
+    }
   }
 }
 

@@ -8,12 +8,12 @@ const cityRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.CITY,
     element: <ListCity />,
-    breadcrumb: 'listCity'
+    breadcrumb: 'city.title'
   },
   {
     path: ROUTER_NAMES.ADD_CITY,
     element: <AddUpdateCity />,
-    breadcrumb: 'Thêm mới thành phố'
+    breadcrumb: 'city.form.addForm'
   },
   {
     path: ROUTER_NAMES.DETAIL_CITY,
@@ -22,7 +22,7 @@ const cityRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.EDIT_CITY,
     element: <AddUpdateCity />,
-    breadcrumb: ({ match }) => `Cập nhật thành phố / ${match.params.id}`
+    breadcrumb: 'city.form.editForm'
   }
 ]
 

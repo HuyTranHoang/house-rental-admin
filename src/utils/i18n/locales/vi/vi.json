@@ -19,5 +19,28 @@
     "home": "Trang chủ",
     "logout": "Đăng xuất",
     "profile": "Thông tin cá nhân"
+  },
+  "common": {
+    "add": "Thêm mới",
+    "edit": "Chỉnh sửa",
+    "update": "Cập nhật",
+    "delete": "Xóa",
+    "reset": "Đặt lại",
+    "back": "Quay lại",
+    "ok": "Đồng ý",
+    "cancel": "Hủy",
+    "table": {
+      "action": "Hành động",
+      "createdAt": "Ngày tạo",
+      "triggerDesc": "Sắp xếp giảm dần",
+      "triggerAsc": "Sắp xếp tăng dần",
+      "cancelSort": "Hủy sắp xếp"
+    },
+    "pagination": {
+      "itemsPerPage": "trang"
+    },
+    "deleteModal": {
+      "note": "Lưu ý: Hành động này không thể hoàn tác!"
+    }
   }
 }

@@ -8,6 +8,7 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import CityTable from './CityTable.tsx'
 
@@ -19,6 +20,8 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListCity() {
   const navigate = useNavigate()
+
+  const { t } = useTranslation()
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useCityFilters()
 
@@ -87,7 +90,7 @@ function ListCity() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            Danh sách thành phố
+            {t('city.title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -102,7 +105,7 @@ function ListCity() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder='Tìm kiếm thành phố'
+                placeholder={t('city.searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -121,7 +124,7 @@ function ListCity() {
             type='primary'
             onClick={() => navigate(ROUTER_NAMES.ADD_CITY)}
           >
-            Thêm mới
+            {t('common.add')}
           </Button>
         </Space>
       </Flex>
@@ -133,7 +136,9 @@ function ListCity() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
+          showTotal: (total, range) => (
+            <Trans i18nKey='city.pagination.showTotal' values={{ total, rangeStart: range[0], rangeEnd: range[1] }} />
+          ),
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}

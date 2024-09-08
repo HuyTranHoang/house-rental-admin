@@ -1,21 +1,21 @@
+import { getCityById } from '@/api/city.api.ts'
+import { useQuery } from '@tanstack/react-query'
 import type { FormProps } from 'antd'
 import { Button, Flex, Form, Input, Spin, Typography } from 'antd'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { getCityById } from '@/api/city.api.ts'
 
-import { useEffect, useState } from 'react'
-import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
-import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { CityForm } from '@/models/city.type.ts'
+import { LeftCircleOutlined } from '@ant-design/icons'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 function AddUpdateCity() {
   const match = useMatch(ROUTER_NAMES.ADD_CITY)
   const isAddMode = Boolean(match)
-  const title = isAddMode ? 'Thêm mới thành phố' : 'Cập nhật thành phố'
+  const { t } = useTranslation()
   const navigate = useNavigate()
-
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
 
@@ -23,6 +23,8 @@ function AddUpdateCity() {
 
   const { addCityMutate, addCityPending } = useCreateCity(setError)
   const { updateCityMutate, updateCityPending } = useUpdateCity(setError)
+
+  const title = isAddMode ? t('city.form.addForm') : t('city.form.editForm')
 
   const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -56,7 +58,7 @@ function AddUpdateCity() {
           {title}
         </Typography.Title>
         <Button icon={<LeftCircleOutlined />} shape='round' type='primary' onClick={() => navigate(ROUTER_NAMES.CITY)}>
-          Quay lại
+          {t('common.back')}
         </Button>
       </Flex>
       <Form
@@ -78,7 +80,7 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item<CityForm>
-          label='Tên thành phố'
+          label={t('city.form.name')}
           name='name'
           rules={[
             { required: true, message: 'Vui lòng nhập tên thành phố' },
@@ -99,11 +101,11 @@ function AddUpdateCity() {
             }}
             style={{ marginRight: 16 }}
           >
-            Đặt lại
+            {t('common.reset')}
           </Button>
 
           <Button loading={addCityPending || updateCityPending} type='primary' htmlType='submit' style={{ width: 100 }}>
-            {isAddMode ? 'Thêm mới' : 'Cập nhật'}
+            {isAddMode ? t('common.add') : t('common.update')}
           </Button>
         </Form.Item>
       </Form>
