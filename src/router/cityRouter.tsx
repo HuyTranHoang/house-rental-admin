@@ -8,7 +8,7 @@ const cityRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.CITY,
     element: <ListCity />,
-    breadcrumb: 'Danh sách thành phố'
+    breadcrumb: 'listCity'
   },
   {
     path: ROUTER_NAMES.ADD_CITY,

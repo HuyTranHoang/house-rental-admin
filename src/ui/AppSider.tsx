@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Button, ConfigProvider, Dropdown, Flex, Layout, Menu, MenuProps, Space, theme, Typography } from 'antd'
 import Sider from 'antd/es/layout/Sider'
+import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -28,6 +29,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
   const dispatch = useAppDispatch()
   const location = useLocation()
   const { user } = useSelector(selectAuth)
+  const { t } = useTranslation()
 
   const {
     token: { colorBgContainer }
@@ -36,80 +38,80 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
   const siderItems: MenuProps['items'] = [
     {
       key: ROUTER_NAMES.DASHBOARD,
-      label: 'Tổng quan',
+      label: t('sidebar.dashboard'),
       icon: <BarChartOutlined />,
       onClick: () => navigate(ROUTER_NAMES.DASHBOARD)
     },
     {
       key: 'property',
-      label: 'Danh Sách Bài Đăng',
+      label: t('sidebar.property'),
       icon: <ScheduleOutlined />,
       onClick: () => navigate(ROUTER_NAMES.PROPERTY)
     },
     {
       key: 'cityDistrict',
-      label: 'Thành phố và quận huyện',
+      label: t('sidebar.cityAndDistrict'),
       icon: <IconFont type='icon-city' />,
       children: [
         {
           key: ROUTER_NAMES.CITY,
-          label: 'Quản lý thành phố',
+          label: t('sidebar.city'),
           onClick: () => navigate(ROUTER_NAMES.CITY)
         },
         {
           key: ROUTER_NAMES.DISTRICT,
-          label: 'Quản lý quận huyện',
+          label: t('sidebar.district'),
           onClick: () => navigate(ROUTER_NAMES.DISTRICT)
         }
       ]
     },
     {
       key: 'roomTypeAmenity',
-      label: 'Loại phòng và tiện nghi',
+      label: t('sidebar.roomTypeAndAmenity'),
       icon: <HomeOutlined />,
       children: [
         {
           key: ROUTER_NAMES.ROOM_TYPE,
-          label: 'Quản lý lọai phòng',
+          label: t('sidebar.roomType'),
           onClick: () => navigate(ROUTER_NAMES.ROOM_TYPE)
         },
         {
           key: ROUTER_NAMES.AMENITY,
-          label: 'Quản lý tiện nghi',
+          label: t('sidebar.amenity'),
           onClick: () => navigate(ROUTER_NAMES.AMENITY)
         }
       ]
     },
     {
       key: 'reportReview',
-      label: 'Báo cáo và đánh giá',
+      label: t('sidebar.reportAndReview'),
       icon: <SolutionOutlined />,
       children: [
         {
           key: ROUTER_NAMES.REPORT,
-          label: 'Quản lý báo cáo',
+          label: t('sidebar.report'),
           onClick: () => navigate(ROUTER_NAMES.REPORT)
         },
         {
           key: ROUTER_NAMES.REVIEW,
-          label: 'Quản lý đánh giá',
+          label: t('sidebar.review'),
           onClick: () => navigate(ROUTER_NAMES.REVIEW)
         }
       ]
     },
     {
       key: 'userRole',
-      label: 'Người dùng và vai trò',
+      label: t('sidebar.userAndRole'),
       icon: <UserOutlined />,
       children: [
         {
           key: ROUTER_NAMES.USER,
-          label: 'Quản lý người dùng',
+          label: t('sidebar.user'),
           onClick: () => navigate(ROUTER_NAMES.USER)
         },
         {
           key: ROUTER_NAMES.ROLE,
-          label: 'Quản lý vai trò',
+          label: t('sidebar.role'),
           onClick: () => navigate(ROUTER_NAMES.ROLE)
         }
       ]
@@ -121,7 +123,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
       key: 'username',
       label: (
         <Flex vertical>
-          <Typography.Text type='secondary'>Tài khoản đăng nhập</Typography.Text>
+          <Typography.Text type='secondary'>{t('sidebar.currentLoginAccount')}</Typography.Text>
           <Typography.Text strong>{user?.username}</Typography.Text>
         </Flex>
       ),
@@ -133,17 +135,17 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     },
     {
       key: 'home',
-      label: 'Trang chủ',
+      label: t('sidebar.home'),
       icon: <HomeOutlined />
     },
     {
       key: 'profile',
-      label: 'Thông tin cá nhân',
+      label: t('sidebar.profile'),
       icon: <EditOutlined />
     },
     {
       key: 'logout',
-      label: 'Đăng xuất',
+      label: t('sidebar.logout'),
       icon: <LogoutOutlined />,
       danger: true
     }

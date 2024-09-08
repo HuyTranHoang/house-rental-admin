@@ -1,11 +1,12 @@
 import { useAppDispatch } from '@/store.ts'
 import AppSider from '@/ui/AppSider.tsx'
-import { selectIsDarkMode, toggleDarkMode } from '@/ui/appSlice.ts'
-import { MoonOutlined, SunOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
-import { Button, ConfigProvider, Flex, FloatButton, Layout, theme, Typography } from 'antd'
+import { selectI18n, selectIsDarkMode, setI18n, toggleDarkMode } from '@/ui/appSlice.ts'
+import { GlobalOutlined, MoonOutlined, SunOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
+import { Button, ConfigProvider, Flex, FloatButton, Layout, Space, theme, Typography } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
 import { clsx } from 'clsx'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import CustomBreadcrumbs from '../components/CustomBreadcrumbs.tsx'
@@ -16,6 +17,8 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
   const [showScrollButton, setShowScrollButton] = useState(false)
   const dispatch = useAppDispatch()
   const isDarkMode = useSelector(selectIsDarkMode)
+  const i18n = useSelector(selectI18n)
+  const { t } = useTranslation()
 
   const {
     token: { colorBgContainer, borderRadiusLG }
@@ -49,13 +52,31 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
               <img src='/favicon.webp' alt='Mogu logo' className='w-8' />
 
               <Typography.Title level={4} className='mx-2 my-0 text-white'>
-                Trang quản trị
+                {t('webTitle')}
               </Typography.Title>
             </Flex>
 
-            <Button type='link' className='mt-2 text-xl' onClick={() => dispatch(toggleDarkMode())}>
-              {isDarkMode ? <SunOutlined className='text-white' /> : <MoonOutlined />}
-            </Button>
+            <Space>
+              <Button type='link' className='mt-2 text-xl' onClick={() => dispatch(toggleDarkMode())}>
+                {isDarkMode ? <SunOutlined className='text-white' /> : <MoonOutlined />}
+              </Button>
+
+              <Button type='link' className='mt-2 text-xl'>
+                <GlobalOutlined className='text-white' />
+                <Typography.Text
+                  onClick={() => dispatch(setI18n('en'))}
+                  className={clsx('text-white hover:text-blue-500', i18n === 'en' ? 'font-semibold' : 'opacity-50')}
+                >
+                  EN
+                </Typography.Text>
+                <Typography.Text
+                  onClick={() => dispatch(setI18n('vi'))}
+                  className={clsx('text-white hover:text-blue-500', i18n === 'vi' ? 'font-semibold' : 'opacity-50')}
+                >
+                  VI
+                </Typography.Text>
+              </Button>
+            </Space>
           </Flex>
         </Header>
         <Layout>

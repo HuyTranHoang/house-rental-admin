@@ -1,21 +1,20 @@
-import { createBrowserRouter } from 'react-router-dom'
-import AppLayout from '../ui/AppLayout.tsx'
-import ProtectedRoute from '../components/ProtectedRoute.tsx'
-import Dashboard from '@/features/dashboard/Dashboard.tsx'
 import Login from '@/features/auth/Login.tsx'
+import Dashboard from '@/features/dashboard/Dashboard.tsx'
+import { createBrowserRouter } from 'react-router-dom'
+import ProtectedRoute from '../components/ProtectedRoute.tsx'
+import AppLayout from '../ui/AppLayout.tsx'
 
 import amenityRouter from './amenityRouter.tsx'
 import cityRouter from './cityRouter.tsx'
-import roomTypeRouter from './roomTypeRouter.tsx'
-import reportRouter from './reportRouter.tsx'
-import roleRouter from './roleRouter.tsx'
-import reviewRouter from './reviewRouter.tsx'
-import { HomeOutlined } from '@ant-design/icons'
 import propertyRouter from './propertyRouter.tsx'
+import reportRouter from './reportRouter.tsx'
+import reviewRouter from './reviewRouter.tsx'
+import roleRouter from './roleRouter.tsx'
+import roomTypeRouter from './roomTypeRouter.tsx'
 
-import userRouter from '@/router/userRouter.tsx'
-import districtRouter from '@/router/districtRouter.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import districtRouter from '@/router/districtRouter.tsx'
+import userRouter from '@/router/userRouter.tsx'
 
 export const routerList = [
   {
@@ -27,11 +26,7 @@ export const routerList = [
           {
             path: ROUTER_NAMES.DASHBOARD,
             element: <Dashboard />,
-            breadcrumb: () => (
-              <span>
-                <HomeOutlined /> Tổng quan
-              </span>
-            )
+            breadcrumb: () => 'sidebar.dashboard'
           }
         ]
       }

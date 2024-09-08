@@ -1,0 +1,23 @@
+{
+  "webTitle": "Trang quản trị",
+  "sidebar": {
+    "dashboard": "Tổng quan",
+    "property": "Danh sách bất động sản",
+    "cityAndDistrict": "Thành phố & Quận huyện",
+    "city": "Quản lý thành phố",
+    "district": "Quản lý quận huyện",
+    "roomTypeAndAmenity": "Loại phòng & Tiện ích",
+    "roomType": "Quản lý loại phòng",
+    "amenity": "Quản lý tiện ích",
+    "reportAndReview": "Báo cáo & Đánh giá",
+    "report": "Quản lý báo cáo",
+    "review": "Quản lý đánh giá",
+    "userAndRole": "Người dùng & Vai trò",
+    "user": "Quản lý người dùng",
+    "role": "Quản lý vai trò",
+    "currentLoginAccount": "Tài khoản đăng nhập",
+    "home": "Trang chủ",
+    "logout": "Đăng xuất",
+    "profile": "Thông tin cá nhân"
+  }
+}

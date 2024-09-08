@@ -1,0 +1,23 @@
+{
+  "webTitle": "Admin Panel",
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "property": "Property List",
+    "cityAndDistrict": "City & District",
+    "city": "City Management",
+    "district": "District Management",
+    "roomTypeAndAmenity": "Room Type & Amenity",
+    "roomType": "Room Type Management",
+    "amenity": "Amenity Management",
+    "reportAndReview": "Report & Review",
+    "report": "Report Management",
+    "review": "Review Management",
+    "userAndRole": "User & Role",
+    "user": "User Management",
+    "role": "Role Management",
+    "currentLoginAccount": "Current login account",
+    "home": "Home",
+    "logout": "Logout",
+    "profile": "Profile"
+  }
+}
