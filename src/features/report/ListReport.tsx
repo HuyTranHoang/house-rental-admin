@@ -62,6 +62,9 @@ function ListReport() {
     if (filters.category) {
       const result = filters.category.join(',')
       setFilters({ category: result })
+    } else {
+      setFilters({ category: '' })
+      setFilteredInfo({})
     }
   }
 
