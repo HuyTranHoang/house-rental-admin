@@ -1,16 +1,15 @@
+import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import TableActions from '@/components/TableActions.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useCitiesAll } from '@/hooks/useCities.ts'
+import { useDeleteDistrict } from '@/hooks/useDistricts.ts'
 import { DistrictDataSource } from '@/models/district.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
-import { useNavigate } from 'react-router-dom'
 import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
-import { useDeleteDistrict } from '@/hooks/useDistricts.ts'
-import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
-import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
-import TableActions from '@/components/TableActions.tsx'
-import { useCitiesAll } from '@/hooks/useCities.ts'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { SorterResult } from 'antd/lib/table/interface'
-
-const { confirm } = Modal
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 interface DistrictTableProps {
   dataSource: DistrictDataSource[]
@@ -33,50 +32,38 @@ function DistrictTable({
 }: DistrictTableProps) {
   const navigate = useNavigate()
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentRecord, setCurrentRecord] = useState<DistrictDataSource | null>(null)
+
   const { cityData, cityIsLoading } = useCitiesAll()
   const { deleteDistrictMutate } = useDeleteDistrict()
 
-  const showDeleteConfirm = (record: DistrictDataSource) => {
-    const items: DescriptionsProps['items'] = [
-      {
-        key: '1',
-        label: 'Id',
-        children: <span>{record.id}</span>,
-        span: 3
-      },
-      {
-        key: '2',
-        label: 'Quận huyện',
-        children: <span>{record.name}</span>,
-        span: 3
-      },
-      {
-        key: '3',
-        label: 'Thành phố',
-        children: <span>{record.cityName}</span>,
-        span: 3
-      },
-      {
-        key: '4',
-        label: 'Ngày tạo',
-        children: <span>{record.createdAt}</span>,
-        span: 3
-      }
-    ]
-
-    confirm({
-      icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa quận huyện' />,
-      content: <ConfirmModalContent items={items} />,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteDistrictMutate(record.id)
-      }
-    })
-  }
+  const items: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'Id',
+      children: <span>{currentRecord?.id}</span>,
+      span: 3
+    },
+    {
+      key: '2',
+      label: 'Quận huyện',
+      children: <span>{currentRecord?.name}</span>,
+      span: 3
+    },
+    {
+      key: '3',
+      label: 'Thành phố',
+      children: <span>{currentRecord?.cityName}</span>,
+      span: 3
+    },
+    {
+      key: '4',
+      label: 'Ngày tạo',
+      children: <span>{currentRecord?.createdAt}</span>,
+      span: 3
+    }
+  ]
 
   const columns: TableProps<DistrictDataSource>['columns'] = [
     {
@@ -120,34 +107,52 @@ function DistrictTable({
       render: (_, record) => (
         <TableActions
           onUpdate={() => navigate(ROUTER_NAMES.getDistrictEditPath(record.id))}
-          onDelete={() => showDeleteConfirm(record)}
+          onDelete={() => {
+            setCurrentRecord(record)
+            setIsModalOpen(true)
+          }}
         />
       )
     }
   ]
 
   return (
-    <Table
-      dataSource={dataSource}
-      columns={columns}
-      rowSelection={rowSelection}
-      onChange={handleTableChange}
-      loading={loading || cityIsLoading}
-      pagination={{
-        position: ['bottomCenter'],
-        pageSizeOptions: ['5', '10', '20'],
-        locale: { items_per_page: '/ trang' },
-        showSizeChanger: true,
-        ...paginationProps
-      }}
-      locale={{
-        triggerDesc: 'Sắp xếp giảm dần',
-        triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp',
-        filterReset: 'Bỏ lọc',
-        filterConfirm: 'Lọc'
-      }}
-    />
+    <>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        rowSelection={rowSelection}
+        onChange={handleTableChange}
+        loading={loading || cityIsLoading}
+        pagination={{
+          position: ['bottomCenter'],
+          pageSizeOptions: ['5', '10', '20'],
+          locale: { items_per_page: '/ trang' },
+          showSizeChanger: true,
+          ...paginationProps
+        }}
+        locale={{
+          triggerDesc: 'Sắp xếp giảm dần',
+          triggerAsc: 'Sắp xếp tăng dần',
+          cancelSort: 'Hủy sắp xếp',
+          filterReset: 'Bỏ lọc',
+          filterConfirm: 'Lọc'
+        }}
+      />
+
+      <Modal
+        open={isModalOpen}
+        className='w-96'
+        title={<ConfirmModalTitle title='Xác nhận xóa thành phố' />}
+        onCancel={() => setIsModalOpen(false)}
+        onOk={() => deleteDistrictMutate(currentRecord!.id)}
+        okText='Xác nhận'
+        okType='danger'
+        cancelText='Hủy'
+      >
+        <ConfirmModalContent items={items} />
+      </Modal>
+    </>
   )
 }
 
