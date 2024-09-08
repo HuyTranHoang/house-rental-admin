@@ -1,3 +1,9 @@
+import ConfirmModalContent from '@/components/ConfirmModalContent'
+import ConfirmModalTitle from '@/components/ConfirmModalTitle'
+import { useDeleteReview } from '@/hooks/useReviews.ts'
+import { ReviewDataSource } from '@/models/review.type.ts'
+import { blue } from '@ant-design/colors'
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import {
   Button,
   Descriptions,
@@ -9,16 +15,8 @@ import {
   TablePaginationConfig,
   TableProps
 } from 'antd'
-import { ReviewDataSource } from '@/models/review.type.ts'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useState } from 'react'
-import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
-import ConfirmModalTitle from '@/components/ConfirmModalTitle'
-import ConfirmModalContent from '@/components/ConfirmModalContent'
-import { useDeleteReview } from '@/hooks/useReviews.ts'
-import { blue } from '@ant-design/colors'
-
-const { confirm } = Modal
 
 interface ReviewTableProps {
   dataSource: ReviewDataSource[]
@@ -30,6 +28,7 @@ interface ReviewTableProps {
 
 function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: ReviewTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [currentReview, setCurrentReview] = useState<ReviewDataSource | null>(null)
 
   const handleView = (record: ReviewDataSource) => {
@@ -39,47 +38,32 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
 
   const { deleteReviewMutate } = useDeleteReview()
 
-  const showDeleteConfirm = (record: ReviewDataSource) => {
-    const items: DescriptionsProps['items'] = [
-      {
-        key: '1',
-        label: 'Id',
-        children: <span>{record.id}</span>,
-        span: 3
-      },
-      {
-        key: '2',
-        label: 'Người đánh giá',
-        children: <span>{record.userName}</span>,
-        span: 3
-      },
-      {
-        key: '3',
-        label: 'Nội dung',
-        children: <span>{record.comment}</span>,
-        span: 3
-      },
-      {
-        key: '4',
-        label: 'Ngày tạo',
-        children: <span>{record.createdAt}</span>,
-        span: 3
-      }
-    ]
-
-    confirm({
-      icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa đánh giá' />,
-      content: <ConfirmModalContent items={items} />,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteReviewMutate(record.id)
-      }
-    })
-  }
+  const items: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'Id',
+      children: <span>{currentReview?.id}</span>,
+      span: 3
+    },
+    {
+      key: '2',
+      label: 'Người đánh giá',
+      children: <span>{currentReview?.userName}</span>,
+      span: 3
+    },
+    {
+      key: '3',
+      label: 'Nội dung',
+      children: <span>{currentReview?.comment}</span>,
+      span: 3
+    },
+    {
+      key: '4',
+      label: 'Ngày tạo',
+      children: <span>{currentReview?.createdAt}</span>,
+      span: 3
+    }
+  ]
 
   const columns: TableProps<ReviewDataSource>['columns'] = [
     {
@@ -180,7 +164,15 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
           >
             Chi tiết
           </Button>
-          <Button icon={<DeleteOutlined />} type='default' onClick={() => showDeleteConfirm(record)} danger>
+          <Button
+            icon={<DeleteOutlined />}
+            type='default'
+            onClick={() => {
+              setCurrentReview(record)
+              setIsDeleteModalOpen(true)
+            }}
+            danger
+          >
             Xóa
           </Button>
         </div>
@@ -256,13 +248,36 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
         footer={
           <>
             <Button onClick={() => setIsModalOpen(false)}>Đóng</Button>
-            <Button type='primary' danger onClick={() => showDeleteConfirm(currentReview as ReviewDataSource)}>
+            <Button
+              type='primary'
+              danger
+              onClick={() => {
+                setIsDeleteModalOpen(true)
+                setIsModalOpen(false)
+              }}
+            >
               Xóa
             </Button>
           </>
         }
       >
         <Descriptions bordered items={detailItems} />
+      </Modal>
+
+      <Modal
+        open={isDeleteModalOpen}
+        className='w-96'
+        title={<ConfirmModalTitle title='Xác nhận xóa đánh giá' />}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onOk={() => {
+          deleteReviewMutate(currentReview!.id)
+          setIsDeleteModalOpen(false)
+        }}
+        okText='Xác nhận'
+        okType='danger'
+        cancelText='Hủy'
+      >
+        <ConfirmModalContent items={items} />
       </Modal>
     </>
   )
