@@ -122,7 +122,10 @@ function CityTable({
         className='w-96'
         title={<ConfirmModalTitle title='Xác nhận xóa thành phố' />}
         onCancel={() => setIsModalOpen(false)}
-        onOk={() => deleteCityMutate(currentRecord!.id)}
+        onOk={() => {
+          deleteCityMutate(currentRecord!.id)
+          setIsModalOpen(false)
+        }}
         okText='Xác nhận'
         okType='danger'
         cancelText='Hủy'

@@ -7,9 +7,8 @@ import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-const { confirm } = Modal
 
 interface RoomTypeTableProps {
   dataSource: RoomTypeDataSource[]
@@ -29,43 +28,32 @@ function RoomTypeTable({
   sortedInfo
 }: RoomTypeTableProps) {
   const navigate = useNavigate()
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentRecord, setCurrentRecord] = useState<RoomTypeDataSource | null>(null)
+
   const { deleteRoomTypeMutate } = useDeleteRoomType()
 
-  const showDeleteConfirm = (record: RoomTypeDataSource) => {
-    const items: DescriptionsProps['items'] = [
-      {
-        key: '1',
-        label: 'Id',
-        children: <span>{record.id}</span>,
-        span: 3
-      },
-      {
-        key: '2',
-        label: 'Tên loại phòng',
-        children: <span>{record.name}</span>,
-        span: 3
-      },
-      {
-        key: '3',
-        label: 'Ngày tạo',
-        children: <span>{record.createdAt}</span>,
-        span: 3
-      }
-    ]
-
-    confirm({
-      icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa loại phòng' />,
-      content: <ConfirmModalContent items={items} />,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteRoomTypeMutate(record.id)
-      }
-    })
-  }
+  const items: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'Id',
+      children: <span>{currentRecord?.id}</span>,
+      span: 3
+    },
+    {
+      key: '2',
+      label: 'Tên loại phòng',
+      children: <span>{currentRecord?.name}</span>,
+      span: 3
+    },
+    {
+      key: '3',
+      label: 'Ngày tạo',
+      children: <span>{currentRecord?.createdAt}</span>,
+      span: 3
+    }
+  ]
 
   const columns: TableProps<RoomTypeDataSource>['columns'] = [
     {
@@ -99,32 +87,53 @@ function RoomTypeTable({
       render: (_, record) => (
         <TableActions
           onUpdate={() => navigate(ROUTER_NAMES.getRoomTypeEditPath(record.id))}
-          onDelete={() => showDeleteConfirm(record)}
+          onDelete={() => {
+            setCurrentRecord(record)
+            setIsModalOpen(true)
+          }}
         />
       )
     }
   ]
 
   return (
-    <Table
-      dataSource={dataSource}
-      columns={columns}
-      rowSelection={rowSelection}
-      pagination={{
-        position: ['bottomCenter'],
-        pageSizeOptions: ['5', '10', '20'],
-        locale: { items_per_page: '/ trang' },
-        showSizeChanger: true,
-        ...paginationProps
-      }}
-      onChange={handleTableChange}
-      loading={loading}
-      locale={{
-        triggerDesc: 'Sắp xếp giảm dần',
-        triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp'
-      }}
-    />
+    <>
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        rowSelection={rowSelection}
+        pagination={{
+          position: ['bottomCenter'],
+          pageSizeOptions: ['5', '10', '20'],
+          locale: { items_per_page: '/ trang' },
+          showSizeChanger: true,
+          ...paginationProps
+        }}
+        onChange={handleTableChange}
+        loading={loading}
+        locale={{
+          triggerDesc: 'Sắp xếp giảm dần',
+          triggerAsc: 'Sắp xếp tăng dần',
+          cancelSort: 'Hủy sắp xếp'
+        }}
+      />
+
+      <Modal
+        open={isModalOpen}
+        className='w-96'
+        title={<ConfirmModalTitle title='Xác nhận xóa loại phòng' />}
+        onCancel={() => setIsModalOpen(false)}
+        onOk={() => {
+          deleteRoomTypeMutate(currentRecord!.id)
+          setIsModalOpen(false)
+        }}
+        okText='Xác nhận'
+        okType='danger'
+        cancelText='Hủy'
+      >
+        <ConfirmModalContent items={items} />
+      </Modal>
+    </>
   )
 }
 

@@ -143,9 +143,12 @@ function DistrictTable({
       <Modal
         open={isModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title='Xác nhận xóa thành phố' />}
+        title={<ConfirmModalTitle title='Xác nhận xóa quận huyện' />}
         onCancel={() => setIsModalOpen(false)}
-        onOk={() => deleteDistrictMutate(currentRecord!.id)}
+        onOk={() => {
+          deleteDistrictMutate(currentRecord!.id)
+          setIsModalOpen(false)
+        }}
         okText='Xác nhận'
         okType='danger'
         cancelText='Hủy'
