@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Amenity, AmenityForm } from '@/models/amenity.type.ts'
 import { PageInfo } from '@/models/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
@@ -10,7 +9,7 @@ export interface AmenitiesWithPagination {
 
 export const getAllAmenities = async () => {
   try {
-    const response = await axios.get<Amenity[]>('/api/amenities/all')
+    const response = await axiosInstance.get<Amenity[]>('/api/amenity/all')
     if (response.status === 200) {
       return response.data
     }
@@ -36,7 +35,7 @@ export const getAllAmenitiesWithPagination = async (
       sortBy
     }
 
-    const response = await axios.get<AmenitiesWithPagination>('/api/amenities', { params })
+    const response = await axiosInstance.get<AmenitiesWithPagination>('/api/amenity', { params })
 
     if (response.status === 200) {
       return response.data
@@ -49,7 +48,7 @@ export const getAllAmenitiesWithPagination = async (
 
 export const getAmenityById = async (id: number) => {
   try {
-    const response = await axios.get<Amenity>(`/api/amenities/${id}`)
+    const response = await axiosInstance.get<Amenity>(`/api/amenity/${id}`)
     if (response.status === 200) {
       return response.data
     }
@@ -60,12 +59,12 @@ export const getAmenityById = async (id: number) => {
 }
 
 export const addAmenity = async (values: AmenityForm) => {
-  await axiosInstance.post('/api/amenities', values)
+  await axiosInstance.post('/api/amenity', values)
 }
 
 export const deleteAmenity = async (id: number) => {
   try {
-    await axiosInstance.delete(`/api/amenities/${id}`)
+    await axiosInstance.delete(`/api/amenity/${id}`)
   } catch (error) {
     console.error(error)
     throw new Error('Xóa tiện nghi thất bại')
@@ -73,12 +72,12 @@ export const deleteAmenity = async (id: number) => {
 }
 
 export const updateAmenity = async (values: AmenityForm) => {
-  await axiosInstance.put(`/api/amenities/${values.id}`, values)
+  await axiosInstance.put(`/api/amenity/${values.id}`, values)
 }
 
 export const deleteAmenities = async (ids: number[]) => {
   try {
-    await axiosInstance.delete('/api/amenities/delete-multiple', { data: { ids } })
+    await axiosInstance.delete('/api/amenity/delete-multiple', { data: { ids } })
   } catch (error) {
     console.error(error)
     throw new Error('Xóa các tiện nghi thất bại')
