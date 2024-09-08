@@ -156,13 +156,11 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
               form.resetFields()
               setCurrentRole(item)
             }}
-            className={clsx('cursor-pointer', {
-              'bg-gray-100': !isDarkMode,
-              'bg-gray-800': isDarkMode,
-              'bg-blue-200': !isDarkMode && item.id === currentRole.id,
-              'bg-blue-950': isDarkMode && item.id === currentRole.id,
-              'hover:bg-gray-100': !isDarkMode && item.id !== currentRole.id,
-              'hover:bg-gray-700': isDarkMode && item.id !== currentRole.id
+            className={clsx('cursor-pointer relative p-1', {
+              'bg-gradient-to-l from-blue-50 to-blue-200': !isDarkMode && item.id === currentRole.id,
+              'bg-gradient-to-l from-blue-950 to-blue-700': isDarkMode && item.id === currentRole.id,
+              'bg-gray-100 hover:bg-gray-200': !isDarkMode && item.id !== currentRole.id,
+              'bg-gray-900 hover:bg-gray-700': isDarkMode && item.id !== currentRole.id,
             })}
           >
             {item.name}
