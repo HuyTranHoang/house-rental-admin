@@ -8,12 +8,12 @@ const amenityRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.AMENITY,
     element: <ListAmenity />,
-    breadcrumb: 'Danh sách tiện nghi'
+    breadcrumb: 'amenity.list'
   },
   {
     path: ROUTER_NAMES.ADD_AMENITY,
     element: <AddUpdateAmenity />,
-    breadcrumb: 'Thêm mới tiện nghi'
+    breadcrumb: 'amenity.add'
   },
   {
     path: ROUTER_NAMES.DETAIL_AMENITY,
@@ -22,7 +22,7 @@ const amenityRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.EDIT_AMENITY,
     element: <AddUpdateAmenity />,
-    breadcrumb: ({ match }) => `Cập nhật tiện nghi / ${match.params.id}`
+    breadcrumb: 'amenity.edit'
   }
 ]
 

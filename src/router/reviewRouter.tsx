@@ -7,7 +7,7 @@ const reviewRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.REVIEW,
     element: <ListReview />,
-    breadcrumb: 'Danh sách đánh giá'
+    breadcrumb: 'review.list'
   }
 ]
 

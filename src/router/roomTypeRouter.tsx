@@ -8,12 +8,12 @@ const roomTypeRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.ROOM_TYPE,
     element: <ListRoomType />,
-    breadcrumb: 'Danh sách loại phòng'
+    breadcrumb: 'roomType.list'
   },
   {
     path: ROUTER_NAMES.ADD_ROOM_TYPE,
     element: <AddUpdateRoomType />,
-    breadcrumb: 'Thêm mới loại phòng'
+    breadcrumb: 'roomType.add'
   },
   {
     path: ROUTER_NAMES.DETAIL_ROOM_TYPE,
@@ -22,7 +22,7 @@ const roomTypeRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.EDIT_ROOM_TYPE,
     element: <AddUpdateRoomType />,
-    breadcrumb: ({ match }) => `Cập nhật loại phòng / ${match.params.id}`
+    breadcrumb: 'roomType.edit'
   }
 ]
 

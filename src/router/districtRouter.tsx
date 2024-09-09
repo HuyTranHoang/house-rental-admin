@@ -8,12 +8,12 @@ const districtRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.DISTRICT,
     element: <ListDistrict />,
-    breadcrumb: 'Danh sách quận huyện'
+    breadcrumb: 'district.list'
   },
   {
     path: ROUTER_NAMES.ADD_DISTRICT,
     element: <AddUpdateDistrict />,
-    breadcrumb: 'Thêm mới quận huyện'
+    breadcrumb: 'district.add'
   },
   {
     path: ROUTER_NAMES.DETAIL_DISTRICT,
@@ -22,7 +22,7 @@ const districtRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.EDIT_DISTRICT,
     element: <AddUpdateDistrict />,
-    breadcrumb: ({ match }) => `Cập nhật quận huyện / ${match.params.id}`
+    breadcrumb: 'district.edit'
   }
 ]
 

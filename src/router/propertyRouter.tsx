@@ -7,7 +7,7 @@ const propertyRounter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.PROPERTY,
     element: <ListProperty />,
-    breadcrumb: 'Danh Sách Bài Đăng'
+    breadcrumb: 'property'
   }
 ]
 

@@ -1,0 +1,43 @@
+{
+  "dashboard": "Tổng quan",
+  "property": "Quản lý bất động sản",
+  "city": {
+    "list": "Quản lý thành phố",
+    "add": "Thêm thành phố",
+    "edit": "Chỉnh sửa thành phố"
+  },
+  "district": {
+    "list": "Quản lý quận/huyện",
+    "add": "Thêm quận/huyện",
+    "edit": "Chỉnh sửa quận/huyện"
+  },
+  "roomTypeAndAmenity": "Loại phòng & Tiện ích",
+  "roomType": {
+    "list": "Quản lý loại phòng",
+    "add": "Thêm loại phòng",
+    "edit": "Chỉnh sửa loại phòng"
+  },
+  "amenity": {
+    "list": "Quản lý tiện ích",
+    "add": "Thêm tiện ích",
+    "edit": "Chỉnh sửa tiện ích"
+  },
+  "reportAndReview": "Báo cáo & Đánh giá",
+  "report": {
+    "list": "Quản lý báo cáo"
+  },
+  "review": {
+    "list": "Quản lý đánh giá"
+  },
+  "userAndRole": "Người dùng & Vai trò",
+  "user": {
+    "list": "Quản lý người dùng"
+  },
+  "role": {
+    "list": "Quản lý vai trò"
+  },
+  "currentLoginAccount": "Tài khoản đăng nhập hiện tại",
+  "home": "Trang chủ",
+  "logout": "Đăng xuất",
+  "profile": "Hồ sơ"
+}

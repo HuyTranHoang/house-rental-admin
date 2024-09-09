@@ -7,7 +7,7 @@ const userRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.USER,
     element: <ListUser />,
-    breadcrumb: 'Danh sách người dùng'
+    breadcrumb: 'user.list'
   }
 ]
 

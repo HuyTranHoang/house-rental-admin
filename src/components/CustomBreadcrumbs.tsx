@@ -8,7 +8,7 @@ import { routerList } from '../router/router.tsx'
 
 const CustomBreadcrumbs = () => {
   const breadcrumbs = useBreadcrumbs(routerList)
-  const { t } = useTranslation()
+  const { t } = useTranslation('langBreadcrumbs')
 
   const breadcrumbItems = breadcrumbs.map(({ match, breadcrumb }) => {
     let breadcrumbText
@@ -21,7 +21,7 @@ const CustomBreadcrumbs = () => {
       } else if (React.isValidElement(breadcrumb) && breadcrumb.key === '/') {
         breadcrumbText = (
           <>
-            <HomeOutlined /> {t('sidebar.dashboard')}
+            <HomeOutlined /> {t('dashboard')}
           </>
         )
       } else if (React.isValidElement(breadcrumb)) {

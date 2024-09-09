@@ -26,7 +26,7 @@ export const routerList = [
           {
             path: ROUTER_NAMES.DASHBOARD,
             element: <Dashboard />,
-            breadcrumb: () => 'sidebar.dashboard'
+            breadcrumb: () => 'dashboard'
           }
         ]
       }

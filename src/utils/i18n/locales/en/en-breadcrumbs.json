@@ -1,0 +1,44 @@
+{
+  "dashboard": "Dashboard",
+  "property": "Property Management",
+  "cityAndDistrict": "City & District",
+  "city": {
+    "list": "City Management",
+    "add": "Add city",
+    "edit": "Edit city"
+  },
+  "district": {
+    "list": "District Management",
+    "add": "Add district",
+    "edit": "Edit district"
+  },
+  "roomTypeAndAmenity": "Room Type & Amenity",
+  "roomType": {
+    "list": "Room Type Management",
+    "add": "Add room type",
+    "edit": "Edit room type"
+  },
+  "amenity": {
+    "list": "Amenity Management",
+    "add": "Add amenity",
+    "edit": "Edit amenity"
+  },
+  "reportAndReview": "Report & Review",
+  "report": {
+    "list": "Report Management"
+  },
+  "review": {
+    "list": "Review Management"
+  },
+  "userAndRole": "User & Role",
+  "user": {
+    "list": "User Management"
+  },
+  "role": {
+    "list": "Role Management"
+  },
+  "currentLoginAccount": "Current login account",
+  "home": "Home",
+  "logout": "Logout",
+  "profile": "Profile"
+}

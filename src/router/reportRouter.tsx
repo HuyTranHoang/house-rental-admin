@@ -7,7 +7,7 @@ const reportRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.REPORT,
     element: <ListReport />,
-    breadcrumb: 'Danh sách báo cáo'
+    breadcrumb: 'report.list'
   }
 ]
 

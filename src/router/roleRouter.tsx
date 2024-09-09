@@ -7,7 +7,7 @@ const roleRouter: RouteObject[] & BreadcrumbsRoute[] = [
   {
     path: ROUTER_NAMES.ROLE,
     element: <RoleManager />,
-    breadcrumb: 'Danh sách vai trò'
+    breadcrumb: 'role.list'
   }
 ]
 

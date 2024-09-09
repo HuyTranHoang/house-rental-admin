@@ -29,7 +29,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
   const dispatch = useAppDispatch()
   const location = useLocation()
   const { user } = useSelector(selectAuth)
-  const { t } = useTranslation()
+  const { t } = useTranslation('langBreadcrumbs')
 
   const {
     token: { colorBgContainer }
@@ -38,88 +38,88 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
   const siderItems: MenuProps['items'] = [
     {
       key: ROUTER_NAMES.DASHBOARD,
-      label: t('sidebar.dashboard'),
+      label: t('dashboard'),
       icon: <BarChartOutlined />,
       onClick: () => navigate(ROUTER_NAMES.DASHBOARD)
     },
     {
       key: 'property',
-      label: t('sidebar.property'),
+      label: t('property'),
       icon: <ScheduleOutlined />,
       onClick: () => navigate(ROUTER_NAMES.PROPERTY)
     },
     {
       key: 'cityDistrict',
-      label: t('sidebar.cityAndDistrict'),
+      label: t('cityAndDistrict'),
       icon: <IconFont type='icon-city' />,
       children: [
         {
           key: ROUTER_NAMES.CITY,
-          label: t('sidebar.city'),
+          label: t('city.list'),
           onClick: () => navigate(ROUTER_NAMES.CITY)
         },
         {
           key: ROUTER_NAMES.DISTRICT,
-          label: t('sidebar.district'),
+          label: t('district.list'),
           onClick: () => navigate(ROUTER_NAMES.DISTRICT)
         }
       ]
     },
     {
       key: 'roomTypeAmenity',
-      label: t('sidebar.roomTypeAndAmenity'),
+      label: t('roomTypeAndAmenity'),
       icon: <HomeOutlined />,
       children: [
         {
           key: ROUTER_NAMES.ROOM_TYPE,
-          label: t('sidebar.roomType'),
+          label: t('roomType.list'),
           onClick: () => navigate(ROUTER_NAMES.ROOM_TYPE)
         },
         {
           key: ROUTER_NAMES.AMENITY,
-          label: t('sidebar.amenity'),
+          label: t('amenity.list'),
           onClick: () => navigate(ROUTER_NAMES.AMENITY)
         }
       ]
     },
     {
       key: 'reportReview',
-      label: t('sidebar.reportAndReview'),
+      label: t('reportAndReview'),
       icon: <SolutionOutlined />,
       children: [
         {
           key: ROUTER_NAMES.REPORT,
-          label: t('sidebar.report'),
+          label: t('report.list'),
           onClick: () => navigate(ROUTER_NAMES.REPORT)
         },
         {
           key: ROUTER_NAMES.REVIEW,
-          label: t('sidebar.review'),
+          label: t('review.list'),
           onClick: () => navigate(ROUTER_NAMES.REVIEW)
         }
       ]
     },
     {
       key: 'userRole',
-      label: t('sidebar.userAndRole'),
+      label: t('userAndRole'),
       icon: <UserOutlined />,
       children: [
         {
           key: ROUTER_NAMES.USER,
-          label: t('sidebar.user'),
+          label: t('user.list'),
           onClick: () => navigate(ROUTER_NAMES.USER)
         },
         {
           key: ROUTER_NAMES.ROLE,
-          label: t('sidebar.role'),
+          label: t('role.list'),
           onClick: () => navigate(ROUTER_NAMES.ROLE)
         }
       ]
     },
     {
       key: 'transations',
-      label: 'Check bản dịch',
-      icon: <SettingOutlined />,
+      label: <Typography.Text type='danger'>Check bản dịch (Dev Only)</Typography.Text>,
+      icon: <SettingOutlined className='text-red-500' />,
       onClick: () => window.open('/?showtranslations')
     }
   ]
@@ -129,7 +129,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
       key: 'username',
       label: (
         <Flex vertical>
-          <Typography.Text type='secondary'>{t('sidebar.currentLoginAccount')}</Typography.Text>
+          <Typography.Text type='secondary'>{t('currentLoginAccount')}</Typography.Text>
           <Typography.Text strong>{user?.username}</Typography.Text>
         </Flex>
       ),
@@ -141,17 +141,17 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     },
     {
       key: 'home',
-      label: t('sidebar.home'),
+      label: t('home'),
       icon: <HomeOutlined />
     },
     {
       key: 'profile',
-      label: t('sidebar.profile'),
+      label: t('profile'),
       icon: <EditOutlined />
     },
     {
       key: 'logout',
-      label: t('sidebar.logout'),
+      label: t('logout'),
       icon: <LogoutOutlined />,
       danger: true
     }
