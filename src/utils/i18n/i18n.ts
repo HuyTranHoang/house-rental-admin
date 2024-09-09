@@ -5,6 +5,7 @@ import enLangCity from '@/utils/i18n/locales/en/en-city.json'
 import enLang from '@/utils/i18n/locales/en/en.json'
 import viLangCity from '@/utils/i18n/locales/vi/vi-city.json'
 import viLang from '@/utils/i18n/locales/vi/vi.json'
+import { i18nextPlugin } from 'translation-check'
 
 export const defaultNS = 'lang'
 export const resources = {
@@ -18,15 +19,18 @@ export const resources = {
   }
 } as const
 
-i18n.use(initReactI18next).init({
-  resources,
-  defaultNS,
-  lng: 'en',
-  fallbackLng: 'en',
-  ns: ['lang', 'langCity'],
-  interpolation: {
-    escapeValue: false
-  }
-})
+i18n
+  .use(i18nextPlugin)
+  .use(initReactI18next)
+  .init({
+    resources,
+    defaultNS,
+    lng: 'en',
+    fallbackLng: 'en',
+    ns: ['lang', 'langCity'],
+    interpolation: {
+      escapeValue: false
+    }
+  })
 
 export default i18n

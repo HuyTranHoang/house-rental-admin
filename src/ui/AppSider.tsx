@@ -9,7 +9,7 @@ import {
   EditOutlined,
   HomeOutlined,
   LogoutOutlined,
-  ScheduleOutlined,
+  ScheduleOutlined, SettingOutlined,
   SolutionOutlined,
   UserOutlined
 } from '@ant-design/icons'
@@ -115,6 +115,12 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
           onClick: () => navigate(ROUTER_NAMES.ROLE)
         }
       ]
+    },
+    {
+      key: 'transations',
+      label: 'Check bản dịch',
+      icon: <SettingOutlined />,
+      onClick: () => window.open('/?showtranslations')
     }
   ]
 
