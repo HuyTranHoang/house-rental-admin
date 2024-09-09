@@ -15,7 +15,7 @@
       "nameMax": "City name must be at most 50 characters"
     },
     "pagination": {
-      "showTotal": "{{rangeStart}}-{{rangeEnd}} in {{total}} cities"
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} cities"
     },
     "notification": {
       "addSuccess": "Add city successfully",
@@ -23,7 +23,8 @@
       "deleteSuccess": "Delete city successfully"
     },
     "deleteModal": {
-      "title": "Confirm city deletion"
+      "title": "Confirm city deletion",
+      "titleMultiple": "Confirm multiple city deletion"
     }
   }
 }

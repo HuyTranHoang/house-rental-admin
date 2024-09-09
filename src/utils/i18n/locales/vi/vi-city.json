@@ -23,7 +23,8 @@
       "deleteSuccess": "Xóa thành phố thành công"
     },
     "deleteModal": {
-      "title": "Xác nhận xóa thành phố"
+      "title": "Xác nhận xóa thành phố",
+      "titleMultiple": "Xác nhận xóa các thành phố"
     }
   }
 }

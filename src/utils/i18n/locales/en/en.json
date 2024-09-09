@@ -5,6 +5,7 @@
     "edit": "Edit",
     "update": "Update",
     "delete": "Delete",
+    "multipleDelete": "Delete selected items",
     "reset": "Reset",
     "back": "Back",
     "ok": "Ok",

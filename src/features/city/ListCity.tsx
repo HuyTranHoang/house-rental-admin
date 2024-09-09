@@ -35,7 +35,7 @@ function ListCity() {
   const { deleteCitiesMutate } = useDeleteMultiCity()
 
   const handleDelete = () => {
-    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các thành phố', () => {
+    showMultipleDeleteConfirm(deleteIdList, t('langCity:city.deleteModal.titleMultiple'), () => {
       deleteCitiesMutate(deleteIdList)
       setDeleteIdList([])
     })
@@ -105,7 +105,7 @@ function ListCity() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder={t('city.searchPlaceholder', { ns: 'langCity' })}
+                placeholder={t('langCity:city.searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -115,7 +115,7 @@ function ListCity() {
         <Space>
           {deleteIdList.length > 0 && (
             <Button shape='round' type='primary' danger onClick={handleDelete}>
-              Xóa các mục đã chọn
+              {t('common.multipleDelete')}
             </Button>
           )}
           <Button
