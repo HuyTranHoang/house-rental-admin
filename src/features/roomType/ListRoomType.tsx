@@ -6,10 +6,10 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { useDeleteRoomTypes, useRoomTypeFilters, useRoomTypes } from '@/hooks/useRoomTypes.ts'
 import RoomTypeTable from './RoomTypeTable.tsx'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { TableRowSelection } from 'antd/es/table/interface'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 
 const { Search } = Input
 
@@ -27,16 +27,10 @@ function ListRoomType() {
   const [form] = Form.useForm()
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
+  const [isOpen, setIsOpen] = useState(false)
 
   const { data, isLoading, isError } = useRoomTypes(search, pageNumber, pageSize, sortBy)
   const { deleteRoomTypesMutate } = useDeleteRoomTypes()
-
-  const handleDelete = () => {
-    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các loại phòng', () => {
-      deleteRoomTypesMutate(deleteIdList)
-      setDeleteIdList([])
-    })
-  }
 
   const handleTableChange: TableProps<RoomTypeDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -112,7 +106,7 @@ function ListRoomType() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
               Xóa các mục đã chọn
             </Button>
           )}
@@ -141,6 +135,17 @@ function ListRoomType() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
+      />
+
+      <MultipleDeleteConfirmModal
+        deleteIdList={deleteIdList}
+        isModalOpen={isOpen}
+        setIsModalOpen={setIsOpen}
+        title={'Xác nhận xóa các mục đã chọn'}
+        onOk={() => {
+          deleteRoomTypesMutate(deleteIdList)
+          setDeleteIdList([])
+        }}
       />
     </>
   )

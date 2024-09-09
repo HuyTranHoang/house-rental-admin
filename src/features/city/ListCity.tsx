@@ -1,5 +1,5 @@
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
+import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
 import { City, CityDataSource } from '@/models/city.type.ts'
@@ -25,6 +25,8 @@ function ListCity() {
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useCityFilters()
 
+  const [isOpen, setIsOpen] = useState(false)
+
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const [form] = Form.useForm()
@@ -33,13 +35,6 @@ function ListCity() {
 
   const { data, isLoading, isError } = useCities(search, pageNumber, pageSize, sortBy)
   const { deleteCitiesMutate } = useDeleteMultiCity()
-
-  const handleDelete = () => {
-    showMultipleDeleteConfirm(deleteIdList, t('langCity:city.deleteModal.titleMultiple'), () => {
-      deleteCitiesMutate(deleteIdList)
-      setDeleteIdList([])
-    })
-  }
 
   const handleTableChange: TableProps<CityDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -114,7 +109,7 @@ function ListCity() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
               {t('common.multipleDelete')}
             </Button>
           )}
@@ -149,6 +144,17 @@ function ListCity() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
+      />
+
+      <MultipleDeleteConfirmModal
+        deleteIdList={deleteIdList}
+        isModalOpen={isOpen}
+        setIsModalOpen={setIsOpen}
+        title={t('langCity:city.deleteModal.titleMultiple')}
+        onOk={() => {
+          deleteCitiesMutate(deleteIdList)
+          setDeleteIdList([])
+        }}
       />
     </>
   )

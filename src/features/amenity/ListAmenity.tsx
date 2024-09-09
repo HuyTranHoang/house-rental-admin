@@ -1,15 +1,15 @@
-import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { PlusCircleOutlined } from '@ant-design/icons'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useAmenities, useAmenityFilters, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
-import AmenityTable from './AmenityTable.tsx'
 import { Amenity, AmenityDataSource } from '@/models/amenity.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
-import ErrorFetching from '@/components/ErrorFetching.tsx'
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
+import { PlusCircleOutlined } from '@ant-design/icons'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import AmenityTable from './AmenityTable.tsx'
 
 const { Search } = Input
 
@@ -22,6 +22,7 @@ function ListAmenity() {
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useAmenityFilters()
 
+  const [isOpen, setIsOpen] = useState(false)
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const [form] = Form.useForm()
@@ -30,13 +31,6 @@ function ListAmenity() {
 
   const { data, isLoading, isError } = useAmenities(search, pageNumber, pageSize, sortBy)
   const { deleteAmenitiesMutate } = useDeleteMultiAmenity()
-
-  const handleDelete = () => {
-    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các tiện nghi', () => {
-      deleteAmenitiesMutate(deleteIdList)
-      setDeleteIdList([])
-    })
-  }
 
   const handleTableChange: TableProps<AmenityDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -112,7 +106,7 @@ function ListAmenity() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
               Xóa các mục đã chọn
             </Button>
           )}
@@ -141,6 +135,17 @@ function ListAmenity() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
+      />
+
+      <MultipleDeleteConfirmModal
+        deleteIdList={deleteIdList}
+        isModalOpen={isOpen}
+        setIsModalOpen={setIsOpen}
+        title={'Xac nhan xoa cac mục đã chọn'}
+        onOk={() => {
+          deleteAmenitiesMutate(deleteIdList)
+          setDeleteIdList([])
+        }}
       />
     </>
   )

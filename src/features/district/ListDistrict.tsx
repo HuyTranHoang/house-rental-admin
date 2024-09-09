@@ -7,9 +7,9 @@ import { useDeleteMultiDistrict, useDistrictFilters, useDistricts } from '@/hook
 import DistrictTable from './DistrictTable.tsx'
 import { District, DistrictDataSource } from '@/models/district.type.ts'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig.tsx'
 import { TableRowSelection } from 'antd/es/table/interface'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 
 const { Search } = Input
 
@@ -30,16 +30,11 @@ function ListDistrict() {
   const [form] = Form.useForm()
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
+  const [isOpen, setIsOpen] = useState(false)
 
   const { data, isLoading, isError } = useDistricts(search, cityId, pageNumber, pageSize, sortBy)
   const { deleteDistrictsMutate } = useDeleteMultiDistrict()
 
-  const handleDelete = () => {
-    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các quận huyện', () => {
-      deleteDistrictsMutate(deleteIdList)
-      setDeleteIdList([])
-    })
-  }
 
   const handleTableChange: TableProps<DistrictDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -128,7 +123,7 @@ function ListDistrict() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
               Xóa các mục đã chọn
             </Button>
           )}
@@ -158,6 +153,17 @@ function ListDistrict() {
         rowSelection={rowSelection}
         filteredInfo={filteredInfo}
         sortedInfo={sortedInfo}
+      />
+
+      <MultipleDeleteConfirmModal
+        deleteIdList={deleteIdList}
+        isModalOpen={isOpen}
+        setIsModalOpen={setIsOpen}
+        title={'Xác nhận xóa các mục đã chọn'}
+        onOk={() => {
+          deleteDistrictsMutate(deleteIdList)
+          setDeleteIdList([])
+        }}
       />
     </>
   )

@@ -1,4 +1,3 @@
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig'
 import ErrorFetching from '@/components/ErrorFetching'
 import { useDeleteUsers, useUsers } from '@/hooks/useUsers'
 import { User, UserDataSource } from '@/models/user.type'
@@ -9,6 +8,7 @@ import { Button, Divider, Flex, Space, TableProps, Tabs, TabsProps, Typography }
 import Search from 'antd/es/input/Search'
 import React, { useState } from 'react'
 import UserTable from './UserTable'
+import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 
 const tabsItem: TabsProps['items'] = [
   {
@@ -36,14 +36,8 @@ function ListUser() {
   const { data, isLoading, isError } = useUsers(search, isNonLocked, roles, pageNumber, pageSize, sortBy)
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
+  const [isOpen, setIsOpen] = useState(false)
   const { deleteUsersMutate } = useDeleteUsers()
-
-  const handleDelete = () => {
-    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các tài khoản', () => {
-      deleteUsersMutate(deleteIdList)
-      setDeleteIdList([])
-    })
-  }
 
   const onTabChange = (key: string) => {
     setIsNonLocked(key === 'isNonLocked')
@@ -101,7 +95,7 @@ function ListUser() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
               Xóa các mục đã chọn
             </Button>
           )}
@@ -125,6 +119,17 @@ function ListUser() {
         rowSelection={{
           type: 'checkbox',
           ...rowSelection
+        }}
+      />
+
+      <MultipleDeleteConfirmModal
+        deleteIdList={deleteIdList}
+        isModalOpen={isOpen}
+        setIsModalOpen={setIsOpen}
+        title={'Xác nhận xóa các mục đã chọn'}
+        onOk={() => {
+          deleteUsersMutate(deleteIdList)
+          setDeleteIdList([])
         }}
       />
     </>

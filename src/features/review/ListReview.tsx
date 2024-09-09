@@ -5,7 +5,7 @@ import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'ant
 import ErrorFetching from '@/components/ErrorFetching'
 import ReviewTable from './ReviewTable'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
-import { showMultipleDeleteConfirm } from '@/components/ConfirmMultipleDeleteConfig'
+import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 
 const { Search } = Input
 
@@ -18,16 +18,11 @@ function ListReview() {
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
+  const [isOpen, setIsOpen] = useState(false)
+
   const { data, isLoading, isError } = useReviews(search, rating, pageNumber, pageSize, sortBy)
 
   const { deleteReviewsMutate } = useDeleteMultiReview()
-
-  const handleDelete = () => {
-    showMultipleDeleteConfirm(deleteIdList, 'Xác nhận xóa các đánh giá', () => {
-      deleteReviewsMutate(deleteIdList)
-      setDeleteIdList([])
-    })
-  }
 
   const handleTableChange: TableProps<ReviewDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -80,7 +75,7 @@ function ListReview() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={handleDelete}>
+            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
               Xóa các mục đã chọn
             </Button>
           )}
@@ -102,6 +97,17 @@ function ListReview() {
         rowSelection={{
           type: 'checkbox',
           ...rowSelection
+        }}
+      />
+
+      <MultipleDeleteConfirmModal
+        deleteIdList={deleteIdList}
+        isModalOpen={isOpen}
+        setIsModalOpen={setIsOpen}
+        title={'Xac nhan xoa cac mục đã chọn'}
+        onOk={() => {
+          deleteReviewsMutate(deleteIdList)
+          setDeleteIdList([])
         }}
       />
     </>
