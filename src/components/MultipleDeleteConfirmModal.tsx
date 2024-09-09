@@ -1,5 +1,6 @@
 import { DescriptionsProps, Modal } from 'antd'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import ConfirmModalContent from '../components/ConfirmModalContent'
 import ConfirmModalTitle from '../components/ConfirmModalTitle'
 
@@ -11,11 +12,19 @@ interface MultipleDeleteConfirmProps {
   setIsModalOpen: (open: boolean) => void
 }
 
-const MultipleDeleteConfirmModal: React.FC<MultipleDeleteConfirmProps> = ({ deleteIdList, title, onOk, isModalOpen, setIsModalOpen }) => {
+const MultipleDeleteConfirmModal: React.FC<MultipleDeleteConfirmProps> = ({
+  deleteIdList,
+  title,
+  onOk,
+  isModalOpen,
+  setIsModalOpen
+}) => {
+  const { t } = useTranslation()
+
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
-      label: 'Số lượng đã chọn',
+      label: t('common.deleteModal.quantitySelected'),
       children: <span>{deleteIdList.length}</span>
     }
   ]
@@ -32,9 +41,9 @@ const MultipleDeleteConfirmModal: React.FC<MultipleDeleteConfirmProps> = ({ dele
       title={<ConfirmModalTitle title={title} />}
       onCancel={() => setIsModalOpen(false)}
       onOk={handleOk}
-      okText='Xác nhận'
+      okText={t('common.ok')}
       okType='danger'
-      cancelText='Hủy'
+      cancelText={t('common.cancel')}
     >
       <ConfirmModalContent items={items} />
     </Modal>

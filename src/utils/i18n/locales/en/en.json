@@ -21,7 +21,8 @@
       "itemsPerPage": "page"
     },
     "deleteModal": {
-      "note": "Note: This action cannot be undone!"
+      "note": "Note: This action cannot be undone!",
+      "quantitySelected": "Selected items"
     }
   }
 }

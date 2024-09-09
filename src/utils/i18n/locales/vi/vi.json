@@ -21,7 +21,8 @@
       "itemsPerPage": "trang"
     },
     "deleteModal": {
-      "note": "Lưu ý: Hành động này không thể hoàn tác!"
+      "note": "Lưu ý: Hành động này không thể hoàn tác!",
+      "quantitySelected": "Số lượng đã chọn"
     }
   }
 }
