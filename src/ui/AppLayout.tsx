@@ -103,7 +103,7 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
         <Footer
           className={clsx('px-0 py-3 text-center', {
             'bg-slate-950 text-white': isDarkMode,
-            'bg-white': !isDarkMode
+            'bg-gray-100': !isDarkMode
           })}
         >
           Mogu Admin ©2024 Created by Group 2
