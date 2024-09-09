@@ -9,7 +9,7 @@ interface IAppSlice {
 
 const initialState: IAppSlice = {
   isDarkMode: false,
-  i18n: 'vi'
+  i18n: 'en'
 }
 
 const appSlice = createSlice({

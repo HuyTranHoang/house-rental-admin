@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 function AddUpdateCity() {
   const match = useMatch(ROUTER_NAMES.ADD_CITY)
   const isAddMode = Boolean(match)
-  const { t } = useTranslation(['enLang', 'enLangCity'])
+  const { t } = useTranslation(['lang', 'langCity'])
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
@@ -24,7 +24,7 @@ function AddUpdateCity() {
   const { addCityMutate, addCityPending } = useCreateCity(setError)
   const { updateCityMutate, updateCityPending } = useUpdateCity(setError)
 
-  const title = isAddMode ? t('city.form.addForm', { ns: 'enLangCity' }) : t('city.form.editForm', { ns: 'enLangCity' })
+  const title = isAddMode ? t('city.form.addForm', { ns: 'langCity' }) : t('city.form.editForm', { ns: 'langCity' })
 
   const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -80,17 +80,17 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item<CityForm>
-          label={t('city.form.name', { ns: 'enLangCity' })}
+          label={t('city.form.name', { ns: 'langCity' })}
           name='name'
           rules={[
-            { required: true, message: 'Vui lòng nhập tên thành phố' },
-            { min: 3, message: 'Tên thành phố phải có ít nhất 3 ký tự' },
-            { max: 50, message: 'Tên thành phố không được vượt quá 50 ký tự' }
+            { required: true, message: t('langCity:city.form.nameRequired') },
+            { min: 3, message: t('langCity:city.form.nameMin') },
+            { max: 50, message: t('langCity:city.form.nameMax') }
           ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
-          <Input onChange={() => setError('')} />
+          <Input onChange={() => setError('')} placeholder={t('langCity:city.form.namePlaceholder')} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>

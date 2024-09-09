@@ -8,7 +8,11 @@
     "form": {
       "addForm": "Thêm thành phố",
       "editForm": "Chỉnh sửa thành phố",
-      "name": "Tên thành phố"
+      "name": "Tên thành phố",
+      "namePlaceholder": "Nhập tên thành phố",
+      "nameRequired": "Vui lòng nhập tên thành phố",
+      "nameMin": "Tên thành phố phải có ít nhất 3 ký tự",
+      "nameMax": "Tên thành phố phải có tối đa 50 ký tự"
     },
     "pagination": {
       "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} thành phố"

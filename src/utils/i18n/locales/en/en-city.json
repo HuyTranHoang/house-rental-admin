@@ -8,7 +8,11 @@
     "form": {
       "addForm": "Add city",
       "editForm": "Edit city",
-      "name": "City name"
+      "name": "City name",
+      "namePlaceholder": "Enter city name",
+      "nameRequired": "Please enter city name",
+      "nameMin": "City name must be at least 3 characters",
+      "nameMax": "City name must be at most 50 characters"
     },
     "pagination": {
       "showTotal": "{{rangeStart}}-{{rangeEnd}} in {{total}} cities"

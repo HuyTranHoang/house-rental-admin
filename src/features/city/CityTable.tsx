@@ -30,7 +30,7 @@ function CityTable({
 }: CityTableProps) {
   const navigate = useNavigate()
 
-  const { t } = useTranslation(['enLang', 'enLangCity'])
+  const { t } = useTranslation(['lang', 'langCity'])
 
   const { deleteCityMutate } = useDeleteCity()
 
@@ -40,7 +40,7 @@ function CityTable({
   const items: DescriptionsProps['items'] = [
     {
       key: '2',
-      label: t('city.table.name', { ns: 'enLangCity' }),
+      label: t('langCity:city.table.name'),
       children: <span>{currentRecord?.name}</span>,
       span: 3
     },
@@ -61,7 +61,7 @@ function CityTable({
       width: 50
     },
     {
-      title: t('city.table.name', { ns: 'enLangCity' }),
+      title: t('langCity:city.table.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
@@ -118,7 +118,7 @@ function CityTable({
       <Modal
         open={isModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title={t('city.deleteModal.title', { ns: 'enLangCity' })} />}
+        title={<ConfirmModalTitle title={t('langCity:city.deleteModal.title')} />}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
           deleteCityMutate(currentRecord!.id)
