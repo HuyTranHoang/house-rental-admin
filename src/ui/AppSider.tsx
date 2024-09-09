@@ -9,7 +9,8 @@ import {
   EditOutlined,
   HomeOutlined,
   LogoutOutlined,
-  ScheduleOutlined, SettingOutlined,
+  ScheduleOutlined,
+  SettingOutlined,
   SolutionOutlined,
   UserOutlined
 } from '@ant-design/icons'
@@ -177,7 +178,15 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
   }
 
   return (
-    <Sider width={260} style={{ background: colorBgContainer }}>
+    <Sider
+      width={260}
+      style={{
+        background: colorBgContainer,
+        height: 'calc(100vh - 100px)',
+        position: 'sticky',
+        top: 40
+      }}
+    >
       <div style={{ position: 'relative' }}>
         <Layout
           className='container'
