@@ -8,6 +8,7 @@ import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } fr
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 interface AmenityTableProps {
@@ -33,6 +34,7 @@ function AmenityTable({
   const [currentRecord, setCurrentRecord] = useState<AmenityDataSource | null>(null)
 
   const { deleteAmenityMutate } = useDeleteAmenity()
+  const { t } = useTranslation(['common', 'amenity'])
 
   const items: DescriptionsProps['items'] = [
     {
@@ -43,13 +45,13 @@ function AmenityTable({
     },
     {
       key: '2',
-      label: 'Tên tiện nghi',
+      label: t('amenity:amenity.table.name'),
       children: <span>{currentRecord?.name}</span>,
       span: 3
     },
     {
       key: '3',
-      label: 'Ngày tạo',
+      label: ('common.table.createdAt'),
       children: <span>{currentRecord?.createdAt}</span>,
       span: 3
     }
@@ -64,14 +66,14 @@ function AmenityTable({
       width: 50
     },
     {
-      title: 'Tên tiện nghi',
+      title: t('amenity:amenity.table.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null
     },
     {
-      title: 'Ngày tạo',
+      title: t('common.table.createdAt'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
@@ -79,8 +81,8 @@ function AmenityTable({
       fixed: 'right',
       width: 300
     },
-    {
-      title: 'Hành động',
+    { 
+      title:  t('common.table.createdAt'),
       key: 'action',
       fixed: 'right',
       width: 200,
@@ -105,31 +107,31 @@ function AmenityTable({
         pagination={{
           position: ['bottomCenter'],
           pageSizeOptions: ['5', '10', '20'],
-          locale: { items_per_page: '/ trang' },
+          locale: { items_per_page: `${t('common.pagination.itemsPerPage')}` },
           showSizeChanger: true,
           ...paginationProps
         }}
         onChange={handleTableChange}
         loading={loading}
         locale={{
-          triggerDesc: 'Sắp xếp giảm dần',
-          triggerAsc: 'Sắp xếp tăng dần',
-          cancelSort: 'Hủy sắp xếp'
+          triggerDesc: t('common.table.triggerDesc'),
+          triggerAsc: t('common.table.triggerAsc'),
+          cancelSort: t('common.table.cancelSort')
         }}
       />
 
       <Modal
         open={isModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title='Xác nhận xóa tiện nghi' />}
+        title={<ConfirmModalTitle title={t('amenity:amenity.deleteModal.title')} />}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
           deleteAmenityMutate(currentRecord!.id)
           setIsModalOpen(false)
         }}
-        okText='Xác nhận'
+        okText={t('common.ok')}
         okType='danger'
-        cancelText='Hủy'
+        cancelText={t('common.cancel')}
       >
         <ConfirmModalContent items={items} />
       </Modal>

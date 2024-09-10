@@ -6,11 +6,13 @@ import enLangBreadcrumbs from '@/utils/i18n/locales/en/breadcrumbs.json'
 import enLangCity from '@/utils/i18n/locales/en/city.json'
 import enLang from '@/utils/i18n/locales/en/common.json'
 import enLangReview from '@/utils/i18n/locales/en/review.json'
+import enLangAmenity from '@/utils/i18n/locales/en/amenity.json'
 
 import viLangBreadcrumbs from '@/utils/i18n/locales/vi/breadcrumbs.json'
 import viLangCity from '@/utils/i18n/locales/vi/city.json'
 import viLang from '@/utils/i18n/locales/vi/common.json'
 import viLangReview from '@/utils/i18n/locales/vi/review.json'
+import viLangAmenity from '@/utils/i18n/locales/vi/amenity.json'
 
 export const defaultNS = 'common'
 export const resources = {
@@ -18,13 +20,15 @@ export const resources = {
     common: enLang,
     city: enLangCity,
     review: enLangReview,
-    breadcrumbs: enLangBreadcrumbs
+    breadcrumbs: enLangBreadcrumbs,
+    amenity : enLangAmenity
   },
   vi: {
     common: viLang,
     city: viLangCity,
     review: viLangReview,
-    breadcrumbs: viLangBreadcrumbs
+    breadcrumbs: viLangBreadcrumbs,
+    amenity : viLangAmenity
   }
 } as const
 
@@ -36,7 +40,7 @@ i18n
     defaultNS,
     lng: 'en',
     fallbackLng: ['en', 'vi'],
-    ns: ['common', 'city', 'review', 'breadcrumbs'],
+    ns: ['common', 'city', 'review', 'breadcrumbs', 'amenity'],
     interpolation: {
       escapeValue: false
     }
