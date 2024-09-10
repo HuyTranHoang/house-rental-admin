@@ -29,8 +29,6 @@ function ListCity() {
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
-  const [form] = Form.useForm()
-
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
   const { data, isLoading, isError } = useCities(search, pageNumber, pageSize, sortBy)
@@ -89,7 +87,6 @@ function ListCity() {
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
-            form={form}
             name='searchCityForm'
             initialValues={{
               search: search

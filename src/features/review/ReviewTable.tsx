@@ -15,7 +15,8 @@ import {
   TablePaginationConfig,
   TableProps
 } from 'antd'
-import { TableRowSelection } from 'antd/es/table/interface'
+import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
+import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 
 interface ReviewTableProps {
@@ -24,9 +25,19 @@ interface ReviewTableProps {
   paginationProps: false | TablePaginationConfig | undefined
   handleTableChange: TableProps<ReviewDataSource>['onChange']
   rowSelection: TableRowSelection<ReviewDataSource> | undefined
+  filteredInfo: Record<string, FilterValue | null>
+  sortedInfo: SorterResult<ReviewDataSource>
 }
 
-function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: ReviewTableProps) {
+function ReviewTable({
+  dataSource,
+  loading,
+  paginationProps,
+  handleTableChange,
+  rowSelection,
+  filteredInfo,
+  sortedInfo
+}: ReviewTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [currentReview, setCurrentReview] = useState<ReviewDataSource | null>(null)
@@ -96,7 +107,9 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
       width: 200,
       key: 'rating',
       sorter: true,
+      sortOrder: sortedInfo.field === 'rating' ? sortedInfo.order : null,
       filterMultiple: false,
+      filteredValue: filteredInfo.rating || null,
       filters: [
         {
           text: (
@@ -146,6 +159,7 @@ function ReviewTable({ dataSource, loading, paginationProps, handleTableChange, 
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 150
     },

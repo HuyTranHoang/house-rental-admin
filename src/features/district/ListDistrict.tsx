@@ -15,7 +15,6 @@ const { Search } = Input
 
 type OnChange = NonNullable<TableProps<DistrictDataSource>['onChange']>
 type Filters = Parameters<OnChange>[1]
-
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
@@ -48,6 +47,9 @@ function ListDistrict() {
     if (filters.cityName) {
       const cityId = filters.cityName[0]
       setFilters({ cityId: cityId as number })
+    } else {
+      setFilters({ cityId: 0 })
+      setFilteredInfo({})
     }
   }
 

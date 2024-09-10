@@ -15,3 +15,11 @@ export type ReviewDataSource = Review & {
   key: React.Key
   index?: number
 }
+
+export type ReviewFilters = {
+  search?: string
+  rating?: number
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
+}

@@ -1,27 +1,32 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
-import { useDeleteMultiReview, useReviews } from '@/hooks/useReviews.ts'
+import { useDeleteMultiReview, useReviewFilters, useReviews } from '@/hooks/useReviews.ts'
 import { Review, ReviewDataSource } from '@/models/review.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
-import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
-import React, { useState } from 'react'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
+import { TableRowSelection } from 'antd/es/table/interface'
+import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import ReviewTable from './ReviewTable'
 
 const { Search } = Input
 
+type OnChange = NonNullable<TableProps<ReviewDataSource>['onChange']>
+type Filters = Parameters<OnChange>[1]
+type GetSingle<T> = T extends (infer U)[] ? U : never
+type Sorts = GetSingle<Parameters<OnChange>[2]>
+
 function ListReview() {
   const { t } = useTranslation(['common', 'review'])
 
-  const [search, setSearch] = useState('')
-  const [rating, setRating] = useState(0)
-  const [sortBy, setSortBy] = useState('IdDesc')
-  const [pageNumber, setPageNumber] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const { search, rating, pageNumber, pageSize, sortBy, setFilters } = useReviewFilters()
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
   const [isOpen, setIsOpen] = useState(false)
+
+  const [filteredInfo, setFilteredInfo] = useState<Filters>({})
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const { data, isLoading, isError } = useReviews(search, rating, pageNumber, pageSize, sortBy)
 
@@ -30,13 +35,14 @@ function ListReview() {
   const handleTableChange: TableProps<ReviewDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setSortBy(`${sorter.field}${order}`)
+      setFilters({ sortBy: `${sorter.field}${order}` })
     }
 
     if (filters.rating) {
-      setRating(filters.rating[0] as number)
+      setFilters({ rating: filters.rating[0] as number })
     } else {
-      setRating(0)
+      setFilters({ rating: 0 })
+      setFilteredInfo({})
     }
   }
 
@@ -49,12 +55,35 @@ function ListReview() {
       }))
     : []
 
-  const rowSelection = {
+  const rowSelection: TableRowSelection<ReviewDataSource> | undefined = {
+    type: 'checkbox',
     onChange: (_selectedRowKeys: React.Key[], selectedRows: ReviewDataSource[]) => {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
   }
+
+  useEffect(() => {
+    if (rating) {
+      setFilteredInfo((prev) => ({
+        ...prev,
+        rating: [rating]
+      }))
+    }
+  }, [rating])
+
+  useEffect(() => {
+    if (sortBy) {
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/)
+      if (match) {
+        const [, field, order] = match
+        setSortedInfo({
+          field,
+          order: order === 'Asc' ? 'ascend' : 'descend'
+        })
+      }
+    }
+  }, [sortBy])
 
   if (isError) {
     return <ErrorFetching />
@@ -68,12 +97,22 @@ function ListReview() {
             {t('review:review.title')}
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Search
-            allowClear
-            onSearch={(value) => setSearch(value)}
-            placeholder={t('review:review.searchPlaceholder')}
-            style={{ width: 300 }}
-          />
+          <Form
+            name='serachReviewForm'
+            initialValues={{
+              search: search
+            }}
+            layout='inline'
+          >
+            <Form.Item name='search'>
+              <Search
+                allowClear
+                onSearch={(value) => setFilters({ search: value })}
+                placeholder={t('review:review.searchPlaceholder')}
+                className='w-64'
+              />
+            </Form.Item>
+          </Form>
         </Flex>
 
         <Space>
@@ -99,14 +138,13 @@ function ListReview() {
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
             />
           ),
-          onShowSizeChange: (_, size) => setPageSize(size),
-          onChange: (page) => setPageNumber(page)
+          onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
+          onChange: (page) => setFilters({ pageNumber: page })
         }}
         handleTableChange={handleTableChange}
-        rowSelection={{
-          type: 'checkbox',
-          ...rowSelection
-        }}
+        rowSelection={rowSelection}
+        filteredInfo={filteredInfo}
+        sortedInfo={sortedInfo}
       />
 
       <MultipleDeleteConfirmModal
