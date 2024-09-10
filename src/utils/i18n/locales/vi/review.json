@@ -1,5 +1,12 @@
 {
   "review": {
-    "title": "Quản lý đánh giá"
+    "title": "Quản lý đánh giá",
+    "searchPlaceholder": "Tìm kiếm theo tên người dùng, tiêu đề",
+    "deleteModal": {
+      "titleMultiple": "Xác nhận xóa các đánh giá"
+    },
+    "pagination": {
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} đánh giá"
+    }
   }
 }

@@ -132,6 +132,7 @@ export const useDistrictFilters = () => {
           if (filters.search !== undefined) {
             if (filters.search) {
               params.set('search', filters.search)
+              params.set('pageNumber', '1')
             } else {
               params.delete('search')
             }
@@ -140,6 +141,7 @@ export const useDistrictFilters = () => {
           if (filters.cityId !== undefined) {
             if (filters.cityId) {
               params.set('cityId', String(filters.cityId))
+              params.set('pageNumber', '1')
             } else {
               params.delete('cityId')
             }

@@ -136,6 +136,7 @@ export const useCityFilters = () => {
           if (filters.search !== undefined) {
             if (filters.search) {
               params.set('search', filters.search)
+              params.set('pageNumber', '1')
             } else {
               params.delete('search')
             }

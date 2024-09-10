@@ -54,6 +54,7 @@ export const useReportFilters = () => {
           if (filters.search !== undefined) {
             if (filters.search) {
               params.set('search', filters.search)
+              params.set('pageNumber', '1')
             } else {
               params.delete('search')
             }
@@ -62,6 +63,7 @@ export const useReportFilters = () => {
           if (filters.status !== undefined) {
             if (filters.status) {
               params.set('status', filters.status)
+              params.set('pageNumber', '1')
             } else {
               params.delete('status')
             }
@@ -70,6 +72,7 @@ export const useReportFilters = () => {
           if (filters.category !== undefined) {
             if (filters.category) {
               params.set('category', filters.category)
+              params.set('pageNumber', '1')
             } else {
               params.delete('category')
             }

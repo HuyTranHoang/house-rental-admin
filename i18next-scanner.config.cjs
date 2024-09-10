@@ -64,11 +64,11 @@ module.exports = {
 
         // Check if the key contains a namespace
         if (key.includes(':')) {
-          ;[ns, newKey] = key.split(':')
+          [ns, newKey] = key.split(':')
         }
 
         // Check if there's a namespace option in the t function call
-        const nsMatch = content.match(new RegExp(`t\\(['"']${key}['"']\\s*,\\s*\\{[^}]*ns:\\s*['"']([^'"]+)['"']`))
+        const nsMatch = content.match(new RegExp(`t\\(['"]${key}['"]\\s*,\\s*\\{[^}]*ns:\\s*['"]([^'"]+)['"]`))
         if (nsMatch) {
           ns = nsMatch[1]
         }

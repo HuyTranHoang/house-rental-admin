@@ -1,5 +1,12 @@
 {
   "review": {
-    "title": "Review Management"
+    "title": "Review Management",
+    "searchPlaceholder": "Search by username, title",
+    "deleteModal": {
+      "titleMultiple": "Confirm multiple review deletion"
+    },
+    "pagination": {
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} reviews"
+    }
   }
 }

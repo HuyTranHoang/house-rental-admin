@@ -5,13 +5,13 @@ import { Review, ReviewDataSource } from '@/models/review.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
 import React, { useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import ReviewTable from './ReviewTable'
 
 const { Search } = Input
 
 function ListReview() {
-  const { t } = useTranslation('review')
+  const { t } = useTranslation(['common', 'review'])
 
   const [search, setSearch] = useState('')
   const [rating, setRating] = useState(0)
@@ -65,13 +65,13 @@ function ListReview() {
       <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
         <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {t('review.title')}
+            {t('review:review.title')}
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Search
             allowClear
             onSearch={(value) => setSearch(value)}
-            placeholder='Tìm kiếm theo tài khoản, bài đăng'
+            placeholder={t('review:review.searchPlaceholder')}
             style={{ width: 300 }}
           />
         </Flex>
@@ -79,7 +79,7 @@ function ListReview() {
         <Space>
           {deleteIdList.length > 0 && (
             <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
-              Xóa các mục đã chọn
+              {t('common.multipleDelete')}
             </Button>
           )}
         </Space>
@@ -92,7 +92,13 @@ function ListReview() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} tiện nghi`,
+          showTotal: (total, range) => (
+            <Trans
+              ns={'review'}
+              i18nKey='review.pagination.showTotal'
+              values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
+            />
+          ),
           onShowSizeChange: (_, size) => setPageSize(size),
           onChange: (page) => setPageNumber(page)
         }}
@@ -107,7 +113,7 @@ function ListReview() {
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
-        title={'Xac nhan xoa cac mục đã chọn'}
+        title={t('review:review.deleteModal.titleMultiple')}
         onOk={() => {
           deleteReviewsMutate(deleteIdList)
           setDeleteIdList([])
