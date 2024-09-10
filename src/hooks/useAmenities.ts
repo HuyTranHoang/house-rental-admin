@@ -12,6 +12,7 @@ import React, { useCallback } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { CityFilters } from '@/models/city.type.ts'
+import { useTranslation } from 'react-i18next'
 
 export const useAmenities = (search: string, pageNumber: number, pageSize: number, sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
@@ -24,29 +25,32 @@ export const useAmenities = (search: string, pageNumber: number, pageSize: numbe
 
 export const useDeleteAmenity = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('amenity')
 
-  const { mutate: deleteAmenityMutate } = useMutation({
+  const { mutate: deleteAmenityMutate, isPending: deleteAmenityPending } = useMutation({
     mutationFn: deleteAmenity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['amenities'] }).then(() => toast.success('Xóa tiện nghi thành công'))
+      queryClient.invalidateQueries({ queryKey: ['amenities'] })
+      .then(() => toast.success(t('amenity.notification.deleteSuccess', { count: 1 })))
     },
     onError: (error) => {
       toast.error(error.message)
     }
   })
 
-  return { deleteAmenityMutate }
+  return { deleteAmenityMutate , deleteAmenityPending }
 }
 
 export const useDeleteMultiAmenity = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('amenity')
 
   const { mutate: deleteAmenitiesMutate } = useMutation({
-    mutationFn: deleteAmenities,
-    onSuccess: () => {
+    mutationFn: (ids: number[]) => deleteAmenities(ids),
+    onSuccess: (_, variables) => {
       queryClient
         .invalidateQueries({ queryKey: ['amenities'] })
-        .then(() => toast.success('Xóa các tiện nghi thành công'))
+        .then(() => toast.success(t('amenity.notification.deleteSuccess', { count: variables.length })))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -59,14 +63,15 @@ export const useDeleteMultiAmenity = () => {
 export const useCreateAmenity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { t } = useTranslation('amenity')
 
   const { mutate: addAmenityMutate, isPending: addAmenityPending } = useMutation({
     mutationFn: addAmenity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['amenities'] }).then(() => {
-        toast.success('Thêm tiện nghi thành công')
+      queryClient.invalidateQueries({ queryKey: ['amenities'] })
+      .then(() => 
+        toast.success(t('amenity.notification.addSuccess')))
         navigate(ROUTER_NAMES.AMENITY)
-      })
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -84,12 +89,13 @@ export const useCreateAmenity = (setError: React.Dispatch<React.SetStateAction<s
 export const useUpdateAmenity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { t } = useTranslation('amenity')
 
   const { mutate: updateAmenityMutate, isPending: updateAmenityPending } = useMutation({
     mutationFn: updateAmenity,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['amenities'] }).then(() => {
-        toast.success('Thêm tiện nghi thành công')
+        toast.success(t('amenity.notification.editSuccess'))
         navigate(ROUTER_NAMES.AMENITY)
       })
     },
