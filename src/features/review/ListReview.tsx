@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
-import { Review, ReviewDataSource } from '@/models/review.type.ts'
-import { useDeleteMultiReview, useReviews } from '@/hooks/useReviews.ts'
-import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
 import ErrorFetching from '@/components/ErrorFetching'
-import ReviewTable from './ReviewTable'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import { useDeleteMultiReview, useReviews } from '@/hooks/useReviews.ts'
+import { Review, ReviewDataSource } from '@/models/review.type.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
+import { Button, Divider, Flex, Input, Space, TableProps, Typography } from 'antd'
+import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import ReviewTable from './ReviewTable'
 
 const { Search } = Input
 
 function ListReview() {
+  const { t } = useTranslation('review')
+
   const [search, setSearch] = useState('')
   const [rating, setRating] = useState(0)
   const [sortBy, setSortBy] = useState('IdDesc')
@@ -62,7 +65,7 @@ function ListReview() {
       <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
         <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            Danh sách đánh giá
+            {t('review.title')}
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Search

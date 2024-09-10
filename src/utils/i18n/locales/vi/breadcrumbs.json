@@ -1,6 +1,7 @@
 {
   "dashboard": "Tổng quan",
   "property": "Quản lý bất động sản",
+  "cityAndDistrict": "Thành phố & Quận/Huyện",
   "city": {
     "list": "Quản lý thành phố",
     "add": "Thêm thành phố",
