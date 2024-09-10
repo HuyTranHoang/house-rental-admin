@@ -21,7 +21,7 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 function ListCity() {
   const navigate = useNavigate()
 
-  const { t } = useTranslation(['lang', 'langCity'])
+  const { t } = useTranslation(['common', 'city'])
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useCityFilters()
 
@@ -85,7 +85,7 @@ function ListCity() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            {t('langCity:city.title')}
+            {t('city.title', { ns: 'city' })}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -100,7 +100,7 @@ function ListCity() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder={t('langCity:city.searchPlaceholder')}
+                placeholder={t('city.searchPlaceholder', { ns: 'city' })}
                 className='w-64'
               />
             </Form.Item>
@@ -133,7 +133,7 @@ function ListCity() {
           current: pageNumber,
           showTotal: (total, range) => (
             <Trans
-              ns={'langCity'}
+              ns={'city'}
               i18nKey='city.pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
             />
@@ -150,7 +150,7 @@ function ListCity() {
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
-        title={t('langCity:city.deleteModal.titleMultiple')}
+        title={t('city.deleteModal.titleMultiple', { ns: 'city' })}
         onOk={() => {
           deleteCitiesMutate(deleteIdList)
           setDeleteIdList([])

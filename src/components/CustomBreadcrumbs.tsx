@@ -8,7 +8,7 @@ import { routerList } from '../router/router.tsx'
 
 const CustomBreadcrumbs = () => {
   const breadcrumbs = useBreadcrumbs(routerList)
-  const { t } = useTranslation('langBreadcrumbs')
+  const { t } = useTranslation('breadcrumbs')
 
   const breadcrumbItems = breadcrumbs.map(({ match, breadcrumb }) => {
     let breadcrumbText

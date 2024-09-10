@@ -30,7 +30,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
   const dispatch = useAppDispatch()
   const location = useLocation()
   const { user } = useSelector(selectAuth)
-  const { t } = useTranslation('langBreadcrumbs')
+  const { t } = useTranslation('breadcrumbs')
 
   const {
     token: { colorBgContainer }

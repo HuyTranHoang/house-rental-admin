@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 function AddUpdateCity() {
   const match = useMatch(ROUTER_NAMES.ADD_CITY)
   const isAddMode = Boolean(match)
-  const { t } = useTranslation(['lang', 'langCity'])
+  const { t } = useTranslation(['common', 'city'])
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
@@ -24,7 +24,7 @@ function AddUpdateCity() {
   const { addCityMutate, addCityPending } = useCreateCity(setError)
   const { updateCityMutate, updateCityPending } = useUpdateCity(setError)
 
-  const title = isAddMode ? t('city.form.addForm', { ns: 'langCity' }) : t('city.form.editForm', { ns: 'langCity' })
+  const title = isAddMode ? t('city.form.addForm', { ns: 'city' }) : t('city.form.editForm', { ns: 'city' })
 
   const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -80,17 +80,17 @@ function AddUpdateCity() {
         </Form.Item>
 
         <Form.Item<CityForm>
-          label={t('city.form.name', { ns: 'langCity' })}
+          label={t('city.form.name', { ns: 'city' })}
           name='name'
           rules={[
-            { required: true, message: t('langCity:city.form.nameRequired') },
-            { min: 3, message: t('langCity:city.form.nameMin') },
-            { max: 50, message: t('langCity:city.form.nameMax') }
+            { required: true, message: t('city.form.nameRequired', { ns: 'city' }) },
+            { min: 3, message: t('city.form.nameMin', { ns: 'city' }) },
+            { max: 50, message: t('city.form.nameMax', { ns: 'city' }) }
           ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
-          <Input onChange={() => setError('')} placeholder={t('langCity:city.form.namePlaceholder')} />
+          <Input onChange={() => setError('')} placeholder={t('city.form.namePlaceholder', { ns: 'city' })} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>
