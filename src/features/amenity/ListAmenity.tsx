@@ -10,6 +10,7 @@ import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AmenityTable from './AmenityTable.tsx'
+import { Trans, useTranslation } from 'react-i18next'
 
 const { Search } = Input
 
@@ -31,6 +32,7 @@ function ListAmenity() {
 
   const { data, isLoading, isError } = useAmenities(search, pageNumber, pageSize, sortBy)
   const { deleteAmenitiesMutate } = useDeleteMultiAmenity()
+  const { t } = useTranslation(['common', 'amenity'])
 
   const handleTableChange: TableProps<AmenityDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -82,7 +84,7 @@ function ListAmenity() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            Danh sách tiện nghi
+              {t('amenity.title', { ns: 'amenity' })}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -97,7 +99,7 @@ function ListAmenity() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder='Tìm kiếm tiện nghi'
+                placeholder={t('amenity.searchPlaceholder', { ns: 'amenity' })}
                 className='w-64'
               />
             </Form.Item>
@@ -107,7 +109,7 @@ function ListAmenity() {
         <Space>
           {deleteIdList.length > 0 && (
             <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
-              Xóa các mục đã chọn
+                {t('common.multipleDelete')}
             </Button>
           )}
           <Button
@@ -116,7 +118,7 @@ function ListAmenity() {
             type='primary'
             onClick={() => navigate(ROUTER_NAMES.ADD_AMENITY)}
           >
-            Thêm mới
+            {t('common.add')}
           </Button>
         </Space>
       </Flex>
@@ -128,7 +130,13 @@ function ListAmenity() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} tiện nghi`,
+          showTotal: (total, range) => (
+            <Trans
+              ns={'amenity'}
+              i18nKey='amenity.pagination.showTotal'
+              values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
+            />
+          ),
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}
@@ -141,7 +149,7 @@ function ListAmenity() {
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
-        title={'Xac nhan xoa cac mục đã chọn'}
+        title={t('amenity.deleteModal.titleMultiple', { ns: 'amenity' })}
         onOk={() => {
           deleteAmenitiesMutate(deleteIdList)
           setDeleteIdList([])

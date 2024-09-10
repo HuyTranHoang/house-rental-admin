@@ -7,11 +7,12 @@ import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { AmenityForm } from '@/models/amenity.type.ts'
+import { useTranslation } from 'react-i18next'
 
 function AddUpdateAmenity() {
   const match = useMatch(ROUTER_NAMES.ADD_AMENITY)
   const isAddMode = Boolean(match)
-  const title = isAddMode ? 'Thêm mới tiện nghi' : 'Cập nhật tiện nghi'
+  
   const navigate = useNavigate()
 
   const { id } = useParams<{ id: string }>()
@@ -21,6 +22,8 @@ function AddUpdateAmenity() {
 
   const { addAmenityMutate, addAmenityPending } = useCreateAmenity(setError)
   const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity(setError)
+  const { t } = useTranslation(['common', 'amenity'])
+  const title = isAddMode ? t('amenity.form.addForm', { ns: 'amenity' }) : t('amenity.form.editForm', { ns: 'amenity' })
 
   const onFinish: FormProps<AmenityForm>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -59,7 +62,7 @@ function AddUpdateAmenity() {
           type='primary'
           onClick={() => navigate(ROUTER_NAMES.AMENITY)}
         >
-          Quay lại
+          {t('common.back')}
         </Button>
       </Flex>
       <Form
@@ -81,17 +84,17 @@ function AddUpdateAmenity() {
         </Form.Item>
 
         <Form.Item<AmenityForm>
-          label='Tên tiện nghi'
+          label={t('amenity.form.name', { ns: 'amenity' })}
           name='name'
           rules={[
-            { required: true, message: 'Vui lòng nhập tên tiện nghi!' },
-            { min: 3, message: 'Tên tiện nghi phải có ít nhất 3 ký tự!' },
-            { max: 50, message: 'Tên tiện nghi không được vượt quá 50 ký tự!' }
+            { required: true, message: t('amenity.form.nameRequired', { ns: 'amenity' }) },
+            { min: 3, message: t('amenity.form.nameMin', { ns: 'amenity' }) },
+            { max: 50, message: t('amenity.form.nameMax', { ns: 'amenity' }) }
           ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
-          <Input onChange={() => setError('')} />
+          <Input onChange={() => setError('')} placeholder={t('amenity.form.namePlaceholder', { ns: 'amenity' })} />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 5 }}>
@@ -102,7 +105,7 @@ function AddUpdateAmenity() {
             }}
             style={{ marginRight: 16 }}
           >
-            Đặt lại
+             {t('common.reset')}
           </Button>
 
           <Button
@@ -111,7 +114,7 @@ function AddUpdateAmenity() {
             htmlType='submit'
             style={{ width: 100 }}
           >
-            {isAddMode ? 'Thêm mới' : 'Cập nhật'}
+            {isAddMode ? t('common.add') : t('common.update')}
           </Button>
         </Form.Item>
       </Form>
