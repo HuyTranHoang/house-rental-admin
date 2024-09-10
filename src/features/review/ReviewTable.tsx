@@ -18,6 +18,7 @@ import {
 import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface ReviewTableProps {
   dataSource: ReviewDataSource[]
@@ -38,6 +39,7 @@ function ReviewTable({
   filteredInfo,
   sortedInfo
 }: ReviewTableProps) {
+  const { t } = useTranslation(['common', 'review'])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [currentReview, setCurrentReview] = useState<ReviewDataSource | null>(null)
@@ -58,19 +60,19 @@ function ReviewTable({
     },
     {
       key: '2',
-      label: 'Người đánh giá',
+      label: t('review:table.userName'),
       children: <span>{currentReview?.userName}</span>,
       span: 3
     },
     {
       key: '3',
-      label: 'Nội dung',
+      label: t('review:table.comment'),
       children: <span>{currentReview?.comment}</span>,
       span: 3
     },
     {
       key: '4',
-      label: 'Ngày tạo',
+      label: t('common.table.createdAt'),
       children: <span>{currentReview?.createdAt}</span>,
       span: 3
     }
@@ -85,24 +87,24 @@ function ReviewTable({
       width: 50
     },
     {
-      title: 'Nguời đánh giá',
+      title: t('review:table.userName'),
       width: 200,
       dataIndex: 'userName',
       key: 'userName'
     },
     {
-      title: 'Bài đăng',
+      title: t('review:table.propertyTitle'),
       dataIndex: 'propertyTitle',
       key: 'propertyTitle'
     },
     {
-      title: 'Nội dung',
+      title: t('review:table.comment'),
       dataIndex: 'comment',
       key: 'comment',
       width: 400
     },
     {
-      title: 'Đánh giá',
+      title: t('review:table.rating'),
       dataIndex: 'rating',
       width: 200,
       key: 'rating',
@@ -155,7 +157,7 @@ function ReviewTable({
       render: (rating: number) => <Rate disabled defaultValue={rating} />
     },
     {
-      title: 'Ngày tạo',
+      title: t('common.table.createdAt'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
@@ -164,7 +166,7 @@ function ReviewTable({
       width: 150
     },
     {
-      title: 'Hành động',
+      title: t('common.table.action'),
       key: 'action',
       fixed: 'right',
       width: 110,
@@ -176,7 +178,7 @@ function ReviewTable({
             style={{ borderColor: blue.primary, color: blue.primary, marginRight: '1rem' }}
             onClick={() => handleView(record)}
           >
-            Chi tiết
+            {t('common.detail')}
           </Button>
           <Button
             icon={<DeleteOutlined />}
@@ -187,7 +189,7 @@ function ReviewTable({
             }}
             danger
           >
-            Xóa
+            {t('common.delete')}
           </Button>
         </div>
       )
@@ -197,25 +199,25 @@ function ReviewTable({
   const detailItems: DescriptionsProps['items'] = [
     {
       key: '1',
-      label: 'Người đánh giá',
+      label: t('review:table.userName'),
       children: <span>{currentReview?.userName}</span>,
       span: 2
     },
     {
       key: '2',
-      label: 'Ngày đánh giá',
+      label: t('common.table.createdAt'),
       children: <span>{currentReview?.createdAt}</span>,
       span: 1
     },
     {
       key: '3',
-      label: 'Tên bài đăng',
+      label: t('review:table.propertyTitle'),
       children: <span>{currentReview?.propertyTitle}</span>,
       span: 3
     },
     {
       key: '4',
-      label: 'Đánh giá',
+      label: t('review:table.rating'),
       children: (
         <span>
           <Rate disabled defaultValue={currentReview?.rating} />
@@ -225,7 +227,7 @@ function ReviewTable({
     },
     {
       key: '5',
-      label: 'Nội dung',
+      label: t('review:table.comment'),
       children: <span>{currentReview?.comment}</span>
     }
   ]
@@ -239,29 +241,29 @@ function ReviewTable({
         pagination={{
           position: ['bottomCenter'],
           pageSizeOptions: ['5', '10', '20'],
-          locale: { items_per_page: '/ trang' },
+          locale: { items_per_page: `/ ${t('common.pagination.itemsPerPage')}` },
           showSizeChanger: true,
           ...paginationProps
         }}
         onChange={handleTableChange}
         loading={loading}
         locale={{
-          triggerDesc: 'Sắp xếp giảm dần',
-          triggerAsc: 'Sắp xếp tăng dần',
-          cancelSort: 'Hủy sắp xếp',
-          filterConfirm: 'Lọc',
-          filterReset: 'Bỏ lọc'
+          triggerDesc: t('common.table.triggerDesc'),
+          triggerAsc: t('common.table.triggerAsc'),
+          cancelSort: t('common.table.cancelSort'),
+          filterConfirm: t('common.table.filterConfirm'),
+          filterReset: t('common.table.filterReset'),
         }}
       />
 
       <Modal
-        title='Chi tiết đánh giá'
+        title={t('review:detailModal.title')}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         width={700}
         footer={
           <>
-            <Button onClick={() => setIsModalOpen(false)}>Đóng</Button>
+            <Button onClick={() => setIsModalOpen(false)}>{t('common.back')}</Button>
             <Button
               type='primary'
               danger
@@ -270,7 +272,7 @@ function ReviewTable({
                 setIsModalOpen(false)
               }}
             >
-              Xóa
+              {t('common.delete')}
             </Button>
           </>
         }
@@ -281,15 +283,15 @@ function ReviewTable({
       <Modal
         open={isDeleteModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title='Xác nhận xóa đánh giá' />}
+        title={<ConfirmModalTitle title={t('review:deleteModal.title')} />}
         onCancel={() => setIsDeleteModalOpen(false)}
         onOk={() => {
           deleteReviewMutate(currentReview!.id)
           setIsDeleteModalOpen(false)
         }}
-        okText='Xác nhận'
+        okText={t('common.ok')}
         okType='danger'
-        cancelText='Hủy'
+        cancelText={t('common.cancel')}
       >
         <ConfirmModalContent items={items} />
       </Modal>

@@ -94,7 +94,7 @@ function ListReview() {
       <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
         <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {t('review:review.title')}
+            {t('review:title')}
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Form
@@ -108,7 +108,7 @@ function ListReview() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder={t('review:review.searchPlaceholder')}
+                placeholder={t('review:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -134,7 +134,7 @@ function ListReview() {
           showTotal: (total, range) => (
             <Trans
               ns={'review'}
-              i18nKey='review.pagination.showTotal'
+              i18nKey='pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
             />
           ),
@@ -151,7 +151,7 @@ function ListReview() {
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
-        title={t('review:review.deleteModal.titleMultiple')}
+        title={t('review:deleteModal.titleMultiple')}
         onOk={() => {
           deleteReviewsMutate(deleteIdList)
           setDeleteIdList([])

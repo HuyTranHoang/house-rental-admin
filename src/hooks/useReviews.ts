@@ -1,6 +1,7 @@
 import { ReviewFilters } from '@/models/review.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { deleteReview, deleteReviews, getAllReviewsWithPagination } from '../api/review.api'
@@ -16,11 +17,11 @@ export const useReviews = (search: string, rating: number, pageNumber: number, p
 
 export const useDeleteReview = () => {
   const queryClient = useQueryClient()
-
+  const { t } = useTranslation('review')
   const { mutate: deleteReviewMutate } = useMutation({
     mutationFn: deleteReview,
     onSuccess: () => {
-      toast.success('Xóa đánh giá thành công')
+      toast.success(t('notification.deleteSuccess', {count: 1}))
       queryClient.invalidateQueries({ queryKey: ['reviews'] })
     },
     onError: (error) => {
@@ -33,11 +34,12 @@ export const useDeleteReview = () => {
 
 export const useDeleteMultiReview = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('review')
 
   const { mutate: deleteReviewsMutate } = useMutation({
     mutationFn: deleteReviews,
-    onSuccess: () => {
-      toast.success('Xóa các đánh giá thành công')
+    onSuccess: (_, variables) => {
+      toast.success(t('notification.deleteSuccess', { count: variables.length }))
       queryClient.invalidateQueries({ queryKey: ['reviews'] })
     },
     onError: (error) => {

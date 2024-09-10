@@ -5,6 +5,7 @@
     "edit": "Edit",
     "update": "Update",
     "delete": "Delete",
+    "detail": "Detail",
     "multipleDelete": "Delete selected items",
     "reset": "Reset",
     "back": "Back",
@@ -15,7 +16,9 @@
       "createdAt": "Created at",
       "triggerDesc": "Sort by descending",
       "triggerAsc": "Sort by ascending",
-      "cancelSort": "Cancel sort"
+      "cancelSort": "Cancel sort",
+      "filterConfirm": "Ok",
+      "filterReset": "Reset"
     },
     "pagination": {
       "itemsPerPage": "page"

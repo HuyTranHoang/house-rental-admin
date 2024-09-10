@@ -5,6 +5,7 @@
     "edit": "Chỉnh sửa",
     "update": "Cập nhật",
     "delete": "Xóa",
+    "detail": "Chi tiết",
     "multipleDelete": "Xóa các mục đã chọn",
     "reset": "Đặt lại",
     "back": "Quay lại",
@@ -15,7 +16,9 @@
       "createdAt": "Ngày tạo",
       "triggerDesc": "Sắp xếp giảm dần",
       "triggerAsc": "Sắp xếp tăng dần",
-      "cancelSort": "Hủy sắp xếp"
+      "cancelSort": "Hủy sắp xếp",
+      "filterConfirm": "Lọc",
+      "filterReset": "Bỏ lọc"
     },
     "pagination": {
       "itemsPerPage": "trang"

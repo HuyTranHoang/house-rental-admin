@@ -1,12 +1,24 @@
 {
-  "review": {
-    "title": "Quản lý đánh giá",
-    "searchPlaceholder": "Tìm kiếm theo tên người dùng, tiêu đề",
-    "deleteModal": {
-      "titleMultiple": "Xác nhận xóa các đánh giá"
-    },
-    "pagination": {
-      "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} đánh giá"
-    }
+  "title": "Quản lý đánh giá",
+  "searchPlaceholder": "Tìm kiếm theo tên người dùng, tiêu đề",
+  "deleteModal": {
+    "title": "Xác nhận xóa đánh giá",
+    "titleMultiple": "Xác nhận xóa các đánh giá"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} đánh giá"
+  },
+  "table": {
+    "userName": "Tên người dùng",
+    "comment": "Bình luận",
+    "propertyTitle": "Tiêu đề bất động sản",
+    "rating": "Đánh giá"
+  },
+  "detailModal": {
+    "title": "Chi tiết đánh giá"
+  },
+  "notification": {
+    "deleteSuccess_one": "Xóa đánh giá thành công",
+    "deleteSuccess_other": "Xóa các đánh giá thành công"
   }
 }

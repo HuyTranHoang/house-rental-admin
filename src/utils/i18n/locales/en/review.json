@@ -1,12 +1,24 @@
 {
-  "review": {
-    "title": "Review Management",
-    "searchPlaceholder": "Search by username, title",
-    "deleteModal": {
-      "titleMultiple": "Confirm multiple review deletion"
-    },
-    "pagination": {
-      "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} reviews"
-    }
+  "title": "Review Management",
+  "searchPlaceholder": "Search by username, title",
+  "deleteModal": {
+    "title": "Confirm review deletion",
+    "titleMultiple": "Confirm multiple review deletion"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} reviews"
+  },
+  "table": {
+    "userName": "Username",
+    "comment": "Comment",
+    "propertyTitle": "Property title",
+    "rating": "Rating"
+  },
+  "detailModal": {
+    "title": "Review detail"
+  },
+  "notification": {
+    "deleteSuccess_one": "Delete review successfully",
+    "deleteSuccess_other": "Delete reviews successfully"
   }
 }

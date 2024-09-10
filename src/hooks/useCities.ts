@@ -42,7 +42,7 @@ export const useDeleteCity = () => {
     onSuccess: () => {
       queryClient
         .invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success(t('city.notification.deleteSuccess')))
+        .then(() => toast.success(t('city.notification.deleteSuccess', { count: 1 })))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -54,11 +54,14 @@ export const useDeleteCity = () => {
 
 export const useDeleteMultiCity = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('city')
 
   const { mutate: deleteCitiesMutate } = useMutation({
-    mutationFn: deleteCities,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => toast.success('Xóa các thành phố thành công'))
+    mutationFn: (ids: number[]) => deleteCities(ids),
+    onSuccess: (_, variables) => {
+      queryClient
+        .invalidateQueries({ queryKey: ['cities'] })
+        .then(() => toast.success(t('city.notification.deleteSuccess', { count: variables.length })))
     },
     onError: (error) => {
       toast.error(error.message)
