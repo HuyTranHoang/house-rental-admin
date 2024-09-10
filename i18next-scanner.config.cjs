@@ -27,7 +27,7 @@ module.exports = {
       component: 'Trans'
     },
     lngs: ['en', 'vi'],
-    ns: ['common', 'city', 'review', 'breadcrumbs'],
+    ns: ['common', 'breadcrumbs', 'city', 'review', 'amenity'],
     defaultLng: 'en',
     defaultNs: DEFAULT_NS,
     defaultValue: STRING_NOT_TRANSLATED,
@@ -64,7 +64,7 @@ module.exports = {
 
         // Check if the key contains a namespace
         if (key.includes(':')) {
-          [ns, newKey] = key.split(':')
+          ;[ns, newKey] = key.split(':')
         }
 
         // Check if there's a namespace option in the t function call

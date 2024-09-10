@@ -2,33 +2,33 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import { i18nextPlugin } from 'translation-check'
 
-import enLangBreadcrumbs from '@/utils/i18n/locales/en/breadcrumbs.json'
-import enLangCity from '@/utils/i18n/locales/en/city.json'
-import enLang from '@/utils/i18n/locales/en/common.json'
-import enLangReview from '@/utils/i18n/locales/en/review.json'
-import enLangAmenity from '@/utils/i18n/locales/en/amenity.json'
+import en_amanity from '@/utils/i18n/locales/en/amenity.json'
+import en_breadcrumbs from '@/utils/i18n/locales/en/breadcrumbs.json'
+import en_city from '@/utils/i18n/locales/en/city.json'
+import en_common from '@/utils/i18n/locales/en/common.json'
+import en_review from '@/utils/i18n/locales/en/review.json'
 
-import viLangBreadcrumbs from '@/utils/i18n/locales/vi/breadcrumbs.json'
-import viLangCity from '@/utils/i18n/locales/vi/city.json'
-import viLang from '@/utils/i18n/locales/vi/common.json'
-import viLangReview from '@/utils/i18n/locales/vi/review.json'
-import viLangAmenity from '@/utils/i18n/locales/vi/amenity.json'
+import vi_amanity from '@/utils/i18n/locales/vi/amenity.json'
+import vi_breadcrumbs from '@/utils/i18n/locales/vi/breadcrumbs.json'
+import vi_city from '@/utils/i18n/locales/vi/city.json'
+import vi_common from '@/utils/i18n/locales/vi/common.json'
+import vi_review from '@/utils/i18n/locales/vi/review.json'
 
 export const defaultNS = 'common'
 export const resources = {
   en: {
-    common: enLang,
-    city: enLangCity,
-    review: enLangReview,
-    breadcrumbs: enLangBreadcrumbs,
-    amenity : enLangAmenity
+    common: en_common,
+    city: en_city,
+    review: en_review,
+    breadcrumbs: en_breadcrumbs,
+    amenity: en_amanity
   },
   vi: {
-    common: viLang,
-    city: viLangCity,
-    review: viLangReview,
-    breadcrumbs: viLangBreadcrumbs,
-    amenity : viLangAmenity
+    common: vi_common,
+    city: vi_city,
+    review: vi_review,
+    breadcrumbs: vi_breadcrumbs,
+    amenity: vi_amanity
   }
 } as const
 
@@ -40,7 +40,7 @@ i18n
     defaultNS,
     lng: 'en',
     fallbackLng: ['en', 'vi'],
-    ns: ['common', 'city', 'review', 'breadcrumbs', 'amenity'],
+    ns: ['common', 'breadcrumbs', 'city', 'review', 'amenity'],
     interpolation: {
       escapeValue: false
     }
