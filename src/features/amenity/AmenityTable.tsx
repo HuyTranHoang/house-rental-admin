@@ -38,12 +38,6 @@ function AmenityTable({
 
   const items: DescriptionsProps['items'] = [
     {
-      key: '1',
-      label: 'Id',
-      children: <span>{currentRecord?.id}</span>,
-      span: 3
-    },
-    {
       key: '2',
       label: t('amenity:amenity.table.name'),
       children: <span>{currentRecord?.name}</span>,
@@ -51,7 +45,7 @@ function AmenityTable({
     },
     {
       key: '3',
-      label: ('common.table.createdAt'),
+      label: t('common.table.createdAt'),
       children: <span>{currentRecord?.createdAt}</span>,
       span: 3
     }
@@ -81,8 +75,8 @@ function AmenityTable({
       fixed: 'right',
       width: 300
     },
-    { 
-      title:  t('common.table.createdAt'),
+    {
+      title: t('common.table.createdAt'),
       key: 'action',
       fixed: 'right',
       width: 200,
