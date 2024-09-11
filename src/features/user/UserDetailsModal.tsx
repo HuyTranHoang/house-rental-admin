@@ -2,8 +2,8 @@ import BlockUserButton from '@/components/BlockUserButton.tsx'
 import { authorityPrivilegesMap } from '@/features/role/authorityPrivilegesMap.ts'
 import { UserDataSource } from '@/models/user.type.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
-import { gray, green } from '@ant-design/colors'
-import { Avatar, Badge, Button, Col, Modal, Row, Space, Tag, Typography } from 'antd'
+import { green } from '@ant-design/colors'
+import { Avatar, Badge, Button, Col, Modal, Row, Space, Tag, theme, Typography } from 'antd'
 
 interface UserDetailsModalProps {
   isModalOpen: boolean
@@ -12,6 +12,10 @@ interface UserDetailsModalProps {
 }
 
 function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDetailsModalProps) {
+  const {
+    token: { colorBgLayout }
+  } = theme.useToken()
+
   const footer = (
     <>
       <Button key='close' onClick={() => setIsModalOpen(false)}>
@@ -26,9 +30,9 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
     <>
       {currentUser && (
         <Modal open={isModalOpen} onCancel={() => setIsModalOpen(false)} footer={footer}>
-          <Row gutter={24} style={{ marginBottom: '20px' }}>
+          <Row gutter={24} className='mb-5'>
             {/* Cột bên trái */}
-            <Col span={8} style={{ textAlign: 'center' }}>
+            <Col span={8} className='text-center'>
               <Avatar
                 size={100}
                 src={currentUser.avatarUrl || `https://robohash.org/${currentUser.username}?set=set4`}
@@ -67,7 +71,7 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
             </Col>
 
             <Col span={24}>
-              <div style={{ margin: '16px 0' }}>
+              <div className='mx-0 my-4'>
                 <Space wrap={true}>
                   <b>Số dư tài khoản:</b>
                   <Typography.Text style={{ color: green.primary }}>
@@ -76,22 +80,18 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
                 </Space>
               </div>
 
-              <div style={{ margin: '16px 0' }}>
+              <div className='mx-0 my-4'>
                 <Space wrap={true}>
                   <b>Vai trò:</b>
-                  <Typography.Text style={{ color: gray.primary }}>{currentUser.roles.join(', ')}</Typography.Text>
+                  <Typography.Text>{currentUser.roles.join(', ')}</Typography.Text>
                 </Space>
               </div>
 
               <b>Quyền hạn:</b>
               <div
+                className='mt-2 h-20 overflow-y-scroll p-2'
                 style={{
-                  height: 80,
-                  marginTop: 8,
-                  overflowY: 'scroll',
-                  backgroundColor: '#fafafa',
-                  padding: 8,
-                  boxShadow: 'rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset'
+                  backgroundColor: colorBgLayout
                 }}
               >
                 <Space wrap={true}>
