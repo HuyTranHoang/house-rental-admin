@@ -20,3 +20,12 @@ export type UserDataSource = User & {
   key: React.Key
   index?: number
 }
+
+export type UserFilters = {
+  search?: string
+  isNonLocked?: boolean
+  roles?: string
+  sortBy?: string
+  pageNumber?: number
+  pageSize?: number
+}

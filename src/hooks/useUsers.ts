@@ -1,7 +1,9 @@
 import { deleteUser, deleteUsers, getAllUserWithPagination, lockUser, updateRoleForUser } from '@/api/user.api.ts'
+import { UserFilters } from '@/models/user.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import React from 'react'
+import React, { useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 export const useUsers = (
@@ -90,4 +92,66 @@ export const useDeleteUsers = () => {
   })
 
   return { deleteUsersMutate }
+}
+
+export const useUserFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const search = searchParams.get('search') || ''
+  const isNonLocked = searchParams.get('isNonLocked') === 'true'
+  const roles = searchParams.get('roles') || ''
+  const sortBy = searchParams.get('sortBy') || ''
+  const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
+  const pageSize = parseInt(searchParams.get('pageSize') || '5')
+
+  const setFilters = useCallback(
+    (filters: UserFilters) => {
+      setSearchParams(
+        (params) => {
+          if (filters.search !== undefined) {
+            if (filters.search) {
+              params.set('search', filters.search)
+              params.set('pageNumber', '1')
+            } else {
+              params.delete('search')
+            }
+          }
+
+          if (filters.isNonLocked !== undefined) {
+            params.set('isNonLocked', String(filters.isNonLocked))
+          }
+
+          if (filters.roles !== undefined) {
+            if (filters.roles) {
+              params.set('roles', String(filters.roles))
+            } else {
+              params.delete('roles')
+            }
+          }
+
+          if (filters.pageNumber !== undefined) {
+            params.set('pageNumber', String(filters.pageNumber))
+          }
+
+          if (filters.pageSize !== undefined) {
+            params.set('pageSize', String(filters.pageSize))
+          }
+
+          if (filters.sortBy !== undefined) {
+            if (filters.sortBy) {
+              params.set('sortBy', filters.sortBy)
+            } else {
+              params.delete('sortBy')
+            }
+          }
+
+          return params
+        },
+        { replace: true }
+      )
+    },
+    [setSearchParams]
+  )
+
+  return { search, isNonLocked, roles, sortBy, pageNumber, pageSize, setFilters }
 }

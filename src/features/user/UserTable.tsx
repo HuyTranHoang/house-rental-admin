@@ -20,8 +20,9 @@ import {
   Tag,
   Tooltip
 } from 'antd'
-import { TableRowSelection } from 'antd/es/table/interface'
+import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
 import { useState } from 'react'
+import { SorterResult } from 'antd/lib/table/interface'
 
 const { confirm } = Modal
 
@@ -31,9 +32,11 @@ interface UserTableProps {
   paginationProps: false | TablePaginationConfig | undefined
   handleTableChange: TableProps<UserDataSource>['onChange']
   rowSelection: TableRowSelection<UserDataSource> | undefined
+  filteredInfo: Record<string, FilterValue | null>
+  sortedInfo: SorterResult<UserDataSource>
 }
 
-function UserTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: UserTableProps) {
+function UserTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection, filteredInfo, sortedInfo }: UserTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
@@ -112,6 +115,7 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
       dataIndex: 'username',
       key: 'username',
       sorter: true,
+      sortOrder: sortedInfo.field === 'username' ? sortedInfo.order : null,
       fixed: 'left',
       width: 200
     },
@@ -120,6 +124,7 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
       dataIndex: 'email',
       key: 'email',
       sorter: true,
+      sortOrder: sortedInfo.field === 'email' ? sortedInfo.order : null,
       fixed: 'left',
       width: 200
     },
@@ -128,6 +133,7 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
       dataIndex: 'roles',
       key: 'roles',
       filterMultiple: false,
+      filteredValue: filteredInfo.roles || null,
       filters: [...(roleData?.map((role) => ({ text: role.name, value: role.name })) || [])],
       render: (_, record: UserDataSource) => (
         <Flex justify='space-between' align='center'>
@@ -153,6 +159,7 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
+      sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
       fixed: 'right',
       width: 250
     },
