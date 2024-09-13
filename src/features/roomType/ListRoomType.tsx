@@ -10,6 +10,7 @@ import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { TableRowSelection } from 'antd/es/table/interface'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import { Trans, useTranslation } from 'react-i18next'
 
 const { Search } = Input
 
@@ -18,6 +19,9 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListRoomType() {
+
+  const { t } = useTranslation(['common', 'roomType'])
+
   const navigate = useNavigate()
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useRoomTypeFilters()
@@ -82,7 +86,7 @@ function ListRoomType() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            Danh sách loại phòng
+            {t('roomType:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -97,7 +101,7 @@ function ListRoomType() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder='Tìm kiếm loại phòng'
+                placeholder={t('roomType:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -107,7 +111,7 @@ function ListRoomType() {
         <Space>
           {deleteIdList.length > 0 && (
             <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
-              Xóa các mục đã chọn
+              {t('common.multipleDelete')}
             </Button>
           )}
           <Button
@@ -116,7 +120,7 @@ function ListRoomType() {
             type='primary'
             onClick={() => navigate(ROUTER_NAMES.ADD_ROOM_TYPE)}
           >
-            Thêm mới
+            {t('common.add')}
           </Button>
         </Space>
       </Flex>
@@ -128,7 +132,13 @@ function ListRoomType() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} loại phòng`,
+          showTotal: (total, range) => (
+            <Trans
+              ns={'roomType'}
+              i18nKey='pagination.showTotal'
+              values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
+            />
+          ),
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}
@@ -141,7 +151,7 @@ function ListRoomType() {
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
-        title={'Xác nhận xóa các mục đã chọn'}
+        title={t('roomType:deleteModal.titleMultiple')}
         onOk={() => {
           deleteRoomTypesMutate(deleteIdList)
           setDeleteIdList([])

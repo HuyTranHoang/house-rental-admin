@@ -1,0 +1,27 @@
+{
+  "title": "Danh sách loại phòng",
+  "searchPlaceholder": "Tìm kiếm loại phòng",
+  "deleteModal": {
+    "title": "Xác nhận xóa loại phòng",
+    "titleMultiple": "Xác nhận xóa các loại phòng đã chọn"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} loại phòng"
+  },
+  "table": {
+    "name": "Tên loại phòng"
+  },
+  "notification": {
+    "deleteSuccess_one": "Xóa loại phòng thành công",
+    "deleteSuccess_other": "Xóa các loại phòng thành công"
+  },
+  "form": {
+    "addForm": "Thêm loại phòng",
+    "editForm": "Chỉnh sửa loại phòng",
+    "name": "Loại phòng",
+    "namePlaceholder": "Nhập tên loại phòng",
+    "nameRequired": "Vui lòng nhập tên loại phòng",
+    "nameMin": "Tên loại phòng phải có ít nhất 3 ký tự",
+    "nameMax": "Tên loại phòng phải có tối đa 50 ký tự"
+  }
+}

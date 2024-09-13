@@ -1,0 +1,27 @@
+{
+  "title": "Room Type Management",
+  "searchPlaceholder": "Search by room type name",
+  "deleteModal": {
+    "title": "Confirm room type deletion",
+    "titleMultiple": "Confirm multiple room type deletion"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} room types"
+  },
+  "table": {
+    "name": "Room type name"
+  },
+  "notification": {
+    "deleteSuccess_one": "Delete room type successfully",
+    "deleteSuccess_other": "Delete room types successfully"
+  },
+  "form": {
+    "addForm": "Add Room Type",
+    "editForm": "Edit Room Type",
+    "name": "Name",
+    "namePlaceholder": "Enter Room Type",
+    "nameRequired": "Please enter room type name",
+    "nameMin": "Room type name must be at least 3 characters",
+    "nameMax": "Room type name must be at most 50 characters"
+  }
+}
