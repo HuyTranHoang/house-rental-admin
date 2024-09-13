@@ -76,7 +76,7 @@ function AmenityTable({
       width: 300
     },
     {
-      title: t('common.table.createdAt'),
+      title: t('common.table.action'),
       key: 'action',
       fixed: 'right',
       width: 200,

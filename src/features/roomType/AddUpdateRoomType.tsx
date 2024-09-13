@@ -6,12 +6,14 @@ import { LeftCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, type FormProps, Input, Spin, Typography } from 'antd'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMatch, useNavigate, useParams } from 'react-router-dom'
 
 function AddUpdateRoomType() {
   const match = useMatch(ROUTER_NAMES.ADD_ROOM_TYPE)
   const isAddMode = Boolean(match)
-  const title = isAddMode ? 'Thêm mới loại phòng' : 'Cập nhật loại phòng'
+  const { t } = useTranslation(['common', 'roomType'])
+  const title = isAddMode ? t('roomType:form.addForm') : t('roomType:form.editForm')
   const navigate = useNavigate()
 
   const { id } = useParams<{ id: string }>()
@@ -59,7 +61,7 @@ function AddUpdateRoomType() {
           type='primary'
           onClick={() => navigate(ROUTER_NAMES.ROOM_TYPE)}
         >
-          Quay lại
+          {t('common.back')}
         </Button>
       </Flex>
       <Form
@@ -81,20 +83,20 @@ function AddUpdateRoomType() {
         </Form.Item>
 
         <Form.Item<RoomTypeForm>
-          label='Tên loại phòng'
+          label={t('roomType:form.name')}
           name='name'
           rules={[
-            { required: true, message: 'Vui lòng nhập tên loại phòng!' },
-            { min: 3, message: 'Tên loại phòng phải có ít nhất 3 ký tự!' },
-            { max: 50, message: 'Tên loại phòng không được quá 50 ký tự!' }
+            { required: true, message: t('roomType:form.nameRequired') },
+            { min: 3, message: t('roomType:form.nameMin') },
+            { max: 50, message: t('roomType:form.nameMax') }
           ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
         >
-          <Input onChange={() => setError('')} />
+          <Input onChange={() => setError('')} placeholder={t('roomType:form.namePlaceholder')}/>
         </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 5 }}>
+        <Form.Item wrapperCol={{ offset: 8 }}>
           <Button
             onClick={() => {
               form.resetFields()
@@ -102,7 +104,7 @@ function AddUpdateRoomType() {
             }}
             style={{ marginRight: 16 }}
           >
-            Đặt lại
+            {t('common.reset')}
           </Button>
 
           <Button
@@ -111,7 +113,7 @@ function AddUpdateRoomType() {
             htmlType='submit'
             style={{ width: 100 }}
           >
-            {isAddMode ? 'Thêm mới' : 'Cập nhật'}
+            {isAddMode ? t('common.add') : t('common.update')}
           </Button>
         </Form.Item>
       </Form>
