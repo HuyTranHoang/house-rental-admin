@@ -2,7 +2,6 @@ import ErrorFetching from '@/components/ErrorFetching'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import { useDeleteUsers, useUserFilters, useUsers } from '@/hooks/useUsers'
 import { User, UserDataSource } from '@/models/user.type'
-import { customFormatDate } from '@/utils/customFormatDate'
 import { CheckCircleOutlined, CloseSquareOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Divider, Flex, Space, TableProps, Tabs, TabsProps, Typography } from 'antd'
@@ -12,6 +11,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import UserTable from './UserTable'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 type OnChange = NonNullable<TableProps<UserDataSource>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -23,6 +23,7 @@ function ListUser() {
   const { t } = useTranslation(['common', 'user'])
 
   const { search, isNonLocked, roles, pageNumber, pageSize, sortBy, setFilters } = useUserFilters()
+  const formatDate = useCustomDateFormatter()
 
   const [filteredInfo, setFilteredInfo] = useState<Filters>({})
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
@@ -76,7 +77,7 @@ function ListUser() {
         ...user,
         key: user.id,
         index: (pageNumber - 1) * pageSize + idx + 1,
-        createdAt: customFormatDate(user.createdAt)
+        createdAt: formatDate(user.createdAt)
       }))
     : []
 

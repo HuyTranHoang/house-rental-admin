@@ -2,7 +2,6 @@ import { getPropertyById } from '@/api/property.api.ts'
 import { useBlockProperty } from '@/hooks/useProperties'
 import { useUpdateReportStatus } from '@/hooks/useReports.ts'
 import { Report, ReportCategory, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
@@ -28,6 +27,7 @@ import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 interface ReportTableProps {
   dataSource: ReportDataSource[]
@@ -51,7 +51,9 @@ function ReportTable({
   const [propertyId, setPropertyId] = useState<number>(0)
   const [report, setReport] = useState<Report>({} as Report)
   const [open, setOpen] = useState(false)
+
   const { updateReportStatusMutate, updateReportStatusPending } = useUpdateReportStatus()
+  const formatDate = useCustomDateFormatter()
   const { t } = useTranslation(['common', 'report'])
   const { blockProperty } = useBlockProperty()
 
@@ -191,7 +193,7 @@ function ReportTable({
     {
       key: 'createdAt',
       label: t('report:detailModal.createdAt'),
-      children: customFormatDate(propertyData?.createdAt)
+      children: formatDate(propertyData?.createdAt)
     },
     {
       key: 'username',

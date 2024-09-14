@@ -3,13 +3,13 @@ import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useDeleteMultiDistrict, useDistrictFilters, useDistricts } from '@/hooks/useDistricts.ts'
 import { District, DistrictDataSource } from '@/models/district.type.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DistrictTable from './DistrictTable.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -30,6 +30,7 @@ function ListDistrict() {
   const [isOpen, setIsOpen] = useState(false)
 
   const { data, isLoading, isError } = useDistricts(search, cityId, pageNumber, pageSize, sortBy)
+  const formatDate = useCustomDateFormatter()
   const { deleteDistrictsMutate, deleteDisitrctsIsPending } = useDeleteMultiDistrict()
 
   const handleTableChange: TableProps<DistrictDataSource>['onChange'] = (_, filters, sorter) => {
@@ -55,7 +56,7 @@ function ListDistrict() {
         ...district,
         key: district.id,
         index: (pageNumber - 1) * pageSize + idx + 1,
-        createdAt: customFormatDate(district.createdAt)
+        createdAt: formatDate(district.createdAt)
       }))
     : []
 

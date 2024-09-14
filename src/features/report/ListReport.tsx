@@ -1,13 +1,13 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { useReportFilters, useReports } from '@/hooks/useReports.ts'
 import { ReportDataSource, ReportStatus, Report as ReportType } from '@/models/report.type.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import ReportTable from './ReportTable.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -19,6 +19,14 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 function ListReport() {
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'report'])
+
+  const { search, status, category, sortBy, pageNumber, pageSize, setFilters } = useReportFilters()
+  const [filteredInfo, setFilteredInfo] = useState<Filters>({})
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
+  const [form] = Form.useForm()
+
+  const { data, isLoading, isError } = useReports(search, category, status, pageNumber, pageSize, sortBy)
+  const formatDate = useCustomDateFormatter()
 
   const tabsItem: TabsProps['items'] = useMemo(
     () => [
@@ -40,15 +48,6 @@ function ListReport() {
     ],
     [t]
   )
-
-  const { search, status, category, sortBy, pageNumber, pageSize, setFilters } = useReportFilters()
-
-  const [filteredInfo, setFilteredInfo] = useState<Filters>({})
-  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
-
-  const [form] = Form.useForm()
-
-  const { data, isLoading, isError } = useReports(search, category, status, pageNumber, pageSize, sortBy)
 
   const onTabChange = (key: string) => {
     setFilters({ status: key as ReportStatus })
@@ -78,7 +77,7 @@ function ListReport() {
         ...report,
         key: report.id,
         index: (pageNumber - 1) * pageSize + idx + 1,
-        createdAt: customFormatDate(report.createdAt)
+        createdAt: formatDate(report.createdAt)
       }))
     : []
 

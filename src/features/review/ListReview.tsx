@@ -2,13 +2,13 @@ import ErrorFetching from '@/components/ErrorFetching'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import { useDeleteMultiReview, useReviewFilters, useReviews } from '@/hooks/useReviews.ts'
 import { Review, ReviewDataSource } from '@/models/review.type.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import ReviewTable from './ReviewTable'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -30,6 +30,7 @@ function ListReview() {
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const { data, isLoading, isError } = useReviews(search, rating, pageNumber, pageSize, sortBy)
+  const formatDate = useCustomDateFormatter()
 
   const { deleteReviewsMutate, deleteReviewsIsPending } = useDeleteMultiReview()
 
@@ -52,7 +53,7 @@ function ListReview() {
         ...review,
         key: review.id,
         index: (pageNumber - 1) * pageSize + idx + 1,
-        createdAt: customFormatDate(review.createdAt)
+        createdAt: formatDate(review.createdAt)
       }))
     : []
 

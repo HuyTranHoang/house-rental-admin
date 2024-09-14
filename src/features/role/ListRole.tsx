@@ -4,7 +4,6 @@ import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import { useCreateRole, useDeleteRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
 import { Role } from '@/models/role.type.ts'
 import { selectIsDarkMode } from '@/ui/appSlice.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -24,6 +23,7 @@ import {
 import { clsx } from 'clsx'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { confirm } = Modal
 
@@ -40,6 +40,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const [formAddRole] = Form.useForm()
 
   const isDarkMode = useSelector(selectIsDarkMode)
+  const formatDate = useCustomDateFormatter()
 
   const { addRoleMutate, addRolePending } = useCreateRole(setError, setIsModalOpen, formAddRole)
   const { updateRoleMutate, updateRolePending } = useUpdateRole(setError, setIsModalOpen, formAddRole, setCurrentRole)
@@ -79,7 +80,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
       {
         key: '3',
         label: 'Ngày tạo',
-        children: <span>{customFormatDate(record.createdAt)}</span>,
+        children: <span>{formatDate(record.createdAt)}</span>,
         span: 3
       }
     ]

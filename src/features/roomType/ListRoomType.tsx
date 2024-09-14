@@ -3,7 +3,6 @@ import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.
 import AddUpdateRoomType from '@/features/roomType/AddUpdateRoomType.tsx'
 import { useDeleteRoomTypes, useRoomTypeFilters, useRoomTypes } from '@/hooks/useRoomTypes.ts'
 import { RoomTypeDataSource } from '@/models/roomType.type.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -11,6 +10,7 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import RoomTypeTable from './RoomTypeTable.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -33,6 +33,7 @@ function ListRoomType() {
   const [isOpen, setIsOpen] = useState(false)
 
   const { data, isLoading, isError } = useRoomTypes(search, pageNumber, pageSize, sortBy)
+  const formatDate = useCustomDateFormatter()
   const { deleteRoomTypesMutate, deleteRoomTypesIsPending } = useDeleteRoomTypes()
 
   const handleTableChange: TableProps<RoomTypeDataSource>['onChange'] = (_, __, sorter) => {
@@ -51,7 +52,7 @@ function ListRoomType() {
         index: (pageNumber - 1) * pageSize + idx + 1,
         id: roomType.id,
         name: roomType.name,
-        createdAt: customFormatDate(roomType.createdAt)
+        createdAt: formatDate(roomType.createdAt)
       }))
     : []
 

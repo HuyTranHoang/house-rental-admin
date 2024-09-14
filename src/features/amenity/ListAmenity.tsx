@@ -3,7 +3,6 @@ import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.
 import AddUpdateAmenity from '@/features/amenity/AddUpdateAmenity.tsx'
 import { useAmenities, useAmenityFilters, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
 import { Amenity, AmenityDataSource } from '@/models/amenity.type.ts'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -11,6 +10,7 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import AmenityTable from './AmenityTable.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -24,6 +24,7 @@ function ListAmenity() {
   const [form] = Form.useForm()
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useAmenityFilters()
+  const formatDate = useCustomDateFormatter()
 
   const [isOpen, setIsOpen] = useState(false)
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
@@ -50,7 +51,7 @@ function ListAmenity() {
         index: (pageNumber - 1) * pageSize + idx + 1,
         id: amenity.id,
         name: amenity.name,
-        createdAt: customFormatDate(amenity.createdAt)
+        createdAt: formatDate(amenity.createdAt),
       }))
     : []
 

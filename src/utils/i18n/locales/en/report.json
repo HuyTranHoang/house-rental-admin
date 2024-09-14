@@ -46,7 +46,7 @@
   },
   "type": {
     "scam": "Scam",
-    "inappropriateContent": "Inapproprite Content",
+    "inappropriateContent": "Inappropriate Content",
     "duplicate": "Dupicate",
     "misinformation": "Misinformation",
     "other": "Other"

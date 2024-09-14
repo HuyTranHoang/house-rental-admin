@@ -8,10 +8,10 @@ import { useDistrictsAll } from '@/hooks/useDistricts.ts'
 import { useProperties, usePropertyFilters } from '@/hooks/useProperties'
 import { useRoomTypesAll } from '@/hooks/useRoomTypes.ts'
 import { PropertyDataSource, PropertyStatus, Property as PropertyType } from '@/models/property.type'
-import { customFormatDate } from '@/utils/customFormatDate'
 import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import PropertyTable from './PropertyTable'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -75,6 +75,7 @@ function ListProperty() {
   // Start City and District
   const { cityData, cityIsLoading } = useCitiesAll()
   const { districtData, districtIsLoading } = useDistrictsAll()
+  const formatDate = useCustomDateFormatter()
   const cityDistrictOptions: Option[] = [{ value: '0', label: 'Toàn Quốc' }]
   if (cityData && districtData) {
     const cityMap = cityData.map((city) => ({
@@ -156,7 +157,7 @@ function ListProperty() {
           ...property,
           key: property.id,
           index: (pageNumber - 1) * pageSize + idx + 1,
-          createdAt: customFormatDate(property.createdAt)
+          createdAt: formatDate(property.createdAt)
         }))
     : []
 
