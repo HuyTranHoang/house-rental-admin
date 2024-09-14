@@ -1,22 +1,21 @@
 import { getCityById } from '@/api/city.api.ts'
 import { useQuery } from '@tanstack/react-query'
-import type { FormProps } from 'antd'
-import { Button, Flex, Form, Input, Spin, Typography } from 'antd'
-import { useMatch, useNavigate, useParams } from 'react-router-dom'
+import { Button, Drawer, Form, FormProps, Input, Spin } from 'antd'
 
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { CityForm } from '@/models/city.type.ts'
-import { LeftCircleOutlined } from '@ant-design/icons'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-function AddUpdateCity() {
-  const match = useMatch(ROUTER_NAMES.ADD_CITY)
-  const isAddMode = Boolean(match)
+interface AddUpdateCityProps {
+  id: number | null
+  formOpen: boolean
+  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
+  const isAddMode = id === null
   const { t } = useTranslation(['common', 'city'])
-  const navigate = useNavigate()
-  const { id } = useParams<{ id: string }>()
   const [form] = Form.useForm()
 
   const [error, setError] = useState<string>('')
@@ -24,7 +23,7 @@ function AddUpdateCity() {
   const { addCityMutate, addCityPending } = useCreateCity(setError)
   const { updateCityMutate, updateCityPending } = useUpdateCity(setError)
 
-  const title = isAddMode ? t('city.form.addForm', { ns: 'city' }) : t('city.form.editForm', { ns: 'city' })
+  const title = isAddMode ? t('city:form.addForm') : t('city:form.editForm')
 
   const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
     if (isAddMode) {
@@ -47,68 +46,66 @@ function AddUpdateCity() {
     }
   }, [cityUpdateData, form])
 
+  const onClose = () => {
+    setFormOpen(false)
+    form.resetFields()
+    setError('')
+  }
+
   if (isLoading) {
     return <Spin spinning={isLoading} fullscreen />
   }
 
   return (
     <>
-      <Flex align='center' justify='space-between'>
-        <Typography.Title level={2} style={{ marginTop: 0 }}>
-          {title}
-        </Typography.Title>
-        <Button icon={<LeftCircleOutlined />} shape='round' type='primary' onClick={() => navigate(ROUTER_NAMES.CITY)}>
-          {t('common.back')}
-        </Button>
-      </Flex>
-      <Form
-        form={form}
-        name='cityForm'
-        labelCol={{ span: 5 }}
-        style={{
-          maxWidth: 600,
-          marginTop: 32,
-          boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #f0f0f0',
-          padding: '32px 32px 0'
-        }}
-        onFinish={onFinish}
-        autoComplete='off'
+      <Drawer
+        title={title}
+        size='large'
+        onClose={onClose}
+        open={formOpen}
+        extra={<Button onClick={onClose}>{t('common.back')}</Button>}
       >
-        <Form.Item<CityForm> label='Id' name='id' hidden>
-          <Input />
-        </Form.Item>
+        <Form form={form} layout='vertical' name='cityForm' onFinish={onFinish} autoComplete='off'>
+          <Form.Item<CityForm> label='Id' name='id' hidden>
+            <Input />
+          </Form.Item>
 
-        <Form.Item<CityForm>
-          label={t('city.form.name', { ns: 'city' })}
-          name='name'
-          rules={[
-            { required: true, message: t('city.form.nameRequired', { ns: 'city' }) },
-            { min: 3, message: t('city.form.nameMin', { ns: 'city' }) },
-            { max: 50, message: t('city.form.nameMax', { ns: 'city' }) }
-          ]}
-          validateStatus={error ? 'error' : undefined}
-          extra={<span style={{ color: 'red' }}>{error}</span>}
-        >
-          <Input onChange={() => setError('')} placeholder={t('city.form.namePlaceholder', { ns: 'city' })} />
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ offset: 5 }}>
-          <Button
-            onClick={() => {
-              form.resetFields()
-              setError('')
-            }}
-            style={{ marginRight: 16 }}
+          <Form.Item<CityForm>
+            label={t('city:form.name')}
+            name='name'
+            rules={[
+              { required: true, message: t('city:form.nameRequired') },
+              { min: 3, message: t('city:form.nameMin') },
+              { max: 50, message: t('city:form.nameMax') }
+            ]}
+            validateStatus={error ? 'error' : undefined}
+            extra={<span style={{ color: 'red' }}>{error}</span>}
           >
-            {t('common.reset')}
-          </Button>
+            <Input onChange={() => setError('')} placeholder={t('city:form.namePlaceholder')} />
+          </Form.Item>
 
-          <Button loading={addCityPending || updateCityPending} type='primary' htmlType='submit' style={{ width: 100 }}>
-            {isAddMode ? t('common.add') : t('common.update')}
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item>
+            <Button
+              className='mr-4'
+              onClick={() => {
+                form.resetFields()
+                setError('')
+              }}
+            >
+              {t('common.reset')}
+            </Button>
+
+            <Button
+              loading={addCityPending || updateCityPending}
+              type='primary'
+              htmlType='submit'
+              style={{ width: 100 }}
+            >
+              {isAddMode ? t('common.add') : t('common.update')}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Drawer>
     </>
   )
 }

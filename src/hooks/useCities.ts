@@ -42,7 +42,7 @@ export const useDeleteCity = () => {
     onSuccess: () => {
       queryClient
         .invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success(t('city.notification.deleteSuccess', { count: 1 })))
+        .then(() => toast.success(t('notification.deleteSuccess', { count: 1 })))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -61,7 +61,7 @@ export const useDeleteMultiCity = () => {
     onSuccess: (_, variables) => {
       queryClient
         .invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success(t('city.notification.deleteSuccess', { count: variables.length })))
+        .then(() => toast.success(t('notification.deleteSuccess', { count: variables.length })))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -81,7 +81,7 @@ export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<stri
     onSuccess: () => {
       queryClient
         .invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success(t('city.notification.addSuccess')))
+        .then(() => toast.success(t('notification.addSuccess')))
 
       navigate(ROUTER_NAMES.CITY)
     },
@@ -107,7 +107,7 @@ export const useUpdateCity = (setError: React.Dispatch<React.SetStateAction<stri
     mutationFn: updateCity,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => {
-        toast.success(t('city.notification.editSuccess'))
+        toast.success(t('notification.editSuccess'))
         navigate(ROUTER_NAMES.CITY)
       })
     },

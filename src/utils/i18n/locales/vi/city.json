@@ -1,31 +1,32 @@
 {
-  "city": {
-    "title": "Quản lý thành phố",
-    "searchPlaceholder": "Tìm kiếm thành phố",
-    "table": {
-      "name": "Tên thành phố"
-    },
-    "form": {
-      "addForm": "Thêm thành phố",
-      "editForm": "Chỉnh sửa thành phố",
-      "name": "Tên thành phố",
-      "namePlaceholder": "Nhập tên thành phố",
-      "nameRequired": "Vui lòng nhập tên thành phố",
-      "nameMin": "Tên thành phố phải có ít nhất 3 ký tự",
-      "nameMax": "Tên thành phố phải có tối đa 50 ký tự"
-    },
-    "pagination": {
-      "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} thành phố"
-    },
-    "notification": {
-      "addSuccess": "Thêm thành phố thành công",
-      "editSuccess": "Chỉnh sửa thành phố thành công",
-      "deleteSuccess_one": "Xóa thành phố thành công",
-      "deleteSuccess_other": "Xóa các thành phố thành công"
-    },
-    "deleteModal": {
-      "title": "Xác nhận xóa thành phố",
-      "titleMultiple": "Xác nhận xóa các thành phố"
-    }
+  "title": "Quản lý thành phố",
+  "searchPlaceholder": "Tìm kiếm thành phố",
+  "table": {
+    "name": "Tên thành phố"
+  },
+  "button": {
+    "add": "Thành phố mới"
+  },
+  "form": {
+    "addForm": "Thêm thành phố mới",
+    "editForm": "Chỉnh sửa thành phố",
+    "name": "Tên thành phố",
+    "namePlaceholder": "Nhập tên thành phố",
+    "nameRequired": "Vui lòng nhập tên thành phố",
+    "nameMin": "Tên thành phố phải có ít nhất 3 ký tự",
+    "nameMax": "Tên thành phố phải có tối đa 50 ký tự"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} thành phố"
+  },
+  "notification": {
+    "addSuccess": "Thêm thành phố thành công",
+    "editSuccess": "Chỉnh sửa thành phố thành công",
+    "deleteSuccess_one": "Xóa thành phố thành công",
+    "deleteSuccess_other": "Xóa các thành phố thành công"
+  },
+  "deleteModal": {
+    "title": "Xác nhận xóa thành phố",
+    "titleMultiple": "Xác nhận xóa các thành phố"
   }
 }

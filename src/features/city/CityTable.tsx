@@ -1,15 +1,13 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import TableActions from '@/components/TableActions.tsx'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useDeleteCity } from '@/hooks/useCities.ts'
 import { CityDataSource } from '@/models/city.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 
 interface CityTableProps {
   dataSource: CityDataSource[]
@@ -18,6 +16,8 @@ interface CityTableProps {
   handleTableChange: TableProps<CityDataSource>['onChange']
   rowSelection: TableRowSelection<CityDataSource> | undefined
   sortedInfo: SorterResult<CityDataSource>
+  setEditId: React.Dispatch<React.SetStateAction<number | null>>
+  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function CityTable({
@@ -26,10 +26,10 @@ function CityTable({
   paginationProps,
   handleTableChange,
   rowSelection,
-  sortedInfo
+  sortedInfo,
+  setEditId,
+  setFormOpen
 }: CityTableProps) {
-  const navigate = useNavigate()
-
   const { t } = useTranslation(['common', 'city'])
 
   const { deleteCityMutate } = useDeleteCity()
@@ -40,7 +40,7 @@ function CityTable({
   const items: DescriptionsProps['items'] = [
     {
       key: '2',
-      label: t('city:city.table.name'),
+      label: t('city:table.name'),
       children: <span>{currentRecord?.name}</span>,
       span: 3
     },
@@ -61,7 +61,7 @@ function CityTable({
       width: 50
     },
     {
-      title: t('city:city.table.name'),
+      title: t('city:table.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
@@ -83,7 +83,10 @@ function CityTable({
       width: 200,
       render: (_, record) => (
         <TableActions
-          onUpdate={() => navigate(ROUTER_NAMES.getCityEditPath(record.id))}
+          onUpdate={() => {
+            setEditId(record.id)
+            setFormOpen(true)
+          }}
           onDelete={() => {
             setCurrentRecord(record)
             setIsModalOpen(true)
@@ -118,7 +121,7 @@ function CityTable({
       <Modal
         open={isModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title={t('city:city.deleteModal.title')} />}
+        title={<ConfirmModalTitle title={t('city:deleteModal.title')} />}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
           deleteCityMutate(currentRecord!.id)

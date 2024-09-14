@@ -1,31 +1,32 @@
 {
-  "city": {
-    "title": "City Management",
-    "searchPlaceholder": "Search city",
-    "table": {
-      "name": "City name"
-    },
-    "form": {
-      "addForm": "Add city",
-      "editForm": "Edit city",
-      "name": "City name",
-      "namePlaceholder": "Enter city name",
-      "nameRequired": "Please enter city name",
-      "nameMin": "City name must be at least 3 characters",
-      "nameMax": "City name must be at most 50 characters"
-    },
-    "pagination": {
-      "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} cities"
-    },
-    "notification": {
-      "addSuccess": "Add city successfully",
-      "editSuccess": "Edit city successfully",
-      "deleteSuccess_one": "Delete city successfully",
-      "deleteSuccess_other": "Delete cities successfully"
-    },
-    "deleteModal": {
-      "title": "Confirm city deletion",
-      "titleMultiple": "Confirm multiple city deletion"
-    }
+  "title": "City Management",
+  "searchPlaceholder": "Search city",
+  "table": {
+    "name": "City name"
+  },
+  "button": {
+    "add": "New city"
+  },
+  "form": {
+    "addForm": "Add new city",
+    "editForm": "Edit city",
+    "name": "City name",
+    "namePlaceholder": "Enter city name",
+    "nameRequired": "Please enter city name",
+    "nameMin": "City name must be at least 3 characters",
+    "nameMax": "City name must be at most 50 characters"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} cities"
+  },
+  "notification": {
+    "addSuccess": "Add city successfully",
+    "editSuccess": "Edit city successfully",
+    "deleteSuccess_one": "Delete city successfully",
+    "deleteSuccess_other": "Delete cities successfully"
+  },
+  "deleteModal": {
+    "title": "Confirm city deletion",
+    "titleMultiple": "Confirm multiple city deletion"
   }
 }

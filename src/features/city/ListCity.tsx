@@ -1,6 +1,6 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
+import AddUpdateCity from '@/features/city/AddUpdateCity.tsx'
 import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
 import { City, CityDataSource } from '@/models/city.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
@@ -9,7 +9,6 @@ import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } fro
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 import CityTable from './CityTable.tsx'
 
 const { Search } = Input
@@ -19,7 +18,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListCity() {
-  const navigate = useNavigate()
+  const [editId, setEditId] = useState<number | null>(null)
+  const [formOpen, setFormOpen] = useState(false)
 
   const { t } = useTranslation(['common', 'city'])
 
@@ -83,7 +83,7 @@ function ListCity() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            {t('city.title', { ns: 'city' })}
+            {t('city:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -97,7 +97,7 @@ function ListCity() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder={t('city.searchPlaceholder', { ns: 'city' })}
+                placeholder={t('city:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -114,9 +114,12 @@ function ListCity() {
             icon={<PlusCircleOutlined />}
             shape='round'
             type='primary'
-            onClick={() => navigate(ROUTER_NAMES.ADD_CITY)}
+            onClick={() => {
+              setEditId(null)
+              setFormOpen(true)
+            }}
           >
-            {t('common.add')}
+            {t('city:button.add')}
           </Button>
         </Space>
       </Flex>
@@ -131,7 +134,7 @@ function ListCity() {
           showTotal: (total, range) => (
             <Trans
               ns={'city'}
-              i18nKey='city.pagination.showTotal'
+              i18nKey='pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
             />
           ),
@@ -141,13 +144,17 @@ function ListCity() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
+        setEditId={setEditId}
+        setFormOpen={setFormOpen}
       />
+
+      <AddUpdateCity id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
-        title={t('city.deleteModal.titleMultiple', { ns: 'city' })}
+        title={t('city:deleteModal.titleMultiple')}
         onOk={() => {
           deleteCitiesMutate(deleteIdList)
           setDeleteIdList([])

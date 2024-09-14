@@ -5,16 +5,16 @@ import ProtectedRoute from '../components/ProtectedRoute.tsx'
 import AppLayout from '../ui/AppLayout.tsx'
 
 import amenityRouter from './amenityRouter.tsx'
-import cityRouter from './cityRouter.tsx'
-import propertyRouter from './propertyRouter.tsx'
-import reportRouter from './reportRouter.tsx'
-import reviewRouter from './reviewRouter.tsx'
-import roleRouter from './roleRouter.tsx'
 import roomTypeRouter from './roomTypeRouter.tsx'
 
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import ListCity from '@/features/city/ListCity.tsx'
+import ListProperty from '@/features/property/ListProperty.tsx'
+import ListReport from '@/features/report/ListReport.tsx'
+import ListReview from '@/features/review/ListReview.tsx'
+import RoleManager from '@/features/role/RoleManager.tsx'
+import ListUser from '@/features/user/ListUser.tsx'
 import districtRouter from '@/router/districtRouter.tsx'
-import userRouter from '@/router/userRouter.tsx'
 
 export const routerList = [
   {
@@ -38,15 +38,39 @@ export const routerList = [
       {
         element: <AppLayout />,
         children: [
-          ...cityRouter, // /city, /city/add, /city/:id/edit
+          {
+            path: ROUTER_NAMES.CITY,
+            element: <ListCity />,
+            breadcrumb: 'city.list'
+          },
           ...districtRouter, // /district, /district/add, /district/:id/edit
           ...roomTypeRouter, // /roomType, /roomType/add, /roomType/:id/edit
           ...amenityRouter, // /amenity, /amenity/add, /amenity/:id:edit
-          ...reportRouter, // /report
-          ...roleRouter, // /role
-          ...reviewRouter, //review
-          ...userRouter, // /user
-          ...propertyRouter // properties
+          {
+            path: ROUTER_NAMES.REPORT,
+            element: <ListReport />,
+            breadcrumb: 'report.list'
+          },
+          {
+            path: ROUTER_NAMES.ROLE,
+            element: <RoleManager />,
+            breadcrumb: 'role.list'
+          },
+          {
+            path: ROUTER_NAMES.REVIEW,
+            element: <ListReview />,
+            breadcrumb: 'review.list'
+          },
+          {
+            path: ROUTER_NAMES.USER,
+            element: <ListUser />,
+            breadcrumb: 'user.list'
+          },
+          {
+            path: ROUTER_NAMES.PROPERTY,
+            element: <ListProperty />,
+            breadcrumb: 'property'
+          }
         ] // End of ProtectedRoute children
       }
     ] // End of AppLayout children
