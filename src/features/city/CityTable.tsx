@@ -8,6 +8,7 @@ import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 interface CityTableProps {
   dataSource: CityDataSource[]
@@ -32,7 +33,7 @@ function CityTable({
 }: CityTableProps) {
   const { t } = useTranslation(['common', 'city'])
 
-  const { deleteCityMutate } = useDeleteCity()
+  const { deleteCityMutate, deleteCityPending } = useDeleteCity()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<CityDataSource | null>(null)
@@ -122,14 +123,19 @@ function CityTable({
         open={isModalOpen}
         className='w-96'
         title={<ConfirmModalTitle title={t('city:deleteModal.title')} />}
-        onCancel={() => setIsModalOpen(false)}
-        onOk={() => {
-          deleteCityMutate(currentRecord!.id)
-          setIsModalOpen(false)
-        }}
         okText={t('common.ok')}
         okType='danger'
         cancelText={t('common.cancel')}
+        okButtonProps={{ loading: deleteCityPending }}
+        cancelButtonProps={{ disabled: deleteCityPending }}
+        onCancel={() => setIsModalOpen(false)}
+        onOk={() => {
+          deleteCityMutate(currentRecord!.id).then(() => {
+            setCurrentRecord(null)
+            setIsModalOpen(false)
+            toast.success(t('city:notification.deleteSuccess'))
+          })
+        }}
       >
         <ConfirmModalContent items={items} />
       </Modal>

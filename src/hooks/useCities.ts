@@ -9,7 +9,6 @@ import {
 import { CityFilters } from '@/models/city.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -33,17 +32,11 @@ export const useCities = (search: string, pageNumber: number, pageSize: number, 
 
 export const useDeleteCity = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('city')
 
-  const { mutate: deleteCityMutate, isPending: deleteCityPending } = useMutation({
+  const { mutateAsync: deleteCityMutate, isPending: deleteCityPending } = useMutation({
     mutationFn: deleteCity,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-      toast.success(t('notification.deleteSuccess'))
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['cities'] }),
+    onError: (error) => toast.error(error.message)
   })
 
   return { deleteCityMutate, deleteCityPending }
@@ -51,20 +44,14 @@ export const useDeleteCity = () => {
 
 export const useDeleteMultiCity = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('city')
 
-  const { mutate: deleteCitiesMutate } = useMutation({
+  const { mutateAsync: deleteCitiesMutate, isPending: deleteCitiesIsPending } = useMutation({
     mutationFn: (ids: number[]) => deleteCities(ids),
-    onSuccess: (_, variables) => {
-      const text = variables.length > 1 ? 'notification.deleteSuccess_other' : 'notification.deleteSuccess'
-      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => toast.success(t(text)))
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['cities'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteCitiesMutate }
+  return { deleteCitiesMutate, deleteCitiesIsPending }
 }
 
 export const useCreateCity = () => {

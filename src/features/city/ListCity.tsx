@@ -9,6 +9,7 @@ import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } fro
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import CityTable from './CityTable.tsx'
 
 const { Search } = Input
@@ -33,7 +34,7 @@ function ListCity() {
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
   const { data, isLoading, isError } = useCities(search, pageNumber, pageSize, sortBy)
-  const { deleteCitiesMutate } = useDeleteMultiCity()
+  const { deleteCitiesMutate, deleteCitiesIsPending } = useDeleteMultiCity()
 
   const handleTableChange: TableProps<CityDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -153,10 +154,14 @@ function ListCity() {
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
+        pending={deleteCitiesIsPending}
         title={t('city:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteCitiesMutate(deleteIdList)
-          setDeleteIdList([])
+          deleteCitiesMutate(deleteIdList).then(() => {
+            toast.success(t('city:notification.deleteSuccess_other'))
+            setIsOpen(false)
+            setDeleteIdList([])
+          })
         }}
       />
     </>

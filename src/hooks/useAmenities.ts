@@ -26,9 +26,7 @@ export const useDeleteAmenity = () => {
   const { mutateAsync: deleteAmenityMutate, isPending: deleteAmenityPending } = useMutation({
     mutationFn: deleteAmenity,
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['amenities'] }),
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onError: (error) => toast.error(error.message)
   })
 
   return { deleteAmenityMutate, deleteAmenityPending }

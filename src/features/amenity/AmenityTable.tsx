@@ -122,6 +122,11 @@ function AmenityTable({
         open={isModalOpen}
         className='w-96'
         title={<ConfirmModalTitle title={t('amenity:deleteModal.title')} />}
+        okText={t('common.ok')}
+        okType='danger'
+        cancelText={t('common.cancel')}
+        okButtonProps={{ loading: deleteAmenityPending }}
+        cancelButtonProps={{ disabled: deleteAmenityPending }}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
           deleteAmenityMutate(currentRecord!.id).then(() => {
@@ -130,11 +135,6 @@ function AmenityTable({
             toast.success(t('amenity:notification.deleteSuccess'))
           })
         }}
-        okText={t('common.ok')}
-        okType='danger'
-        cancelText={t('common.cancel')}
-        okButtonProps={{ loading: deleteAmenityPending }}
-        cancelButtonProps={{ disabled: deleteAmenityPending }}
       >
         <ConfirmModalContent items={items} />
       </Modal>
