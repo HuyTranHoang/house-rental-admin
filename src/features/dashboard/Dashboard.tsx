@@ -1,163 +1,193 @@
-import { ArrowDownOutlined, ArrowUpOutlined, CarOutlined, CoffeeOutlined, HeartOutlined } from '@ant-design/icons'
-import { Card, Col, Flex, Row, Statistic, Tooltip, Typography } from 'antd'
-import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, XAxis, YAxis } from 'recharts'
-import { blue, green, Palette, purple, red } from '@ant-design/colors'
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  DollarOutlined,
+  FileTextOutlined,
+  MessageOutlined,
+  UserOutlined
+} from '@ant-design/icons'
+import { Card, Col, Row, Statistic, Table } from 'antd'
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts'
 
-const demoData = [
+const iconStyle = (color: string) => ({
+  backgroundColor: color,
+  color: 'white',
+  fontSize: 24,
+  padding: 8,
+  borderRadius: 20
+})
+
+const statsData = [
   {
-    name: 'Page A',
-    uv: 4000,
-    pv: 2400
+    title: 'Thành viên mới',
+    value: 11.28,
+    color: '#52c41a',
+    icon: <UserOutlined style={iconStyle('#52c41a')} />,
+    prefix: <ArrowUpOutlined />
   },
   {
-    name: 'Page B',
-    uv: 3000,
-    pv: 1398
+    title: 'Doanh thu',
+    value: 9.3,
+    color: '#f5222d',
+    icon: <DollarOutlined style={iconStyle('#f5222d')} />,
+    prefix: <ArrowDownOutlined />
   },
   {
-    name: 'Page C',
-    uv: 2000,
-    pv: 9800
+    title: 'Số bài đăng mới',
+    value: 13.5,
+    color: '#1890ff',
+    icon: <FileTextOutlined style={iconStyle('#1890ff')} />,
+    prefix: <ArrowUpOutlined />
   },
   {
-    name: 'Page D',
-    uv: 2780,
-    pv: 3908
-  },
-  {
-    name: 'Page E',
-    uv: 1890,
-    pv: 4800
-  },
-  {
-    name: 'Page F',
-    uv: 2390,
-    pv: 3800
-  },
-  {
-    name: 'Page G',
-    uv: 3490,
-    pv: 4300
+    title: 'Nhận xét mới',
+    value: 7.2,
+    color: '#722ed1',
+    icon: <MessageOutlined style={iconStyle('#722ed1')} />,
+    prefix: <ArrowDownOutlined />
   }
 ]
 
-const iconStyle = (color: Palette) => {
-  return {
-    backgroundColor: color[0],
-    color: color[4],
-    fontSize: 24,
-    padding: 8,
-    borderRadius: 16
-  }
-}
+const lineChartData = [
+  { name: 'Jan', uv: 4000, pv: 2400, amt: 2400 },
+  { name: 'Feb', uv: 3000, pv: 1398, amt: 2210 },
+  { name: 'Mar', uv: 2000, pv: 9800, amt: 2290 },
+  { name: 'Apr', uv: 2780, pv: 3908, amt: 2000 },
+  { name: 'May', uv: 1890, pv: 4800, amt: 2181 },
+  { name: 'Jun', uv: 2390, pv: 3800, amt: 2500 },
+  { name: 'Jul', uv: 3490, pv: 4300, amt: 2100 }
+]
 
-function Dashboard() {
+const pieChartData = [
+  { name: 'Group A', value: 400 },
+  { name: 'Group B', value: 300 },
+  { name: 'Group C', value: 300 },
+  { name: 'Group D', value: 200 }
+]
+
+const tableData = [
+  { key: 1, name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },
+  { key: 2, name: 'Jim Green', age: 42, address: 'London No. 1 Bridge Street' },
+  { key: 3, name: 'Joe Black', age: 32, address: 'Sydney No. 1 York Street' }
+]
+
+const columns = [
+  { title: 'Name', dataIndex: 'name', key: 'name' },
+  { title: 'Age', dataIndex: 'age', key: 'age' },
+  { title: 'Address', dataIndex: 'address', key: 'address' }
+]
+
+export default function Component() {
   return (
-    <Row gutter={16}>
-      <Col span={24}>
-        <Typography.Title level={2}>Để tạm UI, sẽ cập nhật sau cho phù hợp!!!</Typography.Title>
-      </Col>
-      <Col span={6}>
-        <Card bordered={false}>
-          <Statistic
-            title={
-              <Flex justify='space-between'>
-                Thành viên mới <CarOutlined style={iconStyle(green)} />
-              </Flex>
-            }
-            value={11.28}
-            precision={2}
-            valueStyle={{ color: '#3f8600' }}
-            prefix={<ArrowUpOutlined />}
-            suffix='%'
-          />
-        </Card>
-      </Col>
-      <Col span={6}>
-        <Card bordered={false}>
-          <Statistic
-            title={
-              <Flex justify='space-between'>
-                Doanh thu <CarOutlined style={iconStyle(red)} />
-              </Flex>
-            }
-            value={9.3}
-            precision={2}
-            valueStyle={{ color: '#cf1322' }}
-            prefix={<ArrowDownOutlined />}
-            suffix='%'
-          />
-        </Card>
-      </Col>
-      <Col span={6}>
-        <Card bordered={false}>
-          <Statistic
-            title={
-              <Flex justify='space-between'>
-                Số bài đăng mới <CoffeeOutlined style={iconStyle(blue)} />
-              </Flex>
-            }
-            value={11.28}
-            precision={2}
-            valueStyle={{ color: '#3f8600' }}
-            prefix={<ArrowUpOutlined />}
-            suffix='%'
-          />
-        </Card>
-      </Col>
-      <Col span={6}>
-        <Card bordered={false}>
-          <Statistic
-            title={
-              <Flex justify='space-between'>
-                Nhận xét mới <HeartOutlined style={iconStyle(purple)} />
-              </Flex>
-            }
-            value={9.3}
-            precision={2}
-            valueStyle={{ color: '#cf1322' }}
-            prefix={<ArrowDownOutlined />}
-            suffix='%'
-          />
-        </Card>
-      </Col>
+    <>
+      <Row gutter={16}>
+        {statsData.map((stat, index) => (
+          <Col key={index} xs={24} sm={12} lg={6}>
+            <Card className='mb-4 shadow-md transition-shadow duration-300 hover:shadow-lg'>
+              <Statistic
+                title={
+                  <span>
+                    {stat.icon} {stat.title}
+                  </span>
+                }
+                value={stat.value}
+                precision={2}
+                valueStyle={{ color: stat.color }}
+                prefix={stat.prefix}
+                suffix='%'
+              />
+            </Card>
+          </Col>
+        ))}
+      </Row>
 
-      <Col span={12} style={{ marginTop: 24, backgroundColor: 'white' }}>
-        <Typography.Title level={4}>Bar Chart</Typography.Title>
-        <BarChart width={730} height={250} data={demoData}>
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='name' />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey='pv' fill='#8884d8' />
-          <Bar dataKey='uv' fill='#82ca9d' />
-        </BarChart>
-      </Col>
+      <Row gutter={16}>
+        <Col xs={24} lg={12}>
+          <Card title='Biểu Đồ Đường' className='mb-6 shadow-md'>
+            <LineChart
+              width={500}
+              height={300}
+              data={lineChartData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type='monotone' dataKey='pv' stroke='#8884d8' activeDot={{ r: 8 }} />
+              <Line type='monotone' dataKey='uv' stroke='#82ca9d' />
+            </LineChart>
+          </Card>
+        </Col>
+        <Col xs={24} lg={12}>
+          <Card title='Biểu Đồ Tròn' className='mb-6 shadow-md'>
+            <PieChart width={500} height={300}>
+              <Pie
+                dataKey='value'
+                isAnimationActive={false}
+                data={pieChartData}
+                cx='50%'
+                cy='50%'
+                outerRadius={80}
+                fill='#8884d8'
+                label
+              />
+              <Tooltip />
+            </PieChart>
+          </Card>
+        </Col>
+      </Row>
 
-      <Col span={12} style={{ marginTop: 24, backgroundColor: 'white' }}>
-        <Typography.Title level={4}>Area Chart</Typography.Title>
-        <AreaChart width={730} height={250} data={demoData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-          <defs>
-            <linearGradient id='colorUv' x1='0' y1='0' x2='0' y2='1'>
-              <stop offset='5%' stopColor='#8884d8' stopOpacity={0.8} />
-              <stop offset='95%' stopColor='#8884d8' stopOpacity={0} />
-            </linearGradient>
-            <linearGradient id='colorPv' x1='0' y1='0' x2='0' y2='1'>
-              <stop offset='5%' stopColor='#82ca9d' stopOpacity={0.8} />
-              <stop offset='95%' stopColor='#82ca9d' stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <XAxis dataKey='name' />
-          <YAxis />
-          <CartesianGrid strokeDasharray='3 3' />
-          <Tooltip />
-          <Area type='monotone' dataKey='uv' stroke='#8884d8' fillOpacity={1} fill='url(#colorUv)' />
-          <Area type='monotone' dataKey='pv' stroke='#82ca9d' fillOpacity={1} fill='url(#colorPv)' />
-        </AreaChart>
-      </Col>
-    </Row>
+      <Row gutter={16}>
+        <Col xs={24} lg={12}>
+          <Card title='Biểu Đồ Cột' className='mb-6 shadow-md'>
+            <BarChart width={500} height={300} data={lineChartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey='pv' fill='#8884d8' />
+              <Bar dataKey='uv' fill='#82ca9d' />
+            </BarChart>
+          </Card>
+        </Col>
+        <Col xs={24} lg={12}>
+          <Card title='Biểu Đồ Vùng' className='mb-6 shadow-md'>
+            <AreaChart
+              width={500}
+              height={300}
+              data={lineChartData}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray='3 3' />
+              <XAxis dataKey='name' />
+              <YAxis />
+              <Tooltip />
+              <Area type='monotone' dataKey='uv' stroke='#8884d8' fill='#8884d8' />
+            </AreaChart>
+          </Card>
+        </Col>
+      </Row>
+
+      <Card title='Bảng Dữ Liệu' className='shadow-md'>
+        <Table columns={columns} dataSource={tableData} />
+      </Card>
+    </>
   )
 }
-
-export default Dashboard
