@@ -7,6 +7,7 @@ interface ReportsWithPagination {
   data: Report[]
 }
 
+
 export interface updateReportStatus {
   id: number
   status: ReportStatus

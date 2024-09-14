@@ -7,8 +7,11 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import { useEffect, useState } from 'react'
 import ReportTable from './ReportTable.tsx'
+import { Trans, useTranslation } from 'react-i18next'
+import { t } from 'i18next'
 
 const { Search } = Input
+
 
 type OnChange = NonNullable<TableProps<ReportDataSource>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -18,23 +21,25 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 const tabsItem: TabsProps['items'] = [
   {
     key: ReportStatus.PENDING,
-    label: 'Chờ xử lý',
+    label: t('report:status.pending'),
     icon: <InfoCircleOutlined />
   },
   {
     key: ReportStatus.APPROVED,
-    label: 'Đã duyệt',
+    label: t('report:status.approved'),
     icon: <CheckCircleOutlined />
   },
   {
     key: ReportStatus.REJECTED,
-    label: 'Đã từ chối',
+    label: t('report:status.rejected'),
     icon: <CloseSquareOutlined />
   }
 ]
 
 function ListReport() {
   const queryClient = useQueryClient()
+
+  const { t } = useTranslation(['common', 'report'])
 
   const { search, status, category, sortBy, pageNumber, pageSize, setFilters } = useReportFilters()
 
@@ -114,7 +119,7 @@ function ListReport() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            Danh sách báo cáo
+            {t('report:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -129,7 +134,7 @@ function ListReport() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder='Tìm kiếm tài khoản'
+                placeholder={t('report:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -146,7 +151,12 @@ function ListReport() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} thành phố`,
+          showTotal: (total, range) => (
+            <Trans
+              ns={'report'}
+              i18nKey='pagination.showTotal'
+              values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
+            />),
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}

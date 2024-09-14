@@ -1,0 +1,57 @@
+{
+  "title": "Danh sách báo cáo",
+  "searchPlaceholder": "Nhập tên tài khoản",
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} báo cáo"
+  },
+  "status": {
+    "pending": "Chờ xử lý",
+    "approved": "Đã duyệt",
+    "rejected": "Đã từ chối",
+    "blocked": "Bị khoá",
+    "reviewed": "Đã kiểm duyệt"
+  },
+  "table": {
+    "username": "Tài khoản",
+    "property": "Bài đăng",
+    "reason": "Lý do",
+    "type": "Phân loại",
+    "status": "Trạng thái",
+    "action": "Hành động",
+    "createdAt": "Ngày tạo"
+  },
+  "button": {
+    "review": "Kiểm duyệt",
+    "approve": "Duyệt, khoá bài đăng",
+    "reject": "Từ chối, giữ bài đăng",
+    "active": "Kích hoạt lại bài đăng"
+  },
+  "detailModal": {
+    "postDetails": "Chi tiết bài đăng",
+    "roomType": "Loại phòng",
+    "city": "Thành phố",
+    "district": "Quận huyện",
+    "price": "Giá thuê",
+    "location": "Địa chỉ",
+    "blocked": "Bị khoá",
+    "area": "Diện tích",
+    "numRooms": "Số phòng ngủ",
+    "createdAt": "Thời gian đăng",
+    "username": "Người đăng",
+    "amenities": "Tiện ích",
+    "description": "Mô tả",
+    "image": "Hình ảnh",
+    "content": "Nội dung báo cáo",
+    "reportingTime": "Thời gian báo cáo"
+  },
+  "type": {
+    "scam": "Lừa đảo",
+    "inappropriateContent": "Nội dung không phù hợp",
+    "duplicate": "Trùng lặp",
+    "misinformation": "Thông tin sai lệch",
+    "other": "Khác"
+  },
+  "toast": {
+    "success": "Xét duyệt báo cáo thành công"
+  }
+}
