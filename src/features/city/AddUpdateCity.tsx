@@ -1,6 +1,6 @@
 import { getCityById } from '@/api/city.api.ts'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Drawer, Form, FormProps, Input, Spin } from 'antd'
+import { Button, Drawer, Form, FormInstance, FormProps, Input, Spin } from 'antd'
 
 import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { CityForm } from '@/models/city.type.ts'
@@ -8,20 +8,20 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface AddUpdateCityProps {
+  form: FormInstance
   id: number | null
   formOpen: boolean
   setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
+function AddUpdateCity({ form, id, formOpen, setFormOpen }: AddUpdateCityProps) {
   const isAddMode = id === null
   const { t } = useTranslation(['common', 'city'])
-  const [form] = Form.useForm()
 
   const [error, setError] = useState<string>('')
 
-  const { addCityMutate, addCityPending } = useCreateCity(setError)
-  const { updateCityMutate, updateCityPending } = useUpdateCity(setError)
+  const { addCityMutate, addCityPending } = useCreateCity(setError, setFormOpen)
+  const { updateCityMutate, updateCityPending } = useUpdateCity(setError, setFormOpen)
 
   const title = isAddMode ? t('city:form.addForm') : t('city:form.editForm')
 
@@ -95,12 +95,7 @@ function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
               {t('common.reset')}
             </Button>
 
-            <Button
-              loading={addCityPending || updateCityPending}
-              type='primary'
-              htmlType='submit'
-              style={{ width: 100 }}
-            >
+            <Button loading={addCityPending || updateCityPending} type='primary' htmlType='submit'>
               {isAddMode ? t('common.add') : t('common.update')}
             </Button>
           </Form.Item>

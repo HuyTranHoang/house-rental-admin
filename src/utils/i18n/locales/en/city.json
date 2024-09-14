@@ -22,7 +22,7 @@
   "notification": {
     "addSuccess": "Add city successfully",
     "editSuccess": "Edit city successfully",
-    "deleteSuccess_one": "Delete city successfully",
+    "deleteSuccess": "Delete city successfully",
     "deleteSuccess_other": "Delete cities successfully"
   },
   "deleteModal": {

@@ -22,7 +22,7 @@
   "notification": {
     "addSuccess": "Thêm thành phố thành công",
     "editSuccess": "Chỉnh sửa thành phố thành công",
-    "deleteSuccess_one": "Xóa thành phố thành công",
+    "deleteSuccess": "Xóa thành phố thành công",
     "deleteSuccess_other": "Xóa các thành phố thành công"
   },
   "deleteModal": {

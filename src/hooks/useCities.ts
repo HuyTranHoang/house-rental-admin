@@ -6,13 +6,12 @@ import {
   getAllCitiesWithPagination,
   updateCity
 } from '@/api/city.api.ts'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { CityFilters } from '@/models/city.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 export const useCitiesAll = () => {
@@ -40,9 +39,8 @@ export const useDeleteCity = () => {
   const { mutate: deleteCityMutate, isPending: deleteCityPending } = useMutation({
     mutationFn: deleteCity,
     onSuccess: () => {
-      queryClient
-        .invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success(t('notification.deleteSuccess', { count: 1 })))
+      queryClient.invalidateQueries({ queryKey: ['cities'] })
+      toast.success(t('notification.deleteSuccess'))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -59,9 +57,8 @@ export const useDeleteMultiCity = () => {
   const { mutate: deleteCitiesMutate } = useMutation({
     mutationFn: (ids: number[]) => deleteCities(ids),
     onSuccess: (_, variables) => {
-      queryClient
-        .invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success(t('notification.deleteSuccess', { count: variables.length })))
+      const text = variables.length > 1 ? 'notification.deleteSuccess_other' : 'notification.deleteSuccess'
+      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => toast.success(t(text)))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -71,19 +68,19 @@ export const useDeleteMultiCity = () => {
   return { deleteCitiesMutate }
 }
 
-export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useCreateCity = (
+  setError: React.Dispatch<React.SetStateAction<string>>,
+  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
   const { t } = useTranslation('city')
 
   const { mutate: addCityMutate, isPending: addCityPending } = useMutation({
     mutationFn: addCity,
     onSuccess: () => {
-      queryClient
-        .invalidateQueries({ queryKey: ['cities'] })
-        .then(() => toast.success(t('notification.addSuccess')))
-
-      navigate(ROUTER_NAMES.CITY)
+      queryClient.invalidateQueries({ queryKey: ['cities'] })
+      toast.success(t('notification.addSuccess'))
+      setFormOpen(false)
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
@@ -98,18 +95,19 @@ export const useCreateCity = (setError: React.Dispatch<React.SetStateAction<stri
   return { addCityMutate, addCityPending }
 }
 
-export const useUpdateCity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useUpdateCity = (
+  setError: React.Dispatch<React.SetStateAction<string>>,
+  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+) => {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
   const { t } = useTranslation('city')
 
   const { mutate: updateCityMutate, isPending: updateCityPending } = useMutation({
     mutationFn: updateCity,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] }).then(() => {
-        toast.success(t('notification.editSuccess'))
-        navigate(ROUTER_NAMES.CITY)
-      })
+      queryClient.invalidateQueries({ queryKey: ['cities'] })
+      toast.success(t('notification.editSuccess'))
+      setFormOpen(false)
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error.response?.status === 409) {

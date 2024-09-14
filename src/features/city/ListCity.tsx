@@ -20,6 +20,7 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 function ListCity() {
   const [editId, setEditId] = useState<number | null>(null)
   const [formOpen, setFormOpen] = useState(false)
+  const [form] = Form.useForm()
 
   const { t } = useTranslation(['common', 'city'])
 
@@ -59,6 +60,12 @@ function ListCity() {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
+  }
+
+  const handleNewCity = () => {
+    form.resetFields()
+    setEditId(null)
+    setFormOpen(true)
   }
 
   useEffect(() => {
@@ -110,15 +117,7 @@ function ListCity() {
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button
-            icon={<PlusCircleOutlined />}
-            shape='round'
-            type='primary'
-            onClick={() => {
-              setEditId(null)
-              setFormOpen(true)
-            }}
-          >
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={handleNewCity}>
             {t('city:button.add')}
           </Button>
         </Space>
@@ -148,7 +147,7 @@ function ListCity() {
         setFormOpen={setFormOpen}
       />
 
-      <AddUpdateCity id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
+      <AddUpdateCity form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
