@@ -2,8 +2,9 @@ import { useRolesWithoutParams } from '@/hooks/useRoles.ts'
 import { useUpdateRoleForUser } from '@/hooks/useUsers.ts'
 import { Role, RoleDataSource } from '@/models/role.type.ts'
 import { UserDataSource } from '@/models/user.type.ts'
-import { Checkbox, Form, Input, Modal } from 'antd'
-import { useState } from 'react'
+import { Checkbox, Form, Modal } from 'antd'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 interface UserUpdateRoleModalProps {
   isUpdateRolesModalOpen: boolean
@@ -17,10 +18,10 @@ function UserUpdateRoleModal({
   currentUser
 }: UserUpdateRoleModalProps) {
   const [form] = Form.useForm()
-  const [, setError] = useState<string>('')
+  const { t } = useTranslation(['common', 'user'])
 
   const { data } = useRolesWithoutParams()
-  const { updateRoleForUserMutate } = useUpdateRoleForUser(setError)
+  const { updateRoleForUserMutate, updateRoleForUserIsPending } = useUpdateRoleForUser()
 
   const roleDataSource: RoleDataSource[] = data
     ? data.map((role: Role) => ({
@@ -41,9 +42,11 @@ function UserUpdateRoleModal({
           updateRoleForUserMutate({
             id: currentUser.id,
             roles: values.roles
+          }).then(() => {
+            toast.success('Cập nhật vai trò thành công!')
+            setIsUpdateRolesModalOpen(false)
           })
         }
-        setIsUpdateRolesModalOpen(false)
       })
       .catch((info) => {
         console.log('Validate Failed:', info)
@@ -56,12 +59,14 @@ function UserUpdateRoleModal({
 
   return (
     <Modal
-      title='Cập nhật vai trò'
+      title={t('user:updateRoleModal.title') + ` '${currentUser?.username}'`}
       open={isUpdateRolesModalOpen}
       onCancel={handleUpdateRolesModalCancel}
       onOk={handleUpdateRolesModalOk}
-      okText='Cập nhật'
-      cancelText='Hủy'
+      okText={t('common.ok')}
+      cancelText={t('common.cancel')}
+      okButtonProps={{ loading: updateRoleForUserIsPending }}
+      cancelButtonProps={{ disabled: updateRoleForUserIsPending }}
     >
       {currentUser && (
         <Form
@@ -69,17 +74,14 @@ function UserUpdateRoleModal({
           layout='vertical'
           initialValues={{ username: currentUser.username, roles: currentUser.roles }}
         >
-          <Form.Item name='username' label='Tài khoản'>
-            <Input disabled />
-          </Form.Item>
           <Form.Item
             name='roles'
-            label='Vai trò'
-            rules={[{ required: true, message: 'Vui lòng chọn ít nhất một vai trò!' }]}
+            label={t('user:updateRoleModal.form.roles')}
+            rules={[{ required: true, message: t('user:updateRoleModal.form.roleRequired') }]}
           >
             <Checkbox.Group>
               {roleDataSource.map((role) => (
-                <Checkbox key={role.id} value={role.name}>
+                <Checkbox key={role.id} value={role.name} className='my-1'>
                   {role.name}
                 </Checkbox>
               ))}

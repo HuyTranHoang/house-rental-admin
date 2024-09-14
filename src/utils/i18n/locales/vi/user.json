@@ -30,6 +30,15 @@
     "title": "Bạn có chắc chắn muốn mở khóa <b>{{username}}</b>?",
     "content": "Người dùng này sẽ có thể đăng nhập lại."
   },
+  "updateRoleModal": {
+    "title": "Cập nhật vai trò cho",
+    "content": "Chọn vai trò bạn muốn gán cho người dùng này.",
+    "form": {
+      "username": "Tài khoản",
+      "roles": "Vai trò",
+      "roleRequired": "Vui lòng chọn ít nhất một vai trò"
+    }
+  },
   "table": {
     "firstName": "Tên",
     "lastName": "Họ",

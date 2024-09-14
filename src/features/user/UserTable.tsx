@@ -229,7 +229,7 @@ function UserTable({
         onOk={() => {
           deleteUserMutate(currentUser!.id).then(() => {
             setCurrentUser(null)
-            setIsModalOpen(false)
+            setIsDeleteModalOpen(false)
             toast.success(t('user:notification.deleteSuccess'))
           })
         }}

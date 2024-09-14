@@ -30,6 +30,15 @@
     "title": "Are you sure you want to unlock <b>{{username}}</b>?",
     "content": "This user will be able to log in again."
   },
+  "updateRoleModal": {
+    "title": "Update role for",
+    "content": "Select the role you want to assign to this user.",
+    "form": {
+      "username": "Username",
+      "roles": "Roles",
+      "roleRequired": "Please select at least one role"
+    }
+  },
   "table": {
     "firstName": "First name",
     "lastName": "Last name",
