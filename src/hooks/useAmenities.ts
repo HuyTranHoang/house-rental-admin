@@ -7,8 +7,7 @@ import {
 } from '@/api/amenity.api.ts'
 import { CityFilters } from '@/models/city.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -60,39 +59,25 @@ export const useDeleteMultiAmenity = () => {
   return { deleteAmenitiesMutate }
 }
 
-export const useCreateAmenity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useCreateAmenity = () => {
   const queryClient = useQueryClient()
 
   const { mutateAsync: addAmenityMutate, isPending: addAmenityPending } = useMutation({
     mutationFn: addAmenity,
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['amenities'] }),
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onError: (error) => toast.error(error.message)
   })
 
   return { addAmenityMutate, addAmenityPending }
 }
 
-export const useUpdateAmenity = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useUpdateAmenity = () => {
   const queryClient = useQueryClient()
 
   const { mutateAsync: updateAmenityMutate, isPending: updateAmenityPending } = useMutation({
     mutationFn: updateAmenity,
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['amenities'] }),
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onError: (error) => toast.error(error.message)
   })
 
   return { updateAmenityMutate, updateAmenityPending }

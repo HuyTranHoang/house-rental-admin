@@ -3,7 +3,7 @@ import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
 import { AmenityForm } from '@/models/amenity.type.ts'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Drawer, Form, FormInstance, FormProps, Input } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -18,10 +18,8 @@ function AddUpdateAmenity({ form, id, formOpen, setFormOpen }: AddUpdateAmenityP
   const isAddMode = id === null
   const { t } = useTranslation(['common', 'amenity'])
 
-  const [error, setError] = useState<string>('')
-
-  const { addAmenityMutate, addAmenityPending } = useCreateAmenity(setError)
-  const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity(setError)
+  const { addAmenityMutate, addAmenityPending } = useCreateAmenity()
+  const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity()
 
   const title = isAddMode ? t('amenity:form.addForm') : t('amenity:form.editForm')
 
@@ -50,7 +48,6 @@ function AddUpdateAmenity({ form, id, formOpen, setFormOpen }: AddUpdateAmenityP
   const onClose = () => {
     setFormOpen(false)
     form.resetFields()
-    setError('')
   }
 
   useEffect(() => {
@@ -82,20 +79,12 @@ function AddUpdateAmenity({ form, id, formOpen, setFormOpen }: AddUpdateAmenityP
             { min: 3, message: t('amenity:form.nameMin') },
             { max: 50, message: t('amenity:form.nameMax') }
           ]}
-          validateStatus={error ? 'error' : undefined}
-          extra={<span style={{ color: 'red' }}>{error}</span>}
         >
-          <Input onChange={() => setError('')} placeholder={t('amenity:form.namePlaceholder')} />
+          <Input placeholder={t('amenity:form.namePlaceholder')} />
         </Form.Item>
 
         <Form.Item>
-          <Button
-            className='mr-4'
-            onClick={() => {
-              form.resetFields()
-              setError('')
-            }}
-          >
+          <Button className='mr-4' onClick={() => form.resetFields()}>
             {t('common.reset')}
           </Button>
 
