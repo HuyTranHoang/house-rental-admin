@@ -1,8 +1,8 @@
 import { useRolesWithoutParams } from '@/hooks/useRoles.ts'
 import { useUpdateRoleForUser } from '@/hooks/useUsers.ts'
-import { Role, RoleDataSource } from '@/models/role.type.ts'
 import { UserDataSource } from '@/models/user.type.ts'
-import { Checkbox, Form, Modal } from 'antd'
+import { Button, Checkbox, Flex, Form, Modal } from 'antd'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -10,6 +10,11 @@ interface UserUpdateRoleModalProps {
   isUpdateRolesModalOpen: boolean
   setIsUpdateRolesModalOpen: (isOpen: boolean) => void
   currentUser: UserDataSource | null
+}
+
+interface UserUpdateRoleFormValues {
+  id: number
+  roles: string[]
 }
 
 function UserUpdateRoleModal({
@@ -23,70 +28,68 @@ function UserUpdateRoleModal({
   const { data } = useRolesWithoutParams()
   const { updateRoleForUserMutate, updateRoleForUserIsPending } = useUpdateRoleForUser()
 
-  const roleDataSource: RoleDataSource[] = data
-    ? data.map((role: Role) => ({
-        key: role.id,
-        id: role.id,
-        name: role.name,
-        description: role.description,
-        authorityPrivileges: role.authorityPrivileges,
-        createdAt: role.createdAt
+  const checkBoxOptions = data
+    ? data.map((role) => ({
+        label: role.name,
+        value: role.name
       }))
     : []
 
-  const handleUpdateRolesModalOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        if (currentUser) {
-          updateRoleForUserMutate({
-            id: currentUser.id,
-            roles: values.roles
-          }).then(() => {
-            toast.success('Cập nhật vai trò thành công!')
-            setIsUpdateRolesModalOpen(false)
-          })
-        }
-      })
-      .catch((info) => {
-        console.log('Validate Failed:', info)
-      })
+  const handleUpdateRoles = (values: UserUpdateRoleFormValues) => {
+    updateRoleForUserMutate(values).then(() => {
+      toast.success('Cập nhật vai trò thành công!')
+      setIsUpdateRolesModalOpen(false)
+    })
   }
 
   const handleUpdateRolesModalCancel = () => {
     setIsUpdateRolesModalOpen(false)
   }
 
+  useEffect(() => {
+    if (currentUser) {
+      form.setFieldsValue({ roles: currentUser.roles })
+    }
+  }, [currentUser, form])
+
   return (
     <Modal
       title={t('user:updateRoleModal.title') + ` '${currentUser?.username}'`}
       open={isUpdateRolesModalOpen}
       onCancel={handleUpdateRolesModalCancel}
-      onOk={handleUpdateRolesModalOk}
-      okText={t('common.ok')}
-      cancelText={t('common.cancel')}
-      okButtonProps={{ loading: updateRoleForUserIsPending }}
-      cancelButtonProps={{ disabled: updateRoleForUserIsPending }}
+      footer={null}
     >
       {currentUser && (
         <Form
           form={form}
+          onFinish={handleUpdateRoles}
           layout='vertical'
-          initialValues={{ username: currentUser.username, roles: currentUser.roles }}
+          initialValues={{ id: currentUser.id, roles: currentUser.roles }}
         >
+          <Form.Item name='id' label='id' hidden>
+            <input />
+          </Form.Item>
           <Form.Item
             name='roles'
             label={t('user:updateRoleModal.form.roles')}
             rules={[{ required: true, message: t('user:updateRoleModal.form.roleRequired') }]}
           >
             <Checkbox.Group>
-              {roleDataSource.map((role) => (
-                <Checkbox key={role.id} value={role.name} className='my-1'>
-                  {role.name}
+              {checkBoxOptions.map((role, index) => (
+                <Checkbox key={index} value={role.value} className='my-1'>
+                  {role.label}
                 </Checkbox>
               ))}
             </Checkbox.Group>
           </Form.Item>
+
+          <Flex gap={8} justify='end'>
+            <Button type='primary' htmlType='submit' loading={updateRoleForUserIsPending}>
+              {t('common.ok')}
+            </Button>
+
+            <Button onClick={handleUpdateRolesModalCancel}>{t('common.cancel')}</Button>
+          </Flex>
         </Form>
       )}
     </Modal>
