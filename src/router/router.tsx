@@ -12,7 +12,7 @@ import ListUser from '@/features/user/ListUser.tsx'
 import districtRouter from '@/router/districtRouter.tsx'
 import AppLayout from '@/ui/AppLayout.tsx'
 import { createBrowserRouter } from 'react-router-dom'
-import roomTypeRouter from './roomTypeRouter.tsx'
+import ListRoomType from '@/features/roomType/ListRoomType.tsx'
 
 export const routerList = [
   {
@@ -42,7 +42,11 @@ export const routerList = [
             breadcrumb: 'city.list'
           },
           ...districtRouter, // /district, /district/add, /district/:id/edit
-          ...roomTypeRouter, // /roomType, /roomType/add, /roomType/:id/edit
+          {
+            path: ROUTER_NAMES.ROOM_TYPE,
+            element: <ListRoomType />,
+            breadcrumb: 'roomType.list'
+          },
           {
             path: ROUTER_NAMES.AMENITY,
             element: <ListAmenity />,
