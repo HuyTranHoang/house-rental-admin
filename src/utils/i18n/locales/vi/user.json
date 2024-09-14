@@ -42,9 +42,14 @@
   "table": {
     "firstName": "Tên",
     "lastName": "Họ",
+    "fullName": "Họ và tên",
     "username": "Tài khoản",
     "email": "Email",
     "roles": "Vai trò",
+    "authorities": "Quyền hạn",
+    "balance": "Số dư tài khoản",
+    "status": "Trạng thái",
+    "phoneNumber": "Số điện thoại",
     "tooltips": {
       "quickView": "Xem nhanh",
       "editRole": "Chỉnh sửa vai trò",

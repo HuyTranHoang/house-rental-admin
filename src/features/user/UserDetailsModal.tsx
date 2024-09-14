@@ -4,6 +4,7 @@ import { UserDataSource } from '@/models/user.type.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { green } from '@ant-design/colors'
 import { Avatar, Badge, Button, Col, Modal, Row, Space, Tag, theme, Typography } from 'antd'
+import { useTranslation } from 'react-i18next'
 
 interface UserDetailsModalProps {
   isModalOpen: boolean
@@ -12,6 +13,7 @@ interface UserDetailsModalProps {
 }
 
 function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDetailsModalProps) {
+  const { t } = useTranslation(['common', 'user'])
   const {
     token: { colorBgLayout }
   } = theme.useToken()
@@ -19,7 +21,7 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
   const footer = (
     <>
       <Button key='close' onClick={() => setIsModalOpen(false)}>
-        Đóng
+        {t('common.back')}
       </Button>
 
       {currentUser && <BlockUserButton record={currentUser} hasText />}
@@ -45,23 +47,23 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
             {/* Cột bên phải */}
             <Col span={16}>
               <Typography.Paragraph>
-                <b>Họ và Tên:</b> {`${currentUser.firstName} ${currentUser.lastName}`}
+                <b>{t('user:table.fullName')}</b> {`${currentUser.firstName} ${currentUser.lastName}`}
               </Typography.Paragraph>
 
               <Typography.Paragraph>
-                <b>Email:</b> {currentUser.email}
+                <b>{t('user:table.email')}</b> {currentUser.email}
               </Typography.Paragraph>
 
               <Typography.Paragraph>
-                <b>Số điện thoại:</b> {currentUser.phoneNumber}
+                <b>{t('user:table.phoneNumber')}</b> {currentUser.phoneNumber}
               </Typography.Paragraph>
 
               <Typography.Paragraph>
-                <b>Ngày tạo:</b> {currentUser.createdAt}
+                <b>{t('common.table.createdAt')}</b> {currentUser.createdAt}
               </Typography.Paragraph>
 
               <Space>
-                <b>Trạng thái:</b>
+                <b>{t('user:table.status')}</b>
                 {currentUser.nonLocked ? (
                   <Badge status='success' text='Hoạt động' />
                 ) : (
@@ -73,7 +75,7 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
             <Col span={24}>
               <div className='mx-0 my-4'>
                 <Space wrap={true}>
-                  <b>Số dư tài khoản:</b>
+                  <b>{t('user:table.balance')}</b>
                   <Typography.Text style={{ color: green.primary }}>
                     {formatCurrency(currentUser.balance)}
                   </Typography.Text>
@@ -82,12 +84,12 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
 
               <div className='mx-0 my-4'>
                 <Space wrap={true}>
-                  <b>Vai trò:</b>
+                  <b>{t('user:table.roles')}</b>
                   <Typography.Text>{currentUser.roles.join(', ')}</Typography.Text>
                 </Space>
               </div>
 
-              <b>Quyền hạn:</b>
+              <b>{t('user:table.authorities')}</b>
               <div
                 className='mt-2 h-20 overflow-y-scroll p-2'
                 style={{

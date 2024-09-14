@@ -42,9 +42,14 @@
   "table": {
     "firstName": "First name",
     "lastName": "Last name",
+    "fullName": "Full name",
     "username": "Username",
     "email": "Email",
     "roles": "Roles",
+    "authorities": "Authorities",
+    "balance": "Balance",
+    "status": "Status",
+    "phoneNumber": "Phone number",
     "tooltips": {
       "quickView": "Quick view",
       "editRole": "Edit role",

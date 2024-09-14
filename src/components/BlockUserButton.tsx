@@ -49,6 +49,7 @@ const BlockUserButton: React.FC<BlockUserButtonProps> = ({ record, hasText }) =>
         : toast.success(t('notification.unlockSuccess', { username: record.username }))
 
       record.nonLocked = !record.nonLocked
+      setOpen(false)
     })
   }
 

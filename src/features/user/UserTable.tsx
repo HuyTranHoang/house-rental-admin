@@ -8,6 +8,7 @@ import { useDeleteUser } from '@/hooks/useUsers'
 import { UserDataSource } from '@/models/user.type'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import {
+  Avatar,
   Button,
   DescriptionsProps,
   Flex,
@@ -70,7 +71,7 @@ function UserTable({
     setIsUpdateRolesModalOpen(true)
   }
 
-  const items: DescriptionsProps['items'] = [
+  const deleteModalItems: DescriptionsProps['items'] = [
     {
       key: 'firstName',
       label: t('user:table.firstName'),
@@ -104,7 +105,15 @@ function UserTable({
       key: 'username',
       sorter: true,
       sortOrder: sortedInfo.field === 'username' ? sortedInfo.order : null,
-      width: 200
+      width: 200,
+      render: (_, record: UserDataSource) => {
+        return (
+          <Space>
+            <Avatar src={record.avatarUrl || `https://robohash.org/${record.username}?set=set4`} />
+            <span>{record.username}</span>
+          </Space>
+        )
+      }
     },
     {
       title: t('user:table.email'),
@@ -234,7 +243,7 @@ function UserTable({
           })
         }}
       >
-        <ConfirmModalContent items={items} />
+        <ConfirmModalContent items={deleteModalItems} />
       </Modal>
     </>
   )
