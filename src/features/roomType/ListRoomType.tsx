@@ -1,16 +1,16 @@
-import { useNavigate } from 'react-router-dom'
-import React, { useEffect, useState } from 'react'
-import { customFormatDate } from '@/utils/customFormatDate.ts'
-import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
-import { PlusCircleOutlined } from '@ant-design/icons'
-import { useDeleteRoomTypes, useRoomTypeFilters, useRoomTypes } from '@/hooks/useRoomTypes.ts'
-import RoomTypeTable from './RoomTypeTable.tsx'
 import ErrorFetching from '@/components/ErrorFetching.tsx'
-import { RoomTypeDataSource } from '@/models/roomType.type.ts'
-import { TableRowSelection } from 'antd/es/table/interface'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import AddUpdateRoomType from '@/features/roomType/AddUpdateRoomType.tsx'
+import { useDeleteRoomTypes, useRoomTypeFilters, useRoomTypes } from '@/hooks/useRoomTypes.ts'
+import { RoomTypeDataSource } from '@/models/roomType.type.ts'
+import { customFormatDate } from '@/utils/customFormatDate.ts'
+import { PlusCircleOutlined } from '@ant-design/icons'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
+import { TableRowSelection } from 'antd/es/table/interface'
+import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+import RoomTypeTable from './RoomTypeTable.tsx'
 
 const { Search } = Input
 
@@ -19,22 +19,21 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListRoomType() {
+  const [editId, setEditId] = useState<number | null>(null)
+  const [formOpen, setFormOpen] = useState(false)
+  const [form] = Form.useForm()
 
   const { t } = useTranslation(['common', 'roomType'])
-
-  const navigate = useNavigate()
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useRoomTypeFilters()
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
-  const [form] = Form.useForm()
-
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
   const [isOpen, setIsOpen] = useState(false)
 
   const { data, isLoading, isError } = useRoomTypes(search, pageNumber, pageSize, sortBy)
-  const { deleteRoomTypesMutate } = useDeleteRoomTypes()
+  const { deleteRoomTypesMutate, deleteRoomTypesIsPending } = useDeleteRoomTypes()
 
   const handleTableChange: TableProps<RoomTypeDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -62,6 +61,12 @@ function ListRoomType() {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
+  }
+
+  const handleNewRoomType = () => {
+    form.resetFields()
+    setEditId(null)
+    setFormOpen(true)
   }
 
   useEffect(() => {
@@ -114,12 +119,7 @@ function ListRoomType() {
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button
-            icon={<PlusCircleOutlined />}
-            shape='round'
-            type='primary'
-            onClick={() => navigate(ROUTER_NAMES.ADD_ROOM_TYPE)}
-          >
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={handleNewRoomType}>
             {t('common.add')}
           </Button>
         </Space>
@@ -145,16 +145,24 @@ function ListRoomType() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
+        setEditId={setEditId}
+        setFormOpen={setFormOpen}
       />
+
+      <AddUpdateRoomType form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
+        pending={deleteRoomTypesIsPending}
         setIsModalOpen={setIsOpen}
         title={t('roomType:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteRoomTypesMutate(deleteIdList)
-          setDeleteIdList([])
+          deleteRoomTypesMutate(deleteIdList).then(() => {
+            toast.success(t('roomType:notification.deleteSuccess_other'))
+            setIsOpen(false)
+            setDeleteIdList([])
+          })
         }}
       />
     </>

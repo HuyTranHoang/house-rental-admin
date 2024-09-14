@@ -1,15 +1,14 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import TableActions from '@/components/TableActions.tsx'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useDeleteRoomType } from '@/hooks/useRoomTypes.ts'
 import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 interface RoomTypeTableProps {
   dataSource: RoomTypeDataSource[]
@@ -18,6 +17,8 @@ interface RoomTypeTableProps {
   handleTableChange: TableProps<RoomTypeDataSource>['onChange']
   rowSelection: TableRowSelection<RoomTypeDataSource> | undefined
   sortedInfo: SorterResult<RoomTypeDataSource>
+  setEditId: React.Dispatch<React.SetStateAction<number | null>>
+  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function RoomTypeTable({
@@ -26,31 +27,25 @@ function RoomTypeTable({
   paginationProps,
   handleTableChange,
   rowSelection,
-  sortedInfo
+  sortedInfo,
+  setEditId,
+  setFormOpen
 }: RoomTypeTableProps) {
-  const navigate = useNavigate()
-
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<RoomTypeDataSource | null>(null)
 
-  const { deleteRoomTypeMutate } = useDeleteRoomType()
+  const { deleteRoomTypeMutate, deleteRoomTypeIsPending } = useDeleteRoomType()
   const { t } = useTranslation(['common', 'roomType'])
 
   const items: DescriptionsProps['items'] = [
     {
-      key: '1',
-      label: 'Id',
-      children: <span>{currentRecord?.id}</span>,
-      span: 3
-    },
-    {
-      key: '2',
+      key: 'name',
       label: t('roomType:table.name'),
       children: <span>{currentRecord?.name}</span>,
       span: 3
     },
     {
-      key: '3',
+      key: 'createdAt',
       label: t('common:common.table.createdAt'),
       children: <span>{currentRecord?.createdAt}</span>,
       span: 3
@@ -88,7 +83,10 @@ function RoomTypeTable({
       width: 200,
       render: (_, record) => (
         <TableActions
-          onUpdate={() => navigate(ROUTER_NAMES.getRoomTypeEditPath(record.id))}
+          onUpdate={() => {
+            setEditId(record.id)
+            setFormOpen(true)
+          }}
           onDelete={() => {
             setCurrentRecord(record)
             setIsModalOpen(true)
@@ -126,12 +124,17 @@ function RoomTypeTable({
         title={<ConfirmModalTitle title={t('roomType:deleteModal.title')} />}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
-          deleteRoomTypeMutate(currentRecord!.id)
-          setIsModalOpen(false)
+          deleteRoomTypeMutate(currentRecord!.id).then(() => {
+            setCurrentRecord(null)
+            setIsModalOpen(false)
+            toast.success(t('roomType:notification.deleteSuccess'))
+          })
         }}
         okText={t('common.ok')}
         okType='danger'
         cancelText={t('common.cancel')}
+        okButtonProps={{ loading: deleteRoomTypeIsPending }}
+        cancelButtonProps={{ disabled: deleteRoomTypeIsPending }}
       >
         <ConfirmModalContent items={items} />
       </Modal>

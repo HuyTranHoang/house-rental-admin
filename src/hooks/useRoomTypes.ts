@@ -6,13 +6,10 @@ import {
   getAllRoomTypesWithPagination,
   updateRoomType
 } from '@/api/roomType.api.ts'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { RoomTypeFilters } from '@/models/roomType.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import React, { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 export const useRoomTypesAll = () => {
@@ -35,89 +32,47 @@ export const useRoomTypes = (search: string, pageNumber: number, pageSize: numbe
 
 export const useDeleteRoomType = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('roomType')
 
-  const { mutate: deleteRoomTypeMutate } = useMutation({
+  const { mutateAsync: deleteRoomTypeMutate, isPending: deleteRoomTypeIsPending } = useMutation({
     mutationFn: deleteRoomType,
-    onSuccess: () => {
-      queryClient
-        .invalidateQueries({ queryKey: ['roomTypes'] })
-        .then(() => toast.success(t('notification.deleteSuccess', { count: 1 })))
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['roomTypes'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteRoomTypeMutate }
+  return { deleteRoomTypeMutate, deleteRoomTypeIsPending }
 }
 
 export const useDeleteRoomTypes = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('roomType')
 
-  const { mutate: deleteRoomTypesMutate } = useMutation({
+  const { mutateAsync: deleteRoomTypesMutate, isPending: deleteRoomTypesIsPending } = useMutation({
     mutationFn: deleteRoomTypes,
-    onSuccess: (_, variables) => {
-      queryClient
-        .invalidateQueries({ queryKey: ['roomTypes'] })
-        .then(() => toast.success(t('notification.deleteSuccess', { count: variables.length })))
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['roomTypes'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteRoomTypesMutate }
+  return { deleteRoomTypesMutate, deleteRoomTypesIsPending }
 }
 
-export const useCreateRoomType = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useCreateRoomType = () => {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
-  const { t } = useTranslation('roomType')
 
-  const { mutate: addRoomTypeMutate, isPending: addRoomTypePening } = useMutation({
+  const { mutateAsync: addRoomTypeMutate, isPending: addRoomTypePening } = useMutation({
     mutationFn: addRoomType,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['roomTypes'] }).then(() => {
-        toast.success(t('notification.addSuccess'))
-        navigate(ROUTER_NAMES.ROOM_TYPE)
-      })
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['roomTypes'] }),
+    onError: (error) => toast.error(error.message)
   })
 
   return { addRoomTypeMutate, addRoomTypePening }
 }
 
-export const useUpdateRoomType = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useUpdateRoomType = () => {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
-  const { t } = useTranslation('roomType')
 
-  const { mutate: updateRoomTypeMutate, isPending: updateRoomTypePending } = useMutation({
+  const { mutateAsync: updateRoomTypeMutate, isPending: updateRoomTypePending } = useMutation({
     mutationFn: updateRoomType,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['roomTypes'] }).then(() => {
-        toast.success(t('notification.editSuccess'))
-        navigate(ROUTER_NAMES.ROOM_TYPE)
-      })
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['roomTypes'] }),
+    onError: (error) => toast.error(error.message)
   })
 
   return { updateRoomTypeMutate, updateRoomTypePending }
