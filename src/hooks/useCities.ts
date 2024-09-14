@@ -8,8 +8,7 @@ import {
 } from '@/api/city.api.ts'
 import { CityFilters } from '@/models/city.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -68,55 +67,25 @@ export const useDeleteMultiCity = () => {
   return { deleteCitiesMutate }
 }
 
-export const useCreateCity = (
-  setError: React.Dispatch<React.SetStateAction<string>>,
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+export const useCreateCity = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('city')
 
-  const { mutate: addCityMutate, isPending: addCityPending } = useMutation({
+  const { mutateAsync: addCityMutate, isPending: addCityPending } = useMutation({
     mutationFn: addCity,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-      toast.success(t('notification.addSuccess'))
-      setFormOpen(false)
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['cities'] }),
+    onError: (error) => toast.error(error.message)
   })
 
   return { addCityMutate, addCityPending }
 }
 
-export const useUpdateCity = (
-  setError: React.Dispatch<React.SetStateAction<string>>,
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+export const useUpdateCity = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('city')
 
-  const { mutate: updateCityMutate, isPending: updateCityPending } = useMutation({
+  const { mutateAsync: updateCityMutate, isPending: updateCityPending } = useMutation({
     mutationFn: updateCity,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['cities'] })
-      toast.success(t('notification.editSuccess'))
-      setFormOpen(false)
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['cities'] }),
+    onError: (error) => toast.error(error.message)
   })
 
   return { updateCityMutate, updateCityPending }

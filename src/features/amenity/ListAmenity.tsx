@@ -1,6 +1,6 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
+import AddUpdateAmenity from '@/features/amenity/AddUpdateAmenity.tsx'
 import { useAmenities, useAmenityFilters, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
 import { Amenity, AmenityDataSource } from '@/models/amenity.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
@@ -8,9 +8,8 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import AmenityTable from './AmenityTable.tsx'
 import { Trans, useTranslation } from 'react-i18next'
+import AmenityTable from './AmenityTable.tsx'
 
 const { Search } = Input
 
@@ -19,14 +18,14 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListAmenity() {
-  const navigate = useNavigate()
+  const [editId, setEditId] = useState<number | null>(null)
+  const [formOpen, setFormOpen] = useState(false)
+  const [form] = Form.useForm()
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useAmenityFilters()
 
   const [isOpen, setIsOpen] = useState(false)
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
-
-  const [form] = Form.useForm()
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
@@ -62,6 +61,12 @@ function ListAmenity() {
     }
   }
 
+  const handleNewAmenity = () => {
+    form.resetFields()
+    setEditId(null)
+    setFormOpen(true)
+  }
+
   useEffect(() => {
     if (sortBy) {
       const match = sortBy.match(/(.*?)(Asc|Desc)$/)
@@ -84,7 +89,7 @@ function ListAmenity() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-              {t('amenity.title', { ns: 'amenity' })}
+            {t('amenity:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -99,7 +104,7 @@ function ListAmenity() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder={t('amenity.searchPlaceholder', { ns: 'amenity' })}
+                placeholder={t('amenity:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -109,15 +114,10 @@ function ListAmenity() {
         <Space>
           {deleteIdList.length > 0 && (
             <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
-                {t('common.multipleDelete')}
+              {t('common.multipleDelete')}
             </Button>
           )}
-          <Button
-            icon={<PlusCircleOutlined />}
-            shape='round'
-            type='primary'
-            onClick={() => navigate(ROUTER_NAMES.ADD_AMENITY)}
-          >
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={handleNewAmenity}>
             {t('common.add')}
           </Button>
         </Space>
@@ -133,7 +133,7 @@ function ListAmenity() {
           showTotal: (total, range) => (
             <Trans
               ns={'amenity'}
-              i18nKey='amenity.pagination.showTotal'
+              i18nKey='pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
             />
           ),
@@ -143,13 +143,17 @@ function ListAmenity() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
+        setEditId={setEditId}
+        setFormOpen={setFormOpen}
       />
+
+      <AddUpdateAmenity form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
         setIsModalOpen={setIsOpen}
-        title={t('amenity.deleteModal.titleMultiple', { ns: 'amenity' })}
+        title={t('amenity:deleteModal.titleMultiple')}
         onOk={() => {
           deleteAmenitiesMutate(deleteIdList)
           setDeleteIdList([])

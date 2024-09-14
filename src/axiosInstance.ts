@@ -44,6 +44,10 @@ axiosInstance.interceptors.response.use(
         window.location.href = ROUTER_NAMES.LOGIN
       }
     }
+
+    if (axios.isAxiosError(error) && error.response?.status === 409) {
+      throw new Error(error.response.data.message)
+    }
   }
 )
 

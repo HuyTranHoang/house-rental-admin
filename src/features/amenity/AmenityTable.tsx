@@ -1,15 +1,14 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import TableActions from '@/components/TableActions.tsx'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useDeleteAmenity } from '@/hooks/useAmenities.ts'
 import { AmenityDataSource } from '@/models/amenity.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+
 
 interface AmenityTableProps {
   dataSource: AmenityDataSource[]
@@ -18,6 +17,8 @@ interface AmenityTableProps {
   handleTableChange: TableProps<AmenityDataSource>['onChange']
   rowSelection: TableRowSelection<AmenityDataSource> | undefined
   sortedInfo: SorterResult<AmenityDataSource>
+  setEditId: React.Dispatch<React.SetStateAction<number | null>>
+  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function AmenityTable({
@@ -26,10 +27,10 @@ function AmenityTable({
   paginationProps,
   handleTableChange,
   rowSelection,
-  sortedInfo
+  sortedInfo,
+  setEditId,
+  setFormOpen
 }: AmenityTableProps) {
-  const navigate = useNavigate()
-
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<AmenityDataSource | null>(null)
 
@@ -38,13 +39,13 @@ function AmenityTable({
 
   const items: DescriptionsProps['items'] = [
     {
-      key: '2',
-      label: t('amenity:amenity.table.name'),
+      key: 'name',
+      label: t('amenity:table.name'),
       children: <span>{currentRecord?.name}</span>,
       span: 3
     },
     {
-      key: '3',
+      key: 'createdAt',
       label: t('common.table.createdAt'),
       children: <span>{currentRecord?.createdAt}</span>,
       span: 3
@@ -60,7 +61,7 @@ function AmenityTable({
       width: 50
     },
     {
-      title: t('amenity:amenity.table.name'),
+      title: t('amenity:table.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
@@ -82,7 +83,10 @@ function AmenityTable({
       width: 200,
       render: (_, record) => (
         <TableActions
-          onUpdate={() => navigate(ROUTER_NAMES.getAmenityEditPath(record.id))}
+          onUpdate={() => {
+            setEditId(record.id)
+            setFormOpen(true)
+          }}
           onDelete={() => {
             setCurrentRecord(record)
             setIsModalOpen(true)
@@ -117,7 +121,7 @@ function AmenityTable({
       <Modal
         open={isModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title={t('amenity:amenity.deleteModal.title')} />}
+        title={<ConfirmModalTitle title={t('amenity:deleteModal.title')} />}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
           deleteAmenityMutate(currentRecord!.id)

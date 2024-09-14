@@ -1,11 +1,12 @@
 import { getCityById } from '@/api/city.api.ts'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Drawer, Form, FormInstance, FormProps, Input, Spin } from 'antd'
+import { Button, Drawer, Form, FormInstance, FormProps, Input } from 'antd'
 
 import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { CityForm } from '@/models/city.type.ts'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 interface AddUpdateCityProps {
   form: FormInstance
@@ -18,18 +19,24 @@ function AddUpdateCity({ form, id, formOpen, setFormOpen }: AddUpdateCityProps) 
   const isAddMode = id === null
   const { t } = useTranslation(['common', 'city'])
 
-  const [error, setError] = useState<string>('')
-
-  const { addCityMutate, addCityPending } = useCreateCity(setError, setFormOpen)
-  const { updateCityMutate, updateCityPending } = useUpdateCity(setError, setFormOpen)
+  const { addCityMutate, addCityPending } = useCreateCity()
+  const { updateCityMutate, updateCityPending } = useUpdateCity()
 
   const title = isAddMode ? t('city:form.addForm') : t('city:form.editForm')
 
   const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
     if (isAddMode) {
-      addCityMutate(values)
+      addCityMutate(values).then(() => {
+        form.resetFields()
+        setFormOpen(false)
+        toast.success(t('city:notification.addSuccess'))
+      })
     } else {
-      updateCityMutate(values)
+      updateCityMutate(values).then(() => {
+        form.resetFields()
+        setFormOpen(false)
+        toast.success(t('city:notification.editSuccess'))
+      })
     }
   }
 
@@ -39,6 +46,11 @@ function AddUpdateCity({ form, id, formOpen, setFormOpen }: AddUpdateCityProps) 
     enabled: !isAddMode
   })
 
+  const onClose = () => {
+    setFormOpen(false)
+    form.resetFields()
+  }
+
   useEffect(() => {
     if (cityUpdateData) {
       form.setFieldValue('id', cityUpdateData.id)
@@ -46,62 +58,43 @@ function AddUpdateCity({ form, id, formOpen, setFormOpen }: AddUpdateCityProps) 
     }
   }, [cityUpdateData, form])
 
-  const onClose = () => {
-    setFormOpen(false)
-    form.resetFields()
-    setError('')
-  }
-
-  if (isLoading) {
-    return <Spin spinning={isLoading} fullscreen />
-  }
-
   return (
-    <>
-      <Drawer
-        title={title}
-        size='large'
-        onClose={onClose}
-        open={formOpen}
-        extra={<Button onClick={onClose}>{t('common.back')}</Button>}
-      >
-        <Form form={form} layout='vertical' name='cityForm' onFinish={onFinish} autoComplete='off'>
-          <Form.Item<CityForm> label='Id' name='id' hidden>
-            <Input />
-          </Form.Item>
+    <Drawer
+      title={title}
+      size='large'
+      onClose={onClose}
+      open={formOpen}
+      loading={isLoading}
+      extra={<Button onClick={onClose}>{t('common.back')}</Button>}
+    >
+      <Form form={form} layout='vertical' name='cityForm' onFinish={onFinish} autoComplete='off'>
+        <Form.Item<CityForm> label='Id' name='id' hidden>
+          <Input />
+        </Form.Item>
 
-          <Form.Item<CityForm>
-            label={t('city:form.name')}
-            name='name'
-            rules={[
-              { required: true, message: t('city:form.nameRequired') },
-              { min: 3, message: t('city:form.nameMin') },
-              { max: 50, message: t('city:form.nameMax') }
-            ]}
-            validateStatus={error ? 'error' : undefined}
-            extra={<span style={{ color: 'red' }}>{error}</span>}
-          >
-            <Input onChange={() => setError('')} placeholder={t('city:form.namePlaceholder')} />
-          </Form.Item>
+        <Form.Item<CityForm>
+          label={t('city:form.name')}
+          name='name'
+          rules={[
+            { required: true, message: t('city:form.nameRequired') },
+            { min: 3, message: t('city:form.nameMin') },
+            { max: 50, message: t('city:form.nameMax') }
+          ]}
+        >
+          <Input placeholder={t('city:form.namePlaceholder')} />
+        </Form.Item>
 
-          <Form.Item>
-            <Button
-              className='mr-4'
-              onClick={() => {
-                form.resetFields()
-                setError('')
-              }}
-            >
-              {t('common.reset')}
-            </Button>
+        <Form.Item>
+          <Button className='mr-4' onClick={() => form.resetFields()}>
+            {t('common.reset')}
+          </Button>
 
-            <Button loading={addCityPending || updateCityPending} type='primary' htmlType='submit'>
-              {isAddMode ? t('common.add') : t('common.update')}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Drawer>
-    </>
+          <Button loading={addCityPending || updateCityPending} type='primary' htmlType='submit'>
+            {isAddMode ? t('common.add') : t('common.update')}
+          </Button>
+        </Form.Item>
+      </Form>
+    </Drawer>
   )
 }
 

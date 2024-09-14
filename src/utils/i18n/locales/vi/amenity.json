@@ -1,32 +1,30 @@
 {
-    "amenity": {
-      "title": "Quản lý tiện nghi",
-      "searchPlaceholder": "Tìm kiếm tiện nghi",
-      "table": {
-        "name": "Tên tiện nghi"
-      },
-      "form": {
-        "addForm": "Thêm tiện nghi",
-        "editForm": "Chỉnh sửa tiện nghi",
-        "name": "Tên tiện nghi",
-        "namePlaceholder": "Nhập tên tiện nghi",
-        "nameRequired": "Vui lòng nhập tên tiện nghi",
-        "nameMin": "Tên tiện nghi phải có ít nhất 3 ký tự",
-        "nameMax": "Tên tiện nghi phải có tối đa 50 ký tự"
-      },
-      "pagination": {
-        "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} tiện nghi"
-      },
-      "notification": {
-        "addSuccess": "Thêm tiện nghi thành công",
-        "editSuccess": "Chỉnh sửa tiện nghi thành công",
-        "deleteSuccess_one": "Xóa tiện nghi thành công",
-        "deleteSuccess_other": "Xóa các tiện nghi thành công"
-      },
-      "deleteModal": {
-        "title": "Xác nhận xóa tiện nghi",
-        "titleMultiple": "Xác nhận xóa các tiện nghi"
-      }
-    }
+  "title": "Quản lý tiện nghi",
+  "searchPlaceholder": "Tìm kiếm tiện nghi",
+  "table": {
+    "name": "Tên tiện nghi"
+  },
+  "form": {
+    "addForm": "Thêm tiện nghi",
+    "editForm": "Chỉnh sửa tiện nghi",
+    "name": "Tên tiện nghi",
+    "namePlaceholder": "Nhập tên tiện nghi",
+    "nameRequired": "Vui lòng nhập tên tiện nghi",
+    "nameMin": "Tên tiện nghi phải có ít nhất 3 ký tự",
+    "nameMax": "Tên tiện nghi phải có tối đa 50 ký tự"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} tiện nghi"
+  },
+  "notification": {
+    "addSuccess": "Thêm tiện nghi thành công",
+    "editSuccess": "Chỉnh sửa tiện nghi thành công",
+    "deleteSuccess_one": "Xóa tiện nghi thành công",
+    "deleteSuccess_other": "Xóa các tiện nghi thành công"
+  },
+  "deleteModal": {
+    "title": "Xác nhận xóa tiện nghi",
+    "titleMultiple": "Xác nhận xóa các tiện nghi"
   }
+}
   

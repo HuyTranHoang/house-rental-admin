@@ -1,32 +1,30 @@
 {
-    "amenity": {
-      "title": "Amenity Management",
-      "searchPlaceholder": "Search Amenities",
-      "table": {
-        "name": "Amenity name"
-      },
-      "form": {
-        "addForm": "Add Amenity",
-        "editForm": "Edit Amenity",
-        "name": "Amenity name",
-        "namePlaceholder": "Enter Amenity name",
-        "nameRequired": "Please enter amenity name",
-        "nameMin": "Amenity name must be at least 3 characters",
-        "nameMax": "Amenity name must be at most 50 characters"
-      },
-      "pagination": {
-        "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} amenities"
-      },
-      "notification": {
-        "addSuccess": "Add amenity successfully",
-        "editSuccess": "Edit amenity successfully",
-        "deleteSuccess_one": "Delete amenity successfully",
-        "deleteSuccess_other": "Delete amenities successfully"
-      },
-      "deleteModal": {
-        "title": "Confirm amenity deletion",
-        "titleMultiple": "Confirm multiple amenity deletion"
-      }
-    }
+  "title": "Amenity Management",
+  "searchPlaceholder": "Search Amenities",
+  "table": {
+    "name": "Amenity name"
+  },
+  "form": {
+    "addForm": "Add Amenity",
+    "editForm": "Edit Amenity",
+    "name": "Amenity name",
+    "namePlaceholder": "Enter Amenity name",
+    "nameRequired": "Please enter amenity name",
+    "nameMin": "Amenity name must be at least 3 characters",
+    "nameMax": "Amenity name must be at most 50 characters"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} amenities"
+  },
+  "notification": {
+    "addSuccess": "Add amenity successfully",
+    "editSuccess": "Edit amenity successfully",
+    "deleteSuccess_one": "Delete amenity successfully",
+    "deleteSuccess_other": "Delete amenities successfully"
+  },
+  "deleteModal": {
+    "title": "Confirm amenity deletion",
+    "titleMultiple": "Confirm multiple amenity deletion"
   }
+}
   
