@@ -4,6 +4,7 @@ import { ReportFilters, ReportStatus } from '../models/report.type.ts'
 import { toast } from 'sonner'
 import { useSearchParams } from 'react-router-dom'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export const useReports = (
   search: string,
@@ -23,11 +24,12 @@ export const useReports = (
 
 export const useUpdateReportStatus = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation(['report'])
 
   const { mutate: updateReportStatusMutate, isPending: updateReportStatusPending } = useMutation({
     mutationFn: updateReportStatus,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reports'] }).then(() => toast.success('Xét duyệt báo cáo thành công'))
+      queryClient.invalidateQueries({ queryKey: ['reports'] }).then(() => toast.success(t('toast.success')))
     },
     onError: (error) => {
       toast.error(error.message)

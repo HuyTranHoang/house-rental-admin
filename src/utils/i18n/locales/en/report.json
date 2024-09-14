@@ -1,0 +1,56 @@
+{
+  "title": "Report Management",
+  "searchPlaceholder": "Enter username",
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} reports"
+  },
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "blocked": "Blocked",
+    "reviewed": "Reviewed"
+  },
+  "table": {
+    "username": "Username",
+    "property": "Property",
+    "reason": "Reason",
+    "type": "Type",
+    "status": "Status",
+    "action": "Action",
+    "createdAt": "Created At"
+  },
+  "button": {
+    "review": "Review",
+    "approve": "Approve, lock posts",
+    "reject": "Reject, keep posts",
+    "active": "Reactivate post"
+  },
+  "detailModal": {
+    "postDetails": "Post details",
+    "roomType": "Room type",
+    "city": "City",
+    "district": "District",
+    "price": "Price",
+    "location": "Location",
+    "blocked": "Blocked",
+    "area": "Area",
+    "numRooms": "Number of rooms",
+    "createdAt": "Created At",
+    "username": "Username",
+    "amenities": "Amenities",
+    "description": "Desciption",
+    "image": "Image",
+    "content": "Content of the report"
+  },
+  "type": {
+    "scam": "Scam",
+    "inappropriateContent": "Inapproprite Content",
+    "duplicate": "Dupicate",
+    "misinformation": "Misinformation",
+    "other": "Other"
+  },
+  "toast": {
+    "success": "Report approval successful"
+  }
+}
