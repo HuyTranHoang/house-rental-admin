@@ -1,4 +1,5 @@
 import { getPropertyById } from '@/api/property.api.ts'
+import { useBlockProperty } from '@/hooks/useProperties'
 import { useUpdateReportStatus } from '@/hooks/useReports.ts'
 import { Report, ReportCategory, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
@@ -61,6 +62,7 @@ function ReportTable({
   const [open, setOpen] = useState(false)
   const { updateReportStatusMutate, updateReportStatusPending } = useUpdateReportStatus()
   const { t } = useTranslation(['common', 'report'])
+  const { blockProperty } = useBlockProperty()
 
   const {
     data: propertyData,
@@ -118,10 +120,10 @@ function ReportTable({
             }}
           >
             <Button
-              ///Gọi function update blocked của property ở chỗ này
               loading={updateReportStatusPending}
               onClick={() => {
-                updateReportStatusMutate({ id: report.id, status: ReportStatus.APPROVED })
+                const status = "unblock";
+                blockProperty({ id: report.propertyId, status})
                 setOpen(false)
               }}
               icon={<CheckOutlined />}
