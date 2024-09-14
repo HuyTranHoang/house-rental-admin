@@ -8,7 +8,7 @@ import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
+import { toast } from 'sonner'
 
 interface AmenityTableProps {
   dataSource: AmenityDataSource[]
@@ -34,7 +34,7 @@ function AmenityTable({
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<AmenityDataSource | null>(null)
 
-  const { deleteAmenityMutate } = useDeleteAmenity()
+  const { deleteAmenityMutate, deleteAmenityPending } = useDeleteAmenity()
   const { t } = useTranslation(['common', 'amenity'])
 
   const items: DescriptionsProps['items'] = [
@@ -124,12 +124,17 @@ function AmenityTable({
         title={<ConfirmModalTitle title={t('amenity:deleteModal.title')} />}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
-          deleteAmenityMutate(currentRecord!.id)
-          setIsModalOpen(false)
+          deleteAmenityMutate(currentRecord!.id).then(() => {
+            setCurrentRecord(null)
+            setIsModalOpen(false)
+            toast.success(t('amenity:notification.deleteSuccess'))
+          })
         }}
         okText={t('common.ok')}
         okType='danger'
         cancelText={t('common.cancel')}
+        okButtonProps={{ loading: deleteAmenityPending }}
+        cancelButtonProps={{ disabled: deleteAmenityPending }}
       >
         <ConfirmModalContent items={items} />
       </Modal>

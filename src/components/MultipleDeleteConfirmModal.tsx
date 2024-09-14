@@ -10,6 +10,7 @@ interface MultipleDeleteConfirmProps {
   onOk: () => void
   isModalOpen: boolean
   setIsModalOpen: (open: boolean) => void
+  pending: boolean
 }
 
 const MultipleDeleteConfirmModal: React.FC<MultipleDeleteConfirmProps> = ({
@@ -17,7 +18,8 @@ const MultipleDeleteConfirmModal: React.FC<MultipleDeleteConfirmProps> = ({
   title,
   onOk,
   isModalOpen,
-  setIsModalOpen
+  setIsModalOpen,
+  pending
 }) => {
   const { t } = useTranslation()
 
@@ -29,21 +31,18 @@ const MultipleDeleteConfirmModal: React.FC<MultipleDeleteConfirmProps> = ({
     }
   ]
 
-  const handleOk = () => {
-    onOk()
-    setIsModalOpen(false)
-  }
-
   return (
     <Modal
       open={isModalOpen}
       className='w-96'
       title={<ConfirmModalTitle title={title} />}
       onCancel={() => setIsModalOpen(false)}
-      onOk={handleOk}
+      onOk={onOk}
       okText={t('common.ok')}
       okType='danger'
       cancelText={t('common.cancel')}
+      okButtonProps={{ loading: pending }}
+      cancelButtonProps={{ disabled: pending }}
     >
       <ConfirmModalContent items={items} />
     </Modal>

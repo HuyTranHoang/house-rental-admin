@@ -11,6 +11,7 @@
     "back": "Back",
     "ok": "Ok",
     "cancel": "Cancel",
+    "deleting": "Deleting, please wait...",
     "table": {
       "action": "Actions",
       "createdAt": "Created at",

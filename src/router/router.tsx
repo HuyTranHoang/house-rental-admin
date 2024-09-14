@@ -1,20 +1,18 @@
-import Login from '@/features/auth/Login.tsx'
-import Dashboard from '@/features/dashboard/Dashboard.tsx'
-import { createBrowserRouter } from 'react-router-dom'
-import ProtectedRoute from '../components/ProtectedRoute.tsx'
-import AppLayout from '../ui/AppLayout.tsx'
-
-import amenityRouter from './amenityRouter.tsx'
-import roomTypeRouter from './roomTypeRouter.tsx'
-
+import ProtectedRoute from '@/components/ProtectedRoute.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import ListAmenity from '@/features/amenity/ListAmenity.tsx'
+import Login from '@/features/auth/Login.tsx'
 import ListCity from '@/features/city/ListCity.tsx'
+import Dashboard from '@/features/dashboard/Dashboard.tsx'
 import ListProperty from '@/features/property/ListProperty.tsx'
 import ListReport from '@/features/report/ListReport.tsx'
 import ListReview from '@/features/review/ListReview.tsx'
 import RoleManager from '@/features/role/RoleManager.tsx'
 import ListUser from '@/features/user/ListUser.tsx'
 import districtRouter from '@/router/districtRouter.tsx'
+import AppLayout from '@/ui/AppLayout.tsx'
+import { createBrowserRouter } from 'react-router-dom'
+import roomTypeRouter from './roomTypeRouter.tsx'
 
 export const routerList = [
   {
@@ -45,7 +43,11 @@ export const routerList = [
           },
           ...districtRouter, // /district, /district/add, /district/:id/edit
           ...roomTypeRouter, // /roomType, /roomType/add, /roomType/:id/edit
-          ...amenityRouter, // /amenity, /amenity/add, /amenity/:id:edit
+          {
+            path: ROUTER_NAMES.AMENITY,
+            element: <ListAmenity />,
+            breadcrumb: 'amenity.list'
+          },
           {
             path: ROUTER_NAMES.REPORT,
             element: <ListReport />,

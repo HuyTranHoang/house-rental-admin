@@ -4,6 +4,9 @@
   "table": {
     "name": "Amenity name"
   },
+  "button": {
+    "add": "New Amenity"
+  },
   "form": {
     "addForm": "Add Amenity",
     "editForm": "Edit Amenity",
@@ -19,7 +22,7 @@
   "notification": {
     "addSuccess": "Add amenity successfully",
     "editSuccess": "Edit amenity successfully",
-    "deleteSuccess_one": "Delete amenity successfully",
+    "deleteSuccess": "Delete amenity successfully",
     "deleteSuccess_other": "Delete amenities successfully"
   },
   "deleteModal": {

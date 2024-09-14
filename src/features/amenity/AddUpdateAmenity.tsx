@@ -1,6 +1,7 @@
 import { getAmenityById } from '@/api/amenity.api.ts'
 import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
 import { AmenityForm } from '@/models/amenity.type.ts'
+import { LeftCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Drawer, Form, FormInstance, FormProps, Input } from 'antd'
 import React, { useEffect } from 'react'
@@ -64,7 +65,11 @@ function AddUpdateAmenity({ form, id, formOpen, setFormOpen }: AddUpdateAmenityP
       onClose={onClose}
       open={formOpen}
       loading={isLoading}
-      extra={<Button onClick={onClose}>{t('common.back')}</Button>}
+      extra={
+        <Button icon={<LeftCircleOutlined />} shape='round' onClick={onClose}>
+          {t('common.back')}
+        </Button>
+      }
     >
       <Form form={form} name='amenityForm' onFinish={onFinish} layout='vertical' autoComplete='off'>
         <Form.Item<AmenityForm> label='Id' name='id' hidden>

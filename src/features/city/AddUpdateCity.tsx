@@ -4,6 +4,7 @@ import { Button, Drawer, Form, FormInstance, FormProps, Input } from 'antd'
 
 import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { CityForm } from '@/models/city.type.ts'
+import { LeftCircleOutlined } from '@ant-design/icons'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -65,7 +66,11 @@ function AddUpdateCity({ form, id, formOpen, setFormOpen }: AddUpdateCityProps) 
       onClose={onClose}
       open={formOpen}
       loading={isLoading}
-      extra={<Button onClick={onClose}>{t('common.back')}</Button>}
+      extra={
+        <Button icon={<LeftCircleOutlined />} shape='round' onClick={onClose}>
+          {t('common.back')}
+        </Button>
+      }
     >
       <Form form={form} layout='vertical' name='cityForm' onFinish={onFinish} autoComplete='off'>
         <Form.Item<CityForm> label='Id' name='id' hidden>

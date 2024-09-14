@@ -4,6 +4,9 @@
   "table": {
     "name": "Tên tiện nghi"
   },
+  "button": {
+    "add": "Tiện nghi mới"
+  },
   "form": {
     "addForm": "Thêm tiện nghi",
     "editForm": "Chỉnh sửa tiện nghi",
@@ -19,7 +22,7 @@
   "notification": {
     "addSuccess": "Thêm tiện nghi thành công",
     "editSuccess": "Chỉnh sửa tiện nghi thành công",
-    "deleteSuccess_one": "Xóa tiện nghi thành công",
+    "deleteSuccess": "Xóa tiện nghi thành công",
     "deleteSuccess_other": "Xóa các tiện nghi thành công"
   },
   "deleteModal": {

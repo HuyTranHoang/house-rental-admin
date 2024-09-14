@@ -9,6 +9,7 @@ import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } fro
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import AmenityTable from './AmenityTable.tsx'
 
 const { Search } = Input
@@ -30,7 +31,7 @@ function ListAmenity() {
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
   const { data, isLoading, isError } = useAmenities(search, pageNumber, pageSize, sortBy)
-  const { deleteAmenitiesMutate } = useDeleteMultiAmenity()
+  const { deleteAmenitiesMutate, deleteAmenitiesIsPending } = useDeleteMultiAmenity()
   const { t } = useTranslation(['common', 'amenity'])
 
   const handleTableChange: TableProps<AmenityDataSource>['onChange'] = (_, __, sorter) => {
@@ -118,7 +119,7 @@ function ListAmenity() {
             </Button>
           )}
           <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={handleNewAmenity}>
-            {t('common.add')}
+            {t('amenity:button.add')}
           </Button>
         </Space>
       </Flex>
@@ -152,11 +153,18 @@ function ListAmenity() {
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
+        pending={deleteAmenitiesIsPending}
         setIsModalOpen={setIsOpen}
         title={t('amenity:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteAmenitiesMutate(deleteIdList)
-          setDeleteIdList([])
+          deleteAmenitiesMutate(deleteIdList).then(() => {
+            deleteIdList.length > 1
+              ? toast.success(t('amenity:notification.deleteSuccess_other'))
+              : toast.success(t('amenity:notification.deleteSuccess'))
+
+            setDeleteIdList([])
+            setIsOpen(false)
+          })
         }}
       />
     </>

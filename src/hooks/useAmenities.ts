@@ -8,7 +8,6 @@ import {
 import { CityFilters } from '@/models/city.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -23,15 +22,10 @@ export const useAmenities = (search: string, pageNumber: number, pageSize: numbe
 
 export const useDeleteAmenity = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('amenity')
 
-  const { mutate: deleteAmenityMutate, isPending: deleteAmenityPending } = useMutation({
+  const { mutateAsync: deleteAmenityMutate, isPending: deleteAmenityPending } = useMutation({
     mutationFn: deleteAmenity,
-    onSuccess: () => {
-      queryClient
-        .invalidateQueries({ queryKey: ['amenities'] })
-        .then(() => toast.success(t('notification.deleteSuccess')))
-    },
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['amenities'] }),
     onError: (error) => {
       toast.error(error.message)
     }
@@ -42,21 +36,14 @@ export const useDeleteAmenity = () => {
 
 export const useDeleteMultiAmenity = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('amenity')
 
-  const { mutate: deleteAmenitiesMutate } = useMutation({
-    mutationFn: (ids: number[]) => deleteAmenities(ids),
-    onSuccess: (_, variables) => {
-      queryClient
-        .invalidateQueries({ queryKey: ['amenities'] })
-        .then(() => toast.success(t('notification.deleteSuccess', { count: variables.length })))
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+  const { mutateAsync: deleteAmenitiesMutate, isPending: deleteAmenitiesIsPending } = useMutation({
+    mutationFn: deleteAmenities,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['amenities'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteAmenitiesMutate }
+  return { deleteAmenitiesMutate, deleteAmenitiesIsPending }
 }
 
 export const useCreateAmenity = () => {
