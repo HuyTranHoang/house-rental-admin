@@ -23,7 +23,7 @@
     "addSuccess": "Add city successfully",
     "editSuccess": "Edit city successfully",
     "deleteSuccess": "Delete city successfully",
-    "deleteSuccess_other": "Delete cities successfully"
+    "deleteSuccessMultiple": "Delete selected cities successfully"
   },
   "deleteModal": {
     "title": "Confirm city deletion",

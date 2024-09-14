@@ -1,4 +1,3 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   addDistrict,
   deleteDistrict,
@@ -7,12 +6,13 @@ import {
   getAllDistrictsWithPagination,
   updateDistrict
 } from '@/api/district.api'
-import { toast } from 'sonner'
-import axios from 'axios'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import React, { useCallback } from 'react'
-import { DistrictFilters } from '@/models/district.type.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { DistrictFilters } from '@/models/district.type.ts'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import React, { useCallback } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 export const useDistrictsAll = () => {
   const { data, isLoading, isError } = useQuery({
@@ -51,7 +51,7 @@ export const useDeleteDistrict = () => {
 export const useDeleteMultiDistrict = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteDistrictsMutate } = useMutation({
+  const { mutate: deleteDistrictsMutate, isPending: deleteDisitrctsIsPending } = useMutation({
     mutationFn: deleteDistricts,
     onSuccess: () => {
       queryClient
@@ -63,7 +63,7 @@ export const useDeleteMultiDistrict = () => {
     }
   })
 
-  return { deleteDistrictsMutate }
+  return { deleteDistrictsMutate, deleteDisitrctsIsPending }
 }
 
 export const useCreateDistrict = (setError: React.Dispatch<React.SetStateAction<string>>) => {

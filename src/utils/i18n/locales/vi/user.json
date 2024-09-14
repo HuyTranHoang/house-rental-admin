@@ -1,0 +1,47 @@
+{
+  "title": "Quản lý người dùng",
+  "searchPlaceholder": "Tìm kiếm người dùng",
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} người dùng"
+  },
+  "notification": {
+    "lockSuccess": "Khóa '{{username}}' thành công",
+    "unlockSuccess": "Mở '{{username}}' dùng thành công",
+    "deleteSuccess": "Xoá người dùng thành công",
+    "deleteSuccessMultiple": "Xoá các người dùng đã chọn thành công"
+  },
+  "deleteModal": {
+    "title": "Confirm user deletion",
+    "titleMultiple": "Confirm multiple user deletion"
+  },
+  "status": {
+    "active": "Hoạt động",
+    "locked": "Bị khóa"
+  },
+  "button": {
+    "lock": "Khóa",
+    "unlock": "Mở khóa"
+  },
+  "lockModal": {
+    "title": "Bạn có chắc chắn muốn khóa <b>{{username}}</b>?",
+    "content": "Người dùng này sẽ không thể đăng nhập cho đến khi bạn mở khóa họ."
+  },
+  "unlockModal": {
+    "title": "Bạn có chắc chắn muốn mở khóa <b>{{username}}</b>?",
+    "content": "Người dùng này sẽ có thể đăng nhập lại."
+  },
+  "table": {
+    "firstName": "Tên",
+    "lastName": "Họ",
+    "username": "Tài khoản",
+    "email": "Email",
+    "roles": "Vai trò",
+    "tooltips": {
+      "quickView": "Xem nhanh",
+      "editRole": "Chỉnh sửa vai trò",
+      "delete": "Xoá người dùng",
+      "lock": "Khóa người dùng",
+      "unlock": "Mở khóa người dùng"
+    }
+  }
+}

@@ -94,7 +94,6 @@ function ListAmenity() {
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
-            form={form}
             name='searchCityForm'
             initialValues={{
               search: search
@@ -159,7 +158,7 @@ function ListAmenity() {
         onOk={() => {
           deleteAmenitiesMutate(deleteIdList).then(() => {
             deleteIdList.length > 1
-              ? toast.success(t('amenity:notification.deleteSuccess_other'))
+              ? toast.success(t('amenity:notification.deleteSuccessMultiple'))
               : toast.success(t('amenity:notification.deleteSuccess'))
 
             setDeleteIdList([])

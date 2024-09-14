@@ -18,7 +18,7 @@
     "title": "Chi tiết đánh giá"
   },
   "notification": {
-    "deleteSuccess_one": "Xóa đánh giá thành công",
-    "deleteSuccess_other": "Xóa các đánh giá thành công"
+    "deleteSuccess": "Xóa đánh giá thành công",
+    "deleteSuccessMultiple": "Xóa các đánh giá thành công"
   }
 }

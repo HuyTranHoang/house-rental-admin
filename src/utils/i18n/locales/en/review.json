@@ -18,7 +18,7 @@
     "title": "Review detail"
   },
   "notification": {
-    "deleteSuccess_one": "Delete review successfully",
-    "deleteSuccess_other": "Delete reviews successfully"
+    "deleteSuccess": "Delete review successfully",
+    "deleteSuccessMultiple": "Delete reviews successfully"
   }
 }

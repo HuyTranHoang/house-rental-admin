@@ -41,7 +41,8 @@
     "amenities": "Amenities",
     "description": "Desciption",
     "image": "Image",
-    "content": "Content of the report"
+    "content": "Content of the report",
+    "reportingTime": "Reporting time"
   },
   "type": {
     "scam": "Scam",

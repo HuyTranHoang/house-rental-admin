@@ -95,8 +95,7 @@ function ListRoomType() {
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
-            form={form}
-            name='searchCityForm'
+            name='searchRoomType'
             initialValues={{
               search: search
             }}
@@ -159,7 +158,9 @@ function ListRoomType() {
         title={t('roomType:deleteModal.titleMultiple')}
         onOk={() => {
           deleteRoomTypesMutate(deleteIdList).then(() => {
-            toast.success(t('roomType:notification.deleteSuccess_other'))
+            deleteIdList.length > 1
+              ? toast.success(t('roomType:notification.deleteSuccess'))
+              : toast.success(t('roomType:notification.deleteSuccessMultiple'))
             setIsOpen(false)
             setDeleteIdList([])
           })

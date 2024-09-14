@@ -23,11 +23,10 @@
     "addSuccess": "Add amenity successfully",
     "editSuccess": "Edit amenity successfully",
     "deleteSuccess": "Delete amenity successfully",
-    "deleteSuccess_other": "Delete amenities successfully"
+    "deleteSuccessMultiple": "Delete selected amenities successfully"
   },
   "deleteModal": {
     "title": "Confirm amenity deletion",
     "titleMultiple": "Confirm multiple amenity deletion"
   }
 }
-  

@@ -27,7 +27,7 @@ module.exports = {
       component: 'Trans'
     },
     lngs: ['en', 'vi'],
-    ns: ['common', 'breadcrumbs', 'city', 'review', 'amenity'],
+    ns: ['common', 'breadcrumbs', 'city', 'review', 'amenity', 'roomType', 'report', 'user'],
     defaultLng: 'en',
     defaultNs: DEFAULT_NS,
     defaultValue: STRING_NOT_TRANSLATED,

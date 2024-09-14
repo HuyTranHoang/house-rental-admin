@@ -21,10 +21,10 @@ import {
   Tooltip
 } from 'antd'
 import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
-import { useState } from 'react'
 import { SorterResult } from 'antd/lib/table/interface'
-
-const { confirm } = Modal
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 interface UserTableProps {
   dataSource: UserDataSource[]
@@ -36,15 +36,25 @@ interface UserTableProps {
   sortedInfo: SorterResult<UserDataSource>
 }
 
-function UserTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection, filteredInfo, sortedInfo }: UserTableProps) {
+function UserTable({
+  dataSource,
+  loading,
+  paginationProps,
+  handleTableChange,
+  rowSelection,
+  filteredInfo,
+  sortedInfo
+}: UserTableProps) {
+  const { t } = useTranslation(['common', 'user'])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isUpdateRolesModalOpen, setIsUpdateRolesModalOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<UserDataSource | null>(null)
   const [form] = Form.useForm()
 
   const { data: roleData, isLoading: roleIsLoading } = useRolesAll()
 
-  const { deleteUserMutate } = useDeleteUser()
+  const { deleteUserMutate, deleteUserIsPending } = useDeleteUser()
 
   const handleView = (record: UserDataSource) => {
     setCurrentUser(record)
@@ -60,67 +70,44 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
     setIsUpdateRolesModalOpen(true)
   }
 
-  const showDeleteConfirm = (record: UserDataSource) => {
-    const items: DescriptionsProps['items'] = [
-      {
-        key: '1',
-        label: 'Id',
-        children: <span>{record.id}</span>,
-        span: 3
-      },
-      {
-        key: '2',
-        label: 'Họ',
-        children: <span>{record.firstName}</span>,
-        span: 3
-      },
-      {
-        key: '3',
-        label: 'Tên',
-        children: <span>{record.lastName}</span>,
-        span: 3
-      },
-      {
-        key: '4',
-        label: 'Email',
-        children: <span>{record.email}</span>,
-        span: 3
-      }
-    ]
-
-    confirm({
-      icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa tài khoản' />,
-      content: <ConfirmModalContent items={items} />,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteUserMutate(record.id)
-      }
-    })
-  }
+  const items: DescriptionsProps['items'] = [
+    {
+      key: 'firstName',
+      label: t('user:table.firstName'),
+      children: <span>{currentUser?.firstName}</span>,
+      span: 3
+    },
+    {
+      key: 'lastName',
+      label: t('user:table.lastName'),
+      children: <span>{currentUser?.lastName}</span>,
+      span: 3
+    },
+    {
+      key: 'email',
+      label: t('user:table.email'),
+      children: <span>{currentUser?.email}</span>,
+      span: 3
+    }
+  ]
 
   const columns: TableProps<UserDataSource>['columns'] = [
     {
       title: '#',
       dataIndex: 'index',
       key: 'id',
-      fixed: 'left',
       width: 50
     },
     {
-      title: 'Tài khoản',
+      title: t('user:table.username'),
       dataIndex: 'username',
       key: 'username',
       sorter: true,
       sortOrder: sortedInfo.field === 'username' ? sortedInfo.order : null,
-      fixed: 'left',
       width: 200
     },
     {
-      title: 'Email',
+      title: t('user:table.email'),
       dataIndex: 'email',
       key: 'email',
       sorter: true,
@@ -129,7 +116,7 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
       width: 200
     },
     {
-      title: 'Vai trò',
+      title: t('user:table.roles'),
       dataIndex: 'roles',
       key: 'roles',
       filterMultiple: false,
@@ -144,7 +131,7 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
               </Tag>
             ))}
           </Space>
-          <Tooltip title='Cập nhật vai trò'>
+          <Tooltip title={t('user:table.tooltips.editRole')}>
             <Button
               icon={<EditOutlined />}
               disabled={record.username === 'admin'}
@@ -155,22 +142,20 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
       )
     },
     {
-      title: 'Ngày tạo',
+      title: t('common.table.createdAt'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
       sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
-      fixed: 'right',
       width: 250
     },
     {
-      title: 'Hành động',
+      title: t('common.table.action'),
       key: 'action',
-      fixed: 'right',
       width: 110,
       render: (_, record: UserDataSource) => (
         <Flex gap={16}>
-          <Tooltip title='Xem nhanh'>
+          <Tooltip title={t('user:table.tooltips.quickView')}>
             <Button
               icon={<EyeOutlined />}
               disabled={record.username === 'admin'}
@@ -181,11 +166,14 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
 
           <BlockUserButton record={record} />
 
-          <Tooltip title='Xóa tài khoản'>
+          <Tooltip title={t('user:table.tooltips.delete')}>
             <Button
               icon={<DeleteOutlined />}
               disabled={record.username === 'admin'}
-              onClick={() => showDeleteConfirm(record)}
+              onClick={() => {
+                setCurrentUser(record)
+                setIsDeleteModalOpen(true)
+              }}
               danger
             />
           </Tooltip>
@@ -203,18 +191,18 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
         pagination={{
           position: ['bottomCenter'],
           pageSizeOptions: ['5', '10', '20'],
-          locale: { items_per_page: '/ trang' },
+          locale: { items_per_page: `/ ${t('common.pagination.itemsPerPage')}` },
           showSizeChanger: true,
           ...paginationProps
         }}
         onChange={handleTableChange}
         loading={loading || roleIsLoading}
         locale={{
-          triggerDesc: 'Sắp xếp giảm dần',
-          triggerAsc: 'Sắp xếp tăng dần',
-          cancelSort: 'Hủy sắp xếp',
-          filterConfirm: 'Lọc',
-          filterReset: 'Bỏ lọc'
+          triggerDesc: t('common.table.triggerDesc'),
+          triggerAsc: t('common.table.triggerAsc'),
+          cancelSort: t('common.table.cancelSort'),
+          filterConfirm: t('common.table.filterConfirm'),
+          filterReset: t('common.table.filterReset')
         }}
       />
 
@@ -227,6 +215,27 @@ function UserTable({ dataSource, loading, paginationProps, handleTableChange, ro
         setIsUpdateRolesModalOpen={setIsUpdateRolesModalOpen}
         currentUser={currentUser}
       />
+
+      <Modal
+        open={isDeleteModalOpen}
+        className='w-96'
+        title={<ConfirmModalTitle title={t('user:deleteModal.title')} />}
+        okText={t('common.ok')}
+        okType='danger'
+        cancelText={t('common.cancel')}
+        okButtonProps={{ loading: deleteUserIsPending }}
+        cancelButtonProps={{ disabled: deleteUserIsPending }}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onOk={() => {
+          deleteUserMutate(currentUser!.id).then(() => {
+            setCurrentUser(null)
+            setIsModalOpen(false)
+            toast.success(t('user:notification.deleteSuccess'))
+          })
+        }}
+      >
+        <ConfirmModalContent items={items} />
+      </Modal>
     </>
   )
 }

@@ -7,30 +7,20 @@ import { CheckCircleOutlined, CloseSquareOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Divider, Flex, Space, TableProps, Tabs, TabsProps, Typography } from 'antd'
 import Search from 'antd/es/input/Search'
-import React, { useEffect, useState } from 'react'
-import UserTable from './UserTable'
 import { TableRowSelection } from 'antd/es/table/interface'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+import UserTable from './UserTable'
 
 type OnChange = NonNullable<TableProps<UserDataSource>['onChange']>
 type Filters = Parameters<OnChange>[1]
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-const tabsItem: TabsProps['items'] = [
-  {
-    key: 'isNonLocked',
-    label: 'Đang hoạt động',
-    icon: <CheckCircleOutlined />
-  },
-  {
-    key: 'isLocked',
-    label: 'Đã bị khoá',
-    icon: <CloseSquareOutlined />
-  }
-]
-
 function ListUser() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation(['common', 'user'])
 
   const { search, isNonLocked, roles, pageNumber, pageSize, sortBy, setFilters } = useUserFilters()
 
@@ -41,14 +31,26 @@ function ListUser() {
   const [isOpen, setIsOpen] = useState(false)
 
   const { data, isLoading, isError } = useUsers(search, isNonLocked, roles, pageNumber, pageSize, sortBy)
-  const { deleteUsersMutate } = useDeleteUsers()
+  const { deleteUsersMutate, deleteUsersIsPending } = useDeleteUsers()
+
+  const tabsItem: TabsProps['items'] = useMemo(
+    () => [
+      {
+        key: 'isNonLocked',
+        label: t('user:status.active'),
+        icon: <CheckCircleOutlined />
+      },
+      {
+        key: 'isLocked',
+        label: t('user:status.locked'),
+        icon: <CloseSquareOutlined />
+      }
+    ],
+    [t]
+  )
 
   const onTabChange = (key: string) => {
-    if (key === 'isNonLocked') {
-      setFilters({ isNonLocked: true })
-    } else {
-      setFilters({ isNonLocked: false })
-    }
+    key === 'isNonLocked' ? setFilters({ isNonLocked: true }) : setFilters({ isNonLocked: false })
     queryClient.invalidateQueries({ queryKey: ['users'] })
   }
 
@@ -117,13 +119,13 @@ function ListUser() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            Danh sách tài khoản
+            {t('user:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Search
             allowClear
             onSearch={(value) => setFilters({ search: value })}
-            placeholder='Tìm kiếm theo tên tài khoản'
+            placeholder={t('user:searchPlaceholder')}
             className='w-64'
           />
         </Flex>
@@ -131,7 +133,7 @@ function ListUser() {
         <Space>
           {deleteIdList.length > 0 && (
             <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
-              Xóa các mục đã chọn
+              {t('common.multipleDelete')}
             </Button>
           )}
         </Space>
@@ -146,7 +148,13 @@ function ListUser() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} tài khoản`,
+          showTotal: (total, range) => (
+            <Trans
+              ns='user'
+              i18nKey='pagination.showTotal'
+              values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
+            />
+          ),
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}
@@ -159,11 +167,17 @@ function ListUser() {
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
+        pending={deleteUsersIsPending}
         setIsModalOpen={setIsOpen}
-        title={'Xác nhận xóa các mục đã chọn'}
+        title={t('user:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteUsersMutate(deleteIdList)
-          setDeleteIdList([])
+          deleteUsersMutate(deleteIdList).then(() => {
+            deleteIdList.length > 1
+              ? toast.success(t('user:notification.deleteSuccess'))
+              : toast.success(t('user:notification.deleteSuccessMultiple'))
+            setDeleteIdList([])
+            setIsOpen(false)
+          })
         }}
       />
     </>

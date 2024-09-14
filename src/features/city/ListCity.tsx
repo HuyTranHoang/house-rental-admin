@@ -158,7 +158,7 @@ function ListCity() {
         title={t('city:deleteModal.titleMultiple')}
         onOk={() => {
           deleteCitiesMutate(deleteIdList).then(() => {
-            toast.success(t('city:notification.deleteSuccess_other'))
+            toast.success(t('city:notification.deleteSuccessMultiple'))
             setIsOpen(false)
             setDeleteIdList([])
           })

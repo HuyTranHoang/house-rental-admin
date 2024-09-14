@@ -1,15 +1,15 @@
-import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useDeleteMultiDistrict, useDistrictFilters, useDistricts } from '@/hooks/useDistricts.ts'
+import { District, DistrictDataSource } from '@/models/district.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
-import { useDeleteMultiDistrict, useDistrictFilters, useDistricts } from '@/hooks/useDistricts.ts'
-import DistrictTable from './DistrictTable.tsx'
-import { District, DistrictDataSource } from '@/models/district.type.ts'
-import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
-import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import DistrictTable from './DistrictTable.tsx'
 
 const { Search } = Input
 
@@ -26,14 +26,11 @@ function ListDistrict() {
   const [filteredInfo, setFilteredInfo] = useState<Filters>({})
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
-  const [form] = Form.useForm()
-
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
   const [isOpen, setIsOpen] = useState(false)
 
   const { data, isLoading, isError } = useDistricts(search, cityId, pageNumber, pageSize, sortBy)
-  const { deleteDistrictsMutate } = useDeleteMultiDistrict()
-
+  const { deleteDistrictsMutate, deleteDisitrctsIsPending } = useDeleteMultiDistrict()
 
   const handleTableChange: TableProps<DistrictDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -105,7 +102,6 @@ function ListDistrict() {
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
-            form={form}
             name='searchCityForm'
             initialValues={{
               search: search
@@ -160,6 +156,7 @@ function ListDistrict() {
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
+        pending={deleteDisitrctsIsPending}
         setIsModalOpen={setIsOpen}
         title={'Xác nhận xóa các mục đã chọn'}
         onOk={() => {

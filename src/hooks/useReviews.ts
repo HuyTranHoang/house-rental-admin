@@ -1,7 +1,6 @@
 import { ReviewFilters } from '@/models/review.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { deleteReview, deleteReviews, getAllReviewsWithPagination } from '../api/review.api'
@@ -17,37 +16,25 @@ export const useReviews = (search: string, rating: number, pageNumber: number, p
 
 export const useDeleteReview = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('review')
-  const { mutate: deleteReviewMutate } = useMutation({
+  const { mutate: deleteReviewMutate, isPending: deleteReviewIsPending } = useMutation({
     mutationFn: deleteReview,
-    onSuccess: () => {
-      toast.success(t('notification.deleteSuccess', {count: 1}))
-      queryClient.invalidateQueries({ queryKey: ['reviews'] })
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['reviews'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteReviewMutate }
+  return { deleteReviewMutate, deleteReviewIsPending }
 }
 
 export const useDeleteMultiReview = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation('review')
 
-  const { mutate: deleteReviewsMutate } = useMutation({
+  const { mutateAsync: deleteReviewsMutate, isPending: deleteReviewsIsPending } = useMutation({
     mutationFn: deleteReviews,
-    onSuccess: (_, variables) => {
-      toast.success(t('notification.deleteSuccess', { count: variables.length }))
-      queryClient.invalidateQueries({ queryKey: ['reviews'] })
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['reviews'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteReviewsMutate }
+  return { deleteReviewsMutate, deleteReviewsIsPending }
 }
 
 export const useReviewFilters = () => {

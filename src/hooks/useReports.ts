@@ -24,7 +24,7 @@ export const useReports = (
 
 export const useUpdateReportStatus = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation(['report'])
+  const { t } = useTranslation('report')
 
   const { mutate: updateReportStatusMutate, isPending: updateReportStatusPending } = useMutation({
     mutationFn: updateReportStatus,

@@ -7,6 +7,7 @@ import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } fro
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 import ReviewTable from './ReviewTable'
 
 const { Search } = Input
@@ -30,7 +31,7 @@ function ListReview() {
 
   const { data, isLoading, isError } = useReviews(search, rating, pageNumber, pageSize, sortBy)
 
-  const { deleteReviewsMutate } = useDeleteMultiReview()
+  const { deleteReviewsMutate, deleteReviewsIsPending } = useDeleteMultiReview()
 
   const handleTableChange: TableProps<ReviewDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -150,11 +151,18 @@ function ListReview() {
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
+        pending={deleteReviewsIsPending}
         setIsModalOpen={setIsOpen}
         title={t('review:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteReviewsMutate(deleteIdList)
-          setDeleteIdList([])
+          deleteReviewsMutate(deleteIdList).then(() => {
+            deleteIdList.length > 1
+              ? toast.success(t('review:notification.deleteSuccess'))
+              : toast.success(t('review:notification.deleteSuccessMultiple'))
+
+            setIsOpen(false)
+            setDeleteIdList([])
+          })
         }}
       />
     </>

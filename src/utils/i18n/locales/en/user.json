@@ -1,0 +1,47 @@
+{
+  "title": "User Management",
+  "searchPlaceholder": "Search user",
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} users"
+  },
+  "notification": {
+    "lockSuccess": "Lock '{{username}}' successfully",
+    "unlockSuccess": "Unlock '{{username}}' successfully",
+    "deleteSuccess": "Delete user successfully",
+    "deleteSuccessMultiple": "Delete selected users successfully"
+  },
+  "deleteModal": {
+    "title": "Xác nhận xóa người dùng",
+    "titleMultiple": "Xác nhận xóa nhiều người dùng"
+  },
+  "status": {
+    "active": "Active",
+    "locked": "Locked"
+  },
+  "button": {
+    "lock": "Lock",
+    "unlock": "Unlock"
+  },
+  "lockModal": {
+    "title": "Are you sure you want to lock <b>{{username}}</b>?",
+    "content": "This user will not be able to log in until you unlock them."
+  },
+  "unlockModal": {
+    "title": "Are you sure you want to unlock <b>{{username}}</b>?",
+    "content": "This user will be able to log in again."
+  },
+  "table": {
+    "firstName": "First name",
+    "lastName": "Last name",
+    "username": "Username",
+    "email": "Email",
+    "roles": "Roles",
+    "tooltips": {
+      "quickView": "Quick view",
+      "editRole": "Edit role",
+      "delete": "Delete user",
+      "lock": "Lock user",
+      "unlock": "Unlock user"
+    }
+  }
+}

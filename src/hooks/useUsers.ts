@@ -1,8 +1,7 @@
 import { deleteUser, deleteUsers, getAllUserWithPagination, lockUser, updateRoleForUser } from '@/api/user.api.ts'
 import { UserFilters } from '@/models/user.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -22,83 +21,58 @@ export const useUsers = (
   return { data, isLoading, isError }
 }
 
-export const useUpdateRoleForUser = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useUpdateRoleForUser = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: updateRoleForUserMutate } = useMutation({
+  const { mutateAsync: updateRoleForUserMutate, isPending: updateRoleForUserIsPending } = useMutation({
     mutationFn: ({ id, roles }: { id: number; roles: string[] }) => updateRoleForUser(id, roles),
-    onSuccess: () => {
-      toast.success('Cập nhật tài khoản thành công')
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onError: (error) => toast.error(error.message)
   })
-  return { updateRoleForUserMutate }
+  return { updateRoleForUserMutate, updateRoleForUserIsPending }
 }
 
 export const useLockUser = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: lockUserMutate } = useMutation({
+  const { mutateAsync: lockUserMutate, isPending: lockUserIsPending } = useMutation({
     mutationFn: lockUser,
-    onSuccess: () => {
-      toast.success('Thay đổi trạng thái tài khoản thành công')
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { lockUserMutate }
+  return { lockUserMutate, lockUserIsPending }
 }
 
 export const useDeleteUser = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteUserMutate } = useMutation({
+  const { mutateAsync: deleteUserMutate, isPending: deleteUserIsPending } = useMutation({
     mutationFn: deleteUser,
-    onSuccess: () => {
-      toast.success('Xóa tài khoản thành công')
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteUserMutate }
+  return { deleteUserMutate, deleteUserIsPending }
 }
 
 export const useDeleteUsers = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteUsersMutate } = useMutation({
+  const { mutateAsync: deleteUsersMutate, isPending: deleteUsersIsPending } = useMutation({
     mutationFn: deleteUsers,
-    onSuccess: () => {
-      toast.success('Xóa các tài khoản thành công')
-      queryClient.invalidateQueries({ queryKey: ['users'] })
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['users'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteUsersMutate }
+  return { deleteUsersMutate, deleteUsersIsPending }
 }
 
 export const useUserFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = searchParams.get('search') || ''
-  const isNonLocked = searchParams.get('isNonLocked') === 'true'
+  const isNonLocked = searchParams.get('isNonLocked') ? searchParams.get('isNonLocked') === 'true' : true
   const roles = searchParams.get('roles') || ''
   const sortBy = searchParams.get('sortBy') || ''
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
@@ -119,11 +93,13 @@ export const useUserFilters = () => {
 
           if (filters.isNonLocked !== undefined) {
             params.set('isNonLocked', String(filters.isNonLocked))
+            params.set('pageNumber', '1')
           }
 
           if (filters.roles !== undefined) {
             if (filters.roles) {
               params.set('roles', String(filters.roles))
+              params.set('pageNumber', '1')
             } else {
               params.delete('roles')
             }

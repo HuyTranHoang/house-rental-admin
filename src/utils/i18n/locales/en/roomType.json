@@ -14,8 +14,8 @@
   "notification": {
     "addSuccess": "Add room type successfully",
     "editSuccess": "Edit room type successfully",
-    "deleteSuccess_one": "Delete room type successfully",
-    "deleteSuccess_other": "Delete room types successfully"
+    "deleteSuccess": "Delete room type successfully",
+    "deleteSuccessMultiple": "Delete selected room types successfully"
   },
   "form": {
     "addForm": "Add Room Type",

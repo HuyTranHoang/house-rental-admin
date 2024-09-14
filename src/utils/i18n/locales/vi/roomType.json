@@ -14,8 +14,8 @@
   "notification": {
     "addSuccess": "Thêm loại phòng thành công",
     "editSuccess": "Chỉnh sửa loại phòng thành công",
-    "deleteSuccess_one": "Xóa loại phòng thành công",
-    "deleteSuccess_other": "Xóa các loại phòng thành công"
+    "deleteSuccess": "Xóa loại phòng thành công",
+    "deleteSuccessMultiple": "Xóa các loại phòng đã chọn thành công"
   },
   "form": {
     "addForm": "Thêm loại phòng",

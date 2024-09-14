@@ -23,11 +23,10 @@
     "addSuccess": "Thêm tiện nghi thành công",
     "editSuccess": "Chỉnh sửa tiện nghi thành công",
     "deleteSuccess": "Xóa tiện nghi thành công",
-    "deleteSuccess_other": "Xóa các tiện nghi thành công"
+    "deleteSuccessMultiple": "Xóa các tiện nghi đã chọn thành công"
   },
   "deleteModal": {
     "title": "Xác nhận xóa tiện nghi",
     "titleMultiple": "Xác nhận xóa các tiện nghi"
   }
 }
-  

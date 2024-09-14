@@ -1,45 +1,45 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import { useReportFilters, useReports } from '@/hooks/useReports.ts'
-import { Report as ReportType, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
+import { ReportDataSource, ReportStatus, Report as ReportType } from '@/models/report.type.ts'
 import { customFormatDate } from '@/utils/customFormatDate.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } from 'antd'
-import { useEffect, useState } from 'react'
-import ReportTable from './ReportTable.tsx'
+import { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { t } from 'i18next'
+import ReportTable from './ReportTable.tsx'
 
 const { Search } = Input
-
 
 type OnChange = NonNullable<TableProps<ReportDataSource>['onChange']>
 type Filters = Parameters<OnChange>[1]
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-const tabsItem: TabsProps['items'] = [
-  {
-    key: ReportStatus.PENDING,
-    label: t('report:status.pending'),
-    icon: <InfoCircleOutlined />
-  },
-  {
-    key: ReportStatus.APPROVED,
-    label: t('report:status.approved'),
-    icon: <CheckCircleOutlined />
-  },
-  {
-    key: ReportStatus.REJECTED,
-    label: t('report:status.rejected'),
-    icon: <CloseSquareOutlined />
-  }
-]
-
 function ListReport() {
   const queryClient = useQueryClient()
-
   const { t } = useTranslation(['common', 'report'])
+
+  const tabsItem: TabsProps['items'] = useMemo(
+    () => [
+      {
+        key: ReportStatus.PENDING,
+        label: t('report:status.pending'),
+        icon: <InfoCircleOutlined />
+      },
+      {
+        key: ReportStatus.APPROVED,
+        label: t('report:status.approved'),
+        icon: <CheckCircleOutlined />
+      },
+      {
+        key: ReportStatus.REJECTED,
+        label: t('report:status.rejected'),
+        icon: <CloseSquareOutlined />
+      }
+    ],
+    [t]
+  )
 
   const { search, status, category, sortBy, pageNumber, pageSize, setFilters } = useReportFilters()
 
@@ -156,7 +156,8 @@ function ListReport() {
               ns={'report'}
               i18nKey='pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
-            />),
+            />
+          ),
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}

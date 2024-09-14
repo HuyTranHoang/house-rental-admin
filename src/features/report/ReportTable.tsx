@@ -26,8 +26,7 @@ import {
 import { FilterValue } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
-import { t } from 'i18next'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface ReportTableProps {
@@ -38,14 +37,6 @@ interface ReportTableProps {
   status: ReportStatus
   filteredInfo: Record<string, FilterValue | null>
   sortedInfo: SorterResult<ReportDataSource>
-}
-
-const categoryMap = {
-  [ReportCategory.SCAM]: [t('report:type.scam'), 'magenta'],
-  [ReportCategory.INAPPROPRIATE_CONTENT]: [t('report:type.inappropriateContent'), 'red'],
-  [ReportCategory.DUPLICATE]: [t('report:type.duplicate'), 'volcano'],
-  [ReportCategory.MISINFORMATION]: [t('report:type.misinformation'), 'orange'],
-  [ReportCategory.OTHER]: [t('report:type.other'), 'gold']
 }
 
 function ReportTable({
@@ -63,6 +54,17 @@ function ReportTable({
   const { updateReportStatusMutate, updateReportStatusPending } = useUpdateReportStatus()
   const { t } = useTranslation(['common', 'report'])
   const { blockProperty } = useBlockProperty()
+
+  const categoryMap = useMemo(
+    () => ({
+      [ReportCategory.SCAM]: [t('report:type.scam'), 'magenta'],
+      [ReportCategory.INAPPROPRIATE_CONTENT]: [t('report:type.inappropriateContent'), 'red'],
+      [ReportCategory.DUPLICATE]: [t('report:type.duplicate'), 'volcano'],
+      [ReportCategory.MISINFORMATION]: [t('report:type.misinformation'), 'orange'],
+      [ReportCategory.OTHER]: [t('report:type.other'), 'gold']
+    }),
+    [t]
+  )
 
   const {
     data: propertyData,
@@ -94,7 +96,7 @@ function ReportTable({
               icon={<CheckOutlined />}
               type='primary'
             >
-             {t('report:button.approve')}
+              {t('report:button.approve')}
             </Button>
           </ConfigProvider>
           <Button
@@ -122,14 +124,14 @@ function ReportTable({
             <Button
               loading={updateReportStatusPending}
               onClick={() => {
-                const status = "unblock";
-                blockProperty({ id: report.propertyId, status})
+                const status = 'unblock'
+                blockProperty({ id: report.propertyId, status })
                 setOpen(false)
               }}
               icon={<CheckOutlined />}
               type='primary'
             >
-             {t('report:button.active')}
+              {t('report:button.active')}
             </Button>
           </ConfigProvider>
         </>
@@ -255,7 +257,7 @@ function ReportTable({
     {
       key: 'usernameReport',
       label: t('report:table.username'),
-      children: report?.username,
+      children: report?.username
     },
     {
       key: 'category',
@@ -281,7 +283,6 @@ function ReportTable({
       title: '#',
       dataIndex: 'index',
       key: 'index',
-      fixed: 'left',
       width: 50
     },
     {
@@ -306,7 +307,6 @@ function ReportTable({
             setReport(record)
           }}
           type='link'
-          className="block w-72 overflow-hidden overflow-ellipsis whitespace-nowrap"
         >
           {text}
         </Button>
@@ -352,7 +352,6 @@ function ReportTable({
       key: 'createdAt',
       sorter: true,
       sortOrder: sortedInfo.field === 'createdAt' ? sortedInfo.order : null,
-      fixed: 'right',
       width: 200
     }
   ]
