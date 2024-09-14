@@ -12,6 +12,8 @@
     "name": "Room type name"
   },
   "notification": {
+    "addSuccess": "Add room type successfully",
+    "editSuccess": "Edit room type successfully",
     "deleteSuccess_one": "Delete room type successfully",
     "deleteSuccess_other": "Delete room types successfully"
   },

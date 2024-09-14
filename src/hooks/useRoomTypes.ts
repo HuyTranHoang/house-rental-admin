@@ -1,4 +1,3 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   addRoomType,
   deleteRoomType,
@@ -7,12 +6,14 @@ import {
   getAllRoomTypesWithPagination,
   updateRoomType
 } from '@/api/roomType.api.ts'
-import { toast } from 'sonner'
-import axios from 'axios'
-import React, { useCallback } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { RoomTypeFilters } from '@/models/roomType.type.ts'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import React, { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 export const useRoomTypesAll = () => {
   const { data, isLoading } = useQuery({
@@ -34,11 +35,14 @@ export const useRoomTypes = (search: string, pageNumber: number, pageSize: numbe
 
 export const useDeleteRoomType = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('roomType')
 
   const { mutate: deleteRoomTypeMutate } = useMutation({
     mutationFn: deleteRoomType,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['roomTypes'] }).then(() => toast.success('Xóa loại phòng thành công'))
+      queryClient
+        .invalidateQueries({ queryKey: ['roomTypes'] })
+        .then(() => toast.success(t('notification.deleteSuccess', { count: 1 })))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -50,13 +54,14 @@ export const useDeleteRoomType = () => {
 
 export const useDeleteRoomTypes = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation('roomType')
 
   const { mutate: deleteRoomTypesMutate } = useMutation({
     mutationFn: deleteRoomTypes,
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient
         .invalidateQueries({ queryKey: ['roomTypes'] })
-        .then(() => toast.success('Xóa các loại phòng thành công'))
+        .then(() => toast.success(t('notification.deleteSuccess', { count: variables.length })))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -69,12 +74,13 @@ export const useDeleteRoomTypes = () => {
 export const useCreateRoomType = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { t } = useTranslation('roomType')
 
   const { mutate: addRoomTypeMutate, isPending: addRoomTypePening } = useMutation({
     mutationFn: addRoomType,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roomTypes'] }).then(() => {
-        toast.success('Thêm loại phòng thành công')
+        toast.success(t('notification.addSuccess'))
         navigate(ROUTER_NAMES.ROOM_TYPE)
       })
     },
@@ -94,12 +100,13 @@ export const useCreateRoomType = (setError: React.Dispatch<React.SetStateAction<
 export const useUpdateRoomType = (setError: React.Dispatch<React.SetStateAction<string>>) => {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { t } = useTranslation('roomType')
 
   const { mutate: updateRoomTypeMutate, isPending: updateRoomTypePending } = useMutation({
     mutationFn: updateRoomType,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roomTypes'] }).then(() => {
-        toast.success('Cập nhật loại phòng thành công')
+        toast.success(t('notification.editSuccess'))
         navigate(ROUTER_NAMES.ROOM_TYPE)
       })
     },

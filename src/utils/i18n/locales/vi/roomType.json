@@ -12,6 +12,8 @@
     "name": "Tên loại phòng"
   },
   "notification": {
+    "addSuccess": "Thêm loại phòng thành công",
+    "editSuccess": "Chỉnh sửa loại phòng thành công",
     "deleteSuccess_one": "Xóa loại phòng thành công",
     "deleteSuccess_other": "Xóa các loại phòng thành công"
   },
