@@ -110,7 +110,7 @@ function ReportTable({
           </Button>
         </>
       )}
-      {status === ReportStatus.APPROVED && (
+      {status === ReportStatus.APPROVED && propertyData?.blocked && (
         <>
           <ConfigProvider
             theme={{
