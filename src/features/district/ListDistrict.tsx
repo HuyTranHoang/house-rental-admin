@@ -1,15 +1,16 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useDeleteMultiDistrict, useDistrictFilters, useDistricts } from '@/hooks/useDistricts.ts'
 import { District, DistrictDataSource } from '@/models/district.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import DistrictTable from './DistrictTable.tsx'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
+import { Trans, useTranslation } from 'react-i18next'
+import AddUpdateDistrict from './AddUpdateDistrict.tsx'
+import { toast } from 'sonner'
 
 const { Search } = Input
 
@@ -19,7 +20,10 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListDistrict() {
-  const navigate = useNavigate()
+
+  const [editId, setEditId] = useState<number | null>(null)
+  const [formOpen, setFormOpen] = useState(false)
+  const [form] = Form.useForm()
 
   const { search, cityId, sortBy, pageNumber, pageSize, setFilters } = useDistrictFilters()
 
@@ -28,10 +32,11 @@ function ListDistrict() {
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
   const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation(['common', 'district'])
 
   const { data, isLoading, isError } = useDistricts(search, cityId, pageNumber, pageSize, sortBy)
   const formatDate = useCustomDateFormatter()
-  const { deleteDistrictsMutate, deleteDisitrctsIsPending } = useDeleteMultiDistrict()
+  const { deleteDistrictsMutate, deleteDistrictsPending } = useDeleteMultiDistrict()
 
   const handleTableChange: TableProps<DistrictDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
@@ -67,6 +72,11 @@ function ListDistrict() {
       setDeleteIdList(selectedIdList)
     }
   }
+  const handleNewDistrict = () => {
+    form.resetFields()
+    setEditId(null)
+    setFormOpen(true)
+  }
 
   useEffect(() => {
     if (cityId) {
@@ -99,7 +109,7 @@ function ListDistrict() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            Danh sách quận huyện
+          {t('district:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -113,7 +123,7 @@ function ListDistrict() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder='Tìm kiếm quận huyện'
+                placeholder={t('district:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -123,16 +133,16 @@ function ListDistrict() {
         <Space>
           {deleteIdList.length > 0 && (
             <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
-              Xóa các mục đã chọn
+              {t('common.multipleDelete')}
             </Button>
           )}
           <Button
             icon={<PlusCircleOutlined />}
             shape='round'
             type='primary'
-            onClick={() => navigate(ROUTER_NAMES.ADD_DISTRICT)}
+            onClick={handleNewDistrict}
           >
-            Thêm mới
+            {t('district:button.add')}
           </Button>
         </Space>
       </Flex>
@@ -144,7 +154,12 @@ function ListDistrict() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} quận huyện`,
+          showTotal: (total, range) => 
+            <Trans
+              ns={'district'}
+              i18nKey='pagination.showTotal'
+              values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
+            />,
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}
@@ -152,19 +167,25 @@ function ListDistrict() {
         rowSelection={rowSelection}
         filteredInfo={filteredInfo}
         sortedInfo={sortedInfo}
+        setEditId={setEditId}
+        setFormOpen={setFormOpen}
       />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
-        pending={deleteDisitrctsIsPending}
+        pending={deleteDistrictsPending}
         setIsModalOpen={setIsOpen}
-        title={'Xác nhận xóa các mục đã chọn'}
+        title={t('district:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteDistrictsMutate(deleteIdList)
-          setDeleteIdList([])
+          deleteDistrictsMutate(deleteIdList).then(() => {
+            toast.success(t('district:notification.deleteSuccessMultiple'))
+            setIsOpen(false)
+            setDeleteIdList([])
+          })
         }}
       />
+      <AddUpdateDistrict form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen}></AddUpdateDistrict>
     </>
   )
 }

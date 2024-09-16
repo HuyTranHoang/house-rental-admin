@@ -1,7 +1,6 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import TableActions from '@/components/TableActions.tsx'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { useDeleteDistrict } from '@/hooks/useDistricts.ts'
 import { DistrictDataSource } from '@/models/district.type.ts'
@@ -9,7 +8,9 @@ import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } fr
 import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+
 
 interface DistrictTableProps {
   dataSource: DistrictDataSource[]
@@ -19,6 +20,8 @@ interface DistrictTableProps {
   rowSelection: TableRowSelection<DistrictDataSource> | undefined
   filteredInfo: Record<string, FilterValue | null>
   sortedInfo: SorterResult<DistrictDataSource>
+  setEditId: React.Dispatch<React.SetStateAction<number | null>>
+  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 function DistrictTable({
@@ -28,15 +31,18 @@ function DistrictTable({
   handleTableChange,
   rowSelection,
   filteredInfo,
-  sortedInfo
+  sortedInfo,
+  setEditId,
+  setFormOpen
 }: DistrictTableProps) {
-  const navigate = useNavigate()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<DistrictDataSource | null>(null)
 
   const { cityData, cityIsLoading } = useCitiesAll()
   const { deleteDistrictMutate } = useDeleteDistrict()
+  const { t } = useTranslation(['common', 'district'])
+
 
   const items: DescriptionsProps['items'] = [
     {
@@ -47,19 +53,19 @@ function DistrictTable({
     },
     {
       key: '2',
-      label: 'Quận huyện',
+      label: t('district:table.name'),
       children: <span>{currentRecord?.name}</span>,
       span: 3
     },
     {
       key: '3',
-      label: 'Thành phố',
+      label: t('district:form.city'),
       children: <span>{currentRecord?.cityName}</span>,
       span: 3
     },
     {
       key: '4',
-      label: 'Ngày tạo',
+      label: t('common.table.createdAt'),
       children: <span>{currentRecord?.createdAt}</span>,
       span: 3
     }
@@ -74,14 +80,14 @@ function DistrictTable({
       width: 50
     },
     {
-      title: 'Quận huyện',
+      title: t('district:table.name'),
       dataIndex: 'name',
       key: 'name',
       sorter: true,
       sortOrder: sortedInfo.field === 'name' ? sortedInfo.order : null
     },
     {
-      title: 'Thành phố',
+      title: t('district:form.city'),
       dataIndex: 'cityName',
       key: 'cityName',
       sorter: true,
@@ -91,7 +97,7 @@ function DistrictTable({
       filteredValue: filteredInfo.cityName || null
     },
     {
-      title: 'Ngày tạo',
+      title: t('common.table.createdAt'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
@@ -100,16 +106,20 @@ function DistrictTable({
       width: 300
     },
     {
-      title: 'Hành động',
+      title: t('common.table.action'),
       key: 'action',
       fixed: 'right',
       width: 200,
       render: (_, record) => (
         <TableActions
-          onUpdate={() => navigate(ROUTER_NAMES.getDistrictEditPath(record.id))}
+          onUpdate={() => {
+              setEditId(record.id)
+              setFormOpen(true)
+            }}
           onDelete={() => {
             setCurrentRecord(record)
             setIsModalOpen(true)
+            
           }}
         />
       )
@@ -127,31 +137,35 @@ function DistrictTable({
         pagination={{
           position: ['bottomCenter'],
           pageSizeOptions: ['5', '10', '20'],
-          locale: { items_per_page: '/ trang' },
+          locale: { items_per_page: `${t('common.pagination.itemsPerPage')}` },
           showSizeChanger: true,
           ...paginationProps
         }}
         locale={{
-          triggerDesc: 'Sắp xếp giảm dần',
-          triggerAsc: 'Sắp xếp tăng dần',
-          cancelSort: 'Hủy sắp xếp',
-          filterReset: 'Bỏ lọc',
-          filterConfirm: 'Lọc'
+          triggerDesc: t('common.table.triggerDesc'),
+          triggerAsc: t('common.table.triggerAsc'),
+          cancelSort: t('common.table.cancelSort'),
+          filterReset: t('district:filter.filter'),
+          filterConfirm: t('district:filter.unFilter')
         }}
       />
 
       <Modal
         open={isModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title='Xác nhận xóa quận huyện' />}
+        title={<ConfirmModalTitle title={t('district:deleteModal.title')} />}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
-          deleteDistrictMutate(currentRecord!.id)
+          deleteDistrictMutate(currentRecord!.id).then(() => {
+            setCurrentRecord(null)
+            setIsModalOpen(false)
+            toast.success(t('district:notification.deleteSuccess'))
+          })
           setIsModalOpen(false)
         }}
-        okText='Xác nhận'
+        okText={t('common.ok')}
         okType='danger'
-        cancelText='Hủy'
+        cancelText={t('common.cancel')}
       >
         <ConfirmModalContent items={items} />
       </Modal>

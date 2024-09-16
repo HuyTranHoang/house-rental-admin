@@ -6,12 +6,10 @@ import {
   getAllDistrictsWithPagination,
   updateDistrict
 } from '@/api/district.api'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { DistrictFilters } from '@/models/district.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import React, { useCallback } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useCallback } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 export const useDistrictsAll = () => {
@@ -35,82 +33,47 @@ export const useDistricts = (search: string, cityId: number, pageNumber: number,
 export const useDeleteDistrict = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteDistrictMutate } = useMutation({
+  const { mutateAsync: deleteDistrictMutate, isPending: deleteDistrictPending } = useMutation({
     mutationFn: deleteDistrict,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['districts'] }).then(() => toast.success('Xóa quận huyện thành công'))
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['district'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteDistrictMutate }
+  return { deleteDistrictMutate, deleteDistrictPending }
 }
 
 export const useDeleteMultiDistrict = () => {
   const queryClient = useQueryClient()
 
-  const { mutate: deleteDistrictsMutate, isPending: deleteDisitrctsIsPending } = useMutation({
-    mutationFn: deleteDistricts,
-    onSuccess: () => {
-      queryClient
-        .invalidateQueries({ queryKey: ['districts'] })
-        .then(() => toast.success('Xóa các quận huyện thành công'))
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    }
+
+  const { mutateAsync: deleteDistrictsMutate, isPending: deleteDistrictsPending } = useMutation({
+    mutationFn: (ids: number[]) => deleteDistricts(ids),
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['districts'] }),
+    onError: (error) => toast.error(error.message)
   })
 
-  return { deleteDistrictsMutate, deleteDisitrctsIsPending }
+  return { deleteDistrictsMutate, deleteDistrictsPending }
 }
 
-export const useCreateDistrict = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useCreateDistrict = () => {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
-  const { mutate: addDistrictMutate, isPending: addDistrictPending } = useMutation({
+  const { mutateAsync: addDistrictMutate, isPending: addDistrictPending } = useMutation({
     mutationFn: addDistrict,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['districts'] }).then(() => {
-        toast.success('Thêm quận huyện thành công')
-        navigate(ROUTER_NAMES.DISTRICT)
-      })
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['districts'] }),
+    onError: (error) => toast.error(error.message)
   })
 
   return { addDistrictMutate, addDistrictPending }
 }
 
-export const useUpdateDistrict = (setError: React.Dispatch<React.SetStateAction<string>>) => {
+export const useUpdateDistrict = () => {
   const queryClient = useQueryClient()
-  const navigate = useNavigate()
 
-  const { mutate: updateDistrictMutate, isPending: updateDistrictPending } = useMutation({
+  const { mutateAsync: updateDistrictMutate, isPending: updateDistrictPending } = useMutation({
     mutationFn: updateDistrict,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['districts'] }).then(() => {
-        toast.success('Cập nhật thành phố thành công')
-        navigate(ROUTER_NAMES.DISTRICT)
-      })
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setError(error.response.data.message)
-        return
-      }
-
-      toast.error(error.message)
-    }
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['districts'] }),
+    onError: (error) => toast.error(error.message)
   })
 
   return { updateDistrictMutate, updateDistrictPending }

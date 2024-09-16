@@ -1,5 +1,4 @@
-import { Button, Flex, Form, FormProps, Input, Select, SelectProps, Spin, Typography } from 'antd'
-import { useMatch, useNavigate, useParams } from 'react-router-dom'
+import { Button, Drawer, Form, FormInstance, FormProps, Input, Select, SelectProps, Spin, Typography } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import { getDistrictById } from '@/api/district.api'
 
@@ -7,34 +6,53 @@ import { useEffect, useState } from 'react'
 import { useCreateDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { DistrictForm } from '@/models/district.type.ts'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
-function AddUpdateDistrict() {
-  const match = useMatch(ROUTER_NAMES.ADD_DISTRICT)
-  const isAddMode = Boolean(match)
-  const title = isAddMode ? 'Thêm mới quận huyện' : 'Cập nhật quận huyện'
-  const navigate = useNavigate()
+interface AddUpdateDistrictProps {
+  form: FormInstance
+  id: number | null
+  formOpen: boolean
+  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-  const { id } = useParams<{ id: string }>()
-  const [form] = Form.useForm()
+function AddUpdateDistrict({ form, id, formOpen, setFormOpen }: AddUpdateDistrictProps) {
+  
+  const isAddMode = id === null
+  const { t } = useTranslation(['common', 'district'])
+  const title = isAddMode ? t('district:form.addForm') : t('district:form.editForm')
+
 
   const { cityData, cityIsLoading } = useCitiesAll()
 
   const [error, setError] = useState<string>('')
   const [cityError, setCityError] = useState<string>('')
 
-  const { addDistrictMutate, addDistrictPending } = useCreateDistrict(setError)
-  const { updateDistrictMutate, updateDistrictPending } = useUpdateDistrict(setError)
+  const { addDistrictMutate, addDistrictPending } = useCreateDistrict()
+  const { updateDistrictMutate, updateDistrictPending } = useUpdateDistrict()
+
 
   const onFinish: FormProps<DistrictForm>['onFinish'] = (values) => {
     if (isAddMode) {
-      addDistrictMutate(values)
+      addDistrictMutate(values).then(() => {
+        form.resetFields()
+        setFormOpen(false)
+        toast.success(t('district:notification.addSuccess'))
+      })
     } else {
-      updateDistrictMutate(values)
+      updateDistrictMutate(values).then(() => {
+        form.resetFields()
+        setFormOpen(false)
+        toast.success(t('district:notification.editSuccess'))
+      })
     }
   }
-
+  const onClose = () => {
+    setFormOpen(false)
+    form.resetFields()
+  }
+  
   const { data: districtUpdateData, isLoading: districtIsLoading } = useQuery({
     queryKey: ['district', id],
     queryFn: () => getDistrictById(Number(id)),
@@ -63,7 +81,7 @@ function AddUpdateDistrict() {
       } else {
         form.setFieldValue('cityId', null)
         setCityError(
-          `Thành phố '${districtUpdateData.cityName}' không còn tồn tại, vui lòng chọn thành phố khác nếu bạn muốn cập nhật!`
+          `${t('district:form.city')} '${districtUpdateData.cityName}' ${t('district:form.cityRequired')}!`
         )
       }
     }
@@ -75,44 +93,31 @@ function AddUpdateDistrict() {
 
   return (
     <>
-      <Flex align='center' justify='space-between'>
-        <Typography.Title level={2} style={{ marginTop: 0 }}>
-          {title}
-        </Typography.Title>
-        <Button
-          icon={<LeftCircleOutlined />}
-          shape='round'
-          type='primary'
-          onClick={() => navigate(ROUTER_NAMES.DISTRICT)}
-        >
-          Quay lại
+     <Drawer
+      title={title}
+      size='large'
+      onClose={onClose}
+      open={formOpen}
+      loading={districtIsLoading}
+      extra={
+        <Button icon={<LeftCircleOutlined />} shape='round' onClick={onClose}>
+          {t('common.back')}
         </Button>
-      </Flex>
+      }
+    >
       <Form
-        form={form}
-        name='districtForm'
-        labelCol={{ span: 6 }}
-        style={{
-          maxWidth: 600,
-          marginTop: 32,
-          boxShadow: '0 0 1px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #f0f0f0',
-          padding: '32px 32px 0'
-        }}
-        onFinish={onFinish}
-        autoComplete='off'
-      >
+        form={form} layout='vertical' name='districtForm' onFinish={onFinish} autoComplete='off'>
         <Form.Item<DistrictForm> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
         <Form.Item<DistrictForm>
-          label='Tên quận huyện'
+          label={t('district:form.name')}
           name='name'
           rules={[
-            { required: true, message: 'Vui lòng nhập tên quận huyện' },
-            { min: 3, message: 'Tên quận huyện phải có ít nhất 3 ký tự' },
-            { max: 50, message: 'Tên quận huyện không được vượt quá 50 ký tự' }
+            { required: true, message: t('district:form.nameRequired') },
+            { min: 3, message: t('district:form.nameMin') },
+            { max: 50, message: t('district:form.nameMax') }
           ]}
           validateStatus={error ? 'error' : undefined}
           extra={<span style={{ color: 'red' }}>{error}</span>}
@@ -120,12 +125,12 @@ function AddUpdateDistrict() {
           <Input onChange={() => setError('')} />
         </Form.Item>
 
-        <Form.Item<DistrictForm>
-          label='Thành phố'
+        <Form.Item<DistrictForm>  
+          label= {t('district:form.city')}
           name='cityId'
-          rules={[{ required: true, message: 'Vui lòng chọn thành phố' }]}
+          rules={[{ required: true, message: t('district:form.selectCity') }]}
         >
-          <Select options={cityOptions} placeholder='Chọn thành phố' onChange={() => setCityError('')} />
+          <Select options={cityOptions} placeholder={t('district:form.cityPick')} onChange={() => setCityError('')} />
         </Form.Item>
 
         {cityError && (
@@ -143,7 +148,7 @@ function AddUpdateDistrict() {
             }}
             style={{ marginRight: 16 }}
           >
-            Đặt lại
+            {t('district:form.formReset')}
           </Button>
 
           <Button
@@ -152,10 +157,11 @@ function AddUpdateDistrict() {
             htmlType='submit'
             style={{ width: 100 }}
           >
-            {isAddMode ? 'Thêm mới' : 'Cập nhật'}
+            {isAddMode ? t('common.add') : t('common.update')}
           </Button>
         </Form.Item>
       </Form>
+      </Drawer>
     </>
   )
 }
