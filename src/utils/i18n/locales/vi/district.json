@@ -1,0 +1,42 @@
+{
+    "title": "Quản lý Quận Huyện",
+    "searchPlaceholder": "Tìm kiếm Quận Huyện",
+    "table": {
+      "name": "Tên Quận Huyện"
+    },
+    "button": {
+      "add": "Quận Huyện mới"
+    },
+    "form": {
+      "addForm": "Thêm Quận Huyện",
+      "editForm": "Chỉnh sửa Quận Huyện",
+      "name": "Tên Quận Huyện",
+      "namePlaceholder": "Nhập tên Quận Huyện",
+      "nameRequired": "Vui lòng nhập tên Quận huyện",
+      "nameMin": "Tên quận huyện phải có ít nhất 3 ký tự",
+      "nameMax": "Tên quận huyện phải có tối đa 50 ký tự",
+      "selectCity" : "Vui lòng nhập thành phố !",
+      "cityPick" :  "Chọn thành phố",
+      "city" : "Thành phố" ,
+      "cityRequired" : "Thành phố không tồn tại , vui lòng nhập thành phố khác" ,
+      "formReset" : "Đặt lại"
+    },
+    "pagination": {
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} quận"
+    },
+    "notification": {
+      "addSuccess": "Thêm quận huyện thành công",
+      "editSuccess": "Chỉnh sửa quận huyện thành công",
+      "deleteSuccess": "Xóa quận huyện thành công",
+      "deleteSuccessMultiple": "Xóa các quận huyện đã chọn thành công"
+    },
+    "deleteModal": {
+      "title": "Xác nhận xóa quận huyện",
+      "titleMultiple": "Xác nhận xóa các quận huyện"
+    },
+    "filter": {
+      "filter": "Lọc",
+      "unFilter": "Hủy lọc"
+    }
+  }
+  

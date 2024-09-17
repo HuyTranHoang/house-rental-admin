@@ -1,0 +1,42 @@
+{
+    "title": "District Management",
+    "searchPlaceholder": "Search District",
+    "table": {
+      "name": "District name"
+    },
+    "button": {
+      "add": "New District"
+    },
+    "form": {
+      "addForm": "Add District",
+      "editForm": "Edit District",
+      "name": "Dictrict name",
+      "namePlaceholder": "Enter District name",
+      "nameRequired": "Please enter district name",
+      "nameMin": "District name must be at least 3 characters",
+      "nameMax": "District name must be at most 50 characters",
+      "selectCity" : "Please select city !",
+      "cityPick" :  "Select city",
+      "city" : "City" ,
+      "cityRequired" : "Not available please enter another city" ,
+      "formReset" : "Reset"
+    },
+    "pagination": {
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} districts"
+    },
+    "notification": {
+      "addSuccess": "Add district successfully",
+      "editSuccess": "Edit district successfully",
+      "deleteSuccess": "Delete district successfully",
+      "deleteSuccessMultiple": "Delete selected districts successfully"
+    },
+    "deleteModal": {
+      "title": "Confirm districts deletion",
+      "titleMultiple": "Confirm multiple district deletion"
+    },
+    "filter": {
+      "filter": "Filter",
+      "unFilter": "unFilter"
+    }
+  }
+  
