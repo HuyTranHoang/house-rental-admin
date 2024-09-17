@@ -9,10 +9,10 @@ import ListReport from '@/features/report/ListReport.tsx'
 import ListReview from '@/features/review/ListReview.tsx'
 import RoleManager from '@/features/role/RoleManager.tsx'
 import ListUser from '@/features/user/ListUser.tsx'
-import districtRouter from '@/router/districtRouter.tsx'
 import AppLayout from '@/ui/AppLayout.tsx'
 import { createBrowserRouter } from 'react-router-dom'
 import ListRoomType from '@/features/roomType/ListRoomType.tsx'
+import ListDistrict from '@/features/district/ListDistrict.tsx'
 
 export const routerList = [
   {
@@ -41,7 +41,11 @@ export const routerList = [
             element: <ListCity />,
             breadcrumb: 'city.list'
           },
-          ...districtRouter, // /district, /district/add, /district/:id/edit
+          {
+            path: ROUTER_NAMES.DISTRICT,
+            element: <ListDistrict />,
+            breadcrumb: 'district.list'
+          },
           {
             path: ROUTER_NAMES.ROOM_TYPE,
             element: <ListRoomType />,

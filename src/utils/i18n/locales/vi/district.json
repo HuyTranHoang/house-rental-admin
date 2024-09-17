@@ -15,10 +15,10 @@
       "nameRequired": "Vui lòng nhập tên Quận huyện",
       "nameMin": "Tên quận huyện phải có ít nhất 3 ký tự",
       "nameMax": "Tên quận huyện phải có tối đa 50 ký tự",
-      "selectCity" : "Vui lòng nhập thành phố !",
-      "cityPick" :  "Chọn thành phố",
-      "city" : "Thành phố" ,
-      "cityRequired" : "Thành phố không tồn tại , vui lòng nhập thành phố khác" ,
+      "cityRequired" : "Vui lòng nhập thành phố!",
+      "cityPlaceholder" :  "Chọn thành phố",
+      "city": "Thành phố",
+      "cityNotFound" : "Thành phố {{cityName}} không còn, vui lòng chọn thành phố khác" ,
       "formReset" : "Đặt lại"
     },
     "pagination": {

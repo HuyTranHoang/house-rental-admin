@@ -1,6 +1,6 @@
 import CustomIndicator from '@/components/CustomIndicator.tsx'
 import useRefreshToken from '@/hooks/useRefreshToken.ts'
-import router from '@/router/router.tsx'
+import router from '@/router.tsx'
 import { Spin } from 'antd'
 import { RouterProvider } from 'react-router-dom'
 import { Toaster } from 'sonner'

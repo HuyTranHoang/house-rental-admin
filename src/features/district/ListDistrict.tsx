@@ -185,6 +185,7 @@ function ListDistrict() {
           })
         }}
       />
+
       <AddUpdateDistrict form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen}></AddUpdateDistrict>
     </>
   )

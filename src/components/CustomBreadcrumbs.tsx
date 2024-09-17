@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 import useBreadcrumbs from 'use-react-router-breadcrumbs'
-import { routerList } from '../router/router.tsx'
+import { routerList } from '../router.tsx'
 
 const CustomBreadcrumbs = () => {
   const breadcrumbs = useBreadcrumbs(routerList)
