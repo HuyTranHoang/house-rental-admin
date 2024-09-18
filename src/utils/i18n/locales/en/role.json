@@ -8,16 +8,16 @@
     "roleList": "Role List",
     "roleAuthority": "Role Authority",
     "selectRole": "Select a role to view permissions",
-    "addNewRole": "Add Role",
+    "addNewRole": "Add role",
     "defaultRole": "Default role cannot be edited",
-    "editRole": "Edit Role",
+    "editRole": "Edit role",
     "adminRole": "Admin role cannot be edited",
     "editAuthority": "Update authority for role",
-    "infoDetail": "Information detail"
+    "infoDetail": "Detail information"
   },
   "table": {
-    "see": "See",
-    "more": "More",
+    "see": "Read",
+    "more": "Other",
     "user": "User",
     "evaluate": "Review",
     "city": "City",
@@ -35,10 +35,10 @@
     "deleteSuccessMultiple": "Delete selected role successfully"
   },
   "form": {
-    "addForm": "Add Role",
-    "editForm": "Edit Role",
-    "roleName": "Role Name",
-    "namePlaceholder": "Enter Role Name",
+    "addForm": "Add role",
+    "editForm": "Edit role",
+    "roleName": "Role name",
+    "namePlaceholder": "Enter role name",
     "nameRequired": "Please enter role name",
     "nameMin": "Role name name must be at least 3 characters",
     "nameMax": "Role name must be at most 50 characters",

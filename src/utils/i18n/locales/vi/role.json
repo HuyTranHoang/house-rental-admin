@@ -35,9 +35,9 @@
     "deleteSuccessMultiple": "Xóa vai trò đã chọn thành công"
   },
   "form": {
-    "addForm": "Thêm Vai Trò",
+    "addForm": "Thêm vai trò",
     "editForm": "Chỉnh sửa vai trò",
-    "roleName": "Tên Vai trò",
+    "roleName": "Tên vai trò",
     "nameRequired": "Vui lòng nhập tên vai trò",
     "nameMin": "Tên vai trò phải có ít nhất 3 ký tự",
     "nameMax": "Tên vai trò phải dài tối đa 50 ký tự",
