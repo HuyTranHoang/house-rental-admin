@@ -180,16 +180,16 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
       width={260}
       style={{
         background: colorBgContainer,
-        height: 'calc(100vh - 100px)',
-        position: 'sticky',
-        top: 40
+        height: '100vh',
+        position: 'fixed'
       }}
+      className='shadow'
     >
       <div style={{ position: 'relative' }}>
         <Layout
           className='container'
           style={{
-            height: 'calc(100vh - 200px)',
+            height: 'calc(100vh - 120px)',
             background: colorBgContainer,
             overflowY: 'scroll'
           }}
