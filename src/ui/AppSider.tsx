@@ -1,7 +1,5 @@
 import axiosInstance from '@/axiosInstance.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
-import { logout, selectAuth } from '@/features/auth/authSlice.ts'
-import { useAppDispatch } from '@/store.ts'
 import { toTitleCase } from '@/utils/toTitleCase.ts'
 import {
   BarChartOutlined,
@@ -17,9 +15,9 @@ import {
 import { Avatar, Button, ConfigProvider, Dropdown, Flex, Layout, Menu, MenuProps, Space, theme, Typography } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+import useBoundStore from '@/store.ts'
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
@@ -27,10 +25,10 @@ const IconFont = createFromIconfontCN({
 
 function AppSider({ darkMode }: { darkMode: boolean }) {
   const navigate = useNavigate()
-  const dispatch = useAppDispatch()
   const location = useLocation()
-  const { user } = useSelector(selectAuth)
   const { t } = useTranslation('breadcrumbs')
+  const user = useBoundStore((state) => state.user)
+  const logout = useBoundStore((state) => state.logout)
 
   const {
     token: { colorBgContainer }
@@ -167,7 +165,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
         toast.info('Chưa có làm uwu!!!')
         break
       case 'logout':
-        dispatch(logout())
+        logout()
         navigate(ROUTER_NAMES.LOGIN)
         localStorage.removeItem('jwtToken')
         axiosInstance.post('/api/auth/logout', {}, { withCredentials: true }).then(() => {
