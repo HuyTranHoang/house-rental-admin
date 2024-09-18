@@ -1,0 +1,58 @@
+{
+    "title": "Role Management",
+    "deleteModal": {
+      "title": "Confirm role deletion",
+      "titleMultiple": "Confirm multiple role deletion"
+    },
+    "list": {
+      "roleList": "Role List",
+      "roleAuthority": "Role Authority",
+      "selectRole" : "Select a role to view permissions",
+      "addNewRole" :"Add Role",
+      "defaultRole" : "Default role cannot be edited",
+      "editRole" : "Edit Role",
+      "adminRole" : "Admin role cannot be edited",
+      "editAuthority" : "Edit authority for role",
+      "infoDetail" : "Information detail"
+    },
+    "table": {
+      "see" :"See",
+      "more" :"More",
+      "user" :"User",
+      "evaluate" :"Review",
+      "city" :"City",
+      "property" :"Property",
+      "district" :"District",
+      "roomType" : "Room Type",
+      "amenity" : "Amenity",
+      "role": "Role" ,
+      "adminPage" :"Admin Page"
+    },
+    "notification": {
+      "addSuccess": "Add role successfully",
+      "editSuccess": "Edit role successfully",
+      "deleteSuccess": "Delete role successfully",
+      "deleteSuccessMultiple": "Delete selected role successfully"
+    },
+    "form": {
+      "addForm": "Add Role",
+      "editForm": "Edit Role",
+      "roleName": "Role Name",
+      "namePlaceholder": "Enter Role Name",
+      "nameRequired": "Please enter role name",
+      "nameMin": "Role name name must be at least 3 characters",
+      "nameMax": "Role name must be at most 50 characters",
+      "description" :"Description",
+      "notDescription" :"No description",
+      "authority" :"Authority",
+      "selectAll" :"Select All",
+      "unSelectAll" :"Un Select All"
+    },
+    "page" : {
+        "filter" :"Filter",
+        "unFilter" :"Cancel Filter",
+        "search" :"Search"
+    }
+    
+  }
+  

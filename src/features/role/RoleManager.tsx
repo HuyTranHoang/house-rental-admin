@@ -24,6 +24,8 @@ import {
 } from 'antd'
 import { ReactNode, useEffect, useState } from 'react'
 import { formatDate } from 'date-fns/format'
+import { useTranslation } from 'react-i18next'
+
 
 interface GroupedAuthorities {
   [key: string]: {
@@ -51,17 +53,16 @@ interface AuthorityPrivileges {
   }
 }
 
-const translationMap: { [key: string]: string } = {
-  user: 'Người dùng',
-  property: 'Bất động sản',
-  review: 'Đánh giá',
-  city: 'Thành phố',
-  district: 'Quận huyện',
-  room_type: 'Loại phòng',
-  amenity: 'Tiện nghi',
-  role: 'Vai trò',
-  dashboard: 'Trang quản trị'
-}
+// user: t('role:table.user'),
+// property: t('role:table.property'),
+// review: t('role:table.evaluate'),
+// city: t('role:table.city'),
+// district: t('role:table.district'),
+// room_type: t('role:table.roomType'),
+// amenity: t('role:table.amenity'),
+// role: t('role:table.role'),
+// dashboard: t('role:table.adminPage')
+
 
 function RoleManager() {
   const [form] = Form.useForm()
@@ -71,12 +72,23 @@ function RoleManager() {
   const [currentRole, setCurrentRole] = useState({} as Role)
   const [, setError] = useState<string>('')
   const { updateRoleMutate, updateRolePending } = useUpdateRole(setError, undefined, undefined, setCurrentRole)
-
+  const { t } = useTranslation(['common', 'role'])
   const { data: roleUpdateData, isLoading: roleUpdateLoading } = useQuery({
     queryKey: ['role', currentRole.id],
     queryFn: () => getRoleById(Number(currentRole.id)),
     enabled: currentRole.id !== undefined
   })
+  const translationMap: { [key: string]: string } = {
+        user: t('role:table.user'),
+        property: t('role:table.property'),
+        review: t('role:table.evaluate'),
+        city: t('role:table.city'),
+        district: t('role:table.district'),
+        room_type: t('role:table.roomType'),
+        amenity: t('role:table.amenity'),
+        role: t('role:table.role'),
+        dashboard: t('role:table.adminPage')
+  }
 
   const columns: TableProps<AuthoritiesTable>['columns'] = [
     {
@@ -85,36 +97,36 @@ function RoleManager() {
       rowScope: 'row'
     },
     {
-      title: 'Xem',
+      title: t('role:table.see'),
       dataIndex: 'read',
       key: 'read'
     },
     {
-      title: 'Thêm',
+      title: t('common:common.add'),
       dataIndex: 'create',
       key: 'create'
     },
     {
-      title: 'Xóa',
+      title: t('common:common.delete'),
       dataIndex: 'delete',
       key: 'delete'
     },
     {
-      title: 'Sửa',
+      title: t('common:common.edit'),
       dataIndex: 'update',
       key: 'update'
     },
     {
-      title: 'Khác',
+      title: t('role:table.more'),
       dataIndex: 'other',
       key: 'other',
       render: (_, rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
         return (
           <Space>
-            <Tooltip title='Chọn tất cả'>
+            <Tooltip title={t('role:form.selectAll')}>
               <PlusSquareOutlined onClick={() => selectAll(rowIndex)} />
             </Tooltip>
-            <Tooltip title='Bỏ chọn tất cả'>
+            <Tooltip title={t('role:form.unSelectAll')}>
               <MinusSquareOutlined onClick={() => unselectAll(rowIndex)} style={{ color: red.primary }} />
             </Tooltip>
           </Space>
@@ -238,7 +250,7 @@ function RoleManager() {
       <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
         <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            Quản lý vai trò
+            {t('role:title')}
           </Typography.Title>
         </Flex>
       </Flex>
@@ -250,25 +262,25 @@ function RoleManager() {
 
         <Col span={12}>
           <Typography.Title level={5}>
-            Quyền hạn vai trò <span style={{ color: blue[5] }}>{currentRole.name}</span>
+          {t('role:list.roleAuthority')} <span style={{ color: blue[5] }}>{currentRole.name}</span>
           </Typography.Title>
           <Form form={form} name='roleForm' onFinish={onFinish} layout='horizontal' autoComplete='off'>
             <Form.Item<RoleField> label='Id' name='id' hidden>
               <Input />
             </Form.Item>
 
-            <Form.Item<RoleField> label='Tên vai trò' name='name' hidden>
+            <Form.Item<RoleField> label={t('role:form.roleName')} name='name' hidden>
               <Input />
             </Form.Item>
 
-            <Form.Item<RoleField> label='Mô tả' name='description' hidden>
+            <Form.Item<RoleField> label={t('role:form.description')} name='description' hidden>
               <Input />
             </Form.Item>
 
             <Form.Item<RoleField>>
-              {!currentRole.id && <Typography.Paragraph>Chọn một vai trò để xem quyền hạn</Typography.Paragraph>}
+              {!currentRole.id && <Typography.Paragraph>{t('role:list.selectRole')}</Typography.Paragraph>}
               {currentRole.id && currentRole.name === 'ROLE_ADMIN' && (
-                <Typography.Paragraph>Vai trò admin có tất cả quyền hạn và không thể thay đổi</Typography.Paragraph>
+                <Typography.Paragraph>{t('role:list.adminRole')}</Typography.Paragraph>
               )}
               {currentRole.id && currentRole.name !== 'ROLE_ADMIN' && (
                 <Table dataSource={dataSource} columns={columns} pagination={false} loading={roleUpdateLoading} />
@@ -278,7 +290,7 @@ function RoleManager() {
             <Form.Item>
               {currentRole.id && currentRole.name !== 'ROLE_ADMIN' && (
                 <Button loading={updateRolePending} type='primary' htmlType='submit'>
-                  Cập nhật quyền hạn cho vai trò
+                    {t('role:list.editAuthority')}
                 </Button>
               )}
             </Form.Item>
@@ -288,12 +300,12 @@ function RoleManager() {
         <Col span={7}>
           {currentRole.id && (
             <>
-              <Typography.Title level={5}>Thông tin chi tiết</Typography.Title>
+              <Typography.Title level={5}>{t('role:list.infoDetail')}</Typography.Title>
               <Typography.Paragraph>
-                {currentRole.description ? `Mô tả: ${currentRole.description}` : 'Không có mô tả'}
+                {currentRole.description ? `${t('role:form.description')} : ${currentRole.description}` : t('role:form.notDescription')}
               </Typography.Paragraph>
               <Typography.Paragraph>
-                {currentRole.createdAt ? `Ngày tạo: ${formatDate(currentRole.createdAt, 'dd-MM-yyyy hh:mm a')}` : ''}
+                {currentRole.createdAt ? `${t('common:common.table.createdAt')}: ${formatDate(currentRole.createdAt, 'dd-MM-yyyy hh:mm a')}` : ''}
               </Typography.Paragraph>
             </>
           )}

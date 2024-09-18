@@ -8,6 +8,7 @@ import { DescriptionsProps, Modal, Space, Table, TablePaginationConfig, TablePro
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useNavigate } from 'react-router-dom'
 import { authorityPrivilegesFilterMap, authorityPrivilegesMap } from './authorityPrivilegesMap.ts'
+import { useTranslation } from 'react-i18next'
 
 const { confirm } = Modal
 
@@ -21,6 +22,7 @@ interface RoleTableProps {
 
 function RoleTable({ dataSource, loading, paginationProps, handleTableChange, rowSelection }: RoleTableProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation(['common', 'role'])
 
   const { deleteRoleMutate } = useDeleteRole()
 
@@ -34,13 +36,13 @@ function RoleTable({ dataSource, loading, paginationProps, handleTableChange, ro
       },
       {
         key: '2',
-        label: 'Tên vai trò',
+        label: t('role:form.roleName'),
         children: <span>{record.name}</span>,
         span: 3
       },
       {
         key: '3',
-        label: 'Ngày tạo',
+        label: t('common:common.table.createdAt'),
         children: <span>{record.createdAt}</span>,
         span: 3
       }
@@ -48,11 +50,11 @@ function RoleTable({ dataSource, loading, paginationProps, handleTableChange, ro
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa vai trò' />,
+      title: <ConfirmModalTitle title={t('role:deleteModal.title')} />,
       content: <ConfirmModalContent items={items} />,
-      okText: 'Xác nhận',
+      okText: t('common.ok'),
       okType: 'danger',
-      cancelText: 'Hủy',
+      cancelText: t('common.cancel'),
       maskClosable: true,
       onOk() {
         deleteRoleMutate(record.id)
@@ -69,13 +71,13 @@ function RoleTable({ dataSource, loading, paginationProps, handleTableChange, ro
       width: 50
     },
     {
-      title: 'Tên vai trò',
+      title: t('role:form.roleName'),
       dataIndex: 'name',
       key: 'name',
       sorter: true
     },
     {
-      title: 'Quyền hạn',
+      title: t('role:form.authority'),
       dataIndex: 'authorityPrivileges',
       key: 'authorityPrivileges',
       filterSearch: true,
@@ -96,7 +98,7 @@ function RoleTable({ dataSource, loading, paginationProps, handleTableChange, ro
       )
     },
     {
-      title: 'Ngày tạo',
+      title: t('common:common.table.createdAt'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       sorter: true,
@@ -104,7 +106,7 @@ function RoleTable({ dataSource, loading, paginationProps, handleTableChange, ro
       width: 300
     },
     {
-      title: 'Hành động',
+      title: t('common.table.action'),
       key: 'action',
       fixed: 'right',
       width: 200,
@@ -126,20 +128,20 @@ function RoleTable({ dataSource, loading, paginationProps, handleTableChange, ro
       pagination={{
         position: ['bottomCenter'],
         pageSizeOptions: ['5', '10', '20'],
-        locale: { items_per_page: '/ trang' },
+        locale: { items_per_page: t('common.pagination.itemsPerPage') },
         showSizeChanger: true,
         ...paginationProps
       }}
       onChange={handleTableChange}
       loading={loading}
       locale={{
-        triggerDesc: 'Sắp xếp giảm dần',
-        triggerAsc: 'Sắp xếp tăng dần',
-        cancelSort: 'Hủy sắp xếp',
-        filterReset: 'Bỏ lọc',
-        filterConfirm: 'Lọc',
-        filterSearchPlaceholder: 'Tìm kiếm',
-        filterCheckall: 'Chọn tất cả'
+        triggerDesc: t('common.table.triggerDesc'),
+        triggerAsc: t('common.table.triggerAsc'),
+        cancelSort: t('common.table.cancelSort'),
+        filterReset: t('role:page.filter'),
+        filterConfirm: t('role:page.unFilter'),
+        filterSearchPlaceholder: t('role:page.search'),
+        filterCheckall: t('role:form.selectAll')
       }}
     />
   )
