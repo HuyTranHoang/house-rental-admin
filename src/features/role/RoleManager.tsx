@@ -22,10 +22,9 @@ import {
   Tooltip,
   Typography
 } from 'antd'
-import { ReactNode, useEffect, useState } from 'react'
 import { formatDate } from 'date-fns/format'
+import { ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
 
 interface GroupedAuthorities {
   [key: string]: {
@@ -67,16 +66,17 @@ function RoleManager() {
     queryFn: () => getRoleById(Number(currentRole.id)),
     enabled: currentRole.id !== undefined
   })
+
   const translationMap: { [key: string]: string } = {
-        user: t('role:table.user'),
-        property: t('role:table.property'),
-        review: t('role:table.evaluate'),
-        city: t('role:table.city'),
-        district: t('role:table.district'),
-        room_type: t('role:table.roomType'),
-        amenity: t('role:table.amenity'),
-        role: t('role:table.role'),
-        dashboard: t('role:table.adminPage')
+    user: t('role:table.user'),
+    property: t('role:table.property'),
+    review: t('role:table.evaluate'),
+    city: t('role:table.city'),
+    district: t('role:table.district'),
+    room_type: t('role:table.roomType'),
+    amenity: t('role:table.amenity'),
+    role: t('role:table.role'),
+    dashboard: t('role:table.adminPage')
   }
 
   const columns: TableProps<AuthoritiesTable>['columns'] = [
@@ -251,7 +251,7 @@ function RoleManager() {
 
         <Col span={12}>
           <Typography.Title level={5}>
-          {t('role:list.roleAuthority')} <span style={{ color: blue[5] }}>{currentRole.name}</span>
+            {t('role:list.roleAuthority')} <span style={{ color: blue[5] }}>{currentRole.name}</span>
           </Typography.Title>
           <Form form={form} name='roleForm' onFinish={onFinish} layout='horizontal' autoComplete='off'>
             <Form.Item<RoleField> label='Id' name='id' hidden>
@@ -279,7 +279,7 @@ function RoleManager() {
             <Form.Item>
               {currentRole.id && currentRole.name !== 'ROLE_ADMIN' && (
                 <Button loading={updateRolePending} type='primary' htmlType='submit'>
-                    {t('role:list.editAuthority')}
+                  {t('role:list.editAuthority')}
                 </Button>
               )}
             </Form.Item>
@@ -291,10 +291,14 @@ function RoleManager() {
             <>
               <Typography.Title level={5}>{t('role:list.infoDetail')}</Typography.Title>
               <Typography.Paragraph>
-                {currentRole.description ? `${t('role:form.description')} : ${currentRole.description}` : t('role:form.notDescription')}
+                {currentRole.description
+                  ? `${t('role:form.description')} : ${currentRole.description}`
+                  : t('role:form.notDescription')}
               </Typography.Paragraph>
               <Typography.Paragraph>
-                {currentRole.createdAt ? `${t('common:common.table.createdAt')}: ${formatDate(currentRole.createdAt, 'dd-MM-yyyy hh:mm a')}` : ''}
+                {currentRole.createdAt
+                  ? `${t('common:common.table.createdAt')}: ${formatDate(currentRole.createdAt, 'dd-MM-yyyy hh:mm a')}`
+                  : ''}
               </Typography.Paragraph>
             </>
           )}
