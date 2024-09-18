@@ -1,0 +1,108 @@
+{
+  "title": "Role Management",
+  "deleteModal": {
+    "title": "Confirm role deletion",
+    "titleMultiple": "Confirm multiple role deletion"
+  },
+  "list": {
+    "roleList": "Role List",
+    "roleAuthority": "Role Authority",
+    "selectRole": "Select a role to view permissions",
+    "addNewRole": "Add Role",
+    "defaultRole": "Default role cannot be edited",
+    "editRole": "Edit Role",
+    "adminRole": "Admin role cannot be edited",
+    "editAuthority": "Update authority for role",
+    "infoDetail": "Information detail"
+  },
+  "table": {
+    "see": "See",
+    "more": "More",
+    "user": "User",
+    "evaluate": "Review",
+    "city": "City",
+    "property": "Property",
+    "district": "District",
+    "roomType": "Room Type",
+    "amenity": "Amenity",
+    "role": "Role",
+    "adminPage": "Admin Page"
+  },
+  "notification": {
+    "addSuccess": "Add role successfully",
+    "editSuccess": "Edit role successfully",
+    "deleteSuccess": "Delete role successfully",
+    "deleteSuccessMultiple": "Delete selected role successfully"
+  },
+  "form": {
+    "addForm": "Add Role",
+    "editForm": "Edit Role",
+    "roleName": "Role Name",
+    "namePlaceholder": "Enter Role Name",
+    "nameRequired": "Please enter role name",
+    "nameMin": "Role name name must be at least 3 characters",
+    "nameMax": "Role name must be at most 50 characters",
+    "description": "Description",
+    "notDescription": "No description",
+    "authority": "Authority",
+    "selectAll": "Select All",
+    "unSelectAll": "Unselect All"
+  },
+  "authorityPrivilege": {
+    "user": {
+      "read": "User: View",
+      "update": "User: Edit",
+      "create": "User: Add",
+      "delete": "User: Delete"
+    },
+    "property": {
+      "read": "Property: View",
+      "update": "Property: Edit",
+      "create": "Property: Add",
+      "delete": "Property: Delete"
+    },
+    "review": {
+      "read": "Review: View",
+      "update": "Review: Edit",
+      "create": "Review: Add",
+      "delete": "Review: Delete"
+    },
+    "city": {
+      "read": "City: View",
+      "update": "City: Edit",
+      "create": "City: Add",
+      "delete": "City: Delete"
+    },
+    "district": {
+      "read": "District: View",
+      "update": "District: Edit",
+      "create": "District: Add",
+      "delete": "District: Delete"
+    },
+    "room_type": {
+      "read": "Room Type: View",
+      "update": "Room Type: Edit",
+      "create": "Room Type: Add",
+      "delete": "Room Type: Delete"
+    },
+    "amenity": {
+      "read": "Amenity: View",
+      "update": "Amenity: Edit",
+      "create": "Amenity: Add",
+      "delete": "Amenity: Delete"
+    },
+    "role": {
+      "read": "Role: View",
+      "update": "Role: Edit",
+      "create": "Role: Add",
+      "delete": "Role: Delete"
+    },
+    "admin": {
+      "all": "Admin: Full Access"
+    },
+    "dashboard": {
+      "read": "Dashboard: View"
+    }
+  }
+}
+  

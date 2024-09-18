@@ -1,0 +1,107 @@
+{
+  "title": "Quản lý vai trò",
+  "deleteModal": {
+    "title": "Xác nhận xóa vai trò",
+    "titleMultiple": "Xác nhận xóa nhiều vai trò"
+  },
+  "list": {
+    "roleList": "Danh sách vai trò",
+    "roleAuthority": "Quyền hạn vai trò",
+    "selectRole": "Chọn một vai trò để xem quyền",
+    "addNewRole": "Thêm mới vai trò",
+    "defaultRole": "Vai trò mặc định không thể chỉnh sửa",
+    "editRole": "Cập nhât vai trò",
+    "adminRole": "Vai trò admin không thể thay đổi",
+    "editAuthority": "Cập nhật quyền hạn cho vai trò",
+    "infoDetail": "Thông tin chi tiết"
+  },
+  "table": {
+    "see": "Xem",
+    "more": "Khác",
+    "user": "Người dùng",
+    "evaluate": "Đánh giá",
+    "city": "Thành phố",
+    "property": "Bất động sản",
+    "district": "Quận huyện",
+    "roomType": "Loại phòng",
+    "amenity": "Tiện nghi",
+    "role": "Vai trò",
+    "adminPage": "Trang quản trị"
+  },
+  "notification": {
+    "addSuccess": "Thêm vai trò thành công",
+    "editSuccess": "Chỉnh sửa vai trò thành công",
+    "deleteSuccess": "Xóa vai trò thành công",
+    "deleteSuccessMultiple": "Xóa vai trò đã chọn thành công"
+  },
+  "form": {
+    "addForm": "Thêm Vai Trò",
+    "editForm": "Chỉnh sửa vai trò",
+    "roleName": "Tên Vai trò",
+    "nameRequired": "Vui lòng nhập tên vai trò",
+    "nameMin": "Tên vai trò phải có ít nhất 3 ký tự",
+    "nameMax": "Tên vai trò phải dài tối đa 50 ký tự",
+    "description": "Mô tả",
+    "notDescription": "Không có mô tả",
+    "authority": "Quyền hạn",
+    "selectAll": "Chọn tất cả",
+    "unSelectAll": "Bỏ chọn tất cả"
+  },
+  "authorityPrivilege": {
+    "user": {
+      "read": "Người dùng: Xem",
+      "update": "Người dùng: Sửa",
+      "create": "Người dùng: Thêm",
+      "delete": "Người dùng: Xóa"
+    },
+    "property": {
+      "read": "Bất động sản: Xem",
+      "update": "Bất động sản: Sửa",
+      "create": "Bất động sản: Thêm",
+      "delete": "Bất động sản: Xóa"
+    },
+    "review": {
+      "read": "Đánh giá: Xem",
+      "update": "Đánh giá: Sửa",
+      "create": "Đánh giá: Thêm",
+      "delete": "Đánh giá: Xóa"
+    },
+    "city": {
+      "read": "Thành phố: Xem",
+      "update": "Thành phố: Sửa",
+      "create": "Thành phố: Thêm",
+      "delete": "Thành phố: Xóa"
+    },
+    "district": {
+      "read": "Quận huyện: Xem",
+      "update": "Quận huyện: Sửa",
+      "create": "Quận huyện: Thêm",
+      "delete": "Quận huyện: Xóa"
+    },
+    "room_type": {
+      "read": "Loại phòng: Xem",
+      "update": "Loại phòng: Sửa",
+      "create": "Loại phòng: Thêm",
+      "delete": "Loại phòng: Xóa"
+    },
+    "amenity": {
+      "read": "Tiện nghi: Xem",
+      "update": "Tiện nghi: Sửa",
+      "create": "Tiện nghi: Thêm",
+      "delete": "Tiện nghi: Xóa"
+    },
+    "role": {
+      "read": "Vai trò: Xem",
+      "update": "Vai trò: Sửa",
+      "create": "Vai trò: Thêm",
+      "delete": "Vai trò: Xóa"
+    },
+    "admin": {
+      "all": "Quản trị: Toàn quyền"
+    },
+    "dashboard": {
+      "read": "Dashboard: Xem"
+    }
+  }
+}
+
