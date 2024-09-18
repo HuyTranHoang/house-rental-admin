@@ -1,5 +1,4 @@
 import BlockUserButton from '@/components/BlockUserButton.tsx'
-import { authorityPrivilegesMap } from '@/features/role/authorityPrivilegesMap.ts'
 import { UserDataSource } from '@/models/user.type.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { green } from '@ant-design/colors'
@@ -12,8 +11,21 @@ interface UserDetailsModalProps {
   currentUser: UserDataSource | null
 }
 
+const authorityColorMap: { [key: string]: string } = {
+  user: 'blue',
+  property: 'magenta',
+  review: 'purple',
+  city: 'volcano',
+  district: 'orange',
+  room_type: 'gold',
+  amenity: 'lime',
+  role: 'green',
+  admin: 'red',
+  dashboard: 'cyan'
+}
+
 function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDetailsModalProps) {
-  const { t } = useTranslation(['common', 'user'])
+  const { t } = useTranslation(['common', 'user', 'role'])
   const {
     token: { colorBgLayout }
   } = theme.useToken()
@@ -98,10 +110,14 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
               >
                 <Space wrap={true}>
                   {currentUser.authorities.map((authority) => {
-                    const [displayName, color] = authorityPrivilegesMap[authority] || [authority, 'blue']
+                    const [resource] = authority.split(':')
+                    const color = authorityColorMap[resource] || 'blue'
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-expect-error
+                    const displayName = t(`role:authorityPrivilege.${authority}`)
                     return (
                       <Tag key={authority} color={color}>
-                        {displayName}
+                        {displayName as string}
                       </Tag>
                     )
                   })}
