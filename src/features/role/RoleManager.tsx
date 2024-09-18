@@ -53,17 +53,6 @@ interface AuthorityPrivileges {
   }
 }
 
-// user: t('role:table.user'),
-// property: t('role:table.property'),
-// review: t('role:table.evaluate'),
-// city: t('role:table.city'),
-// district: t('role:table.district'),
-// room_type: t('role:table.roomType'),
-// amenity: t('role:table.amenity'),
-// role: t('role:table.role'),
-// dashboard: t('role:table.adminPage')
-
-
 function RoleManager() {
   const [form] = Form.useForm()
 
