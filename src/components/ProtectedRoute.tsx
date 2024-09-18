@@ -1,11 +1,10 @@
-import { useSelector } from 'react-redux'
-import { selectAuth } from '@/features/auth/authSlice.ts'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import ROUTER_NAMES from '@/constant/routerNames'
+import useBoundStore from '@/store.ts'
 
 function ProtectedRoute() {
-  const { isAdmin } = useSelector(selectAuth)
+  const isAdmin = useBoundStore((state) => state.isAdmin)
   const navigate = useNavigate()
   const location = useLocation()
 

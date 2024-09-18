@@ -1,13 +1,11 @@
-import { useAppDispatch } from '@/store.ts'
+import useBoundStore from '@/store.ts'
 import AppSider from '@/ui/AppSider.tsx'
-import { selectI18n, selectIsDarkMode, setI18n, toggleDarkMode } from '@/ui/appSlice.ts'
 import { GlobalOutlined, MoonOutlined, SunOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
 import { Button, ConfigProvider, Flex, FloatButton, Layout, Space, theme, Typography } from 'antd'
 import { Footer } from 'antd/lib/layout/layout'
 import { clsx } from 'clsx'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import CustomBreadcrumbs from '../components/CustomBreadcrumbs.tsx'
 
@@ -15,10 +13,11 @@ const { Header, Content } = Layout
 
 function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
   const [showScrollButton, setShowScrollButton] = useState(false)
-  const dispatch = useAppDispatch()
-  const isDarkMode = useSelector(selectIsDarkMode)
-  const i18n = useSelector(selectI18n)
   const { t } = useTranslation()
+  const isDarkMode = useBoundStore((state) => state.isDarkMode)
+  const toggleDarkMode = useBoundStore((state) => state.toggleDarkMode)
+  const i18n = useBoundStore((state) => state.i18n)
+  const setI18n = useBoundStore((state) => state.setI18n)
 
   const {
     token: { colorBgContainer, borderRadiusLG }
@@ -57,20 +56,20 @@ function AppLayout({ haveBgColor = true }: { haveBgColor?: boolean }) {
             </Flex>
 
             <Space>
-              <Button type='link' className='mt-2 text-xl' onClick={() => dispatch(toggleDarkMode())}>
+              <Button type='link' className='mt-2 text-xl' onClick={() => toggleDarkMode()}>
                 {isDarkMode ? <SunOutlined className='text-white' /> : <MoonOutlined />}
               </Button>
 
               <Button type='link' className='mt-2 text-xl'>
                 <GlobalOutlined className='text-white' />
                 <Typography.Text
-                  onClick={() => dispatch(setI18n('en'))}
+                  onClick={() => setI18n('en')}
                   className={clsx('text-white hover:text-blue-500', i18n === 'en' ? 'font-semibold' : 'opacity-50')}
                 >
                   EN
                 </Typography.Text>
                 <Typography.Text
-                  onClick={() => dispatch(setI18n('vi'))}
+                  onClick={() => setI18n('vi')}
                   className={clsx('text-white hover:text-blue-500', i18n === 'vi' ? 'font-semibold' : 'opacity-50')}
                 >
                   VI

@@ -1,32 +1,29 @@
-import GradientButton from '@/components/GradientButton.tsx'
-import { User } from '@/models/user.type.ts'
-import { useAppDispatch } from '@/store.ts'
-import { delay } from '@/utils/delay.ts'
+'use client'
+
+import GradientButton from '@/components/GradientButton'
+import { User } from '@/models/user.type'
+import useBoundStore from '@/store'
+import { delay } from '@/utils/delay'
 import { AntDesignOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Checkbox, Col, Flex, Form, FormProps, Input, Row, Spin, Typography } from 'antd'
+import { useMutation } from '@tanstack/react-query'
+import { Checkbox, Col, Flex, Form, Input, Row, Spin, Typography } from 'antd'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { loginFailure, loginRequest, loginSuccess, selectAuth } from './authSlice.ts'
 
-type FieldType = {
-  username?: string
-  password?: string
-  remember?: string
-}
-
-const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-  console.log('Failed:', errorInfo)
+type LoginFormType = {
+  username: string
+  password: string
+  remember?: boolean
 }
 
 function Login() {
-  const { isAdmin, isLoading } = useSelector(selectAuth)
-  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const location = useLocation()
   const redirectTo = location.state?.from || '/'
+  const isAdmin = useBoundStore((state) => state.isAdmin)
+  const loginSuccess = useBoundStore((state) => state.loginSuccess)
 
   const [spinning, setSpinning] = useState(true)
 
@@ -38,30 +35,26 @@ function Login() {
     }
   }, [isAdmin, navigate, redirectTo])
 
-  const onFinish = async (values: FieldType) => {
-    console.log('Success submit:', values)
-    try {
-      dispatch(loginRequest())
-      const response = await axios.post<User>('/api/auth/login', values)
-      console.log('>>>LOGIN.JSX', response)
+  const loginMutation = useMutation({
+    mutationFn: (values: LoginFormType) => axios.post<User>('/api/auth/login', values),
+    onSuccess: (response) => {
       toast.success('Đăng nhập thành công')
 
-      const payload: { user: User; token: string } = {
+      const payload = {
         user: response.data,
         token: response.headers['jwt-token']
       }
 
       localStorage.setItem('jwtToken', payload.token)
-      dispatch(loginSuccess(payload))
+      loginSuccess(payload.user, payload.token)
       navigate(redirectTo)
-    } catch (error) {
-      console.log('>>>LOGIN.JSX', error)
+    },
+    onError: () => {
       toast.error('Sai tên tài khoản hoặc mật khẩu')
-      dispatch(loginFailure())
     }
-  }
+  })
 
-  if (isAdmin) {
+  if (spinning) {
     return <Spin spinning={spinning} fullscreen />
   }
 
@@ -72,8 +65,7 @@ function Login() {
           <Form
             name='login'
             initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            onFinish={(values) => loginMutation.mutate(values)}
             autoComplete='off'
             layout='vertical'
             style={{
@@ -95,7 +87,7 @@ function Login() {
               </Typography.Text>
             </Flex>
 
-            <Form.Item<FieldType>
+            <Form.Item<LoginFormType>
               label='Tài khoản'
               name='username'
               rules={[{ required: true, message: 'Vui lòng nhập tên tài khoản!' }]}
@@ -103,7 +95,7 @@ function Login() {
               <Input prefix={<UserOutlined />} />
             </Form.Item>
 
-            <Form.Item<FieldType>
+            <Form.Item<LoginFormType>
               label='Mật khẩu'
               name='password'
               rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
@@ -121,7 +113,13 @@ function Login() {
             </Form.Item>
 
             <Form.Item>
-              <GradientButton type='primary' htmlType='submit' icon={<AntDesignOutlined />} loading={isLoading} block>
+              <GradientButton
+                type='primary'
+                htmlType='submit'
+                icon={<AntDesignOutlined />}
+                loading={loginMutation.isPending}
+                block
+              >
                 Đăng nhập
               </GradientButton>
             </Form.Item>

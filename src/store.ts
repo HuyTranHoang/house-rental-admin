@@ -1,17 +1,26 @@
-import { configureStore } from '@reduxjs/toolkit'
-import { useDispatch } from 'react-redux'
+import { createAuthSlice } from '@/features/auth/authSlice.ts'
+import { User } from '@/models/user.type.ts'
+import { createUISlice } from '@/ui/uiSlice.ts'
+import { create } from 'zustand'
 
-import authReducer from './features/auth/authSlice.ts'
-import appReducer from './ui/appSlice.ts'
+export type UISlice = {
+  isDarkMode: boolean
+  i18n: string
+  toggleDarkMode: () => void
+  setI18n: (lang: string) => void
+}
 
-const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    app: appReducer
-  }
-})
+export type AuthSlice = {
+  user: User | null
+  token: string | null
+  isAdmin: boolean
+  loginSuccess: (user: User, token: string) => void
+  logout: () => void
+}
 
-export default store
-export type IRootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
-export const useAppDispatch = useDispatch.withTypes<AppDispatch>()
+const useBoundStore = create<UISlice & AuthSlice>()((...a) => ({
+  ...createUISlice(...a),
+  ...createAuthSlice(...a)
+}))
+
+export default useBoundStore

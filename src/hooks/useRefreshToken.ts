@@ -1,13 +1,13 @@
-import { loginFailure, loginSuccess } from '@/features/auth/authSlice.ts'
-import { User } from '@/models/user.type.ts'
-import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import axiosInstance from '@/axiosInstance.ts'
+import { User } from '@/models/user.type.ts'
+import useBoundStore from '@/store.ts'
+import { useEffect, useState } from 'react'
 
 const useRefreshToken = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const dispatch = useDispatch()
+
   const accessToken = localStorage.getItem('jwtToken')
+  const loginSuccess = useBoundStore((state) => state.loginSuccess)
 
   useEffect(() => {
     const refresh = async () => {
@@ -22,10 +22,8 @@ const useRefreshToken = () => {
         const newJwtToken = response.headers['jwt-token']
 
         localStorage.setItem('jwtToken', newJwtToken)
-        dispatch(loginSuccess({ user, token: newJwtToken }))
+        loginSuccess(user, newJwtToken)
       } catch (error) {
-        console.error('Refresh token failed:', error)
-        dispatch(loginFailure())
         localStorage.removeItem('jwtToken')
       } finally {
         setIsLoading(false)
@@ -33,7 +31,7 @@ const useRefreshToken = () => {
     }
 
     refresh()
-  }, [accessToken, dispatch])
+  }, [accessToken, loginSuccess])
 
   return isLoading
 }

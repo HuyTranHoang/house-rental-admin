@@ -3,7 +3,6 @@ import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import { useCreateRole, useDeleteRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
 import { Role } from '@/models/role.type.ts'
-import { selectIsDarkMode } from '@/ui/appSlice.ts'
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -22,8 +21,8 @@ import {
 } from 'antd'
 import { clsx } from 'clsx'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
+import useBoundStore from '@/store.ts'
 
 const { confirm } = Modal
 
@@ -39,7 +38,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const [error, setError] = useState<string>('')
   const [formAddRole] = Form.useForm()
 
-  const isDarkMode = useSelector(selectIsDarkMode)
+  const isDarkMode = useBoundStore((state) => state.isDarkMode)
   const formatDate = useCustomDateFormatter()
 
   const { addRoleMutate, addRolePending } = useCreateRole(setError, setIsModalOpen, formAddRole)
