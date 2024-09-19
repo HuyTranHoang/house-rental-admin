@@ -1,14 +1,14 @@
-import useAuthStore from '@/features/auth/authStore.ts'
-import axiosInstance from '@/inteceptor/axiosInstance.ts'
 import { User } from '@/models/user.type.ts'
 import { delay } from '@/utils/delay.ts'
 import { useEffect, useState } from 'react'
+import useBoundStore from '@/store.ts'
+import axiosInstance from '@/axiosInstance.ts'
 
 const useRefreshToken = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const accessToken = localStorage.getItem('jwtToken')
-  const loginSuccess = useAuthStore((state) => state.loginSuccess)
+  const loginSuccess = useBoundStore((state) => state.loginSuccess)
 
   useEffect(() => {
     const refresh = async () => {
