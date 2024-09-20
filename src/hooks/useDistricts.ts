@@ -115,7 +115,7 @@ export const useDistrictFilters = () => {
 
           if (filters.cityId !== undefined) {
             if (filters.cityId) {
-              params.set('cityId', String(filters.cityId))
+              params.set('cityId', filters.cityId.toString())
               params.set('pageNumber', '1')
             } else {
               params.delete('cityId')

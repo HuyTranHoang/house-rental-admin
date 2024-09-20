@@ -39,15 +39,16 @@ function ListDistrict() {
   const handleTableChange: TableProps<DistrictDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setFilters({ sortBy: `${sorter.field}${order}` })
+
+      if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     } else {
       setFilters({ sortBy: '' })
       setSortedInfo({})
     }
 
     if (filters.cityName) {
-      const cityId = filters.cityName[0]
-      setFilters({ cityId: cityId as number })
+      const filterCityId = filters.cityName[0]
+      if (filterCityId != cityId) setFilters({ cityId: filterCityId as number })
     } else {
       setFilters({ cityId: 0 })
       setFilteredInfo({})
