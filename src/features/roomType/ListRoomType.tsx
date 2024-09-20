@@ -1,6 +1,7 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import AddUpdateRoomType from '@/features/roomType/AddUpdateRoomType.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useDeleteRoomTypes, useRoomTypeFilters, useRoomTypes } from '@/hooks/useRoomTypes.ts'
 import { RoomTypeDataSource } from '@/models/roomType.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
@@ -10,7 +11,6 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import RoomTypeTable from './RoomTypeTable.tsx'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -19,9 +19,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListRoomType() {
-  const [editId, setEditId] = useState<number | null>(null)
+  const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
-  const [form] = Form.useForm()
 
   const { t } = useTranslation(['common', 'roomType'])
 
@@ -39,7 +38,7 @@ function ListRoomType() {
   const handleTableChange: TableProps<RoomTypeDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setFilters({ sortBy: `${sorter.field}${order}` })
+      if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     } else {
       setFilters({ sortBy: '' })
       setSortedInfo({})
@@ -64,9 +63,8 @@ function ListRoomType() {
     }
   }
 
-  const handleNewRoomType = () => {
-    form.resetFields()
-    setEditId(null)
+  const handleOpenForm = (id: number) => {
+    setEditId(id)
     setFormOpen(true)
   }
 
@@ -119,7 +117,7 @@ function ListRoomType() {
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={handleNewRoomType}>
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handleOpenForm(0)}>
             {t('common.add')}
           </Button>
         </Space>
@@ -145,11 +143,10 @@ function ListRoomType() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
-        setEditId={setEditId}
-        setFormOpen={setFormOpen}
+        onEdit={(id: number) => handleOpenForm(id)}
       />
 
-      <AddUpdateRoomType form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
+      <AddUpdateRoomType id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
