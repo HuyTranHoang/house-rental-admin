@@ -71,7 +71,10 @@ export const useUpdateCity = () => {
 
   const { mutateAsync: updateCityMutate, isPending: updateCityPending } = useMutation({
     mutationFn: updateCity,
-    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['cities'] }),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({ queryKey: ['cities'] })
+      await queryClient.invalidateQueries({ queryKey: ['city', variables.id] })
+    },
     onError: (error) => toast.error(error.message)
   })
 

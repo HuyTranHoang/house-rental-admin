@@ -1,23 +1,23 @@
 import { getCityById } from '@/api/city.api.ts'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Drawer, Form, FormInstance, FormProps, Input } from 'antd'
+import { Button, Drawer, Form, FormProps, Input } from 'antd'
 
 import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { CityForm } from '@/models/city.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface AddUpdateCityProps {
-  form: FormInstance
-  id: number | null
+  id: number
   formOpen: boolean
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateCity({ form, id, formOpen, setFormOpen }: AddUpdateCityProps) {
-  const isAddMode = id === null
+function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
+  const isAddMode = id === 0
+  const [form] = Form.useForm<CityForm>()
   const { t } = useTranslation(['common', 'city'])
 
   const { addCityMutate, addCityPending } = useCreateCity()
@@ -25,39 +25,32 @@ function AddUpdateCity({ form, id, formOpen, setFormOpen }: AddUpdateCityProps) 
 
   const title = isAddMode ? t('city:form.addForm') : t('city:form.editForm')
 
-  const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
-    if (isAddMode) {
-      addCityMutate(values).then(() => {
-        form.resetFields()
-        setFormOpen(false)
-        toast.success(t('city:notification.addSuccess'))
-      })
-    } else {
-      updateCityMutate(values).then(() => {
-        form.resetFields()
-        setFormOpen(false)
-        toast.success(t('city:notification.editSuccess'))
-      })
-    }
-  }
-
   const { data: cityUpdateData, isLoading } = useQuery({
     queryKey: ['city', id],
     queryFn: () => getCityById(Number(id)),
     enabled: !isAddMode
   })
 
-  const onClose = () => {
-    setFormOpen(false)
-    form.resetFields()
+  const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
+    const mutate = isAddMode ? addCityMutate : updateCityMutate
+
+    mutate(values).then(() => {
+      setFormOpen(false)
+      form.resetFields()
+      toast.success(isAddMode ? t('city:notification.addSuccess') : t('city:notification.editSuccess'))
+    })
   }
 
+  const onClose = () => setFormOpen(false)
+
   useEffect(() => {
-    if (cityUpdateData) {
+    if (formOpen && cityUpdateData) {
       form.setFieldValue('id', cityUpdateData.id)
       form.setFieldValue('name', cityUpdateData.name)
+    } else {
+      form.resetFields()
     }
-  }, [cityUpdateData, form])
+  }, [cityUpdateData, form, formOpen])
 
   return (
     <Drawer
