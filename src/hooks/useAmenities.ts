@@ -2,7 +2,7 @@ import {
   addAmenity,
   deleteAmenities,
   deleteAmenity,
-  getAllAmenitiesWithPagination,
+  getAllAmenitiesWithPagination, getAmenityById,
   updateAmenity
 } from '@/api/amenity.api.ts'
 import { CityFilters } from '@/models/city.type.ts'
@@ -18,6 +18,16 @@ export const useAmenities = (search: string, pageNumber: number, pageSize: numbe
   })
 
   return { data, isLoading, isError }
+}
+
+export const useAmenity = (id: number) => {
+  const { data: amenityData, isLoading: amenityIsLoading, isError } = useQuery({
+    queryKey: ['amenity', id],
+    queryFn: () => getAmenityById(id),
+    enabled: id !== 0
+  })
+
+  return { amenityData, amenityIsLoading, isError }
 }
 
 export const useDeleteAmenity = () => {

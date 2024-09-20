@@ -1,50 +1,37 @@
-import { getAmenityById } from '@/api/amenity.api.ts'
-import { useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
+import { useAmenity, useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
 import { AmenityForm } from '@/models/amenity.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
-import { Button, Drawer, Form, FormInstance, FormProps, Input } from 'antd'
-import React, { useEffect } from 'react'
+import { Button, Drawer, Form, FormProps, Input } from 'antd'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface AddUpdateAmenityProps {
-  form: FormInstance
-  id: number | null
+  id: number
   formOpen: boolean
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateAmenity({ form, id, formOpen, setFormOpen }: AddUpdateAmenityProps) {
-  const isAddMode = id === null
+function AddUpdateAmenity({ id, formOpen, setFormOpen }: AddUpdateAmenityProps) {
+  const isAddMode = id === 0
   const { t } = useTranslation(['common', 'amenity'])
+  const [form] = Form.useForm<AmenityForm>()
 
   const { addAmenityMutate, addAmenityPending } = useCreateAmenity()
   const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity()
+  const { amenityData, amenityIsLoading } = useAmenity(id)
 
   const title = isAddMode ? t('amenity:form.addForm') : t('amenity:form.editForm')
 
   const onFinish: FormProps<AmenityForm>['onFinish'] = (values) => {
-    if (isAddMode) {
-      addAmenityMutate(values).then(() => {
-        toast.success(t('amenity:notification.addSuccess'))
-        setFormOpen(false)
-        form.resetFields()
-      })
-    } else {
-      updateAmenityMutate(values).then(() => {
-        toast.success(t('amenity:notification.editSuccess'))
-        setFormOpen(false)
-        form.resetFields()
-      })
-    }
-  }
+    const mutate = isAddMode ? addAmenityMutate : updateAmenityMutate
 
-  const { data: amenityUpdateData, isLoading } = useQuery({
-    queryKey: ['amenity', id],
-    queryFn: () => getAmenityById(Number(id)),
-    enabled: !isAddMode
-  })
+    mutate(values).then(() => {
+      setFormOpen(false)
+      form.resetFields()
+      toast.success(t(`amenity:notification.${isAddMode ? 'add' : 'edit'}Success`))
+    })
+  }
 
   const onClose = () => {
     setFormOpen(false)
@@ -52,11 +39,13 @@ function AddUpdateAmenity({ form, id, formOpen, setFormOpen }: AddUpdateAmenityP
   }
 
   useEffect(() => {
-    if (amenityUpdateData) {
-      form.setFieldValue('id', amenityUpdateData.id)
-      form.setFieldValue('name', amenityUpdateData.name)
+    if (formOpen && amenityData) {
+      form.setFieldValue('id', amenityData.id)
+      form.setFieldValue('name', amenityData.name)
+    } else {
+      form.resetFields()
     }
-  }, [amenityUpdateData, form])
+  }, [amenityData, form, formOpen])
 
   return (
     <Drawer
@@ -64,7 +53,7 @@ function AddUpdateAmenity({ form, id, formOpen, setFormOpen }: AddUpdateAmenityP
       size='large'
       onClose={onClose}
       open={formOpen}
-      loading={isLoading}
+      loading={amenityIsLoading}
       extra={
         <Button icon={<LeftCircleOutlined />} shape='round' onClick={onClose}>
           {t('common.back')}

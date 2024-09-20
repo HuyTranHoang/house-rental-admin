@@ -2,6 +2,7 @@ import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import AddUpdateAmenity from '@/features/amenity/AddUpdateAmenity.tsx'
 import { useAmenities, useAmenityFilters, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { Amenity, AmenityDataSource } from '@/models/amenity.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
@@ -10,7 +11,6 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import AmenityTable from './AmenityTable.tsx'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -19,9 +19,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListAmenity() {
-  const [editId, setEditId] = useState<number | null>(null)
+  const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
-  const [form] = Form.useForm()
 
   const { search, sortBy, pageSize, pageNumber, setFilters } = useAmenityFilters()
   const formatDate = useCustomDateFormatter()
@@ -38,7 +37,7 @@ function ListAmenity() {
   const handleTableChange: TableProps<AmenityDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setFilters({ sortBy: `${sorter.field}${order}` })
+      if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     } else {
       setFilters({ sortBy: '' })
       setSortedInfo({})
@@ -51,7 +50,7 @@ function ListAmenity() {
         index: (pageNumber - 1) * pageSize + idx + 1,
         id: amenity.id,
         name: amenity.name,
-        createdAt: formatDate(amenity.createdAt),
+        createdAt: formatDate(amenity.createdAt)
       }))
     : []
 
@@ -63,9 +62,8 @@ function ListAmenity() {
     }
   }
 
-  const handleNewAmenity = () => {
-    form.resetFields()
-    setEditId(null)
+  const handleOpenForm = (id: number) => {
+    setEditId(id)
     setFormOpen(true)
   }
 
@@ -118,7 +116,7 @@ function ListAmenity() {
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={handleNewAmenity}>
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handleOpenForm(0)}>
             {t('amenity:button.add')}
           </Button>
         </Space>
@@ -144,11 +142,10 @@ function ListAmenity() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
-        setEditId={setEditId}
-        setFormOpen={setFormOpen}
+        onEdit={(id: number) => handleOpenForm(id)}
       />
 
-      <AddUpdateAmenity form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
+      <AddUpdateAmenity id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
