@@ -1,4 +1,5 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useReportFilters, useReports } from '@/hooks/useReports.ts'
 import { ReportDataSource, ReportStatus, Report as ReportType } from '@/models/report.type.ts'
 import { CheckCircleOutlined, CloseSquareOutlined, InfoCircleOutlined } from '@ant-design/icons'
@@ -7,7 +8,6 @@ import { Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } f
 import { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import ReportTable from './ReportTable.tsx'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -57,7 +57,7 @@ function ListReport() {
   const handleTableChange: TableProps<ReportDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setFilters({ sortBy: `${sorter.field}${order}` })
+      if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     } else {
       setFilters({ sortBy: '' })
       setSortedInfo({})
@@ -65,7 +65,7 @@ function ListReport() {
 
     if (filters.category) {
       const result = filters.category.join(',')
-      setFilters({ category: result })
+      if (result !== category) setFilters({ category: result })
     } else {
       setFilters({ category: '' })
       setFilteredInfo({})

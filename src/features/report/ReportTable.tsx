@@ -338,6 +338,7 @@ function ReportTable({
       title: t('report:table.status'),
       dataIndex: 'status',
       key: 'status',
+      width: 150,
       render: (status: ReportStatus) => {
         const statusMap = {
           [ReportStatus.PENDING]: [t('report:status.pending'), 'blue'],
@@ -362,7 +363,6 @@ function ReportTable({
     columns.push({
       title: t('report:table.action'),
       key: 'action',
-      fixed: 'right',
       width: 120,
       render: (_, record) => (
         <Space>
@@ -389,7 +389,7 @@ function ReportTable({
         pagination={{
           position: ['bottomCenter'],
           pageSizeOptions: ['5', '10', '20'],
-          locale: { items_per_page: `${t('common:common.pagination.itemsPerPage')}` },
+          locale: { items_per_page: `/ ${t('common:common.pagination.itemsPerPage')}` },
           showSizeChanger: true,
           ...paginationProps
         }}

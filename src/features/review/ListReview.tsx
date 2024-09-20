@@ -1,5 +1,6 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useDeleteMultiReview, useReviewFilters, useReviews } from '@/hooks/useReviews.ts'
 import { Review, ReviewDataSource } from '@/models/review.type.ts'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
@@ -8,7 +9,6 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import ReviewTable from './ReviewTable'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 
@@ -37,11 +37,12 @@ function ListReview() {
   const handleTableChange: TableProps<ReviewDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setFilters({ sortBy: `${sorter.field}${order}` })
+      if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     }
 
     if (filters.rating) {
-      setFilters({ rating: filters.rating[0] as number })
+      const ratingFilter = filters.rating[0] as number
+      if (ratingFilter !== rating) setFilters({ rating: filters.rating[0] as number })
     } else {
       setFilters({ rating: 0 })
       setFilteredInfo({})
