@@ -32,10 +32,7 @@ function AddUpdateRoomType({ id, formOpen, setFormOpen }: AddUpdateRoomTypeProps
     })
   }
 
-  const onClose = () => {
-    setFormOpen(false)
-    form.resetFields()
-  }
+  const onClose = () => setFormOpen(false)
 
   useEffect(() => {
     if (formOpen && roomTypeData) {

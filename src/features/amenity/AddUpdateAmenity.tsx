@@ -33,10 +33,7 @@ function AddUpdateAmenity({ id, formOpen, setFormOpen }: AddUpdateAmenityProps) 
     })
   }
 
-  const onClose = () => {
-    setFormOpen(false)
-    form.resetFields()
-  }
+  const onClose = () => setFormOpen(false)
 
   useEffect(() => {
     if (formOpen && amenityData) {
