@@ -1,16 +1,16 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useDeleteMultiDistrict, useDistrictFilters, useDistricts } from '@/hooks/useDistricts.ts'
 import { District, DistrictDataSource } from '@/models/district.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
-import DistrictTable from './DistrictTable.tsx'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { Trans, useTranslation } from 'react-i18next'
-import AddUpdateDistrict from './AddUpdateDistrict.tsx'
 import { toast } from 'sonner'
+import AddUpdateDistrict from './AddUpdateDistrict.tsx'
+import DistrictTable from './DistrictTable.tsx'
 
 const { Search } = Input
 
@@ -20,10 +20,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListDistrict() {
-
-  const [editId, setEditId] = useState<number | null>(null)
+  const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
-  const [form] = Form.useForm()
 
   const { search, cityId, sortBy, pageNumber, pageSize, setFilters } = useDistrictFilters()
 
@@ -72,9 +70,8 @@ function ListDistrict() {
       setDeleteIdList(selectedIdList)
     }
   }
-  const handleNewDistrict = () => {
-    form.resetFields()
-    setEditId(null)
+  const handleOpenForm = (id: number) => {
+    setEditId(id)
     setFormOpen(true)
   }
 
@@ -109,7 +106,7 @@ function ListDistrict() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-          {t('district:title')}
+            {t('district:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -136,12 +133,7 @@ function ListDistrict() {
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button
-            icon={<PlusCircleOutlined />}
-            shape='round'
-            type='primary'
-            onClick={handleNewDistrict}
-          >
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handleOpenForm(0)}>
             {t('district:button.add')}
           </Button>
         </Space>
@@ -154,12 +146,13 @@ function ListDistrict() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => 
+          showTotal: (total, range) => (
             <Trans
               ns={'district'}
               i18nKey='pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
-            />,
+            />
+          ),
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}
@@ -167,8 +160,7 @@ function ListDistrict() {
         rowSelection={rowSelection}
         filteredInfo={filteredInfo}
         sortedInfo={sortedInfo}
-        setEditId={setEditId}
-        setFormOpen={setFormOpen}
+        onEdit={(id) => handleOpenForm(id)}
       />
 
       <MultipleDeleteConfirmModal
@@ -186,7 +178,7 @@ function ListDistrict() {
         }}
       />
 
-      <AddUpdateDistrict form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen}></AddUpdateDistrict>
+      <AddUpdateDistrict id={editId} formOpen={formOpen} setFormOpen={setFormOpen}></AddUpdateDistrict>
     </>
   )
 }

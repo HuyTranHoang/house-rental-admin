@@ -3,7 +3,7 @@ import {
   deleteDistrict,
   deleteDistricts,
   getAllDistricts,
-  getAllDistrictsWithPagination,
+  getAllDistrictsWithPagination, getDistrictById,
   updateDistrict
 } from '@/api/district.api'
 import { DistrictFilters } from '@/models/district.type.ts'
@@ -16,6 +16,16 @@ export const useDistrictsAll = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['districts'],
     queryFn: getAllDistricts
+  })
+
+  return { districtData: data, districtIsLoading: isLoading, isError }
+}
+
+export const useDistrict = (id: number) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['district', id],
+    queryFn: () => getDistrictById(id),
+    enabled: id !== 0
   })
 
   return { districtData: data, districtIsLoading: isLoading, isError }
@@ -45,7 +55,6 @@ export const useDeleteDistrict = () => {
 export const useDeleteMultiDistrict = () => {
   const queryClient = useQueryClient()
 
-
   const { mutateAsync: deleteDistrictsMutate, isPending: deleteDistrictsPending } = useMutation({
     mutationFn: (ids: number[]) => deleteDistricts(ids),
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['districts'] }),
@@ -72,7 +81,10 @@ export const useUpdateDistrict = () => {
 
   const { mutateAsync: updateDistrictMutate, isPending: updateDistrictPending } = useMutation({
     mutationFn: updateDistrict,
-    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['districts'] }),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({ queryKey: ['districts'] })
+      await queryClient.invalidateQueries({ queryKey: ['district', variables.id] })
+    },
     onError: (error) => toast.error(error.message)
   })
 

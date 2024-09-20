@@ -1,8 +1,6 @@
-import { getCityById } from '@/api/city.api.ts'
-import { useQuery } from '@tanstack/react-query'
 import { Button, Drawer, Form, FormProps, Input } from 'antd'
 
-import { useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
+import { useCity, useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
 import { CityForm } from '@/models/city.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { useEffect } from 'react'
@@ -22,14 +20,9 @@ function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
 
   const { addCityMutate, addCityPending } = useCreateCity()
   const { updateCityMutate, updateCityPending } = useUpdateCity()
+  const { cityData, cityIsLoading } = useCity(id)
 
   const title = isAddMode ? t('city:form.addForm') : t('city:form.editForm')
-
-  const { data: cityUpdateData, isLoading } = useQuery({
-    queryKey: ['city', id],
-    queryFn: () => getCityById(Number(id)),
-    enabled: !isAddMode
-  })
 
   const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
     const mutate = isAddMode ? addCityMutate : updateCityMutate
@@ -44,13 +37,13 @@ function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
   const onClose = () => setFormOpen(false)
 
   useEffect(() => {
-    if (formOpen && cityUpdateData) {
-      form.setFieldValue('id', cityUpdateData.id)
-      form.setFieldValue('name', cityUpdateData.name)
+    if (formOpen && cityData) {
+      form.setFieldValue('id', cityData.id)
+      form.setFieldValue('name', cityData.name)
     } else {
       form.resetFields()
     }
-  }, [cityUpdateData, form, formOpen])
+  }, [cityData, form, formOpen])
 
   return (
     <Drawer
@@ -58,7 +51,7 @@ function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
       size='large'
       onClose={onClose}
       open={formOpen}
-      loading={isLoading}
+      loading={cityIsLoading}
       extra={
         <Button icon={<LeftCircleOutlined />} shape='round' onClick={onClose}>
           {t('common.back')}

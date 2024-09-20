@@ -3,7 +3,7 @@ import {
   deleteCities,
   deleteCity,
   getAllCities,
-  getAllCitiesWithPagination,
+  getAllCitiesWithPagination, getCityById,
   updateCity
 } from '@/api/city.api.ts'
 import { CityFilters } from '@/models/city.type.ts'
@@ -28,6 +28,16 @@ export const useCities = (search: string, pageNumber: number, pageSize: number, 
   })
 
   return { data, isLoading, isError }
+}
+
+export const useCity = (id: number) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['city', id],
+    queryFn: () => getCityById(id),
+    enabled: id !== 0
+  })
+
+  return { cityData: data, cityIsLoading: isLoading, isError }
 }
 
 export const useDeleteCity = () => {

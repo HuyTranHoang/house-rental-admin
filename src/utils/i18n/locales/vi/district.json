@@ -33,10 +33,6 @@
     "deleteModal": {
       "title": "Xác nhận xóa quận huyện",
       "titleMultiple": "Xác nhận xóa các quận huyện"
-    },
-    "filter": {
-      "filter": "Lọc",
-      "unFilter": "Hủy lọc"
     }
   }
   
