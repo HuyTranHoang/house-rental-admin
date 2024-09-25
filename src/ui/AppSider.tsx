@@ -101,7 +101,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     },
     {
       key: ROUTER_NAMES.TRANSACTION,
-      label: 'transaction',
+      label: t('transaction'),
       icon: <TransactionOutlined />,
       onClick: () => navigate(ROUTER_NAMES.TRANSACTION)
     },

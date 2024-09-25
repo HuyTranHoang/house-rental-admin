@@ -1,21 +1,31 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter'
 import { useTransactionFilters, useTransactions } from '@/hooks/useTransactions'
-import { Transaction, TransactionDataSource } from '@/models/transaction.type'
-import { Divider, Flex, Form, Input, Typography } from 'antd'
+import { Transaction, TransactionDataSource, TransactionStatus, TransactionTypes } from '@/models/transaction.type'
+import { InfoOutlined, SwapOutlined } from '@ant-design/icons'
+import { Divider, Flex, Form, Input, Select, TableProps, Typography } from 'antd'
+import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import TransactionTable from './TransactionTable'
 const { Search } = Input
 
+type OnChange = NonNullable<TableProps<TransactionDataSource>['onChange']>
+type GetSingle<T> = T extends (infer U)[] ? U : never
+type Sorts = GetSingle<Parameters<OnChange>[2]>
+
 function ListTransaction() {
   const formatDate = useCustomDateFormatter()
   const { t } = useTranslation(['common', 'transaction'])
-  const { search, userId, amount, type, status, pageNumber, pageSize, sortBy, setFilters } = useTransactionFilters()
+  const { search, userId, amount, transactionType, status, pageNumber, pageSize, sortBy, setFilters } =
+    useTransactionFilters()
+
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({})
+
   const { data, isLoading, isError } = useTransactions(
     search,
     userId,
     amount,
-    type,
+    transactionType,
     status,
     pageNumber,
     pageSize,
@@ -30,6 +40,29 @@ function ListTransaction() {
         transactionDate: formatDate(transaction.transactionDate)
       }))
     : []
+
+  const handleTableChange: TableProps<TransactionDataSource>['onChange'] = (_, __, sorter) => {
+    if (!Array.isArray(sorter) && sorter.order) {
+      const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+      setFilters({ sortBy: `${sorter.field}${order}` })
+    } else {
+      setFilters({ sortBy: '' })
+      setSortedInfo({})
+    }
+  }
+
+  useEffect(() => {
+    if (sortBy) {
+      const match = sortBy.match(/(.*?)(Asc|Desc)$/)
+      if (match) {
+        const [, field, order] = match
+        setSortedInfo({
+          field,
+          order: order === 'Asc' ? 'ascend' : 'descend'
+        })
+      }
+    }
+  }, [sortBy])
 
   if (isError) {
     return <ErrorFetching />
@@ -58,6 +91,31 @@ function ListTransaction() {
                 className='w-64'
               />
             </Form.Item>
+            <Form.Item>
+              <Select
+                placeholder={t('transaction:filters.type')}
+                className='w-36'
+                suffixIcon={<SwapOutlined className='text-base' />}
+                onChange={(value) => setFilters({ transactionType: value })}
+                options={[
+                  { value: TransactionTypes.DEPOSIT, label: t('transaction:type.DEPOSIT') },
+                  { value: TransactionTypes.WITHDRAWAL, label: t('transaction:type.WITHDRAWAL') }
+                ]}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Select
+                placeholder={t('transaction:filters.status')}
+                className='w-36'
+                suffixIcon={<InfoOutlined className='text-base' />}
+                onChange={(value) => setFilters({ status: value })}
+                options={[
+                  { value: TransactionStatus.SUCCESS, label: t('transaction:stasus.SUCCESS') },
+                  { value: TransactionStatus.FAILED, label: t('transaction:stasus.FAILED') },
+                  { value: TransactionStatus.PENDING, label: t('transaction:stasus.PENDING') }
+                ]}
+              />
+            </Form.Item>
           </Form>
         </Flex>
       </Flex>
@@ -79,6 +137,8 @@ function ListTransaction() {
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}
+        sortedInfo={sortedInfo}
+        handleTableChange={handleTableChange}
       />
     </>
   )

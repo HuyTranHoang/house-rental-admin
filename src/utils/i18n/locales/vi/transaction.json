@@ -1,19 +1,30 @@
 {
-  "title": "Transaction Management",
-  "searchPlaceholder": "Search by username",
+  "title": "Danh sách giao dịch",
+  "searchPlaceholder": "Tìm kiếm mã giao dịch, tài khoản",
+  "filters": {
+    "status": "Trạng thái",
+    "type": "Loại giao dịch"
+  },
+  "stasus": {
+    "PENDING": "ĐANG CHỜ",
+    "SUCCESS": "THÀNH CÔNG",
+    "FAILED": "THẤT BẠI"
+  },
+  "type": {
+    "DEPOSIT": "NẠP TIỀN",
+    "WITHDRAWAL": "RÚT TIỀN"
+  },
   "pagination": {
-    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} transactions"
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} giao dịch"
   },
   "table": {
-    "userName": "Username",
-    "transactionId": "Transaction Id",
-    "amount": "Amount",
-    "status": "Status",
-    "type": "Type",
-    "description": "Desciption",
-    "transactionDate": "Transaction Date"
-  },
-  "detailModal": {
-    "title": "Transaction detail"
+    "userName": "Tài khoản",
+    "transactionId": "Mã giao dịch",
+    "amount": "Số tiền",
+    "status": "Trạng thái",
+    "type": "Loại giao dịch",
+    "description": "Mô tả giao dịch",
+    "transactionDate": "Ngày giao dịch"
   }
 }
+

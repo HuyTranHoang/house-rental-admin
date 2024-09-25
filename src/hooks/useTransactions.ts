@@ -18,7 +18,7 @@ export const useTransactions = (
   search: string,
   userId: number,
   amount: number,
-  type: string,
+  transactionType: string,
   status: string,
   pageNumber: number,
   pageSize: number,
@@ -30,7 +30,7 @@ export const useTransactions = (
       search,
       userId,
       amount,
-      type,
+      transactionType,
       status,
       pageNumber,
       pageSize,
@@ -41,7 +41,7 @@ export const useTransactions = (
         search,
         userId,
         amount,
-        type,
+        transactionType,
         status,
         pageNumber,
         pageSize,
@@ -59,7 +59,7 @@ export const useTransactionFilters = () => {
   const userId = parseInt(searchParams.get('userId') || '0')
   const amount = parseInt(searchParams.get('amount') || '0')
   const status = (searchParams.get('status') as TransactionStatus) || ''
-  const type = (searchParams.get('type') as TransactionTypes) || ''
+  const transactionType = (searchParams.get('transactionType') as TransactionTypes) || ''
   const sortBy = searchParams.get('sortBy') || ''
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
   const pageSize = parseInt(searchParams.get('pageSize') || '5')
@@ -91,8 +91,8 @@ export const useTransactionFilters = () => {
             params.set('pageNumber', '1')
           }
 
-          if (filters.type !== undefined) {
-            params.set('type', filters.type)
+          if (filters.transactionType !== undefined) {
+            params.set('transactionType', filters.transactionType)
             params.set('pageNumber', '1')
           }
 
@@ -124,7 +124,7 @@ export const useTransactionFilters = () => {
     search,
     userId,
     amount,
-    type,
+    transactionType,
     status,
     sortBy,
     pageNumber,

@@ -33,7 +33,7 @@ export type TransactionFilters = {
   userId?: number,
   amount?: number,
   status?: TransactionStatus,
-  type?: TransactionTypes,
+  transactionType?: TransactionTypes,
   pageNumber?: number
   pageSize?: number
 }

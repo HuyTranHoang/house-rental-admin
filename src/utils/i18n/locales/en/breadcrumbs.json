@@ -37,6 +37,7 @@
   "role": {
     "list": "Role Management"
   },
+  "transaction": "Transaction",
   "currentLoginAccount": "Current login account",
   "home": "Home",
   "logout": "Logout",

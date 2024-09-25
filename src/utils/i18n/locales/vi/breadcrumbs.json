@@ -37,6 +37,7 @@
   "role": {
     "list": "Quản lý vai trò"
   },
+  "transaction": "Giao dịch",
   "currentLoginAccount": "Tài khoản đăng nhập hiện tại",
   "home": "Trang chủ",
   "logout": "Đăng xuất",

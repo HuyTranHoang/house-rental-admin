@@ -1,6 +1,19 @@
 {
   "title": "Transaction Management",
-  "searchPlaceholder": "Search by username",
+  "searchPlaceholder": "Search by transaction id, username",
+  "filters": {
+    "status": "Status",
+    "type": "Transaction type"
+  },
+  "stasus": {
+    "PENDING": "PENDING",
+    "SUCCESS": "SUCCESS",
+    "FAILED": "FAILED"
+  },
+  "type": {
+    "DEPOSIT": "DEPOSIT",
+    "WITHDRAWAL": "WITHDRAWAL"
+  },
   "pagination": {
     "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} transactions"
   },
@@ -12,8 +25,5 @@
     "type": "Type",
     "description": "Desciption",
     "transactionDate": "Transaction Date"
-  },
-  "detailModal": {
-    "title": "Transaction detail"
   }
 }
