@@ -4,15 +4,16 @@ import ListAmenity from '@/features/amenity/ListAmenity.tsx'
 import Login from '@/features/auth/Login.tsx'
 import ListCity from '@/features/city/ListCity.tsx'
 import Dashboard from '@/features/dashboard/Dashboard.tsx'
+import ListDistrict from '@/features/district/ListDistrict.tsx'
 import ListProperty from '@/features/property/ListProperty.tsx'
 import ListReport from '@/features/report/ListReport.tsx'
 import ListReview from '@/features/review/ListReview.tsx'
 import RoleManager from '@/features/role/RoleManager.tsx'
+import ListRoomType from '@/features/roomType/ListRoomType.tsx'
 import ListUser from '@/features/user/ListUser.tsx'
 import AppLayout from '@/ui/AppLayout.tsx'
 import { createBrowserRouter } from 'react-router-dom'
-import ListRoomType from '@/features/roomType/ListRoomType.tsx'
-import ListDistrict from '@/features/district/ListDistrict.tsx'
+import ListTransaction from './features/transaction/ListTransaction'
 
 export const routerList = [
   {
@@ -80,6 +81,11 @@ export const routerList = [
             path: ROUTER_NAMES.PROPERTY,
             element: <ListProperty />,
             breadcrumb: 'property'
+          },
+          {
+            path: ROUTER_NAMES.TRANSACTION,
+            element: <ListTransaction />,
+            breadcrumb: 'transaction'
           }
         ] // End of ProtectedRoute children
       }

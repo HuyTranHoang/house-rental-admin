@@ -27,6 +27,8 @@ const ROUTER_NAMES = {
   DETAIL_AMENITY: `${AMENITY_BASE}/:id`,
   EDIT_AMENITY: `${AMENITY_BASE}/:id/cap-nhat`,
 
+  TRANSACTION : `/giao-dich`,
+
   REPORT: '/bao-cao-vi-pham',
 
   ROLE: '/vai-tro',

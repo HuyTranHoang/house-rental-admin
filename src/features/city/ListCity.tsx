@@ -2,6 +2,7 @@ import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import AddUpdateCity from '@/features/city/AddUpdateCity.tsx'
 import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { City, CityDataSource } from '@/models/city.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
@@ -10,7 +11,6 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import CityTable from './CityTable.tsx'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 const { Search } = Input
 

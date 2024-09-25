@@ -11,6 +11,7 @@ import en_roomType from '@/utils/i18n/locales/en/roomType.json'
 import en_report from '@/utils/i18n/locales/en/report.json'
 import en_user from '@/utils/i18n/locales/en/user.json'
 import en_district from '@/utils/i18n/locales/en/district.json'
+import en_transaction from '@/utils/i18n/locales/en/transaction.json'
 
 import vi_amanity from '@/utils/i18n/locales/vi/amenity.json'
 import vi_breadcrumbs from '@/utils/i18n/locales/vi/breadcrumbs.json'
@@ -21,6 +22,8 @@ import vi_roomType from '@/utils/i18n/locales/vi/roomType.json'
 import vi_report from '@/utils/i18n/locales/vi/report.json'
 import vi_user from '@/utils/i18n/locales/vi/user.json'
 import vi_district from '@/utils/i18n/locales/vi/district.json'
+import vi_transaction from '@/utils/i18n/locales/vi/transaction.json'
+
 
 export const defaultNS = 'common'
 export const resources = {
@@ -34,6 +37,7 @@ export const resources = {
     report: en_report,
     user: en_user,
     district : en_district ,
+    transaction: en_transaction,
   },
   vi: {
     common: vi_common,
@@ -45,6 +49,7 @@ export const resources = {
     report: vi_report,
     user: vi_user,
     district : vi_district,
+    transaction: vi_transaction,
   }
 } as const
 
@@ -56,7 +61,7 @@ i18n
     defaultNS,
     lng: 'en',
     fallbackLng: ['en', 'vi'],
-    ns: ['common', 'breadcrumbs', 'city', 'review', 'amenity', 'roomType', 'report', 'user','district'],
+    ns: ['common', 'breadcrumbs', 'city', 'review', 'amenity', 'roomType', 'report', 'user','district', 'transaction'],
     interpolation: {
       escapeValue: false
     }

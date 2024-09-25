@@ -1,5 +1,6 @@
 import axiosInstance from '@/axiosInstance.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import useBoundStore from '@/store.ts'
 import { toTitleCase } from '@/utils/toTitleCase.ts'
 import {
   BarChartOutlined,
@@ -10,6 +11,7 @@ import {
   ScheduleOutlined,
   SettingOutlined,
   SolutionOutlined,
+  TransactionOutlined,
   UserOutlined
 } from '@ant-design/icons'
 import { Avatar, Button, ConfigProvider, Dropdown, Flex, Layout, Menu, MenuProps, Space, theme, Typography } from 'antd'
@@ -17,7 +19,6 @@ import Sider from 'antd/es/layout/Sider'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import useBoundStore from '@/store.ts'
 
 const IconFont = createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
@@ -97,6 +98,12 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
           onClick: () => navigate(ROUTER_NAMES.REVIEW)
         }
       ]
+    },
+    {
+      key: ROUTER_NAMES.TRANSACTION,
+      label: 'transaction',
+      icon: <TransactionOutlined />,
+      onClick: () => navigate(ROUTER_NAMES.TRANSACTION)
     },
     {
       key: 'userRole',

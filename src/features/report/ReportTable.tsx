@@ -1,4 +1,5 @@
 import { getPropertyById } from '@/api/property.api.ts'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useBlockProperty } from '@/hooks/useProperties'
 import { useUpdateReportStatus } from '@/hooks/useReports.ts'
 import { Report, ReportCategory, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
@@ -27,7 +28,6 @@ import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 interface ReportTableProps {
   dataSource: ReportDataSource[]

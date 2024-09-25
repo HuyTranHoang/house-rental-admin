@@ -1,0 +1,19 @@
+{
+  "title": "Transaction Management",
+  "searchPlaceholder": "Search by username",
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} transactions"
+  },
+  "table": {
+    "userName": "Username",
+    "transactionId": "Transaction Id",
+    "amount": "Amount",
+    "status": "Status",
+    "type": "Type",
+    "description": "Desciption",
+    "transactionDate": "Transaction Date"
+  },
+  "detailModal": {
+    "title": "Transaction detail"
+  }
+}
