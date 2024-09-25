@@ -7,31 +7,24 @@ import en_breadcrumbs from '@/utils/i18n/locales/en/breadcrumbs.json'
 import en_city from '@/utils/i18n/locales/en/city.json'
 import en_common from '@/utils/i18n/locales/en/common.json'
 import en_district from '@/utils/i18n/locales/en/district.json'
-<<<<<<< HEAD
-import en_transaction from '@/utils/i18n/locales/en/transaction.json'
-=======
 import en_report from '@/utils/i18n/locales/en/report.json'
 import en_review from '@/utils/i18n/locales/en/review.json'
 import en_role from '@/utils/i18n/locales/en/role.json'
 import en_roomType from '@/utils/i18n/locales/en/roomType.json'
+import en_transaction from '@/utils/i18n/locales/en/transaction.json'
 import en_user from '@/utils/i18n/locales/en/user.json'
->>>>>>> 23fda1711f374c2a7c759e28c5e08c79e566e39c
 
 import vi_amanity from '@/utils/i18n/locales/vi/amenity.json'
 import vi_breadcrumbs from '@/utils/i18n/locales/vi/breadcrumbs.json'
 import vi_city from '@/utils/i18n/locales/vi/city.json'
 import vi_common from '@/utils/i18n/locales/vi/common.json'
 import vi_district from '@/utils/i18n/locales/vi/district.json'
-<<<<<<< HEAD
-import vi_transaction from '@/utils/i18n/locales/vi/transaction.json'
-
-=======
 import vi_report from '@/utils/i18n/locales/vi/report.json'
 import vi_review from '@/utils/i18n/locales/vi/review.json'
 import vi_role from '@/utils/i18n/locales/vi/role.json'
 import vi_roomType from '@/utils/i18n/locales/vi/roomType.json'
+import vi_transaction from '@/utils/i18n/locales/vi/transaction.json'
 import vi_user from '@/utils/i18n/locales/vi/user.json'
->>>>>>> 23fda1711f374c2a7c759e28c5e08c79e566e39c
 
 export const defaultNS = 'common'
 export const resources = {
@@ -71,7 +64,19 @@ i18n
     defaultNS,
     lng: localStorage.getItem('i18n') || 'en',
     fallbackLng: ['en', 'vi'],
-    ns: ['common', 'breadcrumbs', 'city', 'review', 'amenity', 'roomType', 'report', 'user', 'district', 'role', 'transaction'],
+    ns: [
+      'common',
+      'breadcrumbs',
+      'city',
+      'review',
+      'amenity',
+      'roomType',
+      'report',
+      'user',
+      'district',
+      'role',
+      'transaction'
+    ],
     interpolation: {
       escapeValue: false
     }
