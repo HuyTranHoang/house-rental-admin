@@ -1,85 +1,68 @@
-import { getDistrictById } from '@/api/district.api'
 import { useCitiesAll } from '@/hooks/useCities.ts'
-import { useCreateDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
+import { useCreateDistrict, useDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
 import { DistrictForm } from '@/models/district.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
-import { Button, Drawer, Form, FormInstance, FormProps, Input, Select, SelectProps, Typography } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Button, Drawer, Form, FormProps, Input, Select, SelectProps, Typography } from 'antd'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface AddUpdateDistrictProps {
-  form: FormInstance
-  id: number | null
+  id: number
   formOpen: boolean
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateDistrict({ form, id, formOpen, setFormOpen }: AddUpdateDistrictProps) {
-  const isAddMode = id === null
+function AddUpdateDistrict({ id, formOpen, setFormOpen }: AddUpdateDistrictProps) {
+  const isAddMode = id === 0
+  const [form] = Form.useForm<DistrictForm>()
   const { t } = useTranslation(['common', 'district'])
   const title = isAddMode ? t('district:form.addForm') : t('district:form.editForm')
 
   const { cityData, cityIsLoading } = useCitiesAll()
 
-  const [error, setError] = useState<string>('')
   const [cityError, setCityError] = useState<string>('')
 
   const { addDistrictMutate, addDistrictPending } = useCreateDistrict()
   const { updateDistrictMutate, updateDistrictPending } = useUpdateDistrict()
+  const { districtData, districtIsLoading } = useDistrict(id)
 
-  const onFinish: FormProps<DistrictForm>['onFinish'] = (values) => {
-    if (isAddMode) {
-      addDistrictMutate(values).then(() => {
-        form.resetFields()
-        setFormOpen(false)
-        toast.success(t('district:notification.addSuccess'))
-      })
-    } else {
-      updateDistrictMutate(values).then(() => {
-        form.resetFields()
-        setFormOpen(false)
-        toast.success(t('district:notification.editSuccess'))
-      })
-    }
-  }
-  const onClose = () => {
-    setFormOpen(false)
-    form.resetFields()
-  }
-
-  const { data: districtUpdateData, isLoading: districtIsLoading } = useQuery({
-    queryKey: ['district', id],
-    queryFn: () => getDistrictById(Number(id)),
-    enabled: !isAddMode
-  })
-
-  const cityOptions: SelectProps['options'] = []
-
-  if (cityData) {
-    cityOptions.push(
-      ...cityData.map((city) => ({
+  const cityOptions: SelectProps['options'] = cityData
+    ? cityData.map((city) => ({
         label: city.name,
         value: city.id
       }))
-    )
+    : []
+
+  const onFinish: FormProps<DistrictForm>['onFinish'] = (values) => {
+    const mutate = isAddMode ? addDistrictMutate : updateDistrictMutate
+
+    mutate(values).then(() => {
+      form.resetFields()
+      setFormOpen(false)
+      isAddMode
+        ? toast.success(t('district:notification.addSuccess'))
+        : toast.success(t('district:notification.editSuccess'))
+    })
   }
+  const onClose = () => setFormOpen(false)
 
   useEffect(() => {
-    if (districtUpdateData) {
-      form.setFieldValue('id', districtUpdateData.id)
-      form.setFieldValue('name', districtUpdateData.name)
+    if (formOpen && districtData) {
+      form.setFieldValue('id', districtData.id)
+      form.setFieldValue('name', districtData.name)
 
-      const cityExists = cityData?.some((city) => city.id === districtUpdateData.cityId)
+      const cityExists = cityData?.some((city) => city.id === districtData.cityId)
       if (cityExists) {
-        form.setFieldValue('cityId', districtUpdateData.cityId)
+        form.setFieldValue('cityId', districtData.cityId)
       } else {
         form.setFieldValue('cityId', null)
-        setCityError(t('district:form.cityNotFound', { cityName: districtUpdateData.cityName }))
+        setCityError(t('district:form.cityNotFound', { cityName: districtData.cityName }))
       }
+    } else {
+      form.resetFields()
     }
-  }, [cityData, districtUpdateData, form])
+  }, [cityData, districtData, form, formOpen, t])
 
   return (
     <>
@@ -108,10 +91,8 @@ function AddUpdateDistrict({ form, id, formOpen, setFormOpen }: AddUpdateDistric
               { min: 3, message: t('district:form.nameMin') },
               { max: 50, message: t('district:form.nameMax') }
             ]}
-            validateStatus={error ? 'error' : undefined}
-            extra={<span style={{ color: 'red' }}>{error}</span>}
           >
-            <Input onChange={() => setError('')} />
+            <Input placeholder={t('district:form.namePlaceholder')} />
           </Form.Item>
 
           <Form.Item<DistrictForm>
@@ -136,7 +117,6 @@ function AddUpdateDistrict({ form, id, formOpen, setFormOpen }: AddUpdateDistric
             <Button
               onClick={() => {
                 form.resetFields()
-                setError('')
                 setCityError('')
               }}
               className='mr-4'

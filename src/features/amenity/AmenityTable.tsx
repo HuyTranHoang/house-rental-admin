@@ -6,7 +6,7 @@ import { AmenityDataSource } from '@/models/amenity.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -17,8 +17,7 @@ interface AmenityTableProps {
   handleTableChange: TableProps<AmenityDataSource>['onChange']
   rowSelection: TableRowSelection<AmenityDataSource> | undefined
   sortedInfo: SorterResult<AmenityDataSource>
-  setEditId: React.Dispatch<React.SetStateAction<number | null>>
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onEdit: (id: number) => void
 }
 
 function AmenityTable({
@@ -28,8 +27,7 @@ function AmenityTable({
   handleTableChange,
   rowSelection,
   sortedInfo,
-  setEditId,
-  setFormOpen
+  onEdit
 }: AmenityTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<AmenityDataSource | null>(null)
@@ -83,10 +81,7 @@ function AmenityTable({
       width: 200,
       render: (_, record) => (
         <TableActions
-          onUpdate={() => {
-            setEditId(record.id)
-            setFormOpen(true)
-          }}
+          onUpdate={() => onEdit(record.id)}
           onDelete={() => {
             setCurrentRecord(record)
             setIsModalOpen(true)

@@ -19,9 +19,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ListCity() {
-  const [editId, setEditId] = useState<number | null>(null)
+  const [editId, setEditId] = useState<number>(0)
   const [formOpen, setFormOpen] = useState(false)
-  const [form] = Form.useForm()
 
   const { t } = useTranslation(['common', 'city'])
 
@@ -65,9 +64,8 @@ function ListCity() {
     }
   }
 
-  const handleNewCity = () => {
-    form.resetFields()
-    setEditId(null)
+  const handeOpenForm = (id: number) => {
+    setEditId(id)
     setFormOpen(true)
   }
 
@@ -120,7 +118,7 @@ function ListCity() {
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={handleNewCity}>
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handeOpenForm(0)}>
             {t('city:button.add')}
           </Button>
         </Space>
@@ -146,11 +144,10 @@ function ListCity() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
-        setEditId={setEditId}
-        setFormOpen={setFormOpen}
+        onEdit={(id: number) => handeOpenForm(id)}
       />
 
-      <AddUpdateCity form={form} id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
+      <AddUpdateCity id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}

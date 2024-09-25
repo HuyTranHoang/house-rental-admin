@@ -3,7 +3,7 @@ import {
   deleteRoomType,
   deleteRoomTypes,
   getAllRoomTypes,
-  getAllRoomTypesWithPagination,
+  getAllRoomTypesWithPagination, getRoomTypeById,
   updateRoomType
 } from '@/api/roomType.api.ts'
 import { RoomTypeFilters } from '@/models/roomType.type.ts'
@@ -19,6 +19,16 @@ export const useRoomTypesAll = () => {
   })
 
   return { roomTypeData: data, roomTypeIsLoading: isLoading }
+}
+
+export const useRoomType = (id: number) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['roomType', id],
+    queryFn: () => getRoomTypeById(id),
+    enabled: id !== 0
+  })
+
+  return { roomTypeData: data, roomTypeIsLoading: isLoading, isError }
 }
 
 export const useRoomTypes = (search: string, pageNumber: number, pageSize: number, sortBy: string) => {

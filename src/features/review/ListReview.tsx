@@ -37,11 +37,12 @@ function ListReview() {
   const handleTableChange: TableProps<ReviewDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setFilters({ sortBy: `${sorter.field}${order}` })
+      if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     }
 
     if (filters.rating) {
-      setFilters({ rating: filters.rating[0] as number })
+      const ratingFilter = filters.rating[0] as number
+      if (ratingFilter !== rating) setFilters({ rating: filters.rating[0] as number })
     } else {
       setFilters({ rating: 0 })
       setFilteredInfo({})

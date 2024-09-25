@@ -1,61 +1,47 @@
-import { getRoomTypeById } from '@/api/roomType.api.ts'
-import { useCreateRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
+import { useCreateRoomType, useRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
 import { RoomTypeForm } from '@/models/roomType.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
-import { useQuery } from '@tanstack/react-query'
-import { Button, Drawer, Form, FormInstance, type FormProps, Input } from 'antd'
-import React, { useEffect } from 'react'
+import { Button, Drawer, Form, type FormProps, Input } from 'antd'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 interface AddUpdateRoomTypeProps {
-  form: FormInstance
-  id: number | null
+  id: number
   formOpen: boolean
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateRoomType({ form, id, formOpen, setFormOpen }: AddUpdateRoomTypeProps) {
-  const isAddMode = id === null
+function AddUpdateRoomType({ id, formOpen, setFormOpen }: AddUpdateRoomTypeProps) {
+  const isAddMode = id === 0
+  const [form] = Form.useForm<RoomTypeForm>()
   const { t } = useTranslation(['common', 'roomType'])
   const title = isAddMode ? t('roomType:form.addForm') : t('roomType:form.editForm')
 
   const { addRoomTypeMutate, addRoomTypePening } = useCreateRoomType()
   const { updateRoomTypeMutate, updateRoomTypePending } = useUpdateRoomType()
+  const { roomTypeData, roomTypeIsLoading } = useRoomType(id)
 
   const onFinish: FormProps<RoomTypeForm>['onFinish'] = (values) => {
-    if (isAddMode) {
-      addRoomTypeMutate(values).then(() => {
-        toast.success(t('roomType:notification.addSuccess'))
-        setFormOpen(false)
-        form.resetFields()
-      })
-    } else {
-      updateRoomTypeMutate(values).then(() => {
-        toast.success(t('roomType:notification.editSuccess'))
-        setFormOpen(false)
-        form.resetFields()
-      })
-    }
+    const mutate = isAddMode ? addRoomTypeMutate : updateRoomTypeMutate
+
+    mutate(values).then(() => {
+      setFormOpen(false)
+      form.resetFields()
+      toast.success(isAddMode ? t('roomType:notification.addSuccess') : t('roomType:notification.editSuccess'))
+    })
   }
 
-  const { data: roomTypeUpdateData, isLoading } = useQuery({
-    queryKey: ['roomType', id],
-    queryFn: () => getRoomTypeById(Number(id)),
-    enabled: !isAddMode
-  })
-
-  const onClose = () => {
-    setFormOpen(false)
-    form.resetFields()
-  }
+  const onClose = () => setFormOpen(false)
 
   useEffect(() => {
-    if (roomTypeUpdateData) {
-      form.setFieldValue('id', roomTypeUpdateData.id)
-      form.setFieldValue('name', roomTypeUpdateData.name)
+    if (formOpen && roomTypeData) {
+      form.setFieldValue('id', roomTypeData.id)
+      form.setFieldValue('name', roomTypeData.name)
+    } else {
+      form.resetFields()
     }
-  }, [form, roomTypeUpdateData])
+  }, [form, formOpen, roomTypeData])
 
   return (
     <Drawer
@@ -63,7 +49,7 @@ function AddUpdateRoomType({ form, id, formOpen, setFormOpen }: AddUpdateRoomTyp
       size='large'
       onClose={onClose}
       open={formOpen}
-      loading={isLoading}
+      loading={roomTypeIsLoading}
       extra={
         <Button icon={<LeftCircleOutlined />} shape='round' onClick={onClose}>
           {t('common.back')}

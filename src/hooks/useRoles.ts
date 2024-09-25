@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import axios from 'axios'
 import { FormInstance } from 'antd'
 import { Role } from '@/models/role.type.ts'
+import { useTranslation } from 'react-i18next'
 
 export const useRolesAll = () => {
   const { data, isLoading, isError } = useQuery({
@@ -39,11 +40,12 @@ export const useCreateRole = (
   formAddRole: FormInstance
 ) => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation(['common', 'role'])
 
   const { mutate: addRoleMutate, isPending: addRolePending } = useMutation({
     mutationFn: addRole,
     onSuccess: () => {
-      toast.success('Thêm vai trò thành công')
+      toast.success(t('role:notification.addSuccess'))
       queryClient.invalidateQueries({ queryKey: ['roles'] })
 
       setIsModalOpen(false)
@@ -75,11 +77,13 @@ export const useUpdateRole = (
   setCurrentRole?: React.Dispatch<React.SetStateAction<Role>>
 ) => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation(['common', 'role'])
+
 
   const { mutate: updateRoleMutate, isPending: updateRolePending } = useMutation({
     mutationFn: updateRole,
     onSuccess: (data) => {
-      toast.success('Cập nhật vai trò thành công')
+      toast.success(t('role:notification.editSuccess'))
       queryClient.invalidateQueries({ queryKey: ['roles'] })
       queryClient.invalidateQueries({ queryKey: ['role', data.id] })
       setCurrentRole && setCurrentRole(data)
@@ -110,12 +114,13 @@ export const useUpdateRole = (
 }
 
 export const useDeleteRole = () => {
+  const { t } = useTranslation(['common', 'role'])
   const queryClient = useQueryClient()
 
   const { mutate: deleteRoleMutate, isPending: deleteRolePending } = useMutation({
     mutationFn: deleteRole,
     onSuccess: () => {
-      toast.success('Xóa vai trò thành công')
+      toast.success(t('role:notification.deleteSuccess'))
       queryClient.invalidateQueries({ queryKey: ['roles'] })
     },
     onError: (error) => {
@@ -127,12 +132,13 @@ export const useDeleteRole = () => {
 }
 
 export const useDeleteMultiRole = () => {
+  const { t } = useTranslation(['common', 'role'])
   const queryClient = useQueryClient()
 
   const { mutate: deleteRolesMutate, isPending: deleteRolesPending } = useMutation({
     mutationFn: deleteRoles,
     onSuccess: () => {
-      toast.success('Xóa các vai trò thành công')
+      toast.success(t('role:notification.deleteSuccessMultiple'))
       queryClient.invalidateQueries({ queryKey: ['roles'] })
     },
     onError: (error) => {

@@ -1,5 +1,6 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useDeleteUsers, useUserFilters, useUsers } from '@/hooks/useUsers'
 import { User, UserDataSource } from '@/models/user.type'
 import { CheckCircleOutlined, CloseSquareOutlined } from '@ant-design/icons'
@@ -11,7 +12,6 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import UserTable from './UserTable'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 
 type OnChange = NonNullable<TableProps<UserDataSource>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -58,14 +58,15 @@ function ListUser() {
   const handleTableChange: TableProps<UserDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      setFilters({ sortBy: `${sorter.field}${order}` })
+      if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     } else {
       setFilters({ sortBy: '' })
       setSortedInfo({})
     }
 
     if (filters.roles) {
-      setFilters({ roles: filters.roles.join(',') })
+      const filterRoles = filters.roles.join(',')
+      if (filterRoles !== roles) setFilters({ roles: filterRoles })
     } else {
       setFilters({ roles: '' })
       setFilteredInfo({})

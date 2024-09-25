@@ -23,6 +23,7 @@ import { clsx } from 'clsx'
 import React, { useEffect, useState } from 'react'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import useBoundStore from '@/store.ts'
+import { useTranslation } from 'react-i18next'
 
 const { confirm } = Modal
 
@@ -37,6 +38,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [error, setError] = useState<string>('')
   const [formAddRole] = Form.useForm()
+  const { t } = useTranslation(['common', 'role'])
 
   const isDarkMode = useBoundStore((state) => state.isDarkMode)
   const formatDate = useCustomDateFormatter()
@@ -72,13 +74,13 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
       },
       {
         key: '2',
-        label: 'Tên vai trò',
+        label: t('role:form.roleName'),
         children: <span>{record.name}</span>,
         span: 3
       },
       {
         key: '3',
-        label: 'Ngày tạo',
+        label: t('common:common.table.createdAt'),
         children: <span>{formatDate(record.createdAt)}</span>,
         span: 3
       }
@@ -86,11 +88,11 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
 
     confirm({
       icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa vai trò' />,
+      title: <ConfirmModalTitle title={t('role:deleteModal.title')} />,
       content: <ConfirmModalContent items={items} />,
-      okText: 'Xác nhận',
+      okText: t('common.ok'),
       okType: 'danger',
-      cancelText: 'Hủy',
+      cancelText: t('common.cancel'),
       maskClosable: true,
       onOk() {
         deleteRoleMutate(record.id)
@@ -109,8 +111,8 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
     <>
       <Typography.Title level={5}>
         <Space align='center'>
-          Danh sách vai trò
-          <Tooltip title='Thêm mới vai trò'>
+          {t('role:list.roleList')}
+          <Tooltip title={t('role:list.addNewRole')}>
             <PlusCircleOutlined
               className='icon-primary'
               onClick={() => {
@@ -145,7 +147,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
                     <DeleteOutlined onClick={() => showDeleteConfirm(item)} className='icon-danger' />
                   ]
                 : [
-                    <Tooltip title='Vai trò mặc định không thể sửa'>
+                    <Tooltip title={t('role:list.defaultRole')}>
                       <InfoCircleOutlined />
                     </Tooltip>
                   ]
@@ -169,7 +171,7 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
       />
 
       <Modal
-        title={isAddMode ? 'Thêm mới vai trò' : 'Cập nhật vai trò'}
+        title={isAddMode ? t('role:list.addNewRole') : t('role:list.editRole')}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={false}
@@ -182,31 +184,31 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
           autoComplete='off'
         >
           <Form.Item<RoleField>
-            label='Tên vai trò'
+            label={t('role:form.roleName')}
             name='name'
             rules={[
-              { required: true, message: 'Vui lòng nhập tên vai trò' },
-              { min: 3, message: 'Tên vai trò phải có ít nhất 3 ký tự!' }
+              { required: true, message: t('role:form.nameRequired') },
+              { min: 3, message: t('role:form.nameMin') }
             ]}
             validateStatus={error ? 'error' : undefined}
             extra={<span style={{ color: 'red' }}>{error}</span>}
           >
             <Input />
           </Form.Item>
-          <Form.Item<RoleField> label='Mô tả' name='description'>
-            <Input.TextArea />
+          <Form.Item<RoleField> label={t('role:form.description')} name='description'>
+            <Input.TextArea />  
           </Form.Item>
-          <Form.Item<RoleField> label='Quyền hạn' name='authorityPrivileges' hidden>
+          <Form.Item<RoleField> label={t('role:form.authority')} name='authorityPrivileges' hidden>
             <Input />
           </Form.Item>
           <Form.Item>
             <Flex justify='end'>
               <Space>
                 <Button onClick={() => setIsModalOpen(false)} danger>
-                  Hủy
+                  {t('common.cancel')}
                 </Button>
                 <Button loading={addRolePending || updateRolePending} type='primary' htmlType='submit'>
-                  {isAddMode ? 'Thêm mới' : 'Cập nhật'}
+                  {isAddMode ? t('common.add') : t('common.edit')}
                 </Button>
               </Space>
             </Flex>

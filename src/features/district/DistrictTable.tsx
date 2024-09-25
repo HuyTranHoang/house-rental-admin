@@ -7,10 +7,9 @@ import { DistrictDataSource } from '@/models/district.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-
 
 interface DistrictTableProps {
   dataSource: DistrictDataSource[]
@@ -20,8 +19,7 @@ interface DistrictTableProps {
   rowSelection: TableRowSelection<DistrictDataSource> | undefined
   filteredInfo: Record<string, FilterValue | null>
   sortedInfo: SorterResult<DistrictDataSource>
-  setEditId: React.Dispatch<React.SetStateAction<number | null>>
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onEdit: (id: number) => void
 }
 
 function DistrictTable({
@@ -32,17 +30,14 @@ function DistrictTable({
   rowSelection,
   filteredInfo,
   sortedInfo,
-  setEditId,
-  setFormOpen
+  onEdit
 }: DistrictTableProps) {
-
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<DistrictDataSource | null>(null)
 
   const { cityData, cityIsLoading } = useCitiesAll()
   const { deleteDistrictMutate } = useDeleteDistrict()
   const { t } = useTranslation(['common', 'district'])
-
 
   const items: DescriptionsProps['items'] = [
     {
@@ -112,14 +107,10 @@ function DistrictTable({
       width: 200,
       render: (_, record) => (
         <TableActions
-          onUpdate={() => {
-              setEditId(record.id)
-              setFormOpen(true)
-            }}
+          onUpdate={() => onEdit(record.id)}
           onDelete={() => {
             setCurrentRecord(record)
             setIsModalOpen(true)
-            
           }}
         />
       )
@@ -145,8 +136,8 @@ function DistrictTable({
           triggerDesc: t('common.table.triggerDesc'),
           triggerAsc: t('common.table.triggerAsc'),
           cancelSort: t('common.table.cancelSort'),
-          filterReset: t('district:filter.filter'),
-          filterConfirm: t('district:filter.unFilter')
+          filterReset: t('common.table.filterReset'),
+          filterConfirm: t('common.table.filterConfirm')
         }}
       />
 

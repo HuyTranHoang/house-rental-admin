@@ -3,7 +3,7 @@ import {
   deleteCities,
   deleteCity,
   getAllCities,
-  getAllCitiesWithPagination,
+  getAllCitiesWithPagination, getCityById,
   updateCity
 } from '@/api/city.api.ts'
 import { CityFilters } from '@/models/city.type.ts'
@@ -28,6 +28,16 @@ export const useCities = (search: string, pageNumber: number, pageSize: number, 
   })
 
   return { data, isLoading, isError }
+}
+
+export const useCity = (id: number) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['city', id],
+    queryFn: () => getCityById(id),
+    enabled: id !== 0
+  })
+
+  return { cityData: data, cityIsLoading: isLoading, isError }
 }
 
 export const useDeleteCity = () => {
@@ -71,7 +81,10 @@ export const useUpdateCity = () => {
 
   const { mutateAsync: updateCityMutate, isPending: updateCityPending } = useMutation({
     mutationFn: updateCity,
-    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['cities'] }),
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({ queryKey: ['cities'] })
+      await queryClient.invalidateQueries({ queryKey: ['city', variables.id] })
+    },
     onError: (error) => toast.error(error.message)
   })
 

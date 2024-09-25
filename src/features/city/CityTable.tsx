@@ -6,7 +6,7 @@ import { CityDataSource } from '@/models/city.type.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -17,8 +17,7 @@ interface CityTableProps {
   handleTableChange: TableProps<CityDataSource>['onChange']
   rowSelection: TableRowSelection<CityDataSource> | undefined
   sortedInfo: SorterResult<CityDataSource>
-  setEditId: React.Dispatch<React.SetStateAction<number | null>>
-  setFormOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onEdit: (id: number) => void
 }
 
 function CityTable({
@@ -28,8 +27,7 @@ function CityTable({
   handleTableChange,
   rowSelection,
   sortedInfo,
-  setEditId,
-  setFormOpen
+  onEdit
 }: CityTableProps) {
   const { t } = useTranslation(['common', 'city'])
 
@@ -84,10 +82,7 @@ function CityTable({
       width: 200,
       render: (_, record) => (
         <TableActions
-          onUpdate={() => {
-            setEditId(record.id)
-            setFormOpen(true)
-          }}
+          onUpdate={() => onEdit(record.id)}
           onDelete={() => {
             setCurrentRecord(record)
             setIsModalOpen(true)
