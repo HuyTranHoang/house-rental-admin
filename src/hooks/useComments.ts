@@ -1,53 +1,52 @@
-import { ReviewFilters } from '@/types/review.type.ts'
+import { CommentFilters } from '@/types/comment.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import { deleteReview, deleteReviews, getAllReviewsWithPagination } from '../api/review.api'
+import { deleteComment, deleteComments, getAllCommentWithPagination } from '../api/comment.api.ts'
 
-export const useReviews = (search: string, rating: number, pageNumber: number, pageSize: number, sortBy: string) => {
+export const useComments = (search: string, pageNumber: number, pageSize: number, sortBy: string) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['reviews', search, rating, pageNumber, pageSize, sortBy],
-    queryFn: () => getAllReviewsWithPagination(search, rating, pageNumber, pageSize, sortBy)
+    queryKey: ['reviews', search, pageNumber, pageSize, sortBy],
+    queryFn: () => getAllCommentWithPagination(search, pageNumber, pageSize, sortBy)
   })
 
   return { data, isLoading, isError }
 }
 
-export const useDeleteReview = () => {
+export const useDeleteComment = () => {
   const queryClient = useQueryClient()
-  const { mutate: deleteReviewMutate, isPending: deleteReviewIsPending } = useMutation({
-    mutationFn: deleteReview,
+  const { mutate: deleteCommentMutate, isPending: deleteCommentIsPending } = useMutation({
+    mutationFn: deleteComment,
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['reviews'] }),
     onError: (error) => toast.error(error.message)
   })
 
-  return { deleteReviewMutate, deleteReviewIsPending }
+  return { deleteCommentMutate, deleteCommentIsPending }
 }
 
-export const useDeleteMultiReview = () => {
+export const useDeleteMultiComment = () => {
   const queryClient = useQueryClient()
 
-  const { mutateAsync: deleteReviewsMutate, isPending: deleteReviewsIsPending } = useMutation({
-    mutationFn: deleteReviews,
+  const { mutateAsync: deleteCommentsMutate, isPending: deleteCommentsIsPending } = useMutation({
+    mutationFn: deleteComments,
     onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['reviews'] }),
     onError: (error) => toast.error(error.message)
   })
 
-  return { deleteReviewsMutate, deleteReviewsIsPending }
+  return { deleteCommentsMutate, deleteCommentsIsPending }
 }
 
 export const useReviewFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = searchParams.get('search') || ''
-  const rating = parseInt(searchParams.get('rating') || '0')
   const sortBy = searchParams.get('sortBy') || ''
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
   const pageSize = parseInt(searchParams.get('pageSize') || '5')
 
   const setFilters = useCallback(
-    (filters: ReviewFilters) => {
+    (filters: CommentFilters) => {
       setSearchParams(
         (params) => {
           if (filters.search !== undefined) {
@@ -56,15 +55,6 @@ export const useReviewFilters = () => {
               params.set('pageNumber', '1')
             } else {
               params.delete('search')
-            }
-          }
-
-          if (filters.rating !== undefined) {
-            if (filters.rating) {
-              params.set('rating', String(filters.rating))
-              params.set('pageNumber', '1')
-            } else {
-              params.delete('rating')
             }
           }
 
@@ -92,5 +82,5 @@ export const useReviewFilters = () => {
     [setSearchParams]
   )
 
-  return { search, rating, sortBy, pageNumber, pageSize, setFilters }
+  return { search, sortBy, pageNumber, pageSize, setFilters }
 }

@@ -7,7 +7,7 @@ import Dashboard from '@/features/dashboard/Dashboard.tsx'
 import ListDistrict from '@/features/district/ListDistrict.tsx'
 import ListProperty from '@/features/property/ListProperty.tsx'
 import ListReport from '@/features/report/ListReport.tsx'
-import ListReview from '@/features/review/ListReview.tsx'
+import ListComment from '@/features/comment/ListComment.tsx'
 import RoleManager from '@/features/role/RoleManager.tsx'
 import ListRoomType from '@/features/roomType/ListRoomType.tsx'
 import ListUser from '@/features/user/ListUser.tsx'
@@ -69,8 +69,8 @@ export const routerList = [
           },
           {
             path: ROUTER_NAMES.REVIEW,
-            element: <ListReview />,
-            breadcrumb: 'review.list'
+            element: <ListComment />,
+            breadcrumb: 'comment.list'
           },
           {
             path: ROUTER_NAMES.USER,

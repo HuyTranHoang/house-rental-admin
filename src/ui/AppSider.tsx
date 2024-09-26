@@ -89,7 +89,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     },
     {
       key: 'reportReview',
-      label: t('reportAndReview'),
+      label: t('reportAndComment'),
       icon: <SolutionOutlined />,
       children: [
         {
@@ -99,7 +99,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
         },
         {
           key: ROUTER_NAMES.REVIEW,
-          label: t('review.list'),
+          label: t('comment.list'),
           onClick: () => navigate(ROUTER_NAMES.REVIEW)
         }
       ]

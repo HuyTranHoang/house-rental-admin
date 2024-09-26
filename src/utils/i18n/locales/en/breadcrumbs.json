@@ -23,12 +23,12 @@
     "add": "Add amenity",
     "edit": "Edit amenity"
   },
-  "reportAndReview": "Report & Review",
+  "reportAndComment": "Report & Comment",
   "report": {
     "list": "Report Management"
   },
-  "review": {
-    "list": "Review Management"
+  "comment": {
+    "list": "Comment Management"
   },
   "userAndRole": "User & Role",
   "user": {

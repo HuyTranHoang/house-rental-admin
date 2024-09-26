@@ -1,8 +1,7 @@
 import React from 'react'
 
-export interface Review {
+export interface Comment {
   id: number
-  rating: number
   comment: string
   propertyId: number
   propertyTitle: string
@@ -11,14 +10,13 @@ export interface Review {
   createdAt: string
 }
 
-export type ReviewDataSource = Review & {
+export type CommentDataSource = Comment & {
   key: React.Key
   index?: number
 }
 
-export type ReviewFilters = {
+export type CommentFilters = {
   search?: string
-  rating?: number
   sortBy?: string
   pageNumber?: number
   pageSize?: number

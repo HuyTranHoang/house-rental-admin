@@ -1,0 +1,24 @@
+{
+  "title": "Comment Management",
+  "searchPlaceholder": "Search by username, title",
+  "deleteModal": {
+    "title": "Confirm comment deletion",
+    "titleMultiple": "Confirm multiple comment deletion"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} comments"
+  },
+  "table": {
+    "userName": "Username",
+    "comment": "Comment",
+    "propertyTitle": "Property title",
+    "rating": "Rating"
+  },
+  "detailModal": {
+    "title": "Comment detail"
+  },
+  "notification": {
+    "deleteSuccess": "Delete comment successfully",
+    "deleteSuccessMultiple": "Delete comments successfully"
+  }
+}

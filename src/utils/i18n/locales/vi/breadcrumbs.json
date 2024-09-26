@@ -23,12 +23,12 @@
     "add": "Thêm tiện ích",
     "edit": "Chỉnh sửa tiện ích"
   },
-  "reportAndReview": "Báo cáo & Đánh giá",
+  "reportAndComment": "Báo cáo & Bình luận",
   "report": {
     "list": "Quản lý báo cáo"
   },
-  "review": {
-    "list": "Quản lý đánh giá"
+  "comment": {
+    "list": "Quản lý bình luận"
   },
   "userAndRole": "Người dùng & Vai trò",
   "user": {

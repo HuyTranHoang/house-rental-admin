@@ -1,8 +1,8 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
+import { useComments, useDeleteMultiComment, useReviewFilters } from '@/hooks/useComments.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
-import { useDeleteMultiReview, useReviewFilters, useReviews } from '@/hooks/useReviews.ts'
-import { Review, ReviewDataSource } from '@/types/review.type.ts'
+import { Comment, CommentDataSource } from '@/types/comment.type.ts'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
@@ -12,45 +12,35 @@ import ReviewTable from './ReviewTable'
 
 const { Search } = Input
 
-type OnChange = NonNullable<TableProps<ReviewDataSource>['onChange']>
-type Filters = Parameters<OnChange>[1]
+type OnChange = NonNullable<TableProps<CommentDataSource>['onChange']>
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListReview() {
-  const { t } = useTranslation(['common', 'review'])
+function ListComment() {
+  const { t } = useTranslation(['common', 'comment'])
 
-  const { search, rating, pageNumber, pageSize, sortBy, setFilters } = useReviewFilters()
+  const { search, pageNumber, pageSize, sortBy, setFilters } = useReviewFilters()
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
 
   const [isOpen, setIsOpen] = useState(false)
 
-  const [filteredInfo, setFilteredInfo] = useState<Filters>({})
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
-  const { data, isLoading, isError } = useReviews(search, rating, pageNumber, pageSize, sortBy)
+  const { data, isLoading, isError } = useComments(search, pageNumber, pageSize, sortBy)
   const formatDate = useCustomDateFormatter()
 
-  const { deleteReviewsMutate, deleteReviewsIsPending } = useDeleteMultiReview()
+  const { deleteCommentsMutate, deleteCommentsIsPending } = useDeleteMultiComment()
 
-  const handleTableChange: TableProps<ReviewDataSource>['onChange'] = (_, filters, sorter) => {
+  const handleTableChange: TableProps<CommentDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
       if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     }
-
-    if (filters.rating) {
-      const ratingFilter = filters.rating[0] as number
-      if (ratingFilter !== rating) setFilters({ rating: filters.rating[0] as number })
-    } else {
-      setFilters({ rating: 0 })
-      setFilteredInfo({})
-    }
   }
 
-  const dataSource: ReviewDataSource[] = data
-    ? data.data.map((review: Review, idx) => ({
+  const dataSource: CommentDataSource[] = data
+    ? data.data.map((review: Comment, idx) => ({
         ...review,
         key: review.id,
         index: (pageNumber - 1) * pageSize + idx + 1,
@@ -58,22 +48,13 @@ function ListReview() {
       }))
     : []
 
-  const rowSelection: TableRowSelection<ReviewDataSource> | undefined = {
+  const rowSelection: TableRowSelection<CommentDataSource> | undefined = {
     type: 'checkbox',
-    onChange: (_selectedRowKeys: React.Key[], selectedRows: ReviewDataSource[]) => {
+    onChange: (_selectedRowKeys: React.Key[], selectedRows: CommentDataSource[]) => {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
   }
-
-  useEffect(() => {
-    if (rating) {
-      setFilteredInfo((prev) => ({
-        ...prev,
-        rating: [rating]
-      }))
-    }
-  }, [rating])
 
   useEffect(() => {
     if (sortBy) {
@@ -97,7 +78,7 @@ function ListReview() {
       <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
         <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            {t('review:title')}
+            {t('comment:title')}
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Form
@@ -111,7 +92,7 @@ function ListReview() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder={t('review:searchPlaceholder')}
+                placeholder={t('comment:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -136,7 +117,7 @@ function ListReview() {
           current: pageNumber,
           showTotal: (total, range) => (
             <Trans
-              ns={'review'}
+              ns={'comment'}
               i18nKey='pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
             />
@@ -146,21 +127,20 @@ function ListReview() {
         }}
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
-        filteredInfo={filteredInfo}
         sortedInfo={sortedInfo}
       />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
-        pending={deleteReviewsIsPending}
+        pending={deleteCommentsIsPending}
         setIsModalOpen={setIsOpen}
-        title={t('review:deleteModal.titleMultiple')}
+        title={t('comment:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteReviewsMutate(deleteIdList).then(() => {
+          deleteCommentsMutate(deleteIdList).then(() => {
             deleteIdList.length > 1
-              ? toast.success(t('review:notification.deleteSuccess'))
-              : toast.success(t('review:notification.deleteSuccessMultiple'))
+              ? toast.success(t('comment:notification.deleteSuccess'))
+              : toast.success(t('comment:notification.deleteSuccessMultiple'))
 
             setIsOpen(false)
             setDeleteIdList([])
@@ -171,4 +151,4 @@ function ListReview() {
   )
 }
 
-export default ListReview
+export default ListComment

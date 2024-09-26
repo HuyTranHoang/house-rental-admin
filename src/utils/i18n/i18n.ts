@@ -4,10 +4,10 @@ import { initReactI18next } from 'react-i18next'
 import en_amanity from '@/utils/i18n/locales/en/amenity.json'
 import en_breadcrumbs from '@/utils/i18n/locales/en/breadcrumbs.json'
 import en_city from '@/utils/i18n/locales/en/city.json'
+import en_comment from '@/utils/i18n/locales/en/comment.json'
 import en_common from '@/utils/i18n/locales/en/common.json'
 import en_district from '@/utils/i18n/locales/en/district.json'
 import en_report from '@/utils/i18n/locales/en/report.json'
-import en_review from '@/utils/i18n/locales/en/review.json'
 import en_role from '@/utils/i18n/locales/en/role.json'
 import en_roomType from '@/utils/i18n/locales/en/roomType.json'
 import en_transaction from '@/utils/i18n/locales/en/transaction.json'
@@ -16,10 +16,10 @@ import en_user from '@/utils/i18n/locales/en/user.json'
 import vi_amanity from '@/utils/i18n/locales/vi/amenity.json'
 import vi_breadcrumbs from '@/utils/i18n/locales/vi/breadcrumbs.json'
 import vi_city from '@/utils/i18n/locales/vi/city.json'
+import vi_comment from '@/utils/i18n/locales/vi/comment.json'
 import vi_common from '@/utils/i18n/locales/vi/common.json'
 import vi_district from '@/utils/i18n/locales/vi/district.json'
 import vi_report from '@/utils/i18n/locales/vi/report.json'
-import vi_review from '@/utils/i18n/locales/vi/review.json'
 import vi_role from '@/utils/i18n/locales/vi/role.json'
 import vi_roomType from '@/utils/i18n/locales/vi/roomType.json'
 import vi_transaction from '@/utils/i18n/locales/vi/transaction.json'
@@ -30,7 +30,7 @@ export const resources = {
   en: {
     common: en_common,
     city: en_city,
-    review: en_review,
+    comment: en_comment,
     breadcrumbs: en_breadcrumbs,
     amenity: en_amanity,
     roomType: en_roomType,
@@ -43,7 +43,7 @@ export const resources = {
   vi: {
     common: vi_common,
     city: vi_city,
-    review: vi_review,
+    comment: vi_comment,
     breadcrumbs: vi_breadcrumbs,
     amenity: vi_amanity,
     roomType: vi_roomType,

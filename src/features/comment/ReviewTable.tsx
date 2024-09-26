@@ -1,33 +1,22 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
-import { useDeleteReview } from '@/hooks/useReviews.ts'
-import { ReviewDataSource } from '@/types/review.type.ts'
+import { useDeleteComment } from '@/hooks/useComments.ts'
+import { CommentDataSource } from '@/types/comment.type.ts'
 import { blue } from '@ant-design/colors'
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
-import {
-  Button,
-  Descriptions,
-  DescriptionsProps,
-  Modal,
-  Rate,
-  Space,
-  Table,
-  TablePaginationConfig,
-  TableProps
-} from 'antd'
-import { FilterValue, TableRowSelection } from 'antd/es/table/interface'
+import { Button, Descriptions, DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
+import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface ReviewTableProps {
-  dataSource: ReviewDataSource[]
+  dataSource: CommentDataSource[]
   loading: boolean
   paginationProps: false | TablePaginationConfig | undefined
-  handleTableChange: TableProps<ReviewDataSource>['onChange']
-  rowSelection: TableRowSelection<ReviewDataSource> | undefined
-  filteredInfo: Record<string, FilterValue | null>
-  sortedInfo: SorterResult<ReviewDataSource>
+  handleTableChange: TableProps<CommentDataSource>['onChange']
+  rowSelection: TableRowSelection<CommentDataSource> | undefined
+  sortedInfo: SorterResult<CommentDataSource>
 }
 
 function ReviewTable({
@@ -36,49 +25,48 @@ function ReviewTable({
   paginationProps,
   handleTableChange,
   rowSelection,
-  filteredInfo,
   sortedInfo
 }: ReviewTableProps) {
-  const { t } = useTranslation(['common', 'review'])
+  const { t } = useTranslation(['common', 'comment'])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [currentReview, setCurrentReview] = useState<ReviewDataSource | null>(null)
+  const [currentComment, setCurrentComment] = useState<CommentDataSource | null>(null)
 
-  const handleView = (record: ReviewDataSource) => {
-    setCurrentReview(record)
+  const handleView = (record: CommentDataSource) => {
+    setCurrentComment(record)
     setIsModalOpen(true)
   }
 
-  const { deleteReviewMutate } = useDeleteReview()
+  const { deleteCommentMutate } = useDeleteComment()
 
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'Id',
-      children: <span>{currentReview?.id}</span>,
+      children: <span>{currentComment?.id}</span>,
       span: 3
     },
     {
       key: '2',
-      label: t('review:table.userName'),
-      children: <span>{currentReview?.userName}</span>,
+      label: t('comment:table.userName'),
+      children: <span>{currentComment?.userName}</span>,
       span: 3
     },
     {
       key: '3',
-      label: t('review:table.comment'),
-      children: <span>{currentReview?.comment}</span>,
+      label: t('comment:table.comment'),
+      children: <span>{currentComment?.comment}</span>,
       span: 3
     },
     {
       key: '4',
       label: t('common.table.createdAt'),
-      children: <span>{currentReview?.createdAt}</span>,
+      children: <span>{currentComment?.createdAt}</span>,
       span: 3
     }
   ]
 
-  const columns: TableProps<ReviewDataSource>['columns'] = [
+  const columns: TableProps<CommentDataSource>['columns'] = [
     {
       title: '#',
       dataIndex: 'index',
@@ -87,74 +75,21 @@ function ReviewTable({
       width: 50
     },
     {
-      title: t('review:table.userName'),
+      title: t('comment:table.userName'),
       width: 200,
       dataIndex: 'userName',
       key: 'userName'
     },
     {
-      title: t('review:table.propertyTitle'),
+      title: t('comment:table.propertyTitle'),
       dataIndex: 'propertyTitle',
       key: 'propertyTitle'
     },
     {
-      title: t('review:table.comment'),
+      title: t('comment:table.comment'),
       dataIndex: 'comment',
       key: 'comment',
       width: 400
-    },
-    {
-      title: t('review:table.rating'),
-      dataIndex: 'rating',
-      width: 200,
-      key: 'rating',
-      sorter: true,
-      sortOrder: sortedInfo.field === 'rating' ? sortedInfo.order : null,
-      filterMultiple: false,
-      filteredValue: filteredInfo.rating || null,
-      filters: [
-        {
-          text: (
-            <Space>
-              1 <Rate disabled defaultValue={1} />
-            </Space>
-          ),
-          value: 1
-        },
-        {
-          text: (
-            <Space>
-              2 <Rate disabled defaultValue={2} />
-            </Space>
-          ),
-          value: 2
-        },
-        {
-          text: (
-            <Space>
-              3 <Rate disabled defaultValue={3} />
-            </Space>
-          ),
-          value: 3
-        },
-        {
-          text: (
-            <Space>
-              4 <Rate disabled defaultValue={4} />
-            </Space>
-          ),
-          value: 4
-        },
-        {
-          text: (
-            <Space>
-              5 <Rate disabled defaultValue={5} />
-            </Space>
-          ),
-          value: 5
-        }
-      ],
-      render: (rating: number) => <Rate disabled defaultValue={rating} />
     },
     {
       title: t('common.table.createdAt'),
@@ -170,7 +105,7 @@ function ReviewTable({
       key: 'action',
       fixed: 'right',
       width: 110,
-      render: (_, record: ReviewDataSource) => (
+      render: (_, record: CommentDataSource) => (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
           <Button
             icon={<EyeOutlined />}
@@ -184,7 +119,7 @@ function ReviewTable({
             icon={<DeleteOutlined />}
             type='default'
             onClick={() => {
-              setCurrentReview(record)
+              setCurrentComment(record)
               setIsDeleteModalOpen(true)
             }}
             danger
@@ -198,37 +133,27 @@ function ReviewTable({
 
   const detailItems: DescriptionsProps['items'] = [
     {
-      key: '1',
-      label: t('review:table.userName'),
-      children: <span>{currentReview?.userName}</span>,
+      key: 'userName',
+      label: t('comment:table.userName'),
+      children: <span>{currentComment?.userName}</span>,
       span: 2
     },
     {
-      key: '2',
+      key: 'createdAt',
       label: t('common.table.createdAt'),
-      children: <span>{currentReview?.createdAt}</span>,
+      children: <span>{currentComment?.createdAt}</span>,
       span: 1
     },
     {
-      key: '3',
-      label: t('review:table.propertyTitle'),
-      children: <span>{currentReview?.propertyTitle}</span>,
+      key: 'propertyTitle',
+      label: t('comment:table.propertyTitle'),
+      children: <span>{currentComment?.propertyTitle}</span>,
       span: 3
     },
     {
-      key: '4',
-      label: t('review:table.rating'),
-      children: (
-        <span>
-          <Rate disabled defaultValue={currentReview?.rating} />
-        </span>
-      ),
-      span: 3
-    },
-    {
-      key: '5',
-      label: t('review:table.comment'),
-      children: <span>{currentReview?.comment}</span>
+      key: 'comment',
+      label: t('comment:table.comment'),
+      children: <span>{currentComment?.comment}</span>
     }
   ]
 
@@ -252,12 +177,12 @@ function ReviewTable({
           triggerAsc: t('common.table.triggerAsc'),
           cancelSort: t('common.table.cancelSort'),
           filterConfirm: t('common.table.filterConfirm'),
-          filterReset: t('common.table.filterReset'),
+          filterReset: t('common.table.filterReset')
         }}
       />
 
       <Modal
-        title={t('review:detailModal.title')}
+        title={t('comment:detailModal.title')}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         width={700}
@@ -283,10 +208,10 @@ function ReviewTable({
       <Modal
         open={isDeleteModalOpen}
         className='w-96'
-        title={<ConfirmModalTitle title={t('review:deleteModal.title')} />}
+        title={<ConfirmModalTitle title={t('comment:deleteModal.title')} />}
         onCancel={() => setIsDeleteModalOpen(false)}
         onOk={() => {
-          deleteReviewMutate(currentReview!.id)
+          deleteCommentMutate(currentComment!.id)
           setIsDeleteModalOpen(false)
         }}
         okText={t('common.ok')}
