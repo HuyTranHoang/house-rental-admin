@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { PageInfo } from '../models/pageInfo.type'
-import { Review } from '../models/review.type'
+import { PageInfo } from '@/types/pageInfo.type'
+import { Review } from '@/types/review.type'
 import axiosInstance from '../axiosInstance'
 
 interface ReviewWithPagination {

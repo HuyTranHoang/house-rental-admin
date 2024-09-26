@@ -1,7 +1,7 @@
 import { Button, Drawer, Form, FormProps, Input } from 'antd'
 
 import { useCity, useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
-import { CityForm } from '@/models/city.type.ts'
+import { CityForm } from '@/types/city.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'

@@ -1,4 +1,4 @@
-import { User } from '@/models/user.type.ts'
+import { User } from '@/types/user.type.ts'
 import { delay } from '@/utils/delay.ts'
 import { useEffect, useState } from 'react'
 import useBoundStore from '@/store.ts'

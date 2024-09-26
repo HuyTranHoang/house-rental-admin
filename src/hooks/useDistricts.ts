@@ -6,7 +6,7 @@ import {
   getAllDistrictsWithPagination, getDistrictById,
   updateDistrict
 } from '@/api/district.api'
-import { DistrictFilters } from '@/models/district.type.ts'
+import { DistrictFilters } from '@/types/district.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'

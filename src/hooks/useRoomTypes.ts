@@ -6,7 +6,7 @@ import {
   getAllRoomTypesWithPagination, getRoomTypeById,
   updateRoomType
 } from '@/api/roomType.api.ts'
-import { RoomTypeFilters } from '@/models/roomType.type.ts'
+import { RoomTypeFilters } from '@/types/roomType.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'

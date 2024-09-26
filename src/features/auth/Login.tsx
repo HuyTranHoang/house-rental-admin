@@ -1,7 +1,7 @@
 'use client'
 
 import GradientButton from '@/components/GradientButton'
-import { User } from '@/models/user.type'
+import { User } from '@/types/user.type'
 import useBoundStore from '@/store'
 import { delay } from '@/utils/delay'
 import { AntDesignOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'

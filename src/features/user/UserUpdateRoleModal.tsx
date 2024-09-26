@@ -1,6 +1,6 @@
 import { useRolesWithoutParams } from '@/hooks/useRoles.ts'
 import { useUpdateRoleForUser } from '@/hooks/useUsers.ts'
-import { UserDataSource } from '@/models/user.type.ts'
+import { UserDataSource } from '@/types/user.type.ts'
 import { Button, Checkbox, Flex, Form, Modal } from 'antd'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'

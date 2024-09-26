@@ -1,6 +1,6 @@
-import { User } from '@/models/user.type.ts'
+import { User } from '@/types/user.type.ts'
 import axiosInstance from '@/axiosInstance'
-import { PageInfo } from '@/models/pageInfo.type.ts'
+import { PageInfo } from '@/types/pageInfo.type.ts'
 
 interface UsersWithPagination {
   data: User[]

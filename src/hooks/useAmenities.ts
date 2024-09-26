@@ -5,7 +5,7 @@ import {
   getAllAmenitiesWithPagination, getAmenityById,
   updateAmenity
 } from '@/api/amenity.api.ts'
-import { CityFilters } from '@/models/city.type.ts'
+import { CityFilters } from '@/types/city.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'

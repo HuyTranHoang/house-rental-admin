@@ -1,4 +1,4 @@
-import { ReviewFilters } from '@/models/review.type.ts'
+import { ReviewFilters } from '@/types/review.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'

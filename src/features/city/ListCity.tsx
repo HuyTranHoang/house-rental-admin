@@ -3,7 +3,7 @@ import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.
 import AddUpdateCity from '@/features/city/AddUpdateCity.tsx'
 import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
-import { City, CityDataSource } from '@/models/city.type.ts'
+import { City, CityDataSource } from '@/types/city.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'

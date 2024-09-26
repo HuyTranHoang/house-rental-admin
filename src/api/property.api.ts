@@ -1,6 +1,6 @@
-import { Property, PropertyStatus } from '@/models/property.type.ts'
+import { Property, PropertyStatus } from '@/types/property.type.ts'
 import axiosInstance from '@/axiosInstance'
-import { PageInfo } from '@/models/pageInfo.type'
+import { PageInfo } from '@/types/pageInfo.type'
 
 interface PropertyWithPagination {
   pageInfo: PageInfo

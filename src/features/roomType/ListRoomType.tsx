@@ -3,7 +3,7 @@ import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.
 import AddUpdateRoomType from '@/features/roomType/AddUpdateRoomType.tsx'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useDeleteRoomTypes, useRoomTypeFilters, useRoomTypes } from '@/hooks/useRoomTypes.ts'
-import { RoomTypeDataSource } from '@/models/roomType.type.ts'
+import { RoomTypeDataSource } from '@/types/roomType.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'

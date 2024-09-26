@@ -1,5 +1,5 @@
 import { getAllTransactionsWithPagination, getTranasctionById } from '@/api/transaction.api'
-import { TransactionFilters, TransactionStatus, TransactionTypes } from '@/models/transaction.type'
+import { TransactionFilters, TransactionStatus, TransactionTypes } from '@/types/transaction.type'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'

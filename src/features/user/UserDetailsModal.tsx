@@ -1,5 +1,5 @@
 import BlockUserButton from '@/components/BlockUserButton.tsx'
-import { UserDataSource } from '@/models/user.type.ts'
+import { UserDataSource } from '@/types/user.type.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { green } from '@ant-design/colors'
 import { Avatar, Badge, Button, Col, Modal, Row, Space, Tag, theme, Typography } from 'antd'

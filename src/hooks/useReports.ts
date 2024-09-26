@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getAllReportsWithPagination, updateReportStatus } from '@/api/report.api.ts'
-import { ReportFilters, ReportStatus } from '../models/report.type.ts'
+import { ReportFilters, ReportStatus } from '@/types/report.type.ts'
 import { toast } from 'sonner'
 import { useSearchParams } from 'react-router-dom'
 import { useCallback } from 'react'

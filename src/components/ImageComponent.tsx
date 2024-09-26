@@ -1,4 +1,4 @@
-import { PropertyImage } from '@/models/property.type.ts'
+import { PropertyImage } from '@/types/property.type.ts'
 import { useState } from 'react'
 import { Blurhash } from 'react-blurhash'
 import { Image } from 'antd'

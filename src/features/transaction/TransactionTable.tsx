@@ -1,4 +1,4 @@
-import { TransactionDataSource, TransactionStatus, TransactionTypes } from '@/models/transaction.type'
+import { TransactionDataSource, TransactionStatus, TransactionTypes } from '@/types/transaction.type'
 import { formatCurrency } from '@/utils/formatCurrentcy'
 import { Badge, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
 import { SorterResult } from 'antd/es/table/interface'

@@ -3,7 +3,7 @@ import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.
 import AddUpdateAmenity from '@/features/amenity/AddUpdateAmenity.tsx'
 import { useAmenities, useAmenityFilters, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
-import { Amenity, AmenityDataSource } from '@/models/amenity.type.ts'
+import { Amenity, AmenityDataSource } from '@/types/amenity.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'

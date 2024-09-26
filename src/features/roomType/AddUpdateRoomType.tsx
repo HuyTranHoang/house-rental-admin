@@ -1,5 +1,5 @@
 import { useCreateRoomType, useRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
-import { RoomTypeForm } from '@/models/roomType.type.ts'
+import { RoomTypeForm } from '@/types/roomType.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { Button, Drawer, Form, type FormProps, Input } from 'antd'
 import { useEffect } from 'react'

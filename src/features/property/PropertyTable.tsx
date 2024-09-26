@@ -1,7 +1,7 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
 import { useBlockProperty, useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties'
-import { Property, PropertyDataSource, PropertyStatus } from '@/models/property.type'
+import { Property, PropertyDataSource, PropertyStatus } from '@/types/property.type'
 import { formatCurrency } from '@/utils/formatCurrentcy'
 import { blue } from '@ant-design/colors'
 import { CheckOutlined, CloseOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'

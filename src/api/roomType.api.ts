@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { PageInfo } from '@/models/pageInfo.type.ts'
-import { RoomType, RoomTypeForm } from '@/models/roomType.type.ts'
+import { PageInfo } from '@/types/pageInfo.type.ts'
+import { RoomType, RoomTypeForm } from '@/types/roomType.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 
 interface RoomTypesWithPagination {

@@ -1,7 +1,7 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter'
 import { useTransactionFilters, useTransactions } from '@/hooks/useTransactions'
-import { Transaction, TransactionDataSource, TransactionStatus, TransactionTypes } from '@/models/transaction.type'
+import { Transaction, TransactionDataSource, TransactionStatus, TransactionTypes } from '@/types/transaction.type'
 import { InfoOutlined, SwapOutlined } from '@ant-design/icons'
 import { Divider, Flex, Form, Input, Select, TableProps, Typography } from 'antd'
 import { useEffect, useState } from 'react'

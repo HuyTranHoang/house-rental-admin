@@ -1,6 +1,6 @@
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { useCreateDistrict, useDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
-import { DistrictForm } from '@/models/district.type.ts'
+import { DistrictForm } from '@/types/district.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { Button, Drawer, Form, FormProps, Input, Select, SelectProps, Typography } from 'antd'
 import { useEffect, useState } from 'react'

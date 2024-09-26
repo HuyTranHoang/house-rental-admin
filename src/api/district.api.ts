@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { District, DistrictForm } from '@/models/district.type'
-import { PageInfo } from '@/models/pageInfo.type.ts'
+import { District, DistrictForm } from '@/types/district.type'
+import { PageInfo } from '@/types/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 
 interface DistrictsWithPagination {

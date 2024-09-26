@@ -2,7 +2,7 @@ import { getRoleById, RoleField } from '@/api/role.api.ts'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import { useCreateRole, useDeleteRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
-import { Role } from '@/models/role.type.ts'
+import { Role } from '@/types/role.type.ts'
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import {

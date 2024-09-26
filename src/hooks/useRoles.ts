@@ -4,7 +4,7 @@ import React from 'react'
 import { toast } from 'sonner'
 import axios from 'axios'
 import { FormInstance } from 'antd'
-import { Role } from '@/models/role.type.ts'
+import { Role } from '@/types/role.type.ts'
 import { useTranslation } from 'react-i18next'
 
 export const useRolesAll = () => {

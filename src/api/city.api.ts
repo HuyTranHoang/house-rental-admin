@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { City, CityForm } from '@/models/city.type.ts'
-import { PageInfo } from '@/models/pageInfo.type.ts'
+import { City, CityForm } from '@/types/city.type.ts'
+import { PageInfo } from '@/types/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 
 interface CitiesWithPagination {

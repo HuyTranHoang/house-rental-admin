@@ -1,5 +1,5 @@
 import { createAuthSlice } from '@/features/auth/authSlice.ts'
-import { User } from '@/models/user.type.ts'
+import { User } from '@/types/user.type.ts'
 import { createUISlice } from '@/ui/uiSlice.ts'
 import { create } from 'zustand'
 

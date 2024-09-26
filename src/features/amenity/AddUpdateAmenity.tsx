@@ -1,5 +1,5 @@
 import { useAmenity, useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
-import { AmenityForm } from '@/models/amenity.type.ts'
+import { AmenityForm } from '@/types/amenity.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { Button, Drawer, Form, FormProps, Input } from 'antd'
 import { useEffect } from 'react'

@@ -5,7 +5,7 @@ import UserDetailsModal from '@/features/user/UserDetailsModal.tsx'
 import UserUpdateRoleModal from '@/features/user/UserUpdateRoleModal.tsx'
 import { useRolesAll } from '@/hooks/useRoles'
 import { useDeleteUser } from '@/hooks/useUsers'
-import { UserDataSource } from '@/models/user.type'
+import { UserDataSource } from '@/types/user.type'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import {
   Avatar,

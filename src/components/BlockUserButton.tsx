@@ -1,5 +1,5 @@
 import { useLockUser } from '@/hooks/useUsers'
-import { UserDataSource } from '@/models/user.type'
+import { UserDataSource } from '@/types/user.type'
 import { green, red, volcano } from '@ant-design/colors'
 import { LockOutlined, UnlockOutlined, WarningOutlined } from '@ant-design/icons'
 import { Button, Flex, Modal, Tooltip } from 'antd'

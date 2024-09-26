@@ -1,7 +1,7 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
 import { useDeleteReview } from '@/hooks/useReviews.ts'
-import { ReviewDataSource } from '@/models/review.type.ts'
+import { ReviewDataSource } from '@/types/review.type.ts'
 import { blue } from '@ant-design/colors'
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons'
 import {

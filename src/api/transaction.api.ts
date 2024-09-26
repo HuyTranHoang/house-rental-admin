@@ -1,5 +1,5 @@
-import { PageInfo } from '@/models/pageInfo.type.ts'
-import { Transaction } from '@/models/transaction.type.ts'
+import { PageInfo } from '@/types/pageInfo.type.ts'
+import { Transaction } from '@/types/transaction.type.ts'
 import axios from 'axios'
 
 interface TransactionsWithPagination {

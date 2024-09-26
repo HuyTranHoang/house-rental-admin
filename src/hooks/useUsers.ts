@@ -1,5 +1,5 @@
 import { deleteUser, deleteUsers, getAllUserWithPagination, lockUser, updateRoleForUser } from '@/api/user.api.ts'
-import { UserFilters } from '@/models/user.type.ts'
+import { UserFilters } from '@/types/user.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'

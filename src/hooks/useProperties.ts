@@ -5,7 +5,7 @@ import {
   getPropertyById,
   updatePropertyStatus
 } from '@/api/property.api'
-import { PropertyFilters, PropertyStatus } from '@/models/property.type.ts'
+import { PropertyFilters, PropertyStatus } from '@/types/property.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
