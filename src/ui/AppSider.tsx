@@ -9,7 +9,6 @@ import {
   HomeOutlined,
   LogoutOutlined,
   ScheduleOutlined,
-  SettingOutlined,
   SolutionOutlined,
   TransactionOutlined,
   UserOutlined
@@ -47,6 +46,12 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
       label: t('property'),
       icon: <ScheduleOutlined />,
       onClick: () => navigate(ROUTER_NAMES.PROPERTY)
+    },
+    {
+      key: ROUTER_NAMES.TRANSACTION,
+      label: t('transaction'),
+      icon: <TransactionOutlined />,
+      onClick: () => navigate(ROUTER_NAMES.TRANSACTION)
     },
     {
       key: 'cityDistrict',
@@ -100,12 +105,6 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
       ]
     },
     {
-      key: ROUTER_NAMES.TRANSACTION,
-      label: t('transaction'),
-      icon: <TransactionOutlined />,
-      onClick: () => navigate(ROUTER_NAMES.TRANSACTION)
-    },
-    {
       key: 'userRole',
       label: t('userAndRole'),
       icon: <UserOutlined />,
@@ -122,12 +121,6 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
         }
       ]
     },
-    {
-      key: 'transations',
-      label: <Typography.Text type='danger'>Check bản dịch (Dev Only)</Typography.Text>,
-      icon: <SettingOutlined className='text-red-500' />,
-      onClick: () => window.open('/?showtranslations')
-    }
   ]
 
   const dropdownItems: MenuProps['items'] = [

@@ -94,27 +94,30 @@ function ListTransaction() {
             <Form.Item>
               <Select
                 placeholder={t('transaction:filters.type')}
-                className='w-36'
-                suffixIcon={<SwapOutlined className='text-base' />}
+                className="w-36"
+                suffixIcon={<SwapOutlined className="text-base" />}
                 onChange={(value) => setFilters({ transactionType: value })}
-                options={[
-                  { value: TransactionTypes.DEPOSIT, label: t('transaction:type.DEPOSIT') },
-                  { value: TransactionTypes.WITHDRAWAL, label: t('transaction:type.WITHDRAWAL') }
-                ]}
-              />
+                value={transactionType || undefined}
+              >
+                <Select.Option value="">{t('transaction:type.ALL')}</Select.Option>
+                <Select.Option value={TransactionTypes.DEPOSIT}>{t('transaction:type.DEPOSIT')}</Select.Option>
+                <Select.Option value={TransactionTypes.WITHDRAWAL}>{t('transaction:type.WITHDRAWAL')}</Select.Option>
+              </Select>
             </Form.Item>
+
             <Form.Item>
               <Select
                 placeholder={t('transaction:filters.status')}
-                className='w-36'
-                suffixIcon={<InfoOutlined className='text-base' />}
+                className="w-36"
+                suffixIcon={<InfoOutlined className="text-base" />}
                 onChange={(value) => setFilters({ status: value })}
-                options={[
-                  { value: TransactionStatus.SUCCESS, label: t('transaction:stasus.SUCCESS') },
-                  { value: TransactionStatus.FAILED, label: t('transaction:stasus.FAILED') },
-                  { value: TransactionStatus.PENDING, label: t('transaction:stasus.PENDING') }
-                ]}
-              />
+                value={status || undefined}
+              >
+                <Select.Option value="">{t('transaction:status.ALL')}</Select.Option>
+                <Select.Option value={TransactionStatus.SUCCESS}>{t('transaction:status.SUCCESS')}</Select.Option>
+                <Select.Option value={TransactionStatus.FAILED}>{t('transaction:status.FAILED')}</Select.Option>
+                <Select.Option value={TransactionStatus.PENDING}>{t('transaction:status.PENDING')}</Select.Option>
+              </Select>
             </Form.Item>
           </Form>
         </Flex>

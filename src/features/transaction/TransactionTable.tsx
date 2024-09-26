@@ -1,6 +1,6 @@
 import { TransactionDataSource, TransactionStatus, TransactionTypes } from '@/models/transaction.type'
 import { formatCurrency } from '@/utils/formatCurrentcy'
-import { Table, TablePaginationConfig, TableProps } from 'antd'
+import { Badge, Table, TablePaginationConfig, TableProps, Tag } from 'antd'
 import { SorterResult } from 'antd/es/table/interface'
 import { useTranslation } from 'react-i18next'
 
@@ -36,7 +36,7 @@ function TransactionTable({
       key: 'transactionId'
     },
     {
-      title: t('transaction:table.transactionId'),
+      title: t('transaction:table.userName'),
       width: 400,
       dataIndex: 'username',
       key: 'username'
@@ -54,14 +54,14 @@ function TransactionTable({
       title: t('transaction:table.type'),
       dataIndex: 'transactionType',
       key: 'transactionType',
-      width: 200,
+      width: 150,
       sorter: true,
       sortOrder: sortedInfo.field === 'transactionType' ? sortedInfo.order : null,
       render: (value) => {
         if (value === TransactionTypes.DEPOSIT) {
-          return <strong className='text-green-600'>{t('transaction:type.DEPOSIT')}</strong>
+          return <Tag color='green'>{t('transaction:type.DEPOSIT')}</Tag>
         } else {
-          return <strong className='text-red-600'>{t('transaction:type.WITHDRAWAL')}</strong>
+          return <Tag color='red'>{t('transaction:type.WITHDRAWAL')}</Tag>
         }
       }
     },
@@ -69,17 +69,17 @@ function TransactionTable({
       title: t('transaction:table.status'),
       dataIndex: 'status',
       key: 'status',
-      width: 200,
+      width: 150,
       sorter: true,
       sortOrder: sortedInfo.field === 'status' ? sortedInfo.order : null,
       render: (value) => {
-        if (value === TransactionStatus.SUCCESS) {
-          return <strong className='text-blue-600'>{t('transaction:stasus.SUCCESS')}</strong>
-        }
-        if (value === TransactionStatus.FAILED) {
-          return <strong className='text-red-600'>{t('transaction:stasus.FAILED')}</strong>
-        } else {
-          return <strong className='text-yellow-500'>{t('transaction:stasus.PENDING')}</strong>
+        switch (value) {
+          case TransactionStatus.SUCCESS:
+            return <Badge status='success' text={t('transaction:status.SUCCESS')} />
+          case TransactionStatus.FAILED:
+            return <Badge status='error' text={t('transaction:status.FAILED')} />
+          default:
+            return <Badge status='warning' text={t('transaction:status.PENDING')} />
         }
       }
     },
@@ -90,7 +90,7 @@ function TransactionTable({
       sorter: true,
       sortOrder: sortedInfo.field === 'transactionDate' ? sortedInfo.order : null,
       fixed: 'right',
-      width: 250
+      width: 150
     }
   ]
 

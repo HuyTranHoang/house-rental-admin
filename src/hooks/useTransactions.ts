@@ -25,28 +25,9 @@ export const useTransactions = (
   sortBy: string
 ) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: [
-      'transactions',
-      search,
-      userId,
-      amount,
-      transactionType,
-      status,
-      pageNumber,
-      pageSize,
-      sortBy
-    ],
+    queryKey: ['transactions', search, userId, amount, transactionType, status, pageNumber, pageSize, sortBy],
     queryFn: () =>
-      getAllTransactionsWithPagination(
-        search,
-        userId,
-        amount,
-        transactionType,
-        status,
-        pageNumber,
-        pageSize,
-        sortBy
-      )
+      getAllTransactionsWithPagination(search, userId, amount, transactionType, status, pageNumber, pageSize, sortBy)
   })
 
   return { data, isLoading, isError }
@@ -87,12 +68,20 @@ export const useTransactionFilters = () => {
           }
 
           if (filters.status !== undefined) {
-            params.set('status', filters.status)
+            if (filters.status) {
+              params.set('status', filters.status)
+            } else {
+              params.delete('status')
+            }
             params.set('pageNumber', '1')
           }
 
           if (filters.transactionType !== undefined) {
-            params.set('transactionType', filters.transactionType)
+            if (filters.transactionType) {
+              params.set('transactionType', filters.transactionType)
+            } else {
+              params.delete('transactionType')
+            }
             params.set('pageNumber', '1')
           }
 
@@ -124,8 +113,8 @@ export const useTransactionFilters = () => {
     search,
     userId,
     amount,
-    transactionType,
     status,
+    transactionType,
     sortBy,
     pageNumber,
     pageSize,

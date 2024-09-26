@@ -5,14 +5,16 @@
     "status": "Trạng thái",
     "type": "Loại giao dịch"
   },
-  "stasus": {
-    "PENDING": "ĐANG CHỜ",
-    "SUCCESS": "THÀNH CÔNG",
-    "FAILED": "THẤT BẠI"
+  "status": {
+    "ALL": "Tất cả",
+    "PENDING": "Đang chờ",
+    "SUCCESS": "Thành công",
+    "FAILED": "Thất bại"
   },
   "type": {
-    "DEPOSIT": "NẠP TIỀN",
-    "WITHDRAWAL": "RÚT TIỀN"
+    "ALL": "Tất cả",
+    "DEPOSIT": "Nạp tiền",
+    "WITHDRAWAL": "Rút tiền"
   },
   "pagination": {
     "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} giao dịch"

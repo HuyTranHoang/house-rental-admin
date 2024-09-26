@@ -5,14 +5,16 @@
     "status": "Status",
     "type": "Transaction type"
   },
-  "stasus": {
-    "PENDING": "PENDING",
-    "SUCCESS": "SUCCESS",
-    "FAILED": "FAILED"
+  "status": {
+    "ALL": "All",
+    "PENDING": "Pending",
+    "SUCCESS": "Success",
+    "FAILED": "Failed"
   },
   "type": {
-    "DEPOSIT": "DEPOSIT",
-    "WITHDRAWAL": "WITHDRAWAL"
+    "ALL": "All",
+    "DEPOSIT": "Deposit",
+    "WITHDRAWAL": "Withdrawal"
   },
   "pagination": {
     "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} transactions"

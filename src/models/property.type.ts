@@ -18,7 +18,7 @@ export interface Property {
   roomTypeId: number
   roomTypeName: string
   amenities: string[]
-  propertyImages: string[]
+  propertyImages: PropertyImage[]
   createdAt: string
   blocked: boolean
 }
@@ -32,6 +32,11 @@ export enum PropertyStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED'
+}
+
+export interface PropertyImage {
+  imageUrl: string
+  blurhash: string
 }
 
 export type PropertyFilters = {
