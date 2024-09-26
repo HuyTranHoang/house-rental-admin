@@ -1,6 +1,5 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import { i18nextPlugin } from 'translation-check'
 
 import en_amanity from '@/utils/i18n/locales/en/amenity.json'
 import en_breadcrumbs from '@/utils/i18n/locales/en/breadcrumbs.json'
@@ -56,30 +55,27 @@ export const resources = {
   }
 } as const
 
-i18n
-  .use(i18nextPlugin)
-  .use(initReactI18next)
-  .init({
-    resources,
-    defaultNS,
-    lng: localStorage.getItem('i18n') || 'en',
-    fallbackLng: ['en', 'vi'],
-    ns: [
-      'common',
-      'breadcrumbs',
-      'city',
-      'review',
-      'amenity',
-      'roomType',
-      'report',
-      'user',
-      'district',
-      'role',
-      'transaction'
-    ],
-    interpolation: {
-      escapeValue: false
-    }
-  })
+i18n.use(initReactI18next).init({
+  resources,
+  defaultNS,
+  lng: localStorage.getItem('i18n') || 'en',
+  fallbackLng: ['en', 'vi'],
+  ns: [
+    'common',
+    'breadcrumbs',
+    'city',
+    'review',
+    'amenity',
+    'roomType',
+    'report',
+    'user',
+    'district',
+    'role',
+    'transaction'
+  ],
+  interpolation: {
+    escapeValue: false
+  }
+})
 
 export default i18n

@@ -4,7 +4,7 @@ import { useBlockProperty } from '@/hooks/useProperties'
 import { useUpdateReportStatus } from '@/hooks/useReports.ts'
 import { Report, ReportCategory, ReportDataSource, ReportStatus } from '@/models/report.type.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
-import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import {
   Badge,
@@ -28,6 +28,7 @@ import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import ImageComponent from '@/components/ImageComponent.tsx'
 
 interface ReportTableProps {
   dataSource: ReportDataSource[]
@@ -236,17 +237,7 @@ function ReportTable({
           <Image.PreviewGroup>
             {propertyData?.propertyImages.map((image, index) => (
               <Col key={index} span={6}>
-                <Image
-                  preview={{
-                    mask: (
-                      <>
-                        <EyeOutlined style={{ marginRight: 6 }} /> Chi tiết
-                      </>
-                    )
-                  }}
-                  src={image}
-                  className='size-48 object-cover p-2'
-                />
+                <ImageComponent image={image} className='size-48 object-cover p-2' />
               </Col>
             ))}
           </Image.PreviewGroup>

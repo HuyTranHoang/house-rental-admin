@@ -87,7 +87,7 @@ export const getAllPropertyWithPagination = async (
       sortBy
     }
 
-    const response = await axiosInstance.get<PropertyWithPagination>('/api/properties/admin', { params })
+    const response = await axiosInstance.get<PropertyWithPagination>('/api/properties', { params })
 
     if (response.status === 200) {
       return response.data

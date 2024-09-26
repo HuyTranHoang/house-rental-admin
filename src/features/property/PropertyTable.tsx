@@ -27,6 +27,7 @@ import {
 import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
 import { useState } from 'react'
+import ImageComponent from '@/components/ImageComponent.tsx'
 
 const { confirm } = Modal
 
@@ -212,17 +213,7 @@ function PropertyTable({
           <Image.PreviewGroup>
             {currentProperty?.propertyImages.map((image, index) => (
               <Col key={index} span={6}>
-                <Image
-                  preview={{
-                    mask: (
-                      <>
-                        <EyeOutlined style={{ marginRight: 6 }} /> Chi tiết
-                      </>
-                    )
-                  }}
-                  src={image}
-                  className='size-48 object-cover p-2'
-                />
+                <ImageComponent image={image} className='size-48 object-cover p-2' />
               </Col>
             ))}
           </Image.PreviewGroup>
