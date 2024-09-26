@@ -279,7 +279,7 @@ function ListProperty() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} bất bài đăng`,
+          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} bất động sản`,
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}
