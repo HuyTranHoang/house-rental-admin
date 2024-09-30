@@ -8,6 +8,7 @@ import {
 import { PropertyFilters, PropertyStatus } from '@/types/property.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -23,13 +24,14 @@ export const useProperty = (id: number) => {
 
 export function useUpdatePropertyStatus() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation(['common', 'property']);
 
   const { mutate, isPending } = useMutation({
     mutationFn: updatePropertyStatus,
     onSuccess: () => {
       queryClient
         .invalidateQueries({ queryKey: ['properties'] })
-        .then(() => toast.success('Cập nhật trạng thái thành công'))
+        .then(() => toast.success(t('property:notification.setStatusSuccess')))
     },
 
     onError: (error) => {
@@ -42,10 +44,11 @@ export function useUpdatePropertyStatus() {
 
 export function useDeleteProperty() {
   const queryClient = useQueryClient()
+  const { t } = useTranslation(['common', 'property']);
   const { mutate, isPending } = useMutation({
     mutationFn: (id: number) => deleteProperty(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => toast.success('Xóa bài đăng thành công'))
+      queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => toast.success(t('property:notification.deleteSuccess')))
     },
     onError: (error) => {
       toast.error(error.message)
@@ -53,6 +56,7 @@ export function useDeleteProperty() {
   })
   return { deleteProperty: mutate, deletePropertyIsPending: isPending }
 }
+
 
 export const useProperties = (
   search: string,
@@ -109,12 +113,13 @@ export const useProperties = (
 
 export const useBlockProperty = () => {
   const queryClient = useQueryClient()
+  const { t } = useTranslation(['common', 'property']);
 
   const { mutate, isPending } = useMutation({
     mutationFn: blockProperty,
     onSuccess: (property) => {
       queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => {
-        toast.success(`Bài đăng ${property.blocked ? 'đã bị chặn' : 'đã được mở chặn'} thành công`)
+        toast.success(`${t('property:table.property')} ${property.blocked ? t('property:table.blocked') : t('property:table.unBlocked')} ${t('property:table.success')}`)
       })
     },
     onError: (error) => {

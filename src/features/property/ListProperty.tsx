@@ -12,6 +12,8 @@ import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } f
 import { useEffect, useState } from 'react'
 import PropertyTable from './PropertyTable'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
+import { Trans, useTranslation } from 'react-i18next'
+
 
 const { Search } = Input
 
@@ -27,15 +29,17 @@ type OnChange = NonNullable<TableProps<PropertyDataSource>['onChange']>
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-const tabsItem: TabsProps['items'] = [
-  { key: PropertyStatus.PENDING, label: 'Chờ xử lý', icon: <ExclamationCircleOutlined /> },
-  { key: PropertyStatus.APPROVED, label: 'Đã duyệt', icon: <CheckCircleOutlined /> },
-  { key: PropertyStatus.REJECTED, label: 'Đã từ chối', icon: <CloseSquareOutlined /> }
-]
+
 
 function ListProperty() {
   const [form] = Form.useForm()
   const queryClient = useQueryClient()
+  const { t } = useTranslation(['common', 'property']);
+  const tabsItem: TabsProps['items'] = [
+    { key: PropertyStatus.PENDING, label: t('property:tab.pending'), icon: <ExclamationCircleOutlined /> },
+    { key: PropertyStatus.APPROVED, label: t('property:tab.approved'), icon: <CheckCircleOutlined /> },
+    { key: PropertyStatus.REJECTED, label: t('property:tab.rejected'), icon: <CloseSquareOutlined /> }
+  ]
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
@@ -76,13 +80,13 @@ function ListProperty() {
   const { cityData, cityIsLoading } = useCitiesAll()
   const { districtData, districtIsLoading } = useDistrictsAll()
   const formatDate = useCustomDateFormatter()
-  const cityDistrictOptions: Option[] = [{ value: '0', label: 'Toàn Quốc' }]
+  const cityDistrictOptions: Option[] = [{ value: '0', label: t('property:button.nationwide') }]
   if (cityData && districtData) {
     const cityMap = cityData.map((city) => ({
       value: city.id.toString(),
       label: city.name,
       children: [
-        { value: '0', label: 'Tất cả' },
+        { value: '0', label: t('property:more.all') },
         ...districtData
           .filter((district) => district.cityId === city.id)
           .map((district) => ({
@@ -106,7 +110,7 @@ function ListProperty() {
 
   // Start Room Type
   const { roomTypeData, roomTypeIsLoading } = useRoomTypesAll()
-  const roomTypeOptions: Option[] = [{ value: '0', label: 'Tất cả' }]
+  const roomTypeOptions: Option[] = [{ value: '0', label: t('property:more.all') }]
   if (roomTypeData) {
     roomTypeOptions.push(
       ...roomTypeData.map((roomType) => ({
@@ -183,7 +187,7 @@ function ListProperty() {
       <Flex align='center' justify='space-between' style={{ marginBottom: 12 }}>
         <Flex align='center'>
           <Typography.Title level={2} style={{ margin: 0 }}>
-            Danh sách bài đăng
+            {t('property:title')}
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
           <Form
@@ -208,7 +212,7 @@ function ListProperty() {
                 allowClear
                 className='w-72'
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder='Tiêu đề, thành phố, quận huyện, địa chỉ..'
+                placeholder= {t('property:more.searchPlaceholder')}
               />
             </Form.Item>
 
@@ -219,7 +223,7 @@ function ListProperty() {
                 onChange={handleCityDistrictChange}
                 allowClear={false}
                 loading={cityIsLoading || districtIsLoading}
-                placeholder='Chọn quận huyện'
+                placeholder={t('property:more.selectDistrict')}
                 suffixIcon={<GeoIcon />}
               />
             </Form.Item>
@@ -229,7 +233,7 @@ function ListProperty() {
                 className='w-48'
                 onChange={(value) => setFilters({ roomTypeId: parseInt(value) })}
                 loading={roomTypeIsLoading}
-                placeholder={'Loại phòng'}
+                placeholder={t('property:more.roomType')}
                 suffixIcon={<HomeIcon />}
                 options={roomTypeOptions}
               />
@@ -238,14 +242,14 @@ function ListProperty() {
               <Select
                 className='w-48'
                 onChange={handlePriceChange}
-                placeholder='Giá thuê'
+                placeholder={t('property:more.price')}
                 suffixIcon={<DollarIcon />}
                 options={[
-                  { value: '0,0', label: 'Tất cả' },
-                  { value: '0,3', label: 'Dưới 3 triệu' },
-                  { value: '3,7', label: '3 đến 7 triệu' },
-                  { value: '7,10', label: '7 đến 10 triệu' },
-                  { value: '10,0', label: 'Trên 10 triệu' }
+                  { value: '0,0', label: t('property:more.all') },
+                  { value: '0,3', label: t('property:more.option1') },
+                  { value: '3,7', label: t('property:more.option2') },
+                  { value: '7,10', label: t('property:more.option3') },
+                  { value: '10,0', label: t('property:more.option4') }
                 ]}
               />
             </Form.Item>
@@ -253,10 +257,10 @@ function ListProperty() {
               <Select
                 className='w-48'
                 onChange={handleAreaChange}
-                placeholder='Diện tích'
+                placeholder={t('property:more.acreage')}
                 suffixIcon={<HomeIcon />}
                 options={[
-                  { value: '0,0', label: 'Tất cả' },
+                  { value: '0,0', label: t('property:more.all') },
                   { value: '0,3', label: '< 30 m2' },
                   { value: '3,5', label: '30 - 50 m2' },
                   { value: '5,7', label: '50 - 70 m2' },
@@ -279,7 +283,13 @@ function ListProperty() {
           total: data?.pageInfo.totalElements,
           pageSize: pageSize,
           current: pageNumber,
-          showTotal: (total, range) => `${range[0]}-${range[1]} trong ${total} bất động sản`,
+          showTotal: (total, range) => (
+            <Trans
+              ns={'property'}
+              i18nKey='pagination.showTotal'
+              values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
+            />
+          ),
           onShowSizeChange: (_, size) => setFilters({ pageSize: size }),
           onChange: (page) => setFilters({ pageNumber: page })
         }}

@@ -1,0 +1,77 @@
+{
+    "title": "Quản lý bài đăng",
+    "searchPlaceholder": "Tìm kiếm bài đăng",
+    "detailProperty" : "Chi tiết bài đăng",
+    "table": {
+      "name": "Tên bài đăng",
+      "title" : "Tiêu đề",
+      "location" : "Vị trí",
+      "price" : "Giá",
+      "roomType" : "Loại phòng",
+      "city" : "Thành phố" ,
+      "discrict" : "Quận huyện",
+      "address" : "Địa chỉ",
+      "status" : "Trạnh thái",
+      "block" : "Khóa",
+      "activity" :"Hoạt động",
+      "numRoom" : "Số phòng ngủ",
+      "postedBy" : "Người đăng : ",
+      "amenity" : "Tiện ích",
+      "description" : "Mô tả",
+      "image" : "Hình ảnh",
+      "gotBlock" : "Bị chặn",
+      "seenAndAccess" : "Xem và duyệt",
+      "filterConfirm" : "Lọc",
+      "filterReset" : "Bỏ lọc",
+      "property" : "Bài đăng" ,
+      "blocked" : "đã bị chặn" ,
+      "unBlocked" : "đã được mở chặn",
+      "success" : "thành công"
+    },
+    "button": {
+      "add": "bài đăng mới",
+      "nationwide" :"Toàn quốc"
+    },
+    "form": {
+      "addForm": "Thêm bài đăng mới",
+      "editForm": "Chỉnh sửa bài đăng",
+      "name": "Tên bài đăng",
+      "namePlaceholder": "Nhập tên bài đăng",
+      "nameRequired": "Vui lòng nhập tên bài đăng",
+      "nameMin": "Tên bài đăng phải có ít nhất 3 ký tự",
+      "nameMax": "Tên bài đăng phải có tối đa 50 ký tự"
+    },
+    "pagination": {
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} bài đăng"
+    },
+    "notification": {
+      "addSuccess": "Thêm bài đăng thành công",
+      "editSuccess": "Chỉnh sửa bài đăng thành công",
+      "deleteSuccess": "Xóa bài đăng thành công",
+      "deleteSuccessMultiple": "Xóa các bài đăng đã chọn thành công",
+      "setStatusSuccess" : "Cật nhật trạng thái thành công"
+    },
+    "deleteModal": {
+      "title": "Xác nhận xóa bài đăng",
+      "titleMultiple": "Xác nhận xóa các bài đăng"
+    },
+    "more" : {
+        "all" : "Tất cả",
+        "option1" :"Dưới 3 triệu",
+        "option2" :"3 đến 7 triệu",
+        "option3" :"7 đến 10 triệu",
+        "option4" :"Trên 10 triệu",
+        "acreage" : "Diện tích",
+        "searchPlaceholder" : "Tiêu đề, thành phố, quận huyện, địa chỉ..",
+        "selectDistrict" :"Chọn quận huyện",
+        "roomType" : "Loại phòng"  
+    },
+    "tab" : {
+        "pending" : "Chờ xử lý",
+        "approved" : "Đã duyệt",
+        "rejected" : "Đã từ chối",
+        "accessProperty" : "Duyệt , bài đăng hợp lệ",
+        "rejectProperty" : "Duyệt , bài đăng hợp lệ"
+    }
+  }
+  
