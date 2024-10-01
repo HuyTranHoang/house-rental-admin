@@ -17,14 +17,14 @@
   },
   "table": {
     "see": "Read",
-    "filter": "Other",
+    "more": "Other",
     "user": "User",
     "evaluate": "Review",
     "city": "City",
     "property": "Property",
     "district": "District",
     "roomType": "Room Type",
-    "amenities": "Amenity",
+    "amenity": "Amenity",
     "role": "Role",
     "adminPage": "Admin Page"
   },
@@ -61,11 +61,11 @@
       "create": "Property: Add",
       "delete": "Property: Delete"
     },
-    "review": {
-      "read": "Review: View",
-      "update": "Review: Edit",
-      "create": "Review: Add",
-      "delete": "Review: Delete"
+    "comment": {
+      "read": "Comment: View",
+      "update": "Comment: Edit",
+      "create": "Comment: Add",
+      "delete": "Comment: Delete"
     },
     "city": {
       "read": "City: View",
@@ -85,7 +85,7 @@
       "create": "Room Type: Add",
       "delete": "Room Type: Delete"
     },
-    "amenities": {
+    "amenity": {
       "read": "Amenity: View",
       "update": "Amenity: Edit",
       "create": "Amenity: Add",
