@@ -227,7 +227,7 @@ function PropertyTable({
       dataIndex: 'title',
       key: 'title'
     },
-    { title: t('property:table.title'), dataIndex: 'location', key: 'location' },
+    { title: t('property:table.location'), dataIndex: 'location', key: 'location' },
     {
       title: t('property:more.acreage'),
       dataIndex: 'area',
@@ -237,7 +237,7 @@ function PropertyTable({
       width: 120,
       render: (record) => `${record} m²`
     },
-    { title: t('property:table.numRoom'), dataIndex: 'roomTypeName', key: 'roomTypeName', width: 150 },
+    { title: t('property:table.roomType'), dataIndex: 'roomTypeName', key: 'roomTypeName', width: 150 },
     {
       title: t('property:table.city'),
       dataIndex: 'cityName',

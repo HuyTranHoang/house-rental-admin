@@ -7,7 +7,7 @@
       "title" : "Title",
       "location" : "Location",
       "price" : "Price",
-      "roomType" : "Num Room",
+      "roomType" : "Room type",
       "city" : "City" ,
       "district" : "Disctrict",
       "address" : "Address",
@@ -15,7 +15,7 @@
       "block" : "Block",
       "activity" :"Activity",
       "numRoom" : "Num Room",
-      "postedBy" : "Posted By : ",
+      "postedBy" : "Posted By",
       "amenity" : "Amenity",
       "description" : "Description",
       "image" : "Image",
@@ -49,8 +49,7 @@
       "editSuccess": "Edit property successfully",
       "deleteSuccess": "Delete property successfully",
       "deleteSuccessMultiple": "Delete selected properties successfully",
-      "setStatusSuccess" : "Edit Status successful",
-      "useBlock" :"`Property ${property.blocked ? 'blocked' : 'Activity'} Success`"
+      "setStatusSuccess" : "Edit Status successful"
     },
     "deleteModal": {
       "title": "Confirm deletion",
@@ -72,8 +71,8 @@
       "pending" : "Pending",
       "approved" : "Approved",
       "rejected" : "Rejected",
-      "accessProperty" : "Access . Valid Post",
-      "rejectProperty" : "Reject , Invalid Post"
+      "accessProperty" : "Agree. Valid Post",
+      "rejectProperty" : "Reject. Invalid Post"
   }
   }
   

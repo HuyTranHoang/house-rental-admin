@@ -9,13 +9,13 @@
       "price" : "Giá",
       "roomType" : "Loại phòng",
       "city" : "Thành phố" ,
-      "discrict" : "Quận huyện",
+      "district" : "Quận huyện",
       "address" : "Địa chỉ",
       "status" : "Trạnh thái",
       "block" : "Khóa",
       "activity" :"Hoạt động",
       "numRoom" : "Số phòng ngủ",
-      "postedBy" : "Người đăng : ",
+      "postedBy" : "Người đăng",
       "amenity" : "Tiện ích",
       "description" : "Mô tả",
       "image" : "Hình ảnh",
@@ -64,14 +64,15 @@
         "acreage" : "Diện tích",
         "searchPlaceholder" : "Tiêu đề, thành phố, quận huyện, địa chỉ..",
         "selectDistrict" :"Chọn quận huyện",
-        "roomType" : "Loại phòng"  
+        "roomType" : "Loại phòng",
+        "price" : "Giá"
     },
     "tab" : {
         "pending" : "Chờ xử lý",
         "approved" : "Đã duyệt",
         "rejected" : "Đã từ chối",
-        "accessProperty" : "Duyệt , bài đăng hợp lệ",
-        "rejectProperty" : "Duyệt , bài đăng hợp lệ"
+        "accessProperty" : "Duyệt. bài đăng hợp lệ",
+        "rejectProperty" : "Từ chối. Bài đăng không hợp lệ"
     }
   }
   
