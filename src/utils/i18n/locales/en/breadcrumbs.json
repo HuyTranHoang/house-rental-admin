@@ -18,7 +18,7 @@
     "add": "Add room type",
     "edit": "Edit room type"
   },
-  "amenities": {
+  "amenity": {
     "list": "Amenity Management",
     "add": "Add amenity",
     "edit": "Edit amenity"
