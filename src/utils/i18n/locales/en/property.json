@@ -1,79 +1,65 @@
 {
-    "title": "Property Management",
-    "searchPlaceholder": "Search Property",
-    "detailProperty" : "Detail Property",
-    "table": {
-      "name": "Property name",
-      "title" : "Title",
-      "location" : "Location",
-      "price" : "Price",
-      "roomType" : "Num Room",
-      "city" : "City" ,
-      "district" : "Disctrict",
-      "address" : "Address",
-      "status" : "Status",
-      "block" : "Block",
-      "activity" :"Activity",
-      "numRoom" : "Num Room",
-      "postedBy" : "Posted By : ",
-      "amenity" : "Amenity",
-      "description" : "Description",
-      "image" : "Image",
-      "gotBlock" : "Block",
-      "seenAndAccess" : "Seen And Access",
-      "filterConfirm" : "Filter Comfirm",
-      "filterReset" : "Filter Reset",
-      "property" : "Property" ,
-      "blocked" : "blocked" ,
-      "unBlocked" : "un blocked",
-      "success" : "success"
+  "title": "Property Management",
+  "table": {
+    "title": "Title",
+    "area": "Area",
+    "location": "Location",
+    "price": "Price",
+    "roomType": "Room type",
+    "city": "City",
+    "district": "Disctrict",
+    "address": "Address",
+    "status": "Status",
+    "block": "Is blocked",
+    "isActive": "Is active",
+    "numOfRoom": "Num of bedroom",
+    "postedBy": "Posted by",
+    "amenities": "Amenities",
+    "description": "Description",
+    "image": "Images",
+    "viewAndBrowse": "View and browse"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} properties"
+  },
+  "notification": {
+    "addSuccess": "Add property successfully",
+    "editSuccess": "Edit property successfully",
+    "deleteSuccess": "Delete property successfully",
+    "deleteSuccessMultiple": "Delete selected properties successfully",
+    "setStatusSuccess": "Edit Status successful",
+    "blockSuccess": "Block property successfully",
+    "unblockSuccess": "Unblock property successfully"
+  },
+  "deleteModal": {
+    "title": "Confirm deletion",
+    "titleMultiple": "Confirm multiple deletion"
+  },
+  "filter": {
+    "all": "All",
+    "price": {
+      "title": "Price",
+      "priceRangeLow": "Under 3 million",
+      "priceRangeMediumLow": "From 3 to 7 million",
+      "priceRangeMediumHigh": "From 7 to 10 million",
+      "priceRangeHigh": "Over 10 million"
     },
-    "button": {
-      "add": "New property",
-      "nationwide" :"Nationwide"
-    },
-    "form": {
-      "addForm": "Add new property",
-      "editForm": "Edit property",
-      "name": "Property name",
-      "namePlaceholder": "Enter property name",
-      "nameRequired": "Please enter property name",
-      "nameMin": "Propety name must be at least 3 characters",
-      "nameMax": "Propety name must be at most 50 characters"
-    },
-    "pagination": {
-      "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} properties"
-    },
-    "notification": {
-      "addSuccess": "Add property successfully",
-      "editSuccess": "Edit property successfully",
-      "deleteSuccess": "Delete property successfully",
-      "deleteSuccessMultiple": "Delete selected properties successfully",
-      "setStatusSuccess" : "Edit Status successful",
-      "useBlock" :"`Property ${property.blocked ? 'blocked' : 'Activity'} Success`"
-    },
-    "deleteModal": {
-      "title": "Confirm deletion",
-      "titleMultiple": "Confirm multiple deletion"
-    },
-    "more" : {
-        "all" : "All",
-        "option1" :"Under 3 million",
-        "option2" :"3 to 7 million",
-        "option3" :"7 to 10 million",
-        "option4" :"Over 10 million",
-        "acreage" : "Area",
-        "searchPlaceholder" : "Title, city, district, address..",
-        "selectDistrict" :"Select District",
-        "roomType" : "Room Type",
-        "price" : "Price"
-    },
-    "tab" : {
-      "pending" : "Pending",
-      "approved" : "Approved",
-      "rejected" : "Rejected",
-      "accessProperty" : "Access . Valid Post",
-      "rejectProperty" : "Reject , Invalid Post"
-  }
-  }
-  
+    "area": "Area",
+    "searchPlaceholder": "Title, city, district, address..",
+    "selectDistrict": "Select District",
+    "roomType": "Room Type",
+    "nationwide": "Nationwide"
+  },
+  "tab": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "button": {
+    "block": "Block",
+    "unblock": "Unblock",
+    "approved": "Approve, property is valid",
+    "reject": "Reject, property is invalid"
+  },
+  "detail": "Property detail"
+}

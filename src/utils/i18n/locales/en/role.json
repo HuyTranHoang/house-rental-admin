@@ -17,14 +17,14 @@
   },
   "table": {
     "see": "Read",
-    "more": "Other",
+    "filter": "Other",
     "user": "User",
     "evaluate": "Review",
     "city": "City",
     "property": "Property",
     "district": "District",
     "roomType": "Room Type",
-    "amenity": "Amenity",
+    "amenities": "Amenity",
     "role": "Role",
     "adminPage": "Admin Page"
   },
@@ -85,7 +85,7 @@
       "create": "Room Type: Add",
       "delete": "Room Type: Delete"
     },
-    "amenity": {
+    "amenities": {
       "read": "Amenity: View",
       "update": "Amenity: Edit",
       "create": "Amenity: Add",

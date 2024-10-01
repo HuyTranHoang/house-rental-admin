@@ -17,14 +17,14 @@
   },
   "table": {
     "see": "Xem",
-    "more": "Khác",
+    "filter": "Khác",
     "user": "Người dùng",
     "evaluate": "Đánh giá",
     "city": "Thành phố",
     "property": "Bất động sản",
     "district": "Quận huyện",
     "roomType": "Loại phòng",
-    "amenity": "Tiện nghi",
+    "amenities": "Tiện nghi",
     "role": "Vai trò",
     "adminPage": "Trang quản trị"
   },
@@ -84,7 +84,7 @@
       "create": "Loại phòng: Thêm",
       "delete": "Loại phòng: Xóa"
     },
-    "amenity": {
+    "amenities": {
       "read": "Tiện nghi: Xem",
       "update": "Tiện nghi: Sửa",
       "create": "Tiện nghi: Thêm",

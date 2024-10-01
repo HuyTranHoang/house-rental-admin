@@ -1,5 +1,6 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
+import ImageComponent from '@/components/ImageComponent.tsx'
 import { useBlockProperty, useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties'
 import { Property, PropertyDataSource, PropertyStatus } from '@/types/property.type'
 import { formatCurrency } from '@/utils/formatCurrentcy'
@@ -27,7 +28,6 @@ import {
 import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
 import { useState } from 'react'
-import ImageComponent from '@/components/ImageComponent.tsx'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -51,10 +51,9 @@ function PropertyTable({
   const [open, setOpen] = useState(false)
   const [currentProperty, setCurrentProperty] = useState<Property | undefined>(undefined)
 
-  
   const { updatePropertyStatus, updatePropertyStatusIsPending } = useUpdatePropertyStatus()
   const { blockProperty } = useBlockProperty()
-  const { t } = useTranslation(['common', 'property']);
+  const { t } = useTranslation(['common', 'property'])
   const { deleteProperty, deletePropertyIsPending } = useDeleteProperty()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -68,12 +67,12 @@ function PropertyTable({
   ]
   const handleDelete = () => {
     if (currentRecord) {
-      deleteProperty(currentRecord.id); 
-      setCurrentRecord(null);
-      setIsModalOpen(false);
-      toast.success(t('property:notification.deleteSuccess'));
+      deleteProperty(currentRecord.id)
+      setCurrentRecord(null)
+      setIsModalOpen(false)
+      toast.success(t('property:notification.deleteSuccess'))
     }
-  };
+  }
 
   const ModalFooter = (
     <Space>
@@ -95,7 +94,7 @@ function PropertyTable({
               icon={<CheckOutlined />}
               type='primary'
             >
-              {t('property:tab.accessProperty')}
+              {t('property:button.approved')}
             </Button>
           </ConfigProvider>
           <Button
@@ -107,7 +106,7 @@ function PropertyTable({
             icon={<CloseOutlined />}
             danger
           >
-            {t('property:tab.rejectProperty')}
+            {t('property:button.reject')}
           </Button>
         </>
       )}
@@ -148,19 +147,19 @@ function PropertyTable({
       children: (
         <Badge
           status={currentProperty?.blocked ? 'error' : 'success'}
-          text={currentProperty?.blocked ? t('property:table.block') : t('property:table.activity')}
+          text={currentProperty?.blocked ? t('property:table.block') : t('property:table.isActive')}
         />
       ),
       span: 3
     },
     {
       key: 'area',
-      label: t('property:more.acreage'),
+      label: t('property:table.area'),
       children: `${currentProperty?.area} m²`
     },
     {
       key: 'numRooms',
-      label: t('property:table.numRoom'),
+      label: t('property:table.numOfRoom'),
       children: currentProperty?.numRooms
     },
     {
@@ -176,7 +175,7 @@ function PropertyTable({
     },
     {
       key: 'amenities',
-      label: t('property:table.amenity'),
+      label: t('property:table.amenities'),
       span: 2,
       children: (
         <>
@@ -227,9 +226,9 @@ function PropertyTable({
       dataIndex: 'title',
       key: 'title'
     },
-    { title: t('property:table.title'), dataIndex: 'location', key: 'location' },
+    { title: t('property:table.location'), dataIndex: 'location', key: 'location' },
     {
-      title: t('property:more.acreage'),
+      title: t('property:table.area'),
       dataIndex: 'area',
       key: 'area',
       sorter: true,
@@ -237,7 +236,7 @@ function PropertyTable({
       width: 120,
       render: (record) => `${record} m²`
     },
-    { title: t('property:table.numRoom'), dataIndex: 'roomTypeName', key: 'roomTypeName', width: 150 },
+    { title: t('property:table.roomType'), dataIndex: 'roomTypeName', key: 'roomTypeName', width: 150 },
     {
       title: t('property:table.city'),
       dataIndex: 'cityName',
@@ -255,14 +254,14 @@ function PropertyTable({
       render: (record) => formatCurrency(record)
     },
     {
-      title: t('property:table.gotBlock'),
+      title: t('property:table.block'),
       dataIndex: 'blocked',
       key: 'blocked',
       width: 130,
       render: (blocked, record) => (
         <Switch
-          checkedChildren={t('property:table.block')}
-          unCheckedChildren={t('property:table.activity')}
+          checkedChildren={t('property:button.block')}
+          unCheckedChildren={t('property:button.unblock')}
           defaultChecked={blocked}
           onChange={(e) => {
             const status = e ? 'block' : 'unblock'
@@ -287,7 +286,7 @@ function PropertyTable({
       width: 110,
       render: (_, record) => (
         <Flex gap={16}>
-          <Tooltip title={t('property:table.seenAndAccess')}>
+          <Tooltip title={t('property:table.viewAndBrowse')}>
             <Button
               icon={<EyeOutlined />}
               type='default'
@@ -299,7 +298,7 @@ function PropertyTable({
             />
           </Tooltip>
           <Tooltip title={t('common.delete')}>
-          <Button
+            <Button
               icon={<DeleteOutlined />}
               type='default'
               onClick={() => {
@@ -336,19 +335,19 @@ function PropertyTable({
           triggerDesc: t('common.table.triggerDesc'),
           triggerAsc: t('common.table.triggerAsc'),
           cancelSort: t('common.table.cancelSort'),
-          filterConfirm: t('property:table.filterConfirm'),
-          filterReset: t('property:table.filterReset')
+          filterConfirm: t('common.table.filterConfirm'),
+          filterReset: t('common.table.filterReset')
         }}
       />
 
       {currentProperty && (
         <Modal open={open} footer={ModalFooter} onCancel={() => setOpen(false)} width={1000}>
-          <Typography.Title level={4}>{t('property:detailProperty')}</Typography.Title>
+          <Typography.Title level={4}>{t('property:detail')}</Typography.Title>
 
           <Descriptions bordered items={modalItems} />
         </Modal>
       )}
-        <Modal
+      <Modal
         open={isModalOpen}
         className='w-96'
         title={<ConfirmModalTitle title={t('property:deleteModal.title')} />}

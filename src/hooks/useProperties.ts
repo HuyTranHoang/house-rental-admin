@@ -119,7 +119,11 @@ export const useBlockProperty = () => {
     mutationFn: blockProperty,
     onSuccess: (property) => {
       queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => {
-        toast.success(`${t('property:table.property')} ${property.blocked ? t('property:table.blocked') : t('property:table.unBlocked')} ${t('property:table.success')}`)
+        toast.success(
+          property.blocked
+            ? t('property:notification.blockSuccess')
+            : t('property:notification.unblockSuccess')
+        )
       })
     },
     onError: (error) => {
