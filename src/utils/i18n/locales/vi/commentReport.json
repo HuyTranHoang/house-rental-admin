@@ -12,7 +12,7 @@
       "reviewed": "Đã kiểm duyệt"
     },
     "table": {
-      "username": "Người dùng bị báo cáo",
+      "username": "Tài khoản",
       "comment": "Bình luận",
       "reason": "Lý do",
       "category": "Phân loại",
@@ -39,8 +39,8 @@
       "content": "Nội dung báo cáo",
       "blocked": "Bị khóa",
       "createdAt": "Ngày báo cáo",
-      "username": "Tài khoản",
-      "title": "Chi tiết báo cáo"
+      "username": "Tài khoản báo cáo",
+      "title": "Chi tiết bình luận"
     }
   }
   

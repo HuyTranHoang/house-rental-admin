@@ -1,3 +1,5 @@
+import React from 'react'
+
 export interface CommentReport {
   id: number
   userId: number
@@ -5,7 +7,7 @@ export interface CommentReport {
   commentId: number
   comment: string
   reason: string
-  category: ReportCategory
+  category: CommentReportCategory
   status: CommentReportStatus
   createdAt: string
 }
@@ -32,7 +34,7 @@ export enum CommentReportCategory {
 export type CommentReportFilters = {
   search?: string
   status?: CommentReportStatus
-  category?: ReportCategory
+  category?: CommentReportCategory
   sortBy?: string
   pageNumber?: number
   pageSize?: number

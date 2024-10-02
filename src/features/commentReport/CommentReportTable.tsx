@@ -1,14 +1,12 @@
 import { getCommentById } from '@/api/comment.api'
 import { useUpdateCommentReportStatus } from '@/hooks/useCommentReports'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter'
-import { CommentDataSource } from '@/types/comment.type'
 import {
   CommentReport,
   CommentReportCategory,
   CommentReportDataSource,
   CommentReportStatus
 } from '@/types/commentReport.type.ts'
-
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -50,7 +48,6 @@ function CommentReportTable({
 }: CommentReportTableProps) {
   const [commentId, setCommentId] = useState<number>(0)
   const [commentReport, setCommentReport] = useState<CommentReport>({} as CommentReport)
-  const [currentComment, setCurrentComment] = useState<CommentDataSource | null>(null)
 
   const [open, setOpen] = useState(false)
 
@@ -115,30 +112,6 @@ function CommentReportTable({
           </Button>
         </>
       )}
-      {status === CommentReportStatus.APPROVED && (
-        <>
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: '#00b96b'
-              }
-            }}
-          >
-            <Button
-              loading={updateCommentReportStatusPending}
-              // onClick={() => {
-              //   const status = 'unblock'
-              //   deleteComment({ id: commentReport.commentId, status })
-              //   setOpen(false)
-              // }}
-              icon={<CheckOutlined />}
-              type='primary'
-            >
-              {t('commentReport:button.active')}
-            </Button>
-          </ConfigProvider>
-        </>
-      )}
       <Button onClick={() => setOpen(false)}>{t('common.back')}</Button>
     </Space>
   )
@@ -199,12 +172,29 @@ function CommentReportTable({
       width: 50
     },
     {
-      title: t('commentReport:detailModal.username'),
+      title: t('commentReport:table.username'),
       dataIndex: 'username',
       key: 'username',
-      width: 150,
+      width: 200,
       sorter: true,
       sortOrder: sortedInfo.field === 'username' ? sortedInfo.order : null
+    },
+    {
+      title: t('commentReport:table.comment'),
+      dataIndex: 'comment',
+      key: 'comment',
+      render: (text: string, record) => (
+        <Button
+          onClick={() => {
+            setOpen(!open)
+            setCommentId(record.commentId)
+            setCommentReport(record)
+          }}
+          type='link'
+        >
+          {text}
+        </Button>
+      )
     },
     {
       title: t('commentReport:table.category'),
@@ -316,4 +306,5 @@ function CommentReportTable({
     </>
   )
 }
+
 export default CommentReportTable

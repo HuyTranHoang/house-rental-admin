@@ -8,7 +8,7 @@ import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import ReviewTable from './ReviewTable'
+import CommentTable from './CommentTable.tsx'
 
 const { Search } = Input
 
@@ -108,7 +108,7 @@ function ListComment() {
         </Space>
       </Flex>
 
-      <ReviewTable
+      <CommentTable
         dataSource={dataSource}
         loading={isLoading}
         paginationProps={{

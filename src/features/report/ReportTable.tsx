@@ -292,7 +292,7 @@ function ReportTable({
       key: 'title',
       sorter: true,
       sortOrder: sortedInfo.field === 'title' ? sortedInfo.order : null,
-      render: (text, record) => (
+      render: (text: string, record) => (
         <Button
           onClick={() => {
             setOpen(!open)
