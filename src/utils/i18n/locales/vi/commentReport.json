@@ -1,0 +1,46 @@
+{
+    "title": "Báo cáo bình luận",
+    "searchPlaceholder": "Nhập tên tài khoản",
+    "pagination": {
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} báo cáo"
+    },
+    "status": {
+      "pending": "Chờ xử lý",
+      "approved": "Đã duyệt",
+      "rejected": "Đã từ chối",
+      "blocked": "Bị khoá",
+      "reviewed": "Đã kiểm duyệt"
+    },
+    "table": {
+      "username": "Người dùng bị báo cáo",
+      "comment": "Bình luận",
+      "reason": "Lý do",
+      "category": "Phân loại",
+      "status": "Trạng thái",
+      "action": "Hành động",
+      "createdAt": "Ngày tạo"
+    },
+      "button": {
+      "review": "Kiểm duyệt",
+      "approve": "Duyệt, khoá bình luận",
+      "reject": "Từ chối, giữ bình luận"
+    },
+    "category": {
+      "scam": "Lừa đảo",
+      "inappropriateContent": "Nội dung không phù hợp",
+      "duplicate": "Trùng lặp",
+      "misinformation": "Thông tin sai lệch",
+      "other": "Khác"
+    },
+    "toast": {
+      "success": "Report approval successful"
+    },
+    "detailModal": {
+      "content": "Nội dung báo cáo",
+      "blocked": "Bị khóa",
+      "createdAt": "Ngày báo cáo",
+      "username": "Tài khoản",
+      "title": "Chi tiết báo cáo"
+    }
+  }
+  

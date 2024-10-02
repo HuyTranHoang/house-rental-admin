@@ -42,7 +42,8 @@
     "description": "Mô tả",
     "image": "Hình ảnh",
     "content": "Nội dung báo cáo",
-    "reportingTime": "Thời gian báo cáo"
+    "reportingTime": "Thời gian báo cáo",
+    "title": "Chi tiết bài đăng"
   },
   "type": {
     "scam": "Lừa đảo",

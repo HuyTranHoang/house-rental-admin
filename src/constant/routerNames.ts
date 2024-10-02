@@ -31,6 +31,8 @@ const ROUTER_NAMES = {
 
   REPORT: '/bao-cao-vi-pham',
 
+  COMMENT_REPORT: '/bao-cao-binh-luan',
+
   ROLE: '/vai-tro',
 
   REVIEW: '/danh-gia',

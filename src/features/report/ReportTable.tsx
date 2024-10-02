@@ -1,4 +1,5 @@
 import { getPropertyById } from '@/api/property.api.ts'
+import ImageComponent from '@/components/ImageComponent.tsx'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useBlockProperty } from '@/hooks/useProperties'
 import { useUpdateReportStatus } from '@/hooks/useReports.ts'
@@ -28,7 +29,6 @@ import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import ImageComponent from '@/components/ImageComponent.tsx'
 
 interface ReportTableProps {
   dataSource: ReportDataSource[]
@@ -409,7 +409,7 @@ function ReportTable({
           loading={propertyIsLoading}
           width={1000}
         >
-          <Typography.Title level={4}>Chi tiết bài đăng</Typography.Title>
+          <Typography.Title level={4}>{t('report:detailModal.title')}</Typography.Title>
 
           <Descriptions bordered items={modalItems} />
 

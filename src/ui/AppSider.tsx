@@ -42,16 +42,27 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
       onClick: () => navigate(ROUTER_NAMES.DASHBOARD)
     },
     {
-      key: 'property',
-      label: t('property'),
-      icon: <ScheduleOutlined />,
-      onClick: () => navigate(ROUTER_NAMES.PROPERTY)
-    },
-    {
       key: ROUTER_NAMES.TRANSACTION,
       label: t('transaction'),
       icon: <TransactionOutlined />,
       onClick: () => navigate(ROUTER_NAMES.TRANSACTION)
+    },
+    {
+      key: 'property',
+      label: t('propertyManagement'),
+      icon: <ScheduleOutlined />,
+      children: [
+        {
+          key: ROUTER_NAMES.PROPERTY,
+          label: t('property.list'),
+          onClick: () => navigate(ROUTER_NAMES.PROPERTY)
+        },
+        {
+          key: ROUTER_NAMES.REPORT,
+          label: t('report.list'),
+          onClick: () => navigate(ROUTER_NAMES.REPORT)
+        }
+      ]
     },
     {
       key: 'cityDistrict',
@@ -89,18 +100,18 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     },
     {
       key: 'reportReview',
-      label: t('reportAndComment'),
+      label: t('commentManagement'),
       icon: <SolutionOutlined />,
       children: [
-        {
-          key: ROUTER_NAMES.REPORT,
-          label: t('report.list'),
-          onClick: () => navigate(ROUTER_NAMES.REPORT)
-        },
         {
           key: ROUTER_NAMES.REVIEW,
           label: t('comment.list'),
           onClick: () => navigate(ROUTER_NAMES.REVIEW)
+        },
+        {
+          key: ROUTER_NAMES.COMMENT_REPORT,
+          label: t('commentReport.list'),
+          onClick: () => navigate(ROUTER_NAMES.COMMENT_REPORT)
         }
       ]
     },
@@ -120,7 +131,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
           onClick: () => navigate(ROUTER_NAMES.ROLE)
         }
       ]
-    },
+    }
   ]
 
   const dropdownItems: MenuProps['items'] = [

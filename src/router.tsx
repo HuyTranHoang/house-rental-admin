@@ -3,16 +3,17 @@ import ROUTER_NAMES from '@/constant/routerNames.ts'
 import ListAmenity from '@/features/amenity/ListAmenity.tsx'
 import Login from '@/features/auth/Login.tsx'
 import ListCity from '@/features/city/ListCity.tsx'
+import ListComment from '@/features/comment/ListComment.tsx'
 import Dashboard from '@/features/dashboard/Dashboard.tsx'
 import ListDistrict from '@/features/district/ListDistrict.tsx'
 import ListProperty from '@/features/property/ListProperty.tsx'
 import ListReport from '@/features/report/ListReport.tsx'
-import ListComment from '@/features/comment/ListComment.tsx'
 import RoleManager from '@/features/role/RoleManager.tsx'
 import ListRoomType from '@/features/roomType/ListRoomType.tsx'
 import ListUser from '@/features/user/ListUser.tsx'
 import AppLayout from '@/ui/AppLayout.tsx'
 import { createBrowserRouter } from 'react-router-dom'
+import ListCommentReport from './features/commentReport/ListCommentReport'
 import ListTransaction from './features/transaction/ListTransaction'
 
 export const routerList = [
@@ -80,12 +81,17 @@ export const routerList = [
           {
             path: ROUTER_NAMES.PROPERTY,
             element: <ListProperty />,
-            breadcrumb: 'property'
+            breadcrumb: 'property.list'
           },
           {
             path: ROUTER_NAMES.TRANSACTION,
             element: <ListTransaction />,
             breadcrumb: 'transaction'
+          },
+          {
+            path: ROUTER_NAMES.COMMENT_REPORT,
+            element: <ListCommentReport />,
+            breadcrumb: 'commentReport.list'
           }
         ] // End of ProtectedRoute children
       }

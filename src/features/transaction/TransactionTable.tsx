@@ -90,7 +90,7 @@ function TransactionTable({
       sorter: true,
       sortOrder: sortedInfo.field === 'transactionDate' ? sortedInfo.order : null,
       fixed: 'right',
-      width: 150
+      width: 155
     }
   ]
 

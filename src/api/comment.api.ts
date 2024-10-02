@@ -35,6 +35,18 @@ export const getAllCommentWithPagination = async (
   }
 }
 
+export const getCommentById = async (id: number) => {
+  try {
+    const response = await axiosInstance.get<Comment>(`/api/comment/${id}`)
+    if (response.status === 200) {
+      return response.data
+    }
+  } catch (error) {
+    console.error(error)
+    throw new Error('Lấy bình luận thất bại')
+  }
+}
+
 export const deleteComment = async (id: number) => {
   try {
     await axiosInstance.delete(`/api/comment/${id}`)
