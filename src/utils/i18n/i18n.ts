@@ -44,7 +44,7 @@ export const resources = {
     district: en_district,
     role: en_role,
     commentReport: en_commentReport,
-    property : en_property,
+    property : en_property
   },
   vi: {
     common: vi_common,
@@ -59,7 +59,7 @@ export const resources = {
     district: vi_district,
     role: vi_role,
     commentReport: vi_commentReport,
-    property : vi_property,
+    property : vi_property
   }
 } as const
 
@@ -80,7 +80,7 @@ i18n.use(initReactI18next).init({
     'district',
     'role',
     'transaction',
-    'commentReport'
+    'commentReport',
     'property'
   ],
   interpolation: {
