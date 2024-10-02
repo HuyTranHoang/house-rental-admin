@@ -34,7 +34,7 @@ export enum CommentReportCategory {
 export type CommentReportFilters = {
   search?: string
   status?: CommentReportStatus
-  category?: CommentReportCategory
+  category?: string
   sortBy?: string
   pageNumber?: number
   pageSize?: number
