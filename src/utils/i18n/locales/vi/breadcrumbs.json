@@ -1,6 +1,5 @@
 {
   "dashboard": "Tổng quan",
-  "property": "Quản lý bất động sản",
   "cityAndDistrict": "Thành phố & Quận/Huyện",
   "city": {
     "list": "Quản lý thành phố",
@@ -23,12 +22,19 @@
     "add": "Thêm tiện ích",
     "edit": "Chỉnh sửa tiện ích"
   },
-  "reportAndComment": "Báo cáo & Bình luận",
+  "propertyManagement": "Bài đăng & Báo cáo",
+  "property": {
+    "list": "Quản lý bài đăng"
+  },
   "report": {
     "list": "Quản lý báo cáo"
   },
+  "commentManagement": "Bình luận & Báo cáo",
   "comment": {
     "list": "Quản lý bình luận"
+  },
+  "commentReport": {
+    "list": "Quản lý báo cáo bình luận"
   },
   "userAndRole": "Người dùng & Vai trò",
   "user": {

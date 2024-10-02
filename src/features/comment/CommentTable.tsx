@@ -19,7 +19,7 @@ interface ReviewTableProps {
   sortedInfo: SorterResult<CommentDataSource>
 }
 
-function ReviewTable({
+function CommentTable({
   dataSource,
   loading,
   paginationProps,
@@ -224,4 +224,4 @@ function ReviewTable({
   )
 }
 
-export default ReviewTable
+export default CommentTable

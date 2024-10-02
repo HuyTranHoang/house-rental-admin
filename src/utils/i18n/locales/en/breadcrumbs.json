@@ -1,6 +1,5 @@
 {
   "dashboard": "Dashboard",
-  "property": "Property Management",
   "cityAndDistrict": "City & District",
   "city": {
     "list": "City Management",
@@ -23,12 +22,19 @@
     "add": "Add amenity",
     "edit": "Edit amenity"
   },
-  "reportAndComment": "Report & Comment",
+  "propertyManagement": "Property & Report",
+  "property": {
+    "list": "Property Management"
+  },
   "report": {
     "list": "Report Management"
   },
+  "commentManagement": "Comment & Report",
   "comment": {
     "list": "Comment Management"
+  },
+  "commentReport": {
+    "list": "Report Comment Management"
   },
   "userAndRole": "User & Role",
   "user": {

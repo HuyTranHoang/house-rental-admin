@@ -42,7 +42,8 @@
     "description": "Desciption",
     "image": "Image",
     "content": "Content of the report",
-    "reportingTime": "Reporting time"
+    "reportingTime": "Reporting time",
+    "title": "Property details"
   },
   "type": {
     "scam": "Scam",

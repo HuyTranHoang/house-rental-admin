@@ -1,0 +1,45 @@
+{
+  "title": "Report Comment Management",
+  "searchPlaceholder": "Enter username",
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} reports"
+  },
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "blocked": "Blocked",
+    "reviewed": "Reviewed"
+  },
+  "table": {
+    "username": "Username",
+    "comment": "Comment",
+    "reason": "Reason",
+    "category": "Category",
+    "status": "Status",
+    "action": "Action",
+    "createdAt": "Created At"
+  },
+  "button": {
+    "review": "Review",
+    "approve": "Approve, lock comments",
+    "reject": "Reject, keep comments"
+  },
+  "category": {
+    "scam": "Scam",
+    "inappropriateContent": "Inappropriate Content",
+    "duplicate": "Dupicate",
+    "misinformation": "Misinformation",
+    "other": "Other"
+  },
+  "toast": {
+    "success": "Report approval successful"
+  },
+  "detailModal": {
+    "content": "Content of the report",
+    "blocked": "Blocked",
+    "createdAt": "Created At",
+    "username": "Username",
+    "title": "Comment details"
+  }
+}

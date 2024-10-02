@@ -8,6 +8,7 @@ export interface Comment {
   userId: number
   userName: string
   createdAt: string
+  blocked: boolean
 }
 
 export type CommentDataSource = Comment & {

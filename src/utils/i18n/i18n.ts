@@ -12,6 +12,7 @@ import en_role from '@/utils/i18n/locales/en/role.json'
 import en_roomType from '@/utils/i18n/locales/en/roomType.json'
 import en_transaction from '@/utils/i18n/locales/en/transaction.json'
 import en_user from '@/utils/i18n/locales/en/user.json'
+import en_commentReport from '@/utils/i18n/locales/en/commentReport.json'
 import en_property from '@/utils/i18n/locales/en/property.json'
 
 import vi_amanity from '@/utils/i18n/locales/vi/amenity.json'
@@ -25,9 +26,8 @@ import vi_role from '@/utils/i18n/locales/vi/role.json'
 import vi_roomType from '@/utils/i18n/locales/vi/roomType.json'
 import vi_transaction from '@/utils/i18n/locales/vi/transaction.json'
 import vi_user from '@/utils/i18n/locales/vi/user.json'
+import vi_commentReport from '@/utils/i18n/locales/vi/commentReport.json'
 import vi_property from '@/utils/i18n/locales/vi/property.json'
-
-
 
 export const defaultNS = 'common'
 export const resources = {
@@ -43,6 +43,7 @@ export const resources = {
     transaction: en_transaction,
     district: en_district,
     role: en_role,
+    commentReport: en_commentReport,
     property : en_property,
   },
   vi: {
@@ -57,6 +58,7 @@ export const resources = {
     transaction: vi_transaction,
     district: vi_district,
     role: vi_role,
+    commentReport: vi_commentReport,
     property : vi_property,
   }
 } as const
@@ -78,6 +80,7 @@ i18n.use(initReactI18next).init({
     'district',
     'role',
     'transaction',
+    'commentReport'
     'property'
   ],
   interpolation: {
