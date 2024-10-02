@@ -24,7 +24,7 @@ export const useProperty = (id: number) => {
 
 export function useUpdatePropertyStatus() {
   const queryClient = useQueryClient()
-  const { t } = useTranslation(['common', 'property']);
+  const { t } = useTranslation(['common', 'property'])
 
   const { mutate, isPending } = useMutation({
     mutationFn: updatePropertyStatus,
@@ -44,19 +44,15 @@ export function useUpdatePropertyStatus() {
 
 export function useDeleteProperty() {
   const queryClient = useQueryClient()
-  const { t } = useTranslation(['common', 'property']);
-  const { mutate, isPending } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: (id: number) => deleteProperty(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => toast.success(t('property:notification.deleteSuccess')))
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['properties'] }),
     onError: (error) => {
       toast.error(error.message)
     }
   })
-  return { deleteProperty: mutate, deletePropertyIsPending: isPending }
+  return { deleteProperty: mutateAsync, deletePropertyIsPending: isPending }
 }
-
 
 export const useProperties = (
   search: string,
@@ -113,16 +109,14 @@ export const useProperties = (
 
 export const useBlockProperty = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation(['common', 'property']);
+  const { t } = useTranslation(['common', 'property'])
 
   const { mutate, isPending } = useMutation({
     mutationFn: blockProperty,
     onSuccess: (property) => {
       queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => {
         toast.success(
-          property.blocked
-            ? t('property:notification.blockSuccess')
-            : t('property:notification.unblockSuccess')
+          property.blocked ? t('property:notification.blockSuccess') : t('property:notification.unblockSuccess')
         )
       })
     },

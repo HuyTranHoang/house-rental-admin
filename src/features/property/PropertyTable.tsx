@@ -67,10 +67,11 @@ function PropertyTable({
   ]
   const handleDelete = () => {
     if (currentRecord) {
-      deleteProperty(currentRecord.id)
-      setCurrentRecord(null)
-      setIsModalOpen(false)
-      toast.success(t('property:notification.deleteSuccess'))
+      deleteProperty(currentRecord.id).then(() => {
+        setCurrentRecord(null)
+        setIsModalOpen(false)
+        toast.success(t('property:notification.deleteSuccess'))
+      })
     }
   }
 
