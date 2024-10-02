@@ -17,7 +17,7 @@
     "add": "Thêm loại phòng",
     "edit": "Chỉnh sửa loại phòng"
   },
-  "amenity": {
+  "amenities": {
     "list": "Quản lý tiện ích",
     "add": "Thêm tiện ích",
     "edit": "Chỉnh sửa tiện ích"

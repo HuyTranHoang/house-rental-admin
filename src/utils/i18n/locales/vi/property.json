@@ -1,0 +1,64 @@
+{
+  "title": "Quản lý bài đăng",
+  "table": {
+    "title": "Tiêu đề",
+    "area": "Diện tích",
+    "location": "Vị trí",
+    "price": "Giá",
+    "roomType": "Loại phòng",
+    "city": "Thành phố",
+    "district": "Quận huyện",
+    "address": "Địa chỉ",
+    "status": "Trạng thái",
+    "block": "Bị chặn",
+    "isActive": "Hoạt động",
+    "numOfRoom": "Số phòng ngủ",
+    "postedBy": "Người đăng",
+    "amenities": "Tiện ích",
+    "description": "Mô tả",
+    "image": "Hình ảnh",
+    "viewAndBrowse": "Xem và duyệt"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} bài đăng"
+  },
+  "notification": {
+    "addSuccess": "Thêm bài đăng thành công",
+    "editSuccess": "Chỉnh sửa bài đăng thành công",
+    "deleteSuccess": "Xóa bài đăng thành công",
+    "deleteSuccessMultiple": "Xóa các bài đăng đã chọn thành công",
+    "blockSuccess": "Khóa bài đăng thành công",
+    "unblockSuccess": "Mở khóa bài đăng thành công"
+  },
+  "deleteModal": {
+    "title": "Xác nhận xóa bài đăng",
+    "titleMultiple": "Xác nhận xóa các bài đăng"
+  },
+  "filter": {
+    "all": "Tất cả",
+    "price": {
+      "title": "Giá",
+      "priceRangeLow": "Dưới 3 triệu",
+      "priceRangeMediumLow": "Từ 3 đến 7 triệu",
+      "priceRangeMediumHigh": "Từ 7 đến 10 triệu",
+      "priceRangeHigh": "Trên 10 triệu"
+    },
+    "area": "Diện tích",
+    "searchPlaceholder": "Tiêu đề, thành phố, quận huyện, địa chỉ..",
+    "selectDistrict": "Chọn quận huyện",
+    "roomType": "Loại phòng",
+    "nationwide": "Toàn quốc"
+  },
+  "tab": {
+    "pending": "Chờ xử lý",
+    "approved": "Đã duyệt",
+    "rejected": "Đã từ chối"
+  },
+  "button": {
+    "block": "Khóa",
+    "unblock": "Mở",
+    "approved": "Duyệt, bài đăng hợp lệ",
+    "reject": "Từ chối, bài đăng không hợp lệ"
+  },
+  "detail": "Chi tiết bài đăng"
+}

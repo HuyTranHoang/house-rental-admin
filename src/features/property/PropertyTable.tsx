@@ -1,5 +1,6 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
+import ImageComponent from '@/components/ImageComponent.tsx'
 import { useBlockProperty, useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties'
 import { Property, PropertyDataSource, PropertyStatus } from '@/types/property.type'
 import { formatCurrency } from '@/utils/formatCurrentcy'
@@ -27,9 +28,8 @@ import {
 import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
 import { useState } from 'react'
-import ImageComponent from '@/components/ImageComponent.tsx'
-
-const { confirm } = Modal
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
 
 interface PropertyTableProps {
   status: PropertyStatus
@@ -51,30 +51,28 @@ function PropertyTable({
   const [open, setOpen] = useState(false)
   const [currentProperty, setCurrentProperty] = useState<Property | undefined>(undefined)
 
-  const { deleteProperty } = useDeleteProperty()
   const { updatePropertyStatus, updatePropertyStatusIsPending } = useUpdatePropertyStatus()
   const { blockProperty } = useBlockProperty()
+  const { t } = useTranslation(['common', 'property'])
+  const { deleteProperty, deletePropertyIsPending } = useDeleteProperty()
 
-  const showDeleteConfirm = (record: PropertyDataSource) => {
-    const items: DescriptionsProps['items'] = [
-      { key: 'title', label: 'Tiêu đề', children: <span>{record.title}</span>, span: 3 },
-      { key: 'location', label: 'Vị trí', children: <span>{record.location}</span>, span: 3 },
-      { key: 'price', label: 'Giá', children: <span>{record.price} VND</span>, span: 3 },
-      { key: 'createdAt', label: 'Ngày tạo', children: <span>{record.createdAt}</span>, span: 3 }
-    ]
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [currentRecord, setCurrentRecord] = useState<PropertyDataSource | null>(null)
 
-    confirm({
-      icon: null,
-      title: <ConfirmModalTitle title='Xác nhận xóa bất bài đăng' />,
-      content: <ConfirmModalContent items={items} />,
-      okText: 'Xác nhận',
-      okType: 'danger',
-      cancelText: 'Hủy',
-      maskClosable: true,
-      onOk() {
-        deleteProperty(record.id)
-      }
-    })
+  const items: DescriptionsProps['items'] = [
+    { key: 'title', label: t('property:table.title'), children: <span>{currentRecord?.title}</span>, span: 3 },
+    { key: 'location', label: t('property:table.location'), children: <span>{currentRecord?.location}</span>, span: 3 },
+    { key: 'price', label: t('property:table.price'), children: <span>{currentRecord?.price} VND</span>, span: 3 },
+    { key: 'createdAt', label: t('common.table.createdAt'), children: <span>{currentRecord?.createdAt}</span>, span: 3 }
+  ]
+  const handleDelete = () => {
+    if (currentRecord) {
+      deleteProperty(currentRecord.id).then(() => {
+        setCurrentRecord(null)
+        setIsModalOpen(false)
+        toast.success(t('property:notification.deleteSuccess'))
+      })
+    }
   }
 
   const ModalFooter = (
@@ -97,7 +95,7 @@ function PropertyTable({
               icon={<CheckOutlined />}
               type='primary'
             >
-              Duyệt, bài đăng hợp lệ
+              {t('property:button.approved')}
             </Button>
           </ConfigProvider>
           <Button
@@ -109,76 +107,76 @@ function PropertyTable({
             icon={<CloseOutlined />}
             danger
           >
-            Từ chối, bài đăng không hợp lệ
+            {t('property:button.reject')}
           </Button>
         </>
       )}
-      <Button onClick={() => setOpen(false)}>Quay lại</Button>
+      <Button onClick={() => setOpen(false)}>{t('common.back')}</Button>
     </Space>
   )
 
   const modalItems: DescriptionsProps['items'] = [
     {
       key: 'roomType',
-      label: 'Loại phòng',
+      label: t('property:table.roomType'),
       children: currentProperty?.roomTypeName
     },
     {
       key: 'city',
-      label: 'Thành phố',
+      label: t('property:table.city'),
       children: currentProperty?.cityName
     },
     {
       key: 'district',
-      label: 'Quận huyện',
+      label: t('property:table.district'),
       children: currentProperty?.districtName
     },
     {
       key: 'price',
-      label: 'Giá thuê',
+      label: t('property:table.price'),
       children: currentProperty ? formatCurrency(currentProperty.price) : ''
     },
     {
       key: 'location',
-      label: 'Địa chỉ',
+      label: t('property:table.address'),
       children: currentProperty?.location,
       span: 2
     },
     {
       key: 'blocked',
-      label: 'Trạng thái',
+      label: t('property:table.status'),
       children: (
         <Badge
           status={currentProperty?.blocked ? 'error' : 'success'}
-          text={currentProperty?.blocked ? 'Khóa' : 'Hoạt động'}
+          text={currentProperty?.blocked ? t('property:table.block') : t('property:table.isActive')}
         />
       ),
       span: 3
     },
     {
       key: 'area',
-      label: 'Diện tích',
+      label: t('property:table.area'),
       children: `${currentProperty?.area} m²`
     },
     {
       key: 'numRooms',
-      label: 'Số phòng ngủ',
+      label: t('property:table.numOfRoom'),
       children: currentProperty?.numRooms
     },
     {
       key: 'createdAt',
-      label: 'Thời gian đăng',
+      label: t('common.table.createdAt'),
       children: currentProperty?.createdAt
     },
     {
       key: 'username',
-      label: 'Người đăng',
+      label: t('property:table.postedBy'),
       span: 1,
       children: currentProperty?.userName
     },
     {
       key: 'amenities',
-      label: 'Tiện ích',
+      label: t('property:table.amenities'),
       span: 2,
       children: (
         <>
@@ -192,7 +190,7 @@ function PropertyTable({
     },
     {
       key: 'description',
-      label: 'Mô tả',
+      label: t('property:table.description'),
       span: 3,
       children: (
         <>
@@ -207,7 +205,7 @@ function PropertyTable({
     },
     {
       key: 'images',
-      label: `Hình ảnh (${currentProperty?.propertyImages.length})`,
+      label: `${t('property:table.image')} (${currentProperty?.propertyImages.length})`,
       children: (
         <Row gutter={[8, 8]}>
           <Image.PreviewGroup>
@@ -225,13 +223,13 @@ function PropertyTable({
   const columns: TableProps<PropertyDataSource>['columns'] = [
     { title: '#', dataIndex: 'index', key: 'index', fixed: 'left', width: 50 },
     {
-      title: 'Tiêu đề',
+      title: t('property:table.title'),
       dataIndex: 'title',
       key: 'title'
     },
-    { title: 'Vị trí', dataIndex: 'location', key: 'location' },
+    { title: t('property:table.location'), dataIndex: 'location', key: 'location' },
     {
-      title: 'Diện tích',
+      title: t('property:table.area'),
       dataIndex: 'area',
       key: 'area',
       sorter: true,
@@ -239,16 +237,16 @@ function PropertyTable({
       width: 120,
       render: (record) => `${record} m²`
     },
-    { title: 'Loại phòng', dataIndex: 'roomTypeName', key: 'roomTypeName', width: 150 },
+    { title: t('property:table.roomType'), dataIndex: 'roomTypeName', key: 'roomTypeName', width: 150 },
     {
-      title: 'Thành phố',
+      title: t('property:table.city'),
       dataIndex: 'cityName',
       key: 'cityName',
       width: 150
     },
-    { title: 'Quận/Huyện', dataIndex: 'districtName', key: 'districtName', width: 150 },
+    { title: t('property:table.district'), dataIndex: 'districtName', key: 'districtName', width: 150 },
     {
-      title: 'Giá',
+      title: t('property:table.price'),
       dataIndex: 'price',
       key: 'price',
       sorter: true,
@@ -257,14 +255,14 @@ function PropertyTable({
       render: (record) => formatCurrency(record)
     },
     {
-      title: 'Bị chặn',
+      title: t('property:table.block'),
       dataIndex: 'blocked',
       key: 'blocked',
       width: 130,
       render: (blocked, record) => (
         <Switch
-          checkedChildren='Chặn'
-          unCheckedChildren='Hoạt động'
+          checkedChildren={t('property:button.block')}
+          unCheckedChildren={t('property:button.unblock')}
           defaultChecked={blocked}
           onChange={(e) => {
             const status = e ? 'block' : 'unblock'
@@ -274,7 +272,7 @@ function PropertyTable({
       )
     },
     {
-      title: 'Ngày tạo',
+      title: t('common.table.createdAt'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       fixed: 'right',
@@ -283,13 +281,13 @@ function PropertyTable({
       width: 150
     },
     {
-      title: 'Hành động',
+      title: t('common.table.action'),
       key: 'action',
       fixed: 'right',
       width: 110,
       render: (_, record) => (
         <Flex gap={16}>
-          <Tooltip title='Xem và duyệt'>
+          <Tooltip title={t('property:table.viewAndBrowse')}>
             <Button
               icon={<EyeOutlined />}
               type='default'
@@ -300,8 +298,16 @@ function PropertyTable({
               }}
             />
           </Tooltip>
-          <Tooltip title='Xóa'>
-            <Button icon={<DeleteOutlined />} type='default' onClick={() => showDeleteConfirm(record)} danger />
+          <Tooltip title={t('common.delete')}>
+            <Button
+              icon={<DeleteOutlined />}
+              type='default'
+              onClick={() => {
+                setCurrentRecord(record)
+                setIsModalOpen(true)
+              }}
+              danger
+            />
           </Tooltip>
         </Flex>
       )
@@ -320,28 +326,42 @@ function PropertyTable({
         pagination={{
           position: ['bottomCenter'],
           pageSizeOptions: ['5', '10', '20'],
-          locale: { items_per_page: '/ trang' },
+          locale: { items_per_page: `/ ${t('common.pagination.itemsPerPage')}` },
           showSizeChanger: true,
           ...paginationProps
         }}
         onChange={handleTableChange}
         loading={loading}
         locale={{
-          triggerDesc: 'Sắp xếp giảm dần',
-          triggerAsc: 'Sắp xếp tăng dần',
-          cancelSort: 'Hủy sắp xếp',
-          filterConfirm: 'Lọc',
-          filterReset: 'Bỏ lọc'
+          triggerDesc: t('common.table.triggerDesc'),
+          triggerAsc: t('common.table.triggerAsc'),
+          cancelSort: t('common.table.cancelSort'),
+          filterConfirm: t('common.table.filterConfirm'),
+          filterReset: t('common.table.filterReset')
         }}
       />
 
       {currentProperty && (
         <Modal open={open} footer={ModalFooter} onCancel={() => setOpen(false)} width={1000}>
-          <Typography.Title level={4}>Chi tiết bài đăng</Typography.Title>
+          <Typography.Title level={4}>{t('property:detail')}</Typography.Title>
 
           <Descriptions bordered items={modalItems} />
         </Modal>
       )}
+      <Modal
+        open={isModalOpen}
+        className='w-96'
+        title={<ConfirmModalTitle title={t('property:deleteModal.title')} />}
+        okText={t('common.ok')}
+        okType='danger'
+        cancelText={t('common.cancel')}
+        okButtonProps={{ loading: deletePropertyIsPending }}
+        cancelButtonProps={{ disabled: deletePropertyIsPending }}
+        onCancel={() => setIsModalOpen(false)}
+        onOk={handleDelete}
+      >
+        <ConfirmModalContent items={items} />
+      </Modal>
     </>
   )
 }

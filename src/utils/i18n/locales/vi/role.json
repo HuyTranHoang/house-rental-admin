@@ -60,7 +60,7 @@
       "create": "Bất động sản: Thêm",
       "delete": "Bất động sản: Xóa"
     },
-    "review": {
+    "comment": {
       "read": "Đánh giá: Xem",
       "update": "Đánh giá: Sửa",
       "create": "Đánh giá: Thêm",

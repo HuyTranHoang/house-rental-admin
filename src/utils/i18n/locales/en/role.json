@@ -61,11 +61,11 @@
       "create": "Property: Add",
       "delete": "Property: Delete"
     },
-    "review": {
-      "read": "Review: View",
-      "update": "Review: Edit",
-      "create": "Review: Add",
-      "delete": "Review: Delete"
+    "comment": {
+      "read": "Comment: View",
+      "update": "Comment: Edit",
+      "create": "Comment: Add",
+      "delete": "Comment: Delete"
     },
     "city": {
       "read": "City: View",
