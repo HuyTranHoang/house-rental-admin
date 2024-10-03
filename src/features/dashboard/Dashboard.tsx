@@ -1,28 +1,5 @@
-import ErrorFetching from '@/components/ErrorFetching'
-import { useTotalDepositAmountThisWeek,
-  useTotalDepositAmountForCurrentMonth,
-  useTotalDepositAmount,
-  useTotalWithdrawalAmountThisWeek,
-  useTotalWithdrawalAmountForCurrentMonth,
-  useTotalWithdrawalAmount,
-  useUsersCreatedThisWeek,
-  useUsersCreatedThisMonth,
-  useTotalUsers,
-  useCountPropertiesCreatedThisWeek,
-  useCountPropertiesCreatedThisMonth,
-  useCountTotalProperties,
-  useCountCommentsCreatedThisWeek,
-  useCountCommentsCreatedThisMonth,
-  useCountTotalComments, } from '@/hooks/useDashboard'
-import {
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  DollarOutlined,
-  FileTextOutlined,
-  MessageOutlined,
-  UserOutlined
-} from '@ant-design/icons'
-import { Card, Col, Row, Statistic, Table } from 'antd'
+
+import { Card, Col, Row, Table } from 'antd'
 import {
   Area,
   AreaChart,
@@ -38,14 +15,9 @@ import {
   XAxis,
   YAxis
 } from 'recharts'
+import DashboardStatistic from './DashboardStatistic'
 
-const iconStyle = (color: string) => ({
-  backgroundColor: color,
-  color: 'white',
-  fontSize: 24,
-  padding: 8,
-  borderRadius: 20
-})
+
 
 
 
@@ -79,99 +51,11 @@ const columns = [
 ]
 
 export default function Component() {
-  const { data: usersCreatedThisWeek, isLoading: loadingUsersThisWeek, error: errorUsersThisWeek } = useUsersCreatedThisWeek();
-  const { data: usersCreatedThisMonth, isLoading: loadingUsersThisMonth, error: errorUsersThisMonth } = useUsersCreatedThisMonth();
-  const { data: totalUsers, isLoading: loadingTotalUsers, error: errorTotalUsers } = useTotalUsers();
+  
 
-  const { data: totalDepositThisWeek, isLoading: loadingDepositThisWeek, error: errorDepositThisWeek } = useTotalDepositAmountThisWeek();
-  const { data: totalDepositThisMonth, isLoading: loadingDepositThisMonth, error: errorDepositThisMonth } = useTotalDepositAmountForCurrentMonth();
-  const { data: totalDeposit, isLoading: loadingTotalDeposit, error: errorTotalDeposit } = useTotalDepositAmount();
-
-  const { data: totalWithdrawalThisWeek, isLoading: loadingWithdrawalThisWeek, error: errorWithdrawalThisWeek } = useTotalWithdrawalAmountThisWeek();
-  const { data: totalWithdrawalThisMonth, isLoading: loadingWithdrawalThisMonth, error: errorWithdrawalThisMonth } = useTotalWithdrawalAmountForCurrentMonth();
-  const { data: totalWithdrawal, isLoading: loadingTotalWithdrawal, error: errorTotalWithdrawal } = useTotalWithdrawalAmount();
-
-  const { data: propertiesCreatedThisWeek, isLoading: loadingPropertiesThisWeek, error: errorPropertiesThisWeek } = useCountPropertiesCreatedThisWeek();
-  const { data: propertiesCreatedThisMonth, isLoading: loadingPropertiesThisMonth, error: errorPropertiesThisMonth } = useCountPropertiesCreatedThisMonth();
-  const { data: totalProperties, isLoading: loadingTotalProperties, error: errorTotalProperties } = useCountTotalProperties();
-
-  const { data: commentsCreatedThisWeek, isLoading: loadingCommentsThisWeek, error: errorCommentsThisWeek } = useCountCommentsCreatedThisWeek();
-  const { data: commentsCreatedThisMonth, isLoading: loadingCommentsThisMonth, error: errorCommentsThisMonth } = useCountCommentsCreatedThisMonth();
-  const { data: totalComments, isLoading: loadingTotalComments, error: errorTotalComments } = useCountTotalComments();
-
-  const isLoading = loadingUsersThisWeek || loadingUsersThisMonth || loadingTotalUsers ||
-                    loadingDepositThisWeek || loadingDepositThisMonth || loadingTotalDeposit ||
-                    loadingWithdrawalThisWeek || loadingWithdrawalThisMonth || loadingTotalWithdrawal ||
-                    loadingPropertiesThisWeek || loadingPropertiesThisMonth || loadingTotalProperties ||
-                    loadingCommentsThisWeek || loadingCommentsThisMonth || loadingTotalComments;
-
-  const isError = errorUsersThisWeek || errorUsersThisMonth || errorTotalUsers ||
-                   errorDepositThisWeek || errorDepositThisMonth || errorTotalDeposit ||
-                   errorWithdrawalThisWeek || errorWithdrawalThisMonth || errorTotalWithdrawal ||
-                   errorPropertiesThisWeek || errorPropertiesThisMonth || errorTotalProperties ||
-                   errorCommentsThisWeek || errorCommentsThisMonth || errorTotalComments;
-
-
-  const statsData = [
-  {
-    title: 'Thành viên mới',
-    value: usersCreatedThisWeek || 0,
-    color: '#52c41a',
-    icon: <UserOutlined style={iconStyle('#52c41a')} />,
-    prefix: <UserOutlined />
-  },
-  {
-    title: 'Doanh thu',
-    value: totalDepositThisWeek|| 0,
-    color: '#f5222d',
-    icon: <DollarOutlined style={iconStyle('#f5222d')} />,
-    prefix: <DollarOutlined />
-  },
-  {
-    title: 'Số bài đăng mới',
-    value: propertiesCreatedThisWeek || 0,
-    color: '#1890ff',
-    icon: <FileTextOutlined style={iconStyle('#1890ff')} />,
-    prefix: <ArrowUpOutlined />
-  },
-  {
-    title: 'Nhận xét mới',
-    value: commentsCreatedThisWeek|| 0,
-    color: '#722ed1',
-    icon: <MessageOutlined style={iconStyle('#722ed1')} />,
-    prefix: <ArrowDownOutlined />
-  }
-  ]
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <ErrorFetching />
-  }
   return (
     <>
-      <Row gutter={16}>
-        {statsData.map((stat, index) => (
-          <Col key={index} xs={24} sm={12} lg={6}>
-            <Card className='mb-4 shadow-md transition-shadow duration-300 hover:shadow-lg'>
-              <Statistic
-                title={
-                  <span>
-                    {stat.icon} {stat.title}
-                  </span>
-                }
-                value={stat.value}
-                precision={0}
-                valueStyle={{ color: stat.color }}
-                prefix={stat.prefix}
-                suffix=''
-              />
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      <DashboardStatistic/>
 
       <Row gutter={16}>
         <Col xs={24} lg={12}>

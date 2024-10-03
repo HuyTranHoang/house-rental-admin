@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import * as dashboardApi from '@/api/dashboard.api';
+import { useQuery } from '@tanstack/react-query';
+import { getStatisticData } from '@/api/dashboard.api';
 
 type ApiCall<T> = () => Promise<{ data: T }>;
 
@@ -27,54 +29,22 @@ export const useDashboardData = <T>(apiCall: ApiCall<T>) => {
   return { data, isLoading, error };
 };
 
+export const useStatisticData = (timeFrame: string) => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['weeklydata', timeFrame],
+    queryFn: () => getStatisticData(timeFrame)
+  });
 
-export const useUsersCreatedThisWeek = () => {
-  return useDashboardData<number>(dashboardApi.getUsersCreatedThisWeek);
-};
-export const useUsersCreatedThisMonth = () => {
-  return useDashboardData<number>(dashboardApi.getUsersCreatedThisMonth);
-};
-export const useTotalUsers = () => {
-  return useDashboardData<number>(dashboardApi.getTotalUsers);
-};
-
-export const useTotalDepositAmountThisWeek = () => {
-  return useDashboardData<number>(dashboardApi.getTotalDepositAmountThisWeek);
-};
-export const useTotalDepositAmountForCurrentMonth = () => {
-  return useDashboardData<number>(dashboardApi.getTotalDepositAmountForCurrentMonth);
-};
-export const useTotalDepositAmount = () => {
-  return useDashboardData<number>(dashboardApi.getTotalDepositAmount);
-};
+  return { data, isLoading, isError }
+}
 
 
-export const useTotalWithdrawalAmountThisWeek = () => {
-  return useDashboardData<number>(dashboardApi.getTotalWithdrawalAmountThisWeek);
+export const useCountPropertiesWithPending = () => {
+  return useDashboardData<number>(dashboardApi.countPropertiesWithPending);
 };
-export const useTotalWithdrawalAmountForCurrentMonth = () => {
-  return useDashboardData<number>(dashboardApi.getTotalWithdrawalAmountForCurrentMonth);
+export const useCountCommentReportsWithPending = () => {
+  return useDashboardData<number>(dashboardApi.countCommentReportsWithPending);
 };
-export const useTotalWithdrawalAmount = () => {
-  return useDashboardData<number>(dashboardApi.getTotalWithdrawalAmount);
-};
-
-export const useCountPropertiesCreatedThisWeek = () => {
-  return useDashboardData<number>(dashboardApi.countPropertiesCreatedThisWeek);
-};
-export const useCountPropertiesCreatedThisMonth = () => {
-  return useDashboardData<number>(dashboardApi.countPropertiesCreatedThisMonth);
-};
-export const useCountTotalProperties = () => {
-  return useDashboardData<number>(dashboardApi.countTotalProperties);
-};
-
-export const useCountCommentsCreatedThisWeek = () => {
-  return useDashboardData<number>(dashboardApi.countCommentsCreatedThisWeek);
-};
-export const useCountCommentsCreatedThisMonth = () => {
-  return useDashboardData<number>(dashboardApi.countCommentsCreatedThisMonth);
-};
-export const useCountTotalComments = () => {
-  return useDashboardData<number>(dashboardApi.countTotalComments);
+export const useCountReportsWithPending = () => {
+  return useDashboardData<number>(dashboardApi.countReportsWithPending);
 };
