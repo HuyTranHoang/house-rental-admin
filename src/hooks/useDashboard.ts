@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import * as dashboardApi from '@/api/dashboard.api';
 import { useQuery } from '@tanstack/react-query';
-import { getStatisticData } from '@/api/dashboard.api';
+import { getLineChartData, getStatisticData } from '@/api/dashboard.api';
 
 type ApiCall<T> = () => Promise<{ data: T }>;
 
@@ -37,6 +37,15 @@ export const useStatisticData = (timeFrame: string) => {
 
   return { data, isLoading, isError }
 }
+
+export const useLineChartData = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['lineChartData'],
+    queryFn: getLineChartData
+  });
+
+  return { data, isLoading, isError };
+};
 
 
 export const useCountPropertiesWithPending = () => {

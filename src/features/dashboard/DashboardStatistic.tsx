@@ -44,12 +44,7 @@ function DashboardStatistic() {
     }
     ]
     
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-    if (isError) {
-        return <ErrorFetching />
-    }
+    
 
     return (
         <Row gutter={16}>

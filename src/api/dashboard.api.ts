@@ -3,11 +3,14 @@ import axiosInstance from '@/axiosInstance';
 
 const API_BASE_URL = '/api/dashboard';
 
-export const getStatisticData = (timeFrame: string) => {
-  return axiosInstance.get(`${API_BASE_URL}/${timeFrame}`);
+
+export const getStatisticData = async (timeFrame: string) => {
+  return await axiosInstance.get(`${API_BASE_URL}/${timeFrame}`);
 };
 
-
+export const getLineChartData = async ()=> {
+  return await axiosInstance.get(`${API_BASE_URL}/last-seven-months`);
+};
 
 export const countPropertiesWithPending = () => {
   return axiosInstance.get(`${API_BASE_URL}/properties/pending`);
