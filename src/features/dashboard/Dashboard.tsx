@@ -1,20 +1,9 @@
-
 import { Card, Col, Row, Table } from 'antd'
-import {
-  Pie,
-  PieChart,
-  Tooltip,
-} from 'recharts'
-import DashboardStatistic from './DashboardStatistic'
+import { DashboardAreaChart } from './DashboardAreaChart'
+import { DashboardBarChart } from './DashboardBarChart'
 import { DashboardLineChart } from './DashboardLineChart'
-
-
-const pieChartData = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 }
-]
+import DashboardStatistic from './DashboardStatistic'
+import { DashboardReviewItem } from './DashboardReviewItem'
 
 const tableData = [
   { key: 1, name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },
@@ -29,36 +18,27 @@ const columns = [
 ]
 
 export default function Component() {
-  
-
   return (
     <>
-      <DashboardStatistic/>
+      <DashboardStatistic />
 
       <Row gutter={16}>
-        <Col xs={24} lg={12}>
-          <DashboardLineChart/>
+        <Col xs={2} lg={12}>
+          <DashboardLineChart />
         </Col>
         <Col xs={24} lg={12}>
-          <Card title='Biểu Đồ Tròn' className='mb-6 shadow-md'>
-            <PieChart width={500} height={300}>
-              <Pie
-                dataKey='value'
-                isAnimationActive={false}
-                data={pieChartData}
-                cx='50%'
-                cy='50%'
-                outerRadius={80}
-                fill='#8884d8'
-                label
-              />
-              <Tooltip />
-            </PieChart>
-          </Card>
+          <DashboardReviewItem/>
         </Col>
       </Row>
 
-      
+      <Row gutter={16}>
+        <Col xs={24} lg={12}>
+          <DashboardAreaChart />
+        </Col>
+        <Col xs={24} lg={12}>
+          <DashboardBarChart />
+        </Col>
+      </Row>
 
       <Card title='Bảng Dữ Liệu' className='shadow-md'>
         <Table columns={columns} dataSource={tableData} />
