@@ -15,7 +15,7 @@ export const useCommentReports = (
   sortBy: string
 ) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['reports', search, category, status, pageNumber, pageSize, sortBy],
+    queryKey: ['commentReports', search, category, status, pageNumber, pageSize, sortBy],
     queryFn: () => getAllCommentReportsWithPagination(search, category, status, pageNumber, pageSize, sortBy)
   })
 
