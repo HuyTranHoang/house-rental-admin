@@ -1,5 +1,16 @@
-import { FileDoneOutlined, FileTextOutlined, FrownOutlined, InfoCircleOutlined, MessageOutlined } from '@ant-design/icons'
+import ErrorFetching from '@/components/ErrorFetching'
+import ROUTER_NAMES from '@/constant/routerNames'
+import { usePendingData } from '@/hooks/useDashboard'
+import {
+  FileDoneOutlined,
+  FileTextOutlined,
+  FrownOutlined,
+  InfoCircleOutlined,
+  LoadingOutlined,
+  MessageOutlined
+} from '@ant-design/icons'
 import { Card, Row } from 'antd'
+import { useNavigate } from 'react-router-dom'
 
 const iconStyle = (color: string) => ({
   backgroundColor: color,
@@ -10,35 +21,49 @@ const iconStyle = (color: string) => ({
 })
 
 export function DashboardReviewItem() {
+  const { data, isLoading, isError } = usePendingData()
+  const navigate = useNavigate()
+  
   const statsData = [
     {
       title: 'Bài đăng',
-      value: 11 || 0,
+      value: data?.data.properties || 0,
       color: '#048d7f',
       icon: <FileDoneOutlined style={iconStyle('#048d7f')} />,
-      prefix: <FileTextOutlined />
+      prefix: <FileTextOutlined />,
+      path: ROUTER_NAMES.PROPERTY
     },
     {
       title: 'Báo cáo bài đăng',
-      value: 22 || 0,
+      value: data?.data.reports || 0,
       color: '#d1a32e',
       icon: <InfoCircleOutlined style={iconStyle('#d1a32e')} />,
-      prefix: <MessageOutlined />
+      prefix: <MessageOutlined />,
+      path: ROUTER_NAMES.REPORT
     },
     {
       title: 'Báo cáo bình luận',
-      value: 33 || 0,
+      value: data?.data.commentReports || 0,
       color: '#d12e6d',
       icon: <FrownOutlined style={iconStyle('#d12e6d')} />,
-      prefix: <MessageOutlined />
+      prefix: <MessageOutlined />,
+      path: '/comment-reports'
     }
   ]
+
+  if (isLoading) {
+    return <LoadingOutlined />
+  }
+  if (isError) {
+    return <ErrorFetching />
+  }
   return (
     <>
-      <Card className='mb-1 h-16 w-full text-base font-bold'>Cần Xét Duyệt</Card>
+      <Card className='mb-2 h-16 w-full text-base font-bold'>Cần Xét Duyệt</Card>
       {statsData.map((stat, index) => (
         <Row key={index} className='w-100'>
-          <Card className='mb-2 ml-0 h-24 w-full shadow-md transition-shadow duration-300 hover:shadow-lg'>
+          <Card className='mb-2 ml-0 h-24 w-full shadow-md transition-shadow duration-300 hover:shadow-lg'
+            onClick={() => navigate(stat.path)}>
             <div>
               <div className='flex justify-between'>
                 <span className='ml-2 text-base'>

@@ -56,12 +56,11 @@ export const useBarChartData = () => {
   return { data, isLoading, isError }
 }
 
-export const useCountPropertiesWithPending = () => {
-  return useDashboardData<number>(dashboardApi.countPropertiesWithPending)
-}
-export const useCountCommentReportsWithPending = () => {
-  return useDashboardData<number>(dashboardApi.countCommentReportsWithPending)
-}
-export const useCountReportsWithPending = () => {
-  return useDashboardData<number>(dashboardApi.countReportsWithPending)
+export const usePendingData = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['pendingData'],
+    queryFn: dashboardApi.countEntitiesWithPending
+  })
+
+  return { data, isLoading, isError }
 }
