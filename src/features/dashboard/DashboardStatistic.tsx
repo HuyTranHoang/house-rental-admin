@@ -72,7 +72,7 @@ function DashboardStatistic() {
                 {stat.icon}
                 <div className='flex flex-col items-end'>
                   <h3 className='m-0 p-0 text-lg font-semibold'>{stat.title}</h3>
-                  <span className='text-xs text-gray-100'>/{tab === 'week' ? t('week') : t('month')}</span>
+                  <span className='text-xs text-gray-100'>/{tab === 'week' ? t('month') : t('week')}</span>
                 </div>
               </div>
               <Statistic
