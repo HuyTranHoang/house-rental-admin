@@ -1,21 +1,14 @@
-import ErrorFetching from '@/components/ErrorFetching'
 import { useStatisticData } from '@/hooks/useDashboard'
-import { DollarOutlined, FileTextOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { Card, Col, Row, Statistic, Tabs } from 'antd'
+import { formatCurrency } from '@/utils/formatCurrentcy.ts'
+import { SwapOutlined } from '@ant-design/icons'
+import { Card, Col, Row, Space, Statistic, Tooltip, Typography } from 'antd'
+import { DollarSign, FileText, MessageSquare, Users } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-const iconStyle = (color: string) => ({
-  backgroundColor: color,
-  color: 'white',
-  fontSize: 24,
-  padding: 8,
-  borderRadius: 20
-})
-
 function DashboardStatistic() {
   const [tab, setTab] = useState('week')
-  const { data, isLoading: isLoading, isError } = useStatisticData(tab)
+  const { data, isLoading, isError } = useStatisticData(tab)
   const { t } = useTranslation(['dashboard'])
 
   const statsData = [
@@ -23,69 +16,70 @@ function DashboardStatistic() {
       title: t('newMember'),
       value: data?.data.users || 0,
       color: '#52c41a',
-      icon: <UserOutlined style={iconStyle('#52c41a')} />,
-      prefix: <UserOutlined />
+      icon: <Users size={24} />,
+      gradient: 'from-green-400 to-green-600'
     },
     {
       title: t('revenue'),
-      value: data?.data.deposits || 0,
+      value: formatCurrency(data?.data.deposits) || 0,
       color: '#f5222d',
-      icon: <DollarOutlined style={iconStyle('#f5222d')} />,
-      prefix: <DollarOutlined />
+      icon: <DollarSign size={24} />,
+      gradient: 'from-red-400 to-red-600'
     },
     {
       title: t('newPost'),
       value: data?.data.properties || 0,
       color: '#1890ff',
-      icon: <FileTextOutlined style={iconStyle('#1890ff')} />,
-      prefix: <FileTextOutlined />
+      icon: <FileText size={24} />,
+      gradient: 'from-blue-400 to-blue-600'
     },
     {
       title: t('newComment'),
       value: data?.data.comments || 0,
       color: '#722ed1',
-      icon: <MessageOutlined style={iconStyle('#722ed1')} />,
-      prefix: <MessageOutlined />
+      icon: <MessageSquare size={24} />,
+      gradient: 'from-purple-400 to-purple-600'
     }
   ]
 
   if (isError) {
-    return <ErrorFetching />
+    return (
+      <div className='flex h-64 items-center justify-center'>
+        <p className='text-xl text-red-500'>Error fetching data. Please try again later.</p>
+      </div>
+    )
   }
 
   return (
     <>
-      <Row gutter={18}>
-        <Col xs={24} sm={8} lg={2}>
-          <div className='mb-5 mt-5'>
-            <Tabs
-              defaultActiveKey='week'
-              onChange={(key) => {
-                setTab(key)
-              }}
-              tabPosition='left'
-              items={[
-                { label: t('week'), key: 'week' },
-                { label: t('month'), key: 'month' }
-              ]}
-            />
-          </div>
-        </Col>
+      <Space className='mb-3 flex items-center'>
+        <Typography.Title level={3} className='m-0'>
+          {t('dashboardStatistic')}
+        </Typography.Title>
 
+        <Tooltip title={t('switchTime')}>
+          <SwapOutlined className='text-base text-blue-500' onClick={() => setTab(tab === 'week' ? 'month' : 'week')} />
+        </Tooltip>
+      </Space>
+      <Row gutter={[16, 16]} className='mb-4'>
         {statsData.map((stat, index) => (
-          <Col key={index} xs={24} sm={16} lg={5}>
-            <Card className='mb-4 shadow-md transition-shadow duration-300 hover:shadow-lg'>
+          <Col key={index} xs={24} sm={12} lg={6}>
+            <Card
+              className={`h-full bg-gradient-to-br ${stat.gradient} text-white shadow-md transition-all duration-300 hover:scale-105 hover:shadow-xl`}
+              classNames={{ body: 'p-4' }}
+            >
+              <div className='mb-4 flex items-center justify-between'>
+                {stat.icon}
+                <div className='flex flex-col items-end'>
+                  <h3 className='m-0 p-0 text-lg font-semibold'>{stat.title}</h3>
+                  <span className='text-xs text-gray-100'>/{tab === 'week' ? t('week') : t('month')}</span>
+                </div>
+              </div>
               <Statistic
-                title={
-                  <span>
-                    {stat.icon} {stat.title}
-                  </span>
-                }
                 value={stat.value}
-                precision={0}
-                valueStyle={{ color: stat.color }}
-                prefix={stat.prefix}
-                suffix=''
+                valueStyle={{ color: 'white', fontSize: '2rem', fontWeight: 'bold' }}
+                prefix={null}
+                suffix={null}
                 loading={isLoading}
               />
             </Card>
