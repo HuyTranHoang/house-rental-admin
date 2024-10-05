@@ -1,6 +1,7 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import { useLineChartData } from '@/hooks/useDashboard'
 import { Card } from 'antd'
+import { useTranslation } from 'react-i18next'
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts'
 
 type DataItem = {
@@ -12,6 +13,7 @@ type DataItem = {
 
 export function DashboardAreaChart() {
   const { data, isLoading, isError } = useLineChartData()
+  const { t } = useTranslation(['dashboard'])
 
   const updatedData = data?.data.map((item: DataItem) => ({
     ...item,
@@ -23,7 +25,7 @@ export function DashboardAreaChart() {
   }
 
   return (
-    <Card title='Tài Khoản Đăng Ký Mới' className='mb-6 shadow-md' loading={isLoading}>
+    <Card title={t('registrationChartTitle')} className='mb-6 shadow-md' loading={isLoading}>
       <AreaChart
         width={500}
         height={300}
@@ -39,7 +41,7 @@ export function DashboardAreaChart() {
         <XAxis dataKey='months' />
         <YAxis />
         <Tooltip />
-        <Area type='monotone' dataKey='users' stroke='#8884d8' fill='#8884d8' name='Tài khoản' />
+        <Area type='monotone' dataKey='users' stroke='#8884d8' fill='#8884d8' name={t('users')} />
       </AreaChart>
     </Card>
   )

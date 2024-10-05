@@ -3,6 +3,7 @@ import { useStatisticData } from '@/hooks/useDashboard'
 import { DollarOutlined, FileTextOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
 import { Card, Col, Row, Statistic, Tabs } from 'antd'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const iconStyle = (color: string) => ({
   backgroundColor: color,
@@ -13,33 +14,34 @@ const iconStyle = (color: string) => ({
 })
 
 function DashboardStatistic() {
-  const [tab, setTab] = useState('week') // State để quản lý tab đang chọn
+  const [tab, setTab] = useState('week')
   const { data, isLoading: isLoading, isError } = useStatisticData(tab)
+  const { t } = useTranslation(['dashboard'])
 
   const statsData = [
     {
-      title: 'Thành viên mới',
+      title: t('newMember'),
       value: data?.data.users || 0,
       color: '#52c41a',
       icon: <UserOutlined style={iconStyle('#52c41a')} />,
       prefix: <UserOutlined />
     },
     {
-      title: 'Doanh thu',
+      title: t('revenue'),
       value: data?.data.deposits || 0,
       color: '#f5222d',
       icon: <DollarOutlined style={iconStyle('#f5222d')} />,
       prefix: <DollarOutlined />
     },
     {
-      title: 'Số bài đăng mới',
+      title: t('newPost'),
       value: data?.data.properties || 0,
       color: '#1890ff',
       icon: <FileTextOutlined style={iconStyle('#1890ff')} />,
       prefix: <FileTextOutlined />
     },
     {
-      title: 'Nhận xét mới',
+      title: t('newComment'),
       value: data?.data.comments || 0,
       color: '#722ed1',
       icon: <MessageOutlined style={iconStyle('#722ed1')} />,
@@ -63,8 +65,8 @@ function DashboardStatistic() {
               }}
               tabPosition='left'
               items={[
-                { label: 'TUẦN', key: 'week' },
-                { label: 'THÁNG', key: 'month' }
+                { label: t('week'), key: 'week' },
+                { label: t('month'), key: 'month' }
               ]}
             />
           </div>

@@ -1,0 +1,19 @@
+{
+    "month": "MONTH",
+    "week": "WEEK",
+    "newMember": "New member",
+    "revenue": "Revenue",
+    "newPost": "New posts",
+    "newComment": "New comments",
+    "approvalRequest": "Approval Requets",
+    "posts": "Posts",
+    "comments": "Comments",
+    "users": "Users",
+    "reportPosts": "Report Posts",
+    "reportComment": "Comment Posts",
+    "postCommentChartTitle": "Posts & Comments",
+    "registrationChartTitle": "New Registered Account Number",
+    "tradingChartsTitle": "Trading Charts",
+    "deposit": "Deposit",
+    "withdrawal": "Withdrawal"
+}
