@@ -29,7 +29,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^15.0.1",
     "react-router-dom": "^6.25.1",
-    "recharts": "^2.12.7",
+    "recharts": "^2.13.0-alpha.5",
     "sonner": "^1.5.0",
     "styled-components": "^6.1.12",
     "use-react-router-breadcrumbs": "^4.0.1",

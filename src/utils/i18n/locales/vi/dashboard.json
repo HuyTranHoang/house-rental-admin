@@ -5,7 +5,7 @@
   "revenue": "Doanh thu",
   "newPost": "Bài đăng mới",
   "newComment": "Nhận xét mới",
-  "approvalRequest": "Yêu Cầu Xét Duyệt",
+  "pendingApproval": "Đang chờ xét duyệt",
   "posts": "Bài đăng",
   "comments": "Bình luận",
   "users": "Tài khoản",
@@ -17,5 +17,7 @@
   "deposit": "Nạp vào",
   "withdrawal": "Mua gói",
   "dashboardStatistic": "Thống kê",
-  "switchTime": "Chuyển đổi thời gian"
+  "switchTime": "Chuyển đổi thời gian",
+  "pendingReview": "Đang chờ xét duyệt: {{value}}",
+  "noPendingReview": "Không có yêu cầu xét duyệt"
 }

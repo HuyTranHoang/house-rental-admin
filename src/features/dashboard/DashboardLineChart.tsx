@@ -2,7 +2,7 @@ import ErrorFetching from '@/components/ErrorFetching'
 import { useLineChartData } from '@/hooks/useDashboard'
 import { Card } from 'antd'
 import { useTranslation } from 'react-i18next'
-import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts'
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 type DataItem = {
   months: string
@@ -25,7 +25,7 @@ export function DashboardLineChart() {
   }
 
   return (
-    <Card title={t('postCommentChartTitle')} className='mb-6 shadow-md' loading={isLoading}>
+    <Card title={t('postCommentChartTitle')} className='mb-6 h-full shadow-md' loading={isLoading}>
       <ResponsiveContainer width='100%' height={300}>
         <LineChart data={updatedData} margin={{ top: 5, right: 20, left: -30, bottom: 5 }}>
           <CartesianGrid strokeDasharray='3 3' />

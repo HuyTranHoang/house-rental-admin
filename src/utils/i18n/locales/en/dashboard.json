@@ -5,17 +5,19 @@
   "revenue": "Revenue",
   "newPost": "New posts",
   "newComment": "New comments",
-  "approvalRequest": "Approval Requets",
+  "pendingApproval": "Pending approval",
   "posts": "Posts",
   "comments": "Comments",
   "users": "Users",
   "reportPosts": "Report Posts",
-  "reportComment": "Comment Posts",
+  "reportComment": "Report Comments",
   "postCommentChartTitle": "Posts & Comments",
   "registrationChartTitle": "New Registered Account Number",
   "tradingChartsTitle": "Trading Charts",
   "deposit": "Deposit",
   "withdrawal": "Withdrawal",
   "dashboardStatistic": "Statistics",
-  "switchTime": "Switch time period"
+  "switchTime": "Switch time period",
+  "pendingReview": "Pending review: {{value}}",
+  "noPendingReview": "No pending review"
 }
