@@ -1,7 +1,9 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import { useStatisticData } from '@/hooks/useDashboard'
-import { DollarOutlined, FileTextOutlined, LoadingOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { Card, Col, Row, Statistic } from 'antd'
+import { DollarOutlined, FileTextOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
+import { Card, Col, Row, Statistic, Tabs } from 'antd'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const iconStyle = (color: string) => ({
   backgroundColor: color,
@@ -12,31 +14,34 @@ const iconStyle = (color: string) => ({
 })
 
 function DashboardStatistic() {
-  const { data, isLoading: isLoading, isError } = useStatisticData('week')
+  const [tab, setTab] = useState('week')
+  const { data, isLoading: isLoading, isError } = useStatisticData(tab)
+  const { t } = useTranslation(['dashboard'])
+
   const statsData = [
     {
-      title: 'Thành viên mới',
+      title: t('newMember'),
       value: data?.data.users || 0,
       color: '#52c41a',
       icon: <UserOutlined style={iconStyle('#52c41a')} />,
       prefix: <UserOutlined />
     },
     {
-      title: 'Doanh thu',
+      title: t('revenue'),
       value: data?.data.deposits || 0,
       color: '#f5222d',
       icon: <DollarOutlined style={iconStyle('#f5222d')} />,
       prefix: <DollarOutlined />
     },
     {
-      title: 'Số bài đăng mới',
+      title: t('newPost'),
       value: data?.data.properties || 0,
       color: '#1890ff',
       icon: <FileTextOutlined style={iconStyle('#1890ff')} />,
       prefix: <FileTextOutlined />
     },
     {
-      title: 'Nhận xét mới',
+      title: t('newComment'),
       value: data?.data.comments || 0,
       color: '#722ed1',
       icon: <MessageOutlined style={iconStyle('#722ed1')} />,
@@ -44,19 +49,31 @@ function DashboardStatistic() {
     }
   ]
 
-  if (isLoading) {
-    return <LoadingOutlined/>
-  }
   if (isError) {
     return <ErrorFetching />
   }
 
   return (
     <>
-      <Card className='font-bold text-base h-16 w-100'>Thống Kê Tuần</Card>
-      <Row gutter={16}>
+      <Row gutter={18}>
+        <Col xs={24} sm={8} lg={2}>
+          <div className='mb-5 mt-5'>
+            <Tabs
+              defaultActiveKey='week'
+              onChange={(key) => {
+                setTab(key)
+              }}
+              tabPosition='left'
+              items={[
+                { label: t('week'), key: 'week' },
+                { label: t('month'), key: 'month' }
+              ]}
+            />
+          </div>
+        </Col>
+
         {statsData.map((stat, index) => (
-          <Col key={index} xs={24} sm={12} lg={6}>
+          <Col key={index} xs={24} sm={16} lg={5}>
             <Card className='mb-4 shadow-md transition-shadow duration-300 hover:shadow-lg'>
               <Statistic
                 title={
@@ -69,6 +86,7 @@ function DashboardStatistic() {
                 valueStyle={{ color: stat.color }}
                 prefix={stat.prefix}
                 suffix=''
+                loading={isLoading}
               />
             </Card>
           </Col>
