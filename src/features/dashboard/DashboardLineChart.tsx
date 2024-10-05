@@ -2,7 +2,6 @@ import ErrorFetching from '@/components/ErrorFetching'
 import { useLineChartData } from '@/hooks/useDashboard'
 import { Card, Tooltip } from 'antd'
 import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from 'recharts'
-import './Dashboard.css' 
 
 type DataItem = {
   months: string

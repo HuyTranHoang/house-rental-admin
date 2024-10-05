@@ -55,16 +55,16 @@ function DashboardStatistic() {
     <>
       <Row gutter={18}>
         <Col xs={24} sm={8} lg={2}>
-          <div className='mt-5 mb-5'>
+          <div className='mb-5 mt-5'>
             <Tabs
-              defaultActiveKey="week"
+              defaultActiveKey='week'
               onChange={(key) => {
                 setTab(key)
               }}
-              tabPosition="left"
+              tabPosition='left'
               items={[
                 { label: 'TUẦN', key: 'week' },
-                { label: 'THÁNG', key: 'month' },
+                { label: 'THÁNG', key: 'month' }
               ]}
             />
           </div>
@@ -72,22 +72,21 @@ function DashboardStatistic() {
 
         {statsData.map((stat, index) => (
           <Col key={index} xs={24} sm={16} lg={5}>
-            
-              <Card className='mb-4 shadow-md transition-shadow duration-300 hover:shadow-lg'>
-                <Statistic
-                  title={
-                    <span>
-                      {stat.icon} {stat.title}
-                    </span>
-                  }
-                  value={stat.value}
-                  precision={0}
-                  valueStyle={{ color: stat.color }}
-                  prefix={stat.prefix}
-                  suffix=''
-                  loading={isLoading}
-                />
-              </Card>
+            <Card className='mb-4 shadow-md transition-shadow duration-300 hover:shadow-lg'>
+              <Statistic
+                title={
+                  <span>
+                    {stat.icon} {stat.title}
+                  </span>
+                }
+                value={stat.value}
+                precision={0}
+                valueStyle={{ color: stat.color }}
+                prefix={stat.prefix}
+                suffix=''
+                loading={isLoading}
+              />
+            </Card>
           </Col>
         ))}
       </Row>
