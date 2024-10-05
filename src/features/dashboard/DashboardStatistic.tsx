@@ -1,7 +1,8 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import { useStatisticData } from '@/hooks/useDashboard'
-import { DollarOutlined, FileTextOutlined, LoadingOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
-import { Card, Col, Row, Statistic } from 'antd'
+import { DollarOutlined, FileTextOutlined, MessageOutlined, UserOutlined } from '@ant-design/icons'
+import { Card, Col, Row, Statistic, Tabs } from 'antd'
+import { useState } from 'react'
 
 const iconStyle = (color: string) => ({
   backgroundColor: color,
@@ -12,7 +13,9 @@ const iconStyle = (color: string) => ({
 })
 
 function DashboardStatistic() {
-  const { data, isLoading: isLoading, isError } = useStatisticData('week')
+  const [tab, setTab] = useState('week') // State để quản lý tab đang chọn
+  const { data, isLoading: isLoading, isError } = useStatisticData(tab)
+
   const statsData = [
     {
       title: 'Thành viên mới',
@@ -44,33 +47,47 @@ function DashboardStatistic() {
     }
   ]
 
-  if (isLoading) {
-    return <LoadingOutlined/>
-  }
   if (isError) {
     return <ErrorFetching />
   }
 
   return (
     <>
-      <Card className='font-bold text-base h-16 w-100'>Thống Kê Tuần</Card>
-      <Row gutter={16}>
+      <Row gutter={18}>
+        <Col xs={24} sm={8} lg={2}>
+          <div className='mt-5 mb-5'>
+            <Tabs
+              defaultActiveKey="week"
+              onChange={(key) => {
+                setTab(key)
+              }}
+              tabPosition="left"
+              items={[
+                { label: 'TUẦN', key: 'week' },
+                { label: 'THÁNG', key: 'month' },
+              ]}
+            />
+          </div>
+        </Col>
+
         {statsData.map((stat, index) => (
-          <Col key={index} xs={24} sm={12} lg={6}>
-            <Card className='mb-4 shadow-md transition-shadow duration-300 hover:shadow-lg'>
-              <Statistic
-                title={
-                  <span>
-                    {stat.icon} {stat.title}
-                  </span>
-                }
-                value={stat.value}
-                precision={0}
-                valueStyle={{ color: stat.color }}
-                prefix={stat.prefix}
-                suffix=''
-              />
-            </Card>
+          <Col key={index} xs={24} sm={16} lg={5}>
+            
+              <Card className='mb-4 shadow-md transition-shadow duration-300 hover:shadow-lg'>
+                <Statistic
+                  title={
+                    <span>
+                      {stat.icon} {stat.title}
+                    </span>
+                  }
+                  value={stat.value}
+                  precision={0}
+                  valueStyle={{ color: stat.color }}
+                  prefix={stat.prefix}
+                  suffix=''
+                  loading={isLoading}
+                />
+              </Card>
           </Col>
         ))}
       </Row>

@@ -1,22 +1,33 @@
 import ErrorFetching from '@/components/ErrorFetching'
 import { useLineChartData } from '@/hooks/useDashboard'
-import { LoadingOutlined } from '@ant-design/icons'
 import { Card, Tooltip } from 'antd'
 import { CartesianGrid, Legend, Line, LineChart, XAxis, YAxis } from 'recharts'
+import './Dashboard.css' 
+
+type DataItem = {
+  months: string
+  comments: number
+  users: number
+  properties: number
+}
 
 export function DashboardLineChart() {
   const { data, isLoading, isError } = useLineChartData()
 
-  if (isLoading) {
-    return <LoadingOutlined/>
-  }
+  const updatedData = data?.data.map((item: DataItem) => ({
+    ...item,
+    months: item.months.slice(0, 3)
+  }))
+
   if (isError) {
     return <ErrorFetching />
   }
 
   return (
-    <Card title='Bài Đăng & Bình Luận' className='mb-6 shadow-md'>
-      <LineChart width={500} height={300} data={data?.data} margin={{ top: 5, right: 20, left: -30, bottom: 5 }}>
+    <Card title='Bài Đăng & Bình Luận' className='mb-6 shadow-md' loading={isLoading}>
+      <div className='chart-container'>
+
+      <LineChart width={500} height={300} data={updatedData} margin={{ top: 5, right: 20, left: -30, bottom: 5 }}>
         <CartesianGrid strokeDasharray='3 3' />
         <XAxis dataKey='months' />
         <YAxis />
@@ -26,6 +37,7 @@ export function DashboardLineChart() {
         <Line type='monotone' dataKey='properties' stroke='#1890ff' name='Bài đăng' />
         <Line type='monotone' dataKey='comments' stroke='#722ed1' name='Bình luận' />
       </LineChart>
+      </div>
     </Card>
   )
 }

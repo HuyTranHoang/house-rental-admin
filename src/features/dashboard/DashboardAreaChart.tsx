@@ -1,21 +1,33 @@
-import ErrorFetching from '@/components/ErrorFetching';
-import { useLineChartData } from '@/hooks/useDashboard';
+import ErrorFetching from '@/components/ErrorFetching'
+import { useLineChartData } from '@/hooks/useDashboard'
 import { Card } from 'antd'
 import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts'
 
-export function DashboardAreaChart() {
-    const { data, isLoading, isError } = useLineChartData();
+type DataItem = {
+  months: string
+  comments: number
+  users: number
+  properties: number
+}
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-    if (isError) {
-        return <ErrorFetching />
-    }
-  
+export function DashboardAreaChart() {
+  const { data, isLoading, isError } = useLineChartData()
+
+  const updatedData = data?.data.map((item: DataItem) => ({
+    ...item,
+    months: item.months.slice(0, 3)
+  }))
+
+  if (isError) {
+    return <ErrorFetching />
+  }
+
   return (
-    <Card title='Tài Khoản Đăng Ký Mới' className='mb-6 shadow-md'>
-      <AreaChart width={500} height={300} data={data?.data}
+    <Card title='Tài Khoản Đăng Ký Mới' className='mb-6 shadow-md' loading={isLoading}>
+      <AreaChart
+        width={500}
+        height={300}
+        data={updatedData}
         margin={{
           top: 10,
           right: 30,

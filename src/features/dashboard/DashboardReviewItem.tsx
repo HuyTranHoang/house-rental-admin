@@ -6,7 +6,6 @@ import {
   FileTextOutlined,
   FrownOutlined,
   InfoCircleOutlined,
-  LoadingOutlined,
   MessageOutlined
 } from '@ant-design/icons'
 import { Card, Row } from 'antd'
@@ -51,9 +50,6 @@ export function DashboardReviewItem() {
     }
   ]
 
-  if (isLoading) {
-    return <LoadingOutlined />
-  }
   if (isError) {
     return <ErrorFetching />
   }
@@ -62,8 +58,8 @@ export function DashboardReviewItem() {
       <Card className='mb-2 h-16 w-full text-base font-bold'>Cần Xét Duyệt</Card>
       {statsData.map((stat, index) => (
         <Row key={index} className='w-100'>
-          <Card className='mb-2 ml-0 h-24 w-full shadow-md transition-shadow duration-300 hover:shadow-lg'
-            onClick={() => navigate(stat.path)}>
+          <Card className='mb-2 ml-0 h-24 w-full shadow-md transition-shadow duration-300 hover:shadow-lg cursor-pointer'
+            onClick={() => navigate(stat.path)} loading={isLoading}>
             <div>
               <div className='flex justify-between'>
                 <span className='ml-2 text-base'>
