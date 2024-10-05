@@ -1,6 +1,5 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
-import ImageComponent from '@/components/ImageComponent.tsx'
 import { useBlockProperty, useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties'
 import { Property, PropertyDataSource, PropertyStatus } from '@/types/property.type'
 import { formatCurrency } from '@/utils/formatCurrentcy'
@@ -211,7 +210,18 @@ function PropertyTable({
           <Image.PreviewGroup>
             {currentProperty?.propertyImages.map((image, index) => (
               <Col key={index} span={6}>
-                <ImageComponent image={image} className='size-48 object-cover p-2' />
+                <Image
+                  preview={{
+                    mask: (
+                      <>
+                        <EyeOutlined style={{ marginRight: 6 }} /> Chi tiết
+                      </>
+                    )
+                  }}
+                  src={image}
+                  alt={image}
+                  className='size-48 object-cover p-2'
+                />
               </Col>
             ))}
           </Image.PreviewGroup>

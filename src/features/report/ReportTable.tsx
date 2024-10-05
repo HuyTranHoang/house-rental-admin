@@ -1,11 +1,10 @@
 import { getPropertyById } from '@/api/property.api.ts'
-import ImageComponent from '@/components/ImageComponent.tsx'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useBlockProperty } from '@/hooks/useProperties'
 import { useUpdateReportStatus } from '@/hooks/useReports.ts'
 import { Report, ReportCategory, ReportDataSource, ReportStatus } from '@/types/report.type.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons'
+import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import {
   Badge,
@@ -237,7 +236,18 @@ function ReportTable({
           <Image.PreviewGroup>
             {propertyData?.propertyImages.map((image, index) => (
               <Col key={index} span={6}>
-                <ImageComponent image={image} className='size-48 object-cover p-2' />
+                <Image
+                  preview={{
+                    mask: (
+                      <>
+                        <EyeOutlined style={{ marginRight: 6 }} /> Chi tiết
+                      </>
+                    )
+                  }}
+                  src={image}
+                  alt={image}
+                  className='size-48 object-cover p-2'
+                />
               </Col>
             ))}
           </Image.PreviewGroup>
