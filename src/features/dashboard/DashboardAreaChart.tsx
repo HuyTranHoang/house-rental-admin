@@ -2,7 +2,7 @@ import ErrorFetching from '@/components/ErrorFetching'
 import { useLineChartData } from '@/hooks/useDashboard'
 import { Card } from 'antd'
 import { useTranslation } from 'react-i18next'
-import { Area, AreaChart, CartesianGrid, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 type DataItem = {
   months: string
@@ -26,23 +26,23 @@ export function DashboardAreaChart() {
 
   return (
     <Card title={t('registrationChartTitle')} className='mb-6 shadow-md' loading={isLoading}>
-      <AreaChart
-        width={500}
-        height={300}
-        data={updatedData}
-        margin={{
-          top: 10,
-          right: 30,
-          left: 0,
-          bottom: 0
-        }}
-      >
-        <CartesianGrid strokeDasharray='3 3' />
-        <XAxis dataKey='months' />
-        <YAxis />
-        <Tooltip />
-        <Area type='monotone' dataKey='users' stroke='#8884d8' fill='#8884d8' name={t('users')} />
-      </AreaChart>
+      <ResponsiveContainer width='100%' height={300}>
+        <AreaChart
+          data={updatedData}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 0
+          }}
+        >
+          <CartesianGrid strokeDasharray='3 3' />
+          <XAxis dataKey='months' />
+          <YAxis />
+          <Tooltip />
+          <Area type='monotone' dataKey='users' stroke='#8884d8' fill='#8884d8' name={t('users')} />
+        </AreaChart>
+      </ResponsiveContainer>
     </Card>
   )
 }

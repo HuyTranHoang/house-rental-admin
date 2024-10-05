@@ -1,11 +1,10 @@
-import ErrorFetching from "@/components/ErrorFetching";
-import { useStatisticData } from "@/hooks/useDashboard";
-import { Card, Tooltip } from "antd";
-import { Legend, Pie, PieChart } from "recharts";
+import ErrorFetching from '@/components/ErrorFetching'
+import { useStatisticData } from '@/hooks/useDashboard'
+import { Card, Tooltip } from 'antd'
+import { Legend, Pie, PieChart } from 'recharts'
 
-
-export function DashboardPieChart () {
-    const { data, isLoading: isLoading, isError } = useStatisticData('month')
+export function DashboardPieChart() {
+  const { data, isLoading: isLoading, isError } = useStatisticData('month')
 
   if (isLoading) {
     return <div>Loading...</div>
@@ -17,27 +16,17 @@ export function DashboardPieChart () {
   console.log(residual)
   console.log(data?.data.deposits)
   const chartData = [
-    { name: 'Residual', value: residual || 0 , fill: '#82ca9d' },
-    { name: 'Withdrawals', value: data?.data.withdrawals || 0 , fill: '#8884d8' }
-  ];
+    { name: 'Residual', value: residual || 0, fill: '#82ca9d' },
+    { name: 'Withdrawals', value: data?.data.withdrawals || 0, fill: '#8884d8' }
+  ]
 
-
-    return (
-        <Card title='Gói Thành Viên' className='mb-6 shadow-md'>
-            <PieChart width={500} height={300}>
-              <Pie
-                dataKey='value'
-                isAnimationActive={false}
-                data={chartData}
-                cx='50%'
-                cy='50%'
-                outerRadius={80}
-                label
-              />
-              <Tooltip />
-              <Legend layout="vertical" verticalAlign="middle" align="right" />
-
-            </PieChart>
-          </Card>
-    );
+  return (
+    <Card title='Gói Thành Viên' className='mb-6 shadow-md'>
+      <PieChart width={500} height={300}>
+        <Pie dataKey='value' isAnimationActive={false} data={chartData} cx='50%' cy='50%' outerRadius={80} label />
+        <Tooltip />
+        <Legend layout='vertical' verticalAlign='middle' align='right' />
+      </PieChart>
+    </Card>
+  )
 }
