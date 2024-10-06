@@ -1,19 +1,19 @@
 import axiosInstance from '@/axiosInstance'
 
-const API_BASE_URL = '/api/dashboard'
+export const getStatisticData = async (period: string) => {
+  const params = { period }
 
-export const getStatisticData = async (timeFrame: string) => {
-  return await axiosInstance.get(`${API_BASE_URL}/${timeFrame}`)
+  return await axiosInstance.get('/api/dashboard/stats', { params })
 }
 
 export const getLineChartData = async () => {
-  return await axiosInstance.get(`${API_BASE_URL}/last-seven-months`)
+  return await axiosInstance.get('/api/dashboard/last-seven-months/all')
 }
 
 export const getBarChartData = async () => {
-  return await axiosInstance.get(`${API_BASE_URL}/transaction`)
+  return await axiosInstance.get('/api/dashboard/transaction')
 }
 
 export const countEntitiesWithPending = async () => {
-  return await axiosInstance.get(`${API_BASE_URL}/pending`)
+  return await axiosInstance.get('/api/dashboard/pending')
 }

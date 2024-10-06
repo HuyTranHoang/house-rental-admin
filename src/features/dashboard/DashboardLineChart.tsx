@@ -4,32 +4,21 @@ import { Card } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
-type DataItem = {
-  months: string
-  comments: number
-  users: number
-  properties: number
-}
-
 export function DashboardLineChart() {
   const { data, isLoading, isError } = useLineChartData()
   const { t } = useTranslation(['dashboard'])
 
-  const updatedData = data?.data.map((item: DataItem) => ({
-    ...item,
-    months: item.months.slice(0, 3)
-  }))
 
-  if (isError) {
+  if (isError || !data) {
     return <ErrorFetching />
   }
 
   return (
     <Card title={t('postCommentChartTitle')} className='mb-6 h-full shadow-md' loading={isLoading}>
       <ResponsiveContainer width='100%' height={300}>
-        <LineChart data={updatedData} margin={{ top: 5, right: 20, left: -30, bottom: 5 }}>
+        <LineChart data={data.data} margin={{ top: 5, right: 20, left: -30, bottom: 5 }}>
           <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='months' />
+          <XAxis dataKey='month' />
           <YAxis />
           <Tooltip />
           <Legend />

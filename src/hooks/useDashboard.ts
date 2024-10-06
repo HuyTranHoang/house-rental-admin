@@ -29,10 +29,10 @@ export const useDashboardData = <T>(apiCall: ApiCall<T>) => {
   return { data, isLoading, error }
 }
 
-export const useStatisticData = (timeFrame: string) => {
+export const useStatisticData = (period: string) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['weeklydata', timeFrame],
-    queryFn: () => getStatisticData(timeFrame)
+    queryKey: ['weeklydata', period],
+    queryFn: () => getStatisticData(period)
   })
 
   return { data, isLoading, isError }

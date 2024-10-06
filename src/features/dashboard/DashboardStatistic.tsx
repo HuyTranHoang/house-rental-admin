@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 function DashboardStatistic() {
-  const [tab, setTab] = useState('week')
+  const [tab, setTab] = useState('weekly')
   const { data, isLoading, isError } = useStatisticData(tab)
   const { t } = useTranslation(['dashboard'])
 
@@ -58,7 +58,7 @@ function DashboardStatistic() {
         </Typography.Title>
 
         <Tooltip title={t('switchTime')}>
-          <SwapOutlined className='text-base text-blue-500' onClick={() => setTab(tab === 'week' ? 'month' : 'week')} />
+          <SwapOutlined className='text-base text-blue-500' onClick={() => setTab(tab === 'weekly' ? 'monthly' : 'weekly')} />
         </Tooltip>
       </Space>
       <Row gutter={[16, 16]} className='mb-4'>
@@ -72,7 +72,7 @@ function DashboardStatistic() {
                 {stat.icon}
                 <div className='flex flex-col items-end'>
                   <h3 className='m-0 p-0 text-lg font-semibold'>{stat.title}</h3>
-                  <span className='text-xs text-gray-100'>/{tab === 'week' ? t('month') : t('week')}</span>
+                  <span className='text-xs text-gray-100'>/{tab === 'weekly' ? t('week') : t('month')}</span>
                 </div>
               </div>
               <Statistic

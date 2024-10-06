@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 type DataItem = {
-  months: string
+  month: string
   comments: number
   users: number
   properties: number
@@ -17,7 +17,7 @@ export function DashboardAreaChart() {
 
   const updatedData = data?.data.map((item: DataItem) => ({
     ...item,
-    months: item.months.slice(0, 3)
+    month: item.month.slice(0, 3)
   }))
 
   if (isError) {
@@ -37,7 +37,7 @@ export function DashboardAreaChart() {
           }}
         >
           <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='months' />
+          <XAxis dataKey='month' />
           <YAxis />
           <Tooltip />
           <Area type='monotone' dataKey='users' stroke='#8884d8' fill='#8884d8' name={t('users')} />
