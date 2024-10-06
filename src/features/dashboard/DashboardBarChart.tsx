@@ -1,4 +1,3 @@
-import ErrorFetching from '@/components/ErrorFetching'
 import { useBarChartData } from '@/hooks/useDashboard'
 import { Card } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -27,7 +26,7 @@ export function DashboardBarChart() {
   }
 
   if (isError) {
-    return <ErrorFetching />
+    return ''
   }
 
   return (

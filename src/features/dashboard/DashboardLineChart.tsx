@@ -1,4 +1,3 @@
-import ErrorFetching from '@/components/ErrorFetching'
 import { useLineChartData } from '@/hooks/useDashboard'
 import { Card } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -9,14 +8,14 @@ export function DashboardLineChart() {
   const { t } = useTranslation(['dashboard'])
 
 
-  if (isError || !data) {
-    return <ErrorFetching />
+  if (isError) {
+    return ''
   }
 
   return (
     <Card title={t('postCommentChartTitle')} className='mb-6 h-full shadow-md' loading={isLoading}>
       <ResponsiveContainer width='100%' height={300}>
-        <LineChart data={data.data} margin={{ top: 5, right: 20, left: -30, bottom: 5 }}>
+        <LineChart data={data?.data} margin={{ top: 5, right: 20, left: -30, bottom: 5 }}>
           <CartesianGrid strokeDasharray='3 3' />
           <XAxis dataKey='month' />
           <YAxis />
