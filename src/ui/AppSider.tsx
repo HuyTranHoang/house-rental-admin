@@ -8,6 +8,7 @@ import {
   EditOutlined,
   HomeOutlined,
   LogoutOutlined,
+  PictureOutlined,
   ScheduleOutlined,
   SolutionOutlined,
   TransactionOutlined,
@@ -129,6 +130,23 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
           key: ROUTER_NAMES.ROLE,
           label: t('role.list'),
           onClick: () => navigate(ROUTER_NAMES.ROLE)
+        }
+      ]
+    },
+    {
+      key: 'advertisement',
+      label: 'Advertisement',
+      icon: < PictureOutlined/>,
+      children: [
+        // {
+        //   key: ROUTER_NAMES.USER,
+        //   label: 'Header',
+        //   onClick: () => navigate(ROUTER_NAMES.USER)
+        // },
+        {
+          key: ROUTER_NAMES.ADVERTISEMENT,
+          label: 'Picture',
+          onClick: () => navigate(ROUTER_NAMES.ADVERTISEMENT)
         }
       ]
     }

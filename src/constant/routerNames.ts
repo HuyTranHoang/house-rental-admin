@@ -2,6 +2,7 @@ const CITY_BASE = '/thanh-pho'
 const DISTRICT_BASE = '/quan-huyen'
 const ROOM_TYPE_BASE = '/loai-phong'
 const AMENITY_BASE = '/tien-ich'
+const ADVERTISEMENT_BASE = '/quang-cao'
 
 const ROUTER_NAMES = {
   DASHBOARD: '/',
@@ -26,20 +27,22 @@ const ROUTER_NAMES = {
   ADD_AMENITY: `${AMENITY_BASE}/them-moi`,
   DETAIL_AMENITY: `${AMENITY_BASE}/:id`,
   EDIT_AMENITY: `${AMENITY_BASE}/:id/cap-nhat`,
-
+  
   TRANSACTION : `/giao-dich`,
-
+  
   REPORT: '/bao-cao-vi-pham',
-
+  
   COMMENT_REPORT: '/bao-cao-binh-luan',
-
+  
   ROLE: '/vai-tro',
-
+  
   REVIEW: '/danh-gia',
-
+  
   USER: '/nguoi-dung',
-
+  
   PROPERTY: '/bai-dang',
+  
+  ADVERTISEMENT:`${ADVERTISEMENT_BASE}`,
 
   getCityEditPath: (id: string | number) => `${CITY_BASE}/${id}/cap-nhat`,
   getDistrictEditPath: (id: string | number) => `${DISTRICT_BASE}/${id}/cap-nhat`,
