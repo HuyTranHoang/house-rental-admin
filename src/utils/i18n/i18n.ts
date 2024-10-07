@@ -15,6 +15,7 @@ import en_user from '@/utils/i18n/locales/en/user.json'
 import en_commentReport from '@/utils/i18n/locales/en/commentReport.json'
 import en_property from '@/utils/i18n/locales/en/property.json'
 import en_dashboard from '@/utils/i18n/locales/en/dashboard.json'
+import en_membership from '@/utils/i18n/locales/en/membership.json'
 
 import vi_amanity from '@/utils/i18n/locales/vi/amenity.json'
 import vi_breadcrumbs from '@/utils/i18n/locales/vi/breadcrumbs.json'
@@ -30,6 +31,7 @@ import vi_user from '@/utils/i18n/locales/vi/user.json'
 import vi_commentReport from '@/utils/i18n/locales/vi/commentReport.json'
 import vi_property from '@/utils/i18n/locales/vi/property.json'
 import vi_dashboard from '@/utils/i18n/locales/vi/dashboard.json'
+import vi_membership from '@/utils/i18n/locales/vi/membership.json'
 
 export const defaultNS = 'common'
 export const resources = {
@@ -47,7 +49,8 @@ export const resources = {
     role: en_role,
     commentReport: en_commentReport,
     property : en_property,
-    dashboard : en_dashboard
+    dashboard : en_dashboard,
+    membership : en_membership
   },
   vi: {
     common: vi_common,
@@ -63,7 +66,8 @@ export const resources = {
     role: vi_role,
     commentReport: vi_commentReport,
     property : vi_property,
-    dashboard : vi_dashboard
+    dashboard : vi_dashboard,
+    membership : vi_membership
   }
 } as const
 
@@ -86,7 +90,8 @@ i18n.use(initReactI18next).init({
     'transaction',
     'commentReport',
     'property',
-    'dashboard'
+    'dashboard',
+    'membership'
   ],
   interpolation: {
     escapeValue: false

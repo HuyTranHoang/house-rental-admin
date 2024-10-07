@@ -265,7 +265,11 @@ function ReportTable({
     {
       key: 'category',
       label: t('report:table.type'),
-      children: report.category,
+      children: report.category && categoryMap[report.category] ? (
+        <Tag color={categoryMap[report.category][1]}>
+          {categoryMap[report.category][0]}
+        </Tag>
+      ) : null,
       span: 2
     },
     {
