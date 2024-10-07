@@ -46,11 +46,6 @@ const ROUTER_NAMES = {
   USER: '/nguoi-dung',
 
   PROPERTY: '/bai-dang',
-
-  getCityEditPath: (id: string | number) => `${CITY_BASE}/${id}/cap-nhat`,
-  getDistrictEditPath: (id: string | number) => `${DISTRICT_BASE}/${id}/cap-nhat`,
-  getRoomTypeEditPath: (id: string | number) => `${ROOM_TYPE_BASE}/${id}/cap-nhat`,
-  getAmenityEditPath: (id: string | number) => `${AMENITY_BASE}/${id}/cap-nhat`
 }
 
 export default ROUTER_NAMES

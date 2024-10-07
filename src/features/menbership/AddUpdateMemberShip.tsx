@@ -80,14 +80,14 @@ function AddUpdateMemberShip({ id, formOpen, setFormOpen }: AddUpdateMemberShipP
         </Form.Item>
 
         <Form.Item<MemberShipForm>
-          label={t('membership:form.price')}
+          label={t('membership:form.price') + ' (VND)'}
           name='price'
           rules={[
             { required: true, message: t('membership:form.priceRequired') },
             {
               type: 'number',
               min: 0,
-              max: 99999,
+              max: 9999999,
               message: t('membership:form.priceInvalid'),
             },
           ]}
@@ -157,7 +157,7 @@ function AddUpdateMemberShip({ id, formOpen, setFormOpen }: AddUpdateMemberShipP
           name='description'
           rules={[
             { required: true, message: t('membership:form.descriptionRequired') },
-            { min: 50, message: t('membership:form.descriptionDaysMin') },
+            { min: 10, message: t('membership:form.descriptionDaysMin') },
             { max: 999, message: t('membership:form.descriptionDaysMax') }
           ]}
         >

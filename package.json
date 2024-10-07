@@ -1,7 +1,7 @@
 {
   "name": "house.rental.admin",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "cross-env API_TARGET=https://house-rental-latest.onrender.com/api vite",
@@ -12,7 +12,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ant-design/colors": "^7.1.0",
     "@ant-design/icons": "^5.4.0",
     "@emotion/css": "^11.13.0",
     "@tanstack/react-query": "^5.51.11",
@@ -25,7 +24,6 @@
     "i18next": "^23.14.0",
     "lucide-react": "^0.447.0",
     "react": "^18.2.0",
-    "react-blurhash": "^0.3.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^15.0.1",
     "react-router-dom": "^6.25.1",

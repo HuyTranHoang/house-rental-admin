@@ -1,9 +1,9 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import TableActions from '@/components/TableActions.tsx'
-import { useDeleteAmenity } from '@/hooks/useAmenities.ts'
-import { AmenityDataSource } from '@/types/amenity.type.ts'
+import { useDeleteMemberShip } from '@/hooks/useMemberships.ts'
 import { MemberShipDataSource } from '@/types/membership.type'
+import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
@@ -31,16 +31,22 @@ function MemberShipTable({
   onEdit
 }: MemberShipTableProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [currentRecord, setCurrentRecord] = useState<AmenityDataSource | null>(null)
+  const [currentRecord, setCurrentRecord] = useState<MemberShipDataSource | null>(null)
 
-  const { deleteAmenityMutate, deleteAmenityPending } = useDeleteAmenity()
+  const { deleteMemberShipMutant, deleteMemberShipPending } = useDeleteMemberShip()
   const { t } = useTranslation(['common', 'membership'])
 
   const items: DescriptionsProps['items'] = [
     {
       key: 'name',
-      label: t('membership:table.name'),
+      label: t('membership:form.name'),
       children: <span>{currentRecord?.name}</span>,
+      span: 3
+    },
+    {
+      key: 'price',
+      label: t('membership:form.price'),
+      children: <span>{formatCurrency(Number(currentRecord?.price))}</span>,
       span: 3
     },
     {
@@ -71,6 +77,7 @@ function MemberShipTable({
       dataIndex: 'price',
       key: 'price',
       sorter: true,
+      render: (price) => formatCurrency(price),
       sortOrder: sortedInfo.field === 'price' ? sortedInfo.order : null
     },
     {
@@ -97,9 +104,7 @@ function MemberShipTable({
     {
       title: t('membership:form.description'),
       dataIndex: 'description',
-      key: 'description',
-      sorter: true,
-      sortOrder: sortedInfo.field === 'description' ? sortedInfo.order : null
+      key: 'description'
     },
     {
       title: t('common.table.createdAt'),
@@ -156,11 +161,11 @@ function MemberShipTable({
         okText={t('common.ok')}
         okType='danger'
         cancelText={t('common.cancel')}
-        okButtonProps={{ loading: deleteAmenityPending }}
-        cancelButtonProps={{ disabled: deleteAmenityPending }}
+        okButtonProps={{ loading: deleteMemberShipPending }}
+        cancelButtonProps={{ disabled: deleteMemberShipPending }}
         onCancel={() => setIsModalOpen(false)}
         onOk={() => {
-          deleteAmenityMutate(currentRecord!.id).then(() => {
+          deleteMemberShipMutant(currentRecord!.id).then(() => {
             setCurrentRecord(null)
             setIsModalOpen(false)
             toast.success(t('membership:notification.deleteSuccess'))

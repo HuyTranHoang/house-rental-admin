@@ -1,4 +1,6 @@
-  export interface MemberShip {
+import React from 'react'
+
+export interface MemberShip {
     id: number
     name: string
     price: number
