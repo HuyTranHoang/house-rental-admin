@@ -147,7 +147,11 @@ function CommentReportTable({
     {
       key: 'category',
       label: t('commentReport:table.category'),
-      children: commentReport.category,
+      children: commentReport.category && categoryMap[commentReport.category] ? (
+        <Tag color={categoryMap[commentReport.category][1]}>
+          {categoryMap[commentReport.category][0]}
+        </Tag>
+      ) : null,
       span: 1
     },
     {
