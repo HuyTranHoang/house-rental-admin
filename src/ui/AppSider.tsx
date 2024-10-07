@@ -112,6 +112,11 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
           key: ROUTER_NAMES.COMMENT_REPORT,
           label: t('commentReport.list'),
           onClick: () => navigate(ROUTER_NAMES.COMMENT_REPORT)
+        },
+        {
+          key: ROUTER_NAMES.MEMBER_SHIP,
+          label: t('memberShip.list'),
+          onClick: () => navigate(ROUTER_NAMES.MEMBER_SHIP)
         }
       ]
     },
