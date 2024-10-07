@@ -1,0 +1,54 @@
+{
+    "title": "Membership Management",
+    "searchPlaceholder": "Search Memberships",
+    "table": {
+      "name": "Membership name"
+    },
+    "button": {
+      "add": "New Membership"
+    },
+    "form": {
+      "addForm": "Add Membership",
+      "editForm": "Edit Membership",
+      "name": "Membership name",
+      "price": "Price",
+      "durationDays": "Duration Days",
+      "refresh": "Refresh",
+      "priority": "Priority",
+      "description": "Description",
+      "namePlaceholder": "Enter Membership name",
+      "nameRequired": "Please enter membership name",
+      "nameMin": "Membership name must be at least 3 characters",
+      "nameMax": "Membership name must be at most 50 characters",
+      "priceRequired" : "Please enter price",
+      "pricePlaceHolder" : "Enter Price",
+      "durationDaysRequired" : "Please enter durations days",
+      "durationsDaysPlaceHolder" : "Enter Duration Days",
+      "refreshRequired" : "Please enter refresh",
+      "refreshPlaceHolder" : "Enter refresh",
+      "priorityRequired" : "Please enter priority",
+      "priorityPlaceHolder" : "Enter priority",
+      "descriptionRequired" : "Please enter description",
+      "descriptionPlaceHolder" : "Enter description",
+      "priceInvalid" : "Price invalid , please input number & greater than 0 & less than 9999" ,
+      "durationDaysInvalid" : "Price invalid , please input number & greater than 0 & less than 100",
+      "refreshInvalid" : "Refresh invalid , please input number & greater than 0 & less than 100",
+      "priorityInvalid" : "Price invalid , please input number & greater than 0 & less than 100",
+      "descriptionDaysMin" : "Description must be more than 50 characters",
+      "descriptionDaysMax" : "Cannot enter more than 900 words"
+    },
+    "pagination": {
+      "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} memberships"
+    },
+    "notification": {
+      "addSuccess": "Add membership successfully",
+      "editSuccess": "Edit membership successfully",
+      "deleteSuccess": "Delete membership successfully",
+      "deleteSuccessMultiple": "Delete selected membership successfully"
+    },
+    "deleteModal": {
+      "title": "Confirm membership deletion",
+      "titleMultiple": "Confirm multiple membership deletion"
+    }
+  }
+  

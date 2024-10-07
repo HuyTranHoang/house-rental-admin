@@ -43,6 +43,9 @@
   "role": {
     "list": "Quản lý vai trò"
   },
+  "memberShip": {
+    "list": "Quản lý gói thành viên"
+  },
   "transaction": "Giao dịch",
   "currentLoginAccount": "Tài khoản đăng nhập hiện tại",
   "home": "Trang chủ",
