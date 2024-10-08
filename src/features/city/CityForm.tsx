@@ -1,7 +1,7 @@
 import { Button, Drawer, Form, FormProps, Input } from 'antd'
 
 import { useCity, useCreateCity, useUpdateCity } from '@/hooks/useCities.ts'
-import { CityForm } from '@/types/city.type.ts'
+import { CityFormType } from '@/types/city.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,9 +13,9 @@ interface AddUpdateCityProps {
   setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
+function CityForm({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
   const isAddMode = id === 0
-  const [form] = Form.useForm<CityForm>()
+  const [form] = Form.useForm<CityFormType>()
   const { t } = useTranslation(['common', 'city'])
 
   const { addCityMutate, addCityPending } = useCreateCity()
@@ -24,7 +24,7 @@ function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
 
   const title = isAddMode ? t('city:form.addForm') : t('city:form.editForm')
 
-  const onFinish: FormProps<CityForm>['onFinish'] = (values) => {
+  const onFinish: FormProps<CityFormType>['onFinish'] = (values) => {
     const mutate = isAddMode ? addCityMutate : updateCityMutate
 
     mutate(values).then(() => {
@@ -59,11 +59,11 @@ function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
       }
     >
       <Form form={form} layout='vertical' name='cityForm' onFinish={onFinish} autoComplete='off'>
-        <Form.Item<CityForm> label='Id' name='id' hidden>
+        <Form.Item<CityFormType> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item<CityForm>
+        <Form.Item<CityFormType>
           label={t('city:form.name')}
           name='name'
           rules={[
@@ -89,4 +89,4 @@ function AddUpdateCity({ id, formOpen, setFormOpen }: AddUpdateCityProps) {
   )
 }
 
-export default AddUpdateCity
+export default CityForm

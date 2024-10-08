@@ -16,7 +16,7 @@ type OnChange = NonNullable<TableProps<CommentDataSource>['onChange']>
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListComment() {
+function CommentManager() {
   const { t } = useTranslation(['common', 'comment'])
 
   const { search, pageNumber, pageSize, sortBy, setFilters } = useReviewFilters()
@@ -151,4 +151,4 @@ function ListComment() {
   )
 }
 
-export default ListComment
+export default CommentManager

@@ -9,8 +9,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { MemberShip, MemberShipDataSource } from '@/types/membership.type.ts'
 import { useDeleteMutiMemberShip, useMembershipFilters, useMemberShips } from '@/hooks/useMemberships.ts'
-import MemberShipTable from './MemberShipTable'
-import AddUpdateMemberShip from './AddUpdateMemberShip'
+import MembershipTable from './MembershipTable.tsx'
+import MembershipForm from './MembershipForm.tsx'
 
 const { Search } = Input
 
@@ -18,7 +18,7 @@ type OnChange = NonNullable<TableProps<MemberShipDataSource>['onChange']>
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListMemberShip() {
+function MembershipManager() {
   const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -127,7 +127,7 @@ function ListMemberShip() {
         </Space>
       </Flex>
 
-      <MemberShipTable
+      <MembershipTable
         dataSource={dataSource}
         loading={isLoading}
         paginationProps={{
@@ -150,7 +150,7 @@ function ListMemberShip() {
         onEdit={(id: number) => handleOpenForm(id)}
       />
 
-      <AddUpdateMemberShip id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
+      <MembershipForm id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
@@ -173,4 +173,4 @@ function ListMemberShip() {
   )
 }
 
-export default ListMemberShip
+export default MembershipManager

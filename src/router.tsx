@@ -1,22 +1,22 @@
 import ProtectedRoute from '@/components/ProtectedRoute.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import AdvertisementManager from '@/features/advertisement/AdvertisementManager.tsx'
-import ListAmenity from '@/features/amenity/ListAmenity.tsx'
+import AmenityManager from '@/features/amenity/AmenityManager.tsx'
 import Login from '@/features/auth/Login.tsx'
-import ListCity from '@/features/city/ListCity.tsx'
-import ListComment from '@/features/comment/ListComment.tsx'
+import CityManager from '@/features/city/CityManager.tsx'
+import CommentManager from '@/features/comment/CommentManager.tsx'
 import Dashboard from '@/features/dashboard/Dashboard.tsx'
-import ListDistrict from '@/features/district/ListDistrict.tsx'
-import ListProperty from '@/features/property/ListProperty.tsx'
-import ListReport from '@/features/report/ListReport.tsx'
+import DistrictManager from '@/features/district/DistrictManager.tsx'
+import PropertyManager from '@/features/property/PropertyManager.tsx'
+import ReportManager from '@/features/report/ReportManager.tsx'
 import RoleManager from '@/features/role/RoleManager.tsx'
-import ListRoomType from '@/features/roomType/ListRoomType.tsx'
-import ListUser from '@/features/user/ListUser.tsx'
+import RoomTypeManager from '@/features/roomType/RoomTypeManager.tsx'
+import UserManager from '@/features/user/UserManager.tsx'
 import AppLayout from '@/ui/AppLayout.tsx'
 import { createBrowserRouter } from 'react-router-dom'
-import ListCommentReport from './features/commentReport/ListCommentReport'
-import ListTransaction from './features/transaction/ListTransaction'
-import ListMemberShip from './features/menbership/ListMemberShip'
+import CommentReportManager from './features/commentReport/CommentReportManager.tsx'
+import TransactionManager from './features/transaction/TransactionManager.tsx'
+import MembershipManager from './features/menbership/MembershipManager.tsx'
 
 export const routerList = [
   {
@@ -42,27 +42,27 @@ export const routerList = [
         children: [
           {
             path: ROUTER_NAMES.CITY,
-            element: <ListCity />,
+            element: <CityManager />,
             breadcrumb: 'city.list'
           },
           {
             path: ROUTER_NAMES.DISTRICT,
-            element: <ListDistrict />,
+            element: <DistrictManager />,
             breadcrumb: 'district.list'
           },
           {
             path: ROUTER_NAMES.ROOM_TYPE,
-            element: <ListRoomType />,
+            element: <RoomTypeManager />,
             breadcrumb: 'roomType.list'
           },
           {
             path: ROUTER_NAMES.AMENITY,
-            element: <ListAmenity />,
+            element: <AmenityManager />,
             breadcrumb: 'amenity.list'
           },
           {
             path: ROUTER_NAMES.REPORT,
-            element: <ListReport />,
+            element: <ReportManager />,
             breadcrumb: 'report.list'
           },
           {
@@ -72,27 +72,27 @@ export const routerList = [
           },
           {
             path: ROUTER_NAMES.REVIEW,
-            element: <ListComment />,
+            element: <CommentManager />,
             breadcrumb: 'comment.list'
           },
           {
             path: ROUTER_NAMES.USER,
-            element: <ListUser />,
+            element: <UserManager />,
             breadcrumb: 'user.list'
           },
           {
             path: ROUTER_NAMES.PROPERTY,
-            element: <ListProperty />,
+            element: <PropertyManager />,
             breadcrumb: 'property.list'
           },
           {
             path: ROUTER_NAMES.TRANSACTION,
-            element: <ListTransaction />,
+            element: <TransactionManager />,
             breadcrumb: 'transaction'
           },
           {
             path: ROUTER_NAMES.COMMENT_REPORT,
-            element: <ListCommentReport />,
+            element: <CommentReportManager />,
             breadcrumb: 'commentReport.list'
           },
           {
@@ -102,7 +102,7 @@ export const routerList = [
           },
           {
             path: ROUTER_NAMES.MEMBER_SHIP,
-            element: <ListMemberShip />,
+            element: <MembershipManager />,
             breadcrumb: 'memberShip.list'
           }
         ] // End of ProtectedRoute children

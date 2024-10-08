@@ -13,7 +13,7 @@ type OnChange = NonNullable<TableProps<TransactionDataSource>['onChange']>
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListTransaction() {
+function TransactionManager() {
   const formatDate = useCustomDateFormatter()
   const { t } = useTranslation(['common', 'transaction'])
   const { search, userId, amount, transactionType, status, pageNumber, pageSize, sortBy, setFilters } =
@@ -147,4 +147,4 @@ function ListTransaction() {
   )
 }
 
-export default ListTransaction
+export default TransactionManager

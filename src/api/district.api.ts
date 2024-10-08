@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { District, DistrictForm } from '@/types/district.type'
+import { District, DistrictFormType } from '@/types/district.type'
 import { PageInfo } from '@/types/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 
@@ -61,7 +61,7 @@ export const getDistrictById = async (id: number) => {
   }
 }
 
-export const addDistrict = async (values: DistrictForm) => {
+export const addDistrict = async (values: DistrictFormType) => {
   await axiosInstance.post('/api/district', values)
 }
 
@@ -74,7 +74,7 @@ export const deleteDistrict = async (id: number) => {
   }
 }
 
-export const updateDistrict = async (values: DistrictForm) => {
+export const updateDistrict = async (values: DistrictFormType) => {
   await axiosInstance.put(`/api/district/${values.id}`, values)
 }
 

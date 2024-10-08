@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { PageInfo } from '@/types/pageInfo.type.ts'
-import { RoomType, RoomTypeForm } from '@/types/roomType.type.ts'
+import { RoomType, RoomTypeFormType } from '@/types/roomType.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 
 interface RoomTypesWithPagination {
@@ -63,11 +63,11 @@ export const deleteRoomTypes = async (ids: number[]) => {
   }
 }
 
-export const addRoomType = async (values: RoomTypeForm) => {
+export const addRoomType = async (values: RoomTypeFormType) => {
   await axiosInstance.post('/api/room-type', values)
 }
 
-export const updateRoomType = async (values: RoomTypeForm) => {
+export const updateRoomType = async (values: RoomTypeFormType) => {
   await axiosInstance.put(`/api/room-type/${values.id}`, values)
 }
 

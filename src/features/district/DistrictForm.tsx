@@ -1,6 +1,6 @@
 import { useCitiesAll } from '@/hooks/useCities.ts'
 import { useCreateDistrict, useDistrict, useUpdateDistrict } from '@/hooks/useDistricts.ts'
-import { DistrictForm } from '@/types/district.type.ts'
+import { DistrictFormType } from '@/types/district.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { Button, Drawer, Form, FormProps, Input, Select, SelectProps, Typography } from 'antd'
 import { useEffect, useState } from 'react'
@@ -13,9 +13,9 @@ interface AddUpdateDistrictProps {
   setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateDistrict({ id, formOpen, setFormOpen }: AddUpdateDistrictProps) {
+function DistrictForm({ id, formOpen, setFormOpen }: AddUpdateDistrictProps) {
   const isAddMode = id === 0
-  const [form] = Form.useForm<DistrictForm>()
+  const [form] = Form.useForm<DistrictFormType>()
   const { t } = useTranslation(['common', 'district'])
   const title = isAddMode ? t('district:form.addForm') : t('district:form.editForm')
 
@@ -34,7 +34,7 @@ function AddUpdateDistrict({ id, formOpen, setFormOpen }: AddUpdateDistrictProps
       }))
     : []
 
-  const onFinish: FormProps<DistrictForm>['onFinish'] = (values) => {
+  const onFinish: FormProps<DistrictFormType>['onFinish'] = (values) => {
     const mutate = isAddMode ? addDistrictMutate : updateDistrictMutate
 
     mutate(values).then(() => {
@@ -79,11 +79,11 @@ function AddUpdateDistrict({ id, formOpen, setFormOpen }: AddUpdateDistrictProps
         }
       >
         <Form form={form} layout='vertical' name='districtForm' onFinish={onFinish} autoComplete='off'>
-          <Form.Item<DistrictForm> label='Id' name='id' hidden>
+          <Form.Item<DistrictFormType> label='Id' name='id' hidden>
             <Input />
           </Form.Item>
 
-          <Form.Item<DistrictForm>
+          <Form.Item<DistrictFormType>
             label={t('district:form.name')}
             name='name'
             rules={[
@@ -95,7 +95,7 @@ function AddUpdateDistrict({ id, formOpen, setFormOpen }: AddUpdateDistrictProps
             <Input placeholder={t('district:form.namePlaceholder')} />
           </Form.Item>
 
-          <Form.Item<DistrictForm>
+          <Form.Item<DistrictFormType>
             label={t('district:form.city')}
             name='cityId'
             rules={[{ required: true, message: t('district:form.cityRequired') }]}
@@ -134,4 +134,4 @@ function AddUpdateDistrict({ id, formOpen, setFormOpen }: AddUpdateDistrictProps
   )
 }
 
-export default AddUpdateDistrict
+export default DistrictForm

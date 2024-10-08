@@ -18,7 +18,7 @@ export type CityFilters = {
   pageSize?: number
 }
 
-export interface CityForm {
+export interface CityFormType {
   id?: number
   name: string
 }

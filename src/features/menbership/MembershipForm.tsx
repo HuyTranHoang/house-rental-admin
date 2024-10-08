@@ -12,7 +12,7 @@ interface AddUpdateMemberShipProps {
   setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateMemberShip({ id, formOpen, setFormOpen }: AddUpdateMemberShipProps) {
+function MembershipForm({ id, formOpen, setFormOpen }: AddUpdateMemberShipProps) {
   const isAddMode = id === 0
   const { t } = useTranslation(['common', 'membership'])
   const [form] = Form.useForm<MemberShipForm>()
@@ -178,4 +178,4 @@ function AddUpdateMemberShip({ id, formOpen, setFormOpen }: AddUpdateMemberShipP
   )
 }
 
-export default AddUpdateMemberShip
+export default MembershipForm

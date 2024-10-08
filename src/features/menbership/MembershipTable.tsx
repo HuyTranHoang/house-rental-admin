@@ -21,7 +21,7 @@ interface MemberShipTableProps {
   onEdit: (id: number) => void
 }
 
-function MemberShipTable({
+function MembershipTable({
   dataSource,
   loading,
   paginationProps,
@@ -178,4 +178,4 @@ function MemberShipTable({
   )
 }
 
-export default MemberShipTable
+export default MembershipTable

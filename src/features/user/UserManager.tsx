@@ -18,7 +18,7 @@ type Filters = Parameters<OnChange>[1]
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListUser() {
+function UserManager() {
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'user'])
 
@@ -186,4 +186,4 @@ function ListUser() {
   )
 }
 
-export default ListUser
+export default UserManager

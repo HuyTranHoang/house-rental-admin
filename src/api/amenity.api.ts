@@ -1,4 +1,4 @@
-import { Amenity, AmenityForm } from '@/types/amenity.type.ts'
+import { Amenity, AmenityFormType } from '@/types/amenity.type.ts'
 import { PageInfo } from '@/types/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 
@@ -58,7 +58,7 @@ export const getAmenityById = async (id: number) => {
   }
 }
 
-export const addAmenity = async (values: AmenityForm) => {
+export const addAmenity = async (values: AmenityFormType) => {
   await axiosInstance.post('/api/amenity', values)
 }
 
@@ -71,7 +71,7 @@ export const deleteAmenity = async (id: number) => {
   }
 }
 
-export const updateAmenity = async (values: AmenityForm) => {
+export const updateAmenity = async (values: AmenityFormType) => {
   await axiosInstance.put(`/api/amenity/${values.id}`, values)
 }
 

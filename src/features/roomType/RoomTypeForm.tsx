@@ -1,5 +1,5 @@
 import { useCreateRoomType, useRoomType, useUpdateRoomType } from '@/hooks/useRoomTypes.ts'
-import { RoomTypeForm } from '@/types/roomType.type.ts'
+import { RoomTypeFormType } from '@/types/roomType.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { Button, Drawer, Form, type FormProps, Input } from 'antd'
 import { useEffect } from 'react'
@@ -12,9 +12,9 @@ interface AddUpdateRoomTypeProps {
   setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateRoomType({ id, formOpen, setFormOpen }: AddUpdateRoomTypeProps) {
+function RoomTypeForm({ id, formOpen, setFormOpen }: AddUpdateRoomTypeProps) {
   const isAddMode = id === 0
-  const [form] = Form.useForm<RoomTypeForm>()
+  const [form] = Form.useForm<RoomTypeFormType>()
   const { t } = useTranslation(['common', 'roomType'])
   const title = isAddMode ? t('roomType:form.addForm') : t('roomType:form.editForm')
 
@@ -22,7 +22,7 @@ function AddUpdateRoomType({ id, formOpen, setFormOpen }: AddUpdateRoomTypeProps
   const { updateRoomTypeMutate, updateRoomTypePending } = useUpdateRoomType()
   const { roomTypeData, roomTypeIsLoading } = useRoomType(id)
 
-  const onFinish: FormProps<RoomTypeForm>['onFinish'] = (values) => {
+  const onFinish: FormProps<RoomTypeFormType>['onFinish'] = (values) => {
     const mutate = isAddMode ? addRoomTypeMutate : updateRoomTypeMutate
 
     mutate(values).then(() => {
@@ -57,11 +57,11 @@ function AddUpdateRoomType({ id, formOpen, setFormOpen }: AddUpdateRoomTypeProps
       }
     >
       <Form form={form} name='roomTypeForm' onFinish={onFinish} layout='vertical' autoComplete='off'>
-        <Form.Item<RoomTypeForm> label='Id' name='id' hidden>
+        <Form.Item<RoomTypeFormType> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item<RoomTypeForm>
+        <Form.Item<RoomTypeFormType>
           label={t('roomType:form.name')}
           name='name'
           rules={[
@@ -87,4 +87,4 @@ function AddUpdateRoomType({ id, formOpen, setFormOpen }: AddUpdateRoomTypeProps
   )
 }
 
-export default AddUpdateRoomType
+export default RoomTypeForm

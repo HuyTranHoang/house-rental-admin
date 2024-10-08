@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { City, CityForm } from '@/types/city.type.ts'
+import { City, CityFormType } from '@/types/city.type.ts'
 import { PageInfo } from '@/types/pageInfo.type.ts'
 import axiosInstance from '@/axiosInstance.ts'
 
@@ -59,7 +59,7 @@ export const getCityById = async (id: number) => {
   }
 }
 
-export const addCity = async (values: CityForm) => {
+export const addCity = async (values: CityFormType) => {
   await axiosInstance.post('/api/city', values)
 }
 
@@ -72,7 +72,7 @@ export const deleteCity = async (id: number) => {
   }
 }
 
-export const updateCity = async (values: CityForm) => {
+export const updateCity = async (values: CityFormType) => {
   await axiosInstance.put(`/api/city/${values.id}`, values)
 }
 

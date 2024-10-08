@@ -28,7 +28,7 @@ type OnChange = NonNullable<TableProps<PropertyDataSource>['onChange']>
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListProperty() {
+function PropertyManager() {
   const [form] = Form.useForm()
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'property'])
@@ -297,4 +297,4 @@ function ListProperty() {
   )
 }
 
-export default ListProperty
+export default PropertyManager

@@ -16,7 +16,7 @@ type Filters = Parameters<OnChange>[1]
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListReport() {
+function ReportManager() {
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'report'])
 
@@ -168,4 +168,4 @@ function ListReport() {
   )
 }
 
-export default ListReport
+export default ReportManager

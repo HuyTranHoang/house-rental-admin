@@ -1,71 +1,89 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
-import AddUpdateAmenity from '@/features/amenity/AddUpdateAmenity.tsx'
-import { useAmenities, useAmenityFilters, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
-import { Amenity, AmenityDataSource } from '@/types/amenity.type.ts'
+import { useDeleteMultiDistrict, useDistrictFilters, useDistricts } from '@/hooks/useDistricts.ts'
+import { District, DistrictDataSource } from '@/types/district.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import AmenityTable from './AmenityTable.tsx'
+import DistrictForm from './DistrictForm.tsx'
+import DistrictTable from './DistrictTable.tsx'
 
 const { Search } = Input
 
-type OnChange = NonNullable<TableProps<AmenityDataSource>['onChange']>
+type OnChange = NonNullable<TableProps<DistrictDataSource>['onChange']>
+type Filters = Parameters<OnChange>[1]
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListAmenity() {
+function DistrictManager() {
   const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
 
-  const { search, sortBy, pageSize, pageNumber, setFilters } = useAmenityFilters()
-  const formatDate = useCustomDateFormatter()
+  const { search, cityId, sortBy, pageNumber, pageSize, setFilters } = useDistrictFilters()
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [filteredInfo, setFilteredInfo] = useState<Filters>({})
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
+  const [isOpen, setIsOpen] = useState(false)
+  const { t } = useTranslation(['common', 'district'])
 
-  const { data, isLoading, isError } = useAmenities(search, pageNumber, pageSize, sortBy)
-  const { deleteAmenitiesMutate, deleteAmenitiesIsPending } = useDeleteMultiAmenity()
-  const { t } = useTranslation(['common', 'amenity'])
+  const { data, isLoading, isError } = useDistricts(search, cityId, pageNumber, pageSize, sortBy)
+  const formatDate = useCustomDateFormatter()
+  const { deleteDistrictsMutate, deleteDistrictsPending } = useDeleteMultiDistrict()
 
-  const handleTableChange: TableProps<AmenityDataSource>['onChange'] = (_, __, sorter) => {
+  const handleTableChange: TableProps<DistrictDataSource>['onChange'] = (_, filters, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
+
       if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
     } else {
       setFilters({ sortBy: '' })
       setSortedInfo({})
     }
+
+    if (filters.cityName) {
+      const filterCityId = filters.cityName[0]
+      if (filterCityId != cityId) setFilters({ cityId: filterCityId as number })
+    } else {
+      setFilters({ cityId: 0 })
+      setFilteredInfo({})
+    }
   }
 
-  const dataSource: AmenityDataSource[] = data
-    ? data.data.map((amenity: Amenity, idx) => ({
-        key: amenity.id,
+  const dataSource: DistrictDataSource[] = data
+    ? data.data.map((district: District, idx) => ({
+        ...district,
+        key: district.id,
         index: (pageNumber - 1) * pageSize + idx + 1,
-        id: amenity.id,
-        name: amenity.name,
-        createdAt: formatDate(amenity.createdAt)
+        createdAt: formatDate(district.createdAt)
       }))
     : []
 
-  const rowSelection: TableRowSelection<AmenityDataSource> | undefined = {
+  const rowSelection: TableRowSelection<DistrictDataSource> | undefined = {
     type: 'checkbox',
-    onChange: (_selectedRowKeys: React.Key[], selectedRows: AmenityDataSource[]) => {
+    onChange: (_: React.Key[], selectedRows: DistrictDataSource[]) => {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
   }
-
   const handleOpenForm = (id: number) => {
     setEditId(id)
     setFormOpen(true)
   }
+
+  useEffect(() => {
+    if (cityId) {
+      setFilteredInfo((prev) => ({
+        ...prev,
+        cityName: [cityId]
+      }))
+    }
+  }, [cityId])
 
   useEffect(() => {
     if (sortBy) {
@@ -89,7 +107,7 @@ function ListAmenity() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            {t('amenity:title')}
+            {t('district:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
@@ -103,7 +121,7 @@ function ListAmenity() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder={t('amenity:searchPlaceholder')}
+                placeholder={t('district:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -117,12 +135,12 @@ function ListAmenity() {
             </Button>
           )}
           <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handleOpenForm(0)}>
-            {t('amenity:button.add')}
+            {t('district:button.add')}
           </Button>
         </Space>
       </Flex>
 
-      <AmenityTable
+      <DistrictTable
         dataSource={dataSource}
         loading={isLoading}
         paginationProps={{
@@ -131,7 +149,7 @@ function ListAmenity() {
           current: pageNumber,
           showTotal: (total, range) => (
             <Trans
-              ns={'amenity'}
+              ns={'district'}
               i18nKey='pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
             />
@@ -141,31 +159,29 @@ function ListAmenity() {
         }}
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
+        filteredInfo={filteredInfo}
         sortedInfo={sortedInfo}
-        onEdit={(id: number) => handleOpenForm(id)}
+        onEdit={(id) => handleOpenForm(id)}
       />
-
-      <AddUpdateAmenity id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
-        pending={deleteAmenitiesIsPending}
+        pending={deleteDistrictsPending}
         setIsModalOpen={setIsOpen}
-        title={t('amenity:deleteModal.titleMultiple')}
+        title={t('district:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteAmenitiesMutate(deleteIdList).then(() => {
-            deleteIdList.length > 1
-              ? toast.success(t('amenity:notification.deleteSuccessMultiple'))
-              : toast.success(t('amenity:notification.deleteSuccess'))
-
-            setDeleteIdList([])
+          deleteDistrictsMutate(deleteIdList).then(() => {
+            toast.success(t('district:notification.deleteSuccessMultiple'))
             setIsOpen(false)
+            setDeleteIdList([])
           })
         }}
       />
+
+      <DistrictForm id={editId} formOpen={formOpen} setFormOpen={setFormOpen}></DistrictForm>
     </>
   )
 }
 
-export default ListAmenity
+export default DistrictManager

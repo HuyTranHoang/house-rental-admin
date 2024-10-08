@@ -18,7 +18,7 @@ export type RoomTypeFilters = {
   pageSize?: number
 }
 
-export interface RoomTypeForm {
+export interface RoomTypeFormType {
   id?: number
   name: string
 }

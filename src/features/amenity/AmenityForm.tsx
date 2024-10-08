@@ -1,5 +1,5 @@
 import { useAmenity, useCreateAmenity, useUpdateAmenity } from '@/hooks/useAmenities.ts'
-import { AmenityForm } from '@/types/amenity.type.ts'
+import { AmenityFormType } from '@/types/amenity.type.ts'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { Button, Drawer, Form, FormProps, Input } from 'antd'
 import { useEffect } from 'react'
@@ -12,10 +12,10 @@ interface AddUpdateAmenityProps {
   setFormOpen: (open: boolean) => void
 }
 
-function AddUpdateAmenity({ id, formOpen, setFormOpen }: AddUpdateAmenityProps) {
+function AmenityForm({ id, formOpen, setFormOpen }: AddUpdateAmenityProps) {
   const isAddMode = id === 0
   const { t } = useTranslation(['common', 'amenity'])
-  const [form] = Form.useForm<AmenityForm>()
+  const [form] = Form.useForm<AmenityFormType>()
 
   const { addAmenityMutate, addAmenityPending } = useCreateAmenity()
   const { updateAmenityMutate, updateAmenityPending } = useUpdateAmenity()
@@ -23,7 +23,7 @@ function AddUpdateAmenity({ id, formOpen, setFormOpen }: AddUpdateAmenityProps) 
 
   const title = isAddMode ? t('amenity:form.addForm') : t('amenity:form.editForm')
 
-  const onFinish: FormProps<AmenityForm>['onFinish'] = (values) => {
+  const onFinish: FormProps<AmenityFormType>['onFinish'] = (values) => {
     const mutate = isAddMode ? addAmenityMutate : updateAmenityMutate
 
     mutate(values).then(() => {
@@ -58,11 +58,11 @@ function AddUpdateAmenity({ id, formOpen, setFormOpen }: AddUpdateAmenityProps) 
       }
     >
       <Form form={form} name='amenityForm' onFinish={onFinish} layout='vertical' autoComplete='off'>
-        <Form.Item<AmenityForm> label='Id' name='id' hidden>
+        <Form.Item<AmenityFormType> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item<AmenityForm>
+        <Form.Item<AmenityFormType>
           label={t('amenity:form.name')}
           name='name'
           rules={[
@@ -88,4 +88,4 @@ function AddUpdateAmenity({ id, formOpen, setFormOpen }: AddUpdateAmenityProps) 
   )
 }
 
-export default AddUpdateAmenity
+export default AmenityForm

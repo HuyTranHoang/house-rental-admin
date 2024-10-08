@@ -1,69 +1,70 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
-import AddUpdateRoomType from '@/features/roomType/AddUpdateRoomType.tsx'
+import CityForm from '@/features/city/CityForm.tsx'
+import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
-import { useDeleteRoomTypes, useRoomTypeFilters, useRoomTypes } from '@/hooks/useRoomTypes.ts'
-import { RoomTypeDataSource } from '@/types/roomType.type.ts'
+import { City, CityDataSource } from '@/types/city.type.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import RoomTypeTable from './RoomTypeTable.tsx'
+import CityTable from './CityTable.tsx'
 
 const { Search } = Input
 
-type OnChange = NonNullable<TableProps<RoomTypeDataSource>['onChange']>
+type OnChange = NonNullable<TableProps<CityDataSource>['onChange']>
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListRoomType() {
-  const [editId, setEditId] = useState(0)
+function CityManager() {
+  const [editId, setEditId] = useState<number>(0)
   const [formOpen, setFormOpen] = useState(false)
 
-  const { t } = useTranslation(['common', 'roomType'])
+  const { t } = useTranslation(['common', 'city'])
 
-  const { search, sortBy, pageSize, pageNumber, setFilters } = useRoomTypeFilters()
+  const { search, sortBy, pageSize, pageNumber, setFilters } = useCityFilters()
+
+  const [isOpen, setIsOpen] = useState(false)
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const [deleteIdList, setDeleteIdList] = useState<number[]>([])
-  const [isOpen, setIsOpen] = useState(false)
 
-  const { data, isLoading, isError } = useRoomTypes(search, pageNumber, pageSize, sortBy)
+  const { data, isLoading, isError } = useCities(search, pageNumber, pageSize, sortBy)
   const formatDate = useCustomDateFormatter()
-  const { deleteRoomTypesMutate, deleteRoomTypesIsPending } = useDeleteRoomTypes()
 
-  const handleTableChange: TableProps<RoomTypeDataSource>['onChange'] = (_, __, sorter) => {
+  const { deleteCitiesMutate, deleteCitiesIsPending } = useDeleteMultiCity()
+
+  const handleTableChange: TableProps<CityDataSource>['onChange'] = (_, __, sorter) => {
     if (!Array.isArray(sorter) && sorter.order) {
       const order = sorter.order === 'ascend' ? 'Asc' : 'Desc'
-      if (`${sorter.field}${order}` !== sortBy) setFilters({ sortBy: `${sorter.field}${order}` })
+      setFilters({ sortBy: `${sorter.field}${order}` })
     } else {
       setFilters({ sortBy: '' })
       setSortedInfo({})
     }
   }
 
-  const dataSource: RoomTypeDataSource[] = data
-    ? data.data.map((roomType, idx) => ({
-        key: roomType.id,
+  const dataSource: CityDataSource[] = data
+    ? data.data.map((city: City, idx) => ({
+        ...city,
+        key: city.id,
         index: (pageNumber - 1) * pageSize + idx + 1,
-        id: roomType.id,
-        name: roomType.name,
-        createdAt: formatDate(roomType.createdAt)
+        createdAt: formatDate(city.createdAt)
       }))
     : []
 
-  const rowSelection: TableRowSelection<RoomTypeDataSource> | undefined = {
+  const rowSelection: TableRowSelection<CityDataSource> | undefined = {
     type: 'checkbox',
-    onChange: (_selectedRowKeys: React.Key[], selectedRows: RoomTypeDataSource[]) => {
+    onChange: (_: React.Key[], selectedRows: CityDataSource[]) => {
       const selectedIdList = selectedRows.map((row) => row.id)
       setDeleteIdList(selectedIdList)
     }
   }
 
-  const handleOpenForm = (id: number) => {
+  const handeOpenForm = (id: number) => {
     setEditId(id)
     setFormOpen(true)
   }
@@ -90,11 +91,11 @@ function ListRoomType() {
       <Flex align='center' justify='space-between' className='mb-3'>
         <Flex align='center'>
           <Typography.Title level={2} className='m-0'>
-            {t('roomType:title')}
+            {t('city:title')}
           </Typography.Title>
           <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
           <Form
-            name='searchRoomType'
+            name='searchCityForm'
             initialValues={{
               search: search
             }}
@@ -104,7 +105,7 @@ function ListRoomType() {
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
-                placeholder={t('roomType:searchPlaceholder')}
+                placeholder={t('city:searchPlaceholder')}
                 className='w-64'
               />
             </Form.Item>
@@ -117,13 +118,13 @@ function ListRoomType() {
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handleOpenForm(0)}>
-            {t('common.add')}
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handeOpenForm(0)}>
+            {t('city:button.add')}
           </Button>
         </Space>
       </Flex>
 
-      <RoomTypeTable
+      <CityTable
         dataSource={dataSource}
         loading={isLoading}
         paginationProps={{
@@ -132,7 +133,7 @@ function ListRoomType() {
           current: pageNumber,
           showTotal: (total, range) => (
             <Trans
-              ns={'roomType'}
+              ns={'city'}
               i18nKey='pagination.showTotal'
               values={{ total, rangeStart: range[0], rangeEnd: range[1] }}
             />
@@ -143,22 +144,20 @@ function ListRoomType() {
         handleTableChange={handleTableChange}
         rowSelection={rowSelection}
         sortedInfo={sortedInfo}
-        onEdit={(id: number) => handleOpenForm(id)}
+        onEdit={(id: number) => handeOpenForm(id)}
       />
 
-      <AddUpdateRoomType id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
+      <CityForm id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
 
       <MultipleDeleteConfirmModal
         deleteIdList={deleteIdList}
         isModalOpen={isOpen}
-        pending={deleteRoomTypesIsPending}
         setIsModalOpen={setIsOpen}
-        title={t('roomType:deleteModal.titleMultiple')}
+        pending={deleteCitiesIsPending}
+        title={t('city:deleteModal.titleMultiple')}
         onOk={() => {
-          deleteRoomTypesMutate(deleteIdList).then(() => {
-            deleteIdList.length > 1
-              ? toast.success(t('roomType:notification.deleteSuccess'))
-              : toast.success(t('roomType:notification.deleteSuccessMultiple'))
+          deleteCitiesMutate(deleteIdList).then(() => {
+            toast.success(t('city:notification.deleteSuccessMultiple'))
             setIsOpen(false)
             setDeleteIdList([])
           })
@@ -168,4 +167,4 @@ function ListRoomType() {
   )
 }
 
-export default ListRoomType
+export default CityManager

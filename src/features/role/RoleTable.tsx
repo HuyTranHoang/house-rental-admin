@@ -33,7 +33,7 @@ interface ListRoleProps {
   currentRole: Role
 }
 
-function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
+function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const [isAddMode, setIsAddMode] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [error, setError] = useState<string>('')
@@ -219,4 +219,4 @@ function ListRole({ form, setCurrentRole, currentRole }: ListRoleProps) {
   )
 }
 
-export default ListRole
+export default RoleTable

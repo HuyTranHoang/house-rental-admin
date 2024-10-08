@@ -11,7 +11,7 @@ export type AmenityDataSource = Amenity & {
   index?: number
 }
 
-export interface AmenityForm {
+export interface AmenityFormType {
   id?: number
   name: string
 }

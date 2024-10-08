@@ -1,5 +1,5 @@
 import { getRoleById, RoleField } from '@/api/role.api.ts'
-import ListRole from '@/features/role/ListRole.tsx'
+import RoleTable from '@/features/role/RoleTable.tsx'
 import { useAuthorities } from '@/hooks/useAuthorities.ts'
 import { useUpdateRole } from '@/hooks/useRoles.ts'
 import { Authority } from '@/types/authority.type.ts'
@@ -246,7 +246,7 @@ function RoleManager() {
 
       <Row gutter={24}>
         <Col span={5}>
-          <ListRole form={form} setCurrentRole={setCurrentRole} currentRole={currentRole} />
+          <RoleTable form={form} setCurrentRole={setCurrentRole} currentRole={currentRole} />
         </Col>
 
         <Col span={12}>

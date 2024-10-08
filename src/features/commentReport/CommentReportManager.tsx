@@ -20,7 +20,7 @@ type Filters = Parameters<OnChange>[1]
 type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
-function ListCommentReport() {
+function CommentReportManager() {
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'commentReport'])
 
@@ -171,4 +171,4 @@ function ListCommentReport() {
     </>
   )
 }
-export default ListCommentReport
+export default CommentReportManager
