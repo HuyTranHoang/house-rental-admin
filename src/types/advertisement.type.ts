@@ -4,4 +4,5 @@ export interface Advertisement {
     name: string
     imageUrl: string
     createdAt: string
+    actived: boolean
 }

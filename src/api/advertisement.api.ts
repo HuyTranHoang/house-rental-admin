@@ -26,6 +26,18 @@ export const getAdvertisementById = async (id: number) => {
     }
 }
 
+export const updateIsActivedById = async (id: number) => {
+    try {
+        const response = await axiosInstance.put<Advertisement>(`/api/advertisements/active/${id}`)
+        if (response.status === 200 ) {
+            return response.data
+        }
+    } catch (error) {
+        console.error(error)
+        throw new Error('Kích hoạt quảng cáo thất bại')
+    }
+}
+
 export const deleteAdvertisement = async (id: number) => {
     try {
         await axiosInstance.delete<Advertisement>(`/api/advertisements/${id}`)
