@@ -3,7 +3,9 @@ import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.
 import CityForm from '@/features/city/CityForm.tsx'
 import { useCities, useCityFilters, useDeleteMultiCity } from '@/hooks/useCities.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
+import useBoundStore from '@/store.ts'
 import { City, CityDataSource } from '@/types/city.type.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -19,6 +21,7 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function CityManager() {
+  const currentUser = useBoundStore((state) => state.user)
   const [editId, setEditId] = useState<number>(0)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -114,11 +117,23 @@ function CityManager() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
+            <Button
+              shape='round'
+              type='primary'
+              danger
+              disabled={!hasAuthority(currentUser, 'city:delete')}
+              onClick={() => setIsOpen(true)}
+            >
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handeOpenForm(0)}>
+          <Button
+            icon={<PlusCircleOutlined />}
+            shape='round'
+            type='primary'
+            disabled={!hasAuthority(currentUser, 'city:create')}
+            onClick={() => handeOpenForm(0)}
+          >
             {t('city:button.add')}
           </Button>
         </Space>

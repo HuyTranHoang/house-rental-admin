@@ -31,10 +31,10 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const isDarkMode = useBoundStore((state) => state.isDarkMode)
   const formatDate = useCustomDateFormatter()
 
-  const { addRoleMutate, addRolePending } = useCreateRole(setError, setIsDeleteModalOpen, formAddRole)
+  const { addRoleMutate, addRolePending } = useCreateRole(setError, setIsModalOpen, formAddRole)
   const { updateRoleMutate, updateRolePending } = useUpdateRole(
     setError,
-    setIsDeleteModalOpen,
+    setIsModalOpen,
     formAddRole,
     setCurrentRole
   )
@@ -55,6 +55,19 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
     } else {
       updateRoleMutate({ ...values, id: currentRole.id })
     }
+  }
+
+  const showAddModal = () => {
+    formAddRole.resetFields()
+    setError('')
+    setIsAddMode(true)
+    setIsModalOpen(true)
+  }
+
+  const showEditModal = (record: Role) => {
+    setCurrentRole(record)
+    setIsAddMode(false)
+    setIsModalOpen(true)
   }
 
   const showDeleteModal = (record: Role) => {
@@ -82,15 +95,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
         <Space align='center'>
           {t('role:list.roleList')}
           <Tooltip title={t('role:list.addNewRole')}>
-            <PlusCircleOutlined
-              className='icon-primary'
-              onClick={() => {
-                formAddRole.resetFields()
-                setError('')
-                setIsAddMode(true)
-                setIsDeleteModalOpen(true)
-              }}
-            />
+            <PlusCircleOutlined className='icon-primary' onClick={showAddModal} />
           </Tooltip>
         </Space>
       </Typography.Title>
@@ -106,13 +111,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
             actions={
               item.name !== 'ROLE_ADMIN' && item.name !== 'ROLE_USER'
                 ? [
-                    <EditOutlined
-                      onClick={() => {
-                        setCurrentRole(item)
-                        setIsAddMode(false)
-                        setIsDeleteModalOpen(true)
-                      }}
-                    />,
+                    <EditOutlined onClick={() => showEditModal(item)} />,
                     <DeleteOutlined onClick={() => showDeleteModal(item)} className='icon-danger' />
                   ]
                 : [

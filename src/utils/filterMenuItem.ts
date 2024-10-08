@@ -4,7 +4,7 @@ import { MenuProps } from 'antd'
 
 type MenuItems = Required<MenuProps>['items']
 
-const hasAuthority = (currentUser: User | null, authority: string) => {
+export const hasAuthority = (currentUser: User | null, authority: string) => {
   return currentUser?.authorities.includes(authority) || currentUser?.roles.includes('ROLE_ADMIN')
 }
 

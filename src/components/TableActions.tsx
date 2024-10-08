@@ -2,16 +2,23 @@ import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
 import { Button, Space } from 'antd'
 import { useTranslation } from 'react-i18next'
 
-function TableActions(props: { onUpdate: () => void; onDelete: () => void; disabled?: boolean }) {
+interface TableActionsProps {
+  onUpdate: () => void
+  onDelete: () => void
+  updateDisabled?: boolean
+  deleteDisabled?: boolean
+}
+
+function TableActions({ deleteDisabled, updateDisabled, onUpdate, onDelete }: TableActionsProps) {
   const { t } = useTranslation()
 
   return (
     <Space size='middle'>
-      <Button disabled={props.disabled} icon={<FormOutlined />} onClick={props.onUpdate}>
+      <Button disabled={updateDisabled} icon={<FormOutlined />} onClick={onUpdate}>
         {t('common.edit')}
       </Button>
 
-      <Button disabled={props.disabled} icon={<DeleteOutlined />} type='default' onClick={props.onDelete} danger>
+      <Button disabled={deleteDisabled} icon={<DeleteOutlined />} type='default' onClick={onDelete} danger>
         {t('common.delete')}
       </Button>
     </Space>

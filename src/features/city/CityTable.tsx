@@ -9,6 +9,8 @@ import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import useBoundStore from '@/store.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface CityTableProps {
   dataSource: CityDataSource[]
@@ -29,6 +31,7 @@ function CityTable({
   sortedInfo,
   onEdit
 }: CityTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
   const { t } = useTranslation(['common', 'city'])
 
   const { deleteCityMutate, deleteCityPending } = useDeleteCity()
@@ -82,6 +85,8 @@ function CityTable({
       width: 200,
       render: (_, record) => (
         <TableActions
+          updateDisabled={!hasAuthority(currentUser, 'city:update')}
+          deleteDisabled={!hasAuthority(currentUser, 'city:delete')}
           onUpdate={() => onEdit(record.id)}
           onDelete={() => {
             setCurrentRecord(record)
