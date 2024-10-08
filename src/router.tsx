@@ -16,6 +16,7 @@ import AppLayout from '@/ui/AppLayout.tsx'
 import { createBrowserRouter } from 'react-router-dom'
 import ListCommentReport from './features/commentReport/ListCommentReport'
 import ListTransaction from './features/transaction/ListTransaction'
+import ListMemberShip from './features/menbership/ListMemberShip'
 
 export const routerList = [
   {
@@ -98,6 +99,11 @@ export const routerList = [
             path: ROUTER_NAMES.ADVERTISEMENT,
             element: <AdvertisementManager />,
             breadcrumb: 'advertisement.picture'
+          },
+          {
+            path: ROUTER_NAMES.MEMBER_SHIP,
+            element: <ListMemberShip />,
+            breadcrumb: 'memberShip.list'
           }
         ] // End of ProtectedRoute children
       }

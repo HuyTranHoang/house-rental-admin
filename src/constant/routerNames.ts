@@ -3,6 +3,7 @@ const DISTRICT_BASE = '/quan-huyen'
 const ROOM_TYPE_BASE = '/loai-phong'
 const AMENITY_BASE = '/tien-ich'
 const ADVERTISEMENT_BASE = '/quang-cao'
+const MEMBERSHIP_BASE = '/goi-thanh-vien'
 
 const ROUTER_NAMES = {
   DASHBOARD: '/',
@@ -27,7 +28,11 @@ const ROUTER_NAMES = {
   ADD_AMENITY: `${AMENITY_BASE}/them-moi`,
   DETAIL_AMENITY: `${AMENITY_BASE}/:id`,
   EDIT_AMENITY: `${AMENITY_BASE}/:id/cap-nhat`,
-  
+
+  MEMBER_SHIP: `${MEMBERSHIP_BASE}`,
+  ADD_MEMBERSHIP: `${MEMBERSHIP_BASE}/them-moi`,
+  DETAIL_MEMBERSHIP: `${MEMBERSHIP_BASE}/:id`,
+  EDIT_MEMBERSHIP: `${MEMBERSHIP_BASE}/:id/cap-nhat`,
   TRANSACTION : `/giao-dich`,
   
   REPORT: '/bao-cao-vi-pham',
@@ -43,11 +48,6 @@ const ROUTER_NAMES = {
   PROPERTY: '/bai-dang',
   
   ADVERTISEMENT:`${ADVERTISEMENT_BASE}`,
-
-  getCityEditPath: (id: string | number) => `${CITY_BASE}/${id}/cap-nhat`,
-  getDistrictEditPath: (id: string | number) => `${DISTRICT_BASE}/${id}/cap-nhat`,
-  getRoomTypeEditPath: (id: string | number) => `${ROOM_TYPE_BASE}/${id}/cap-nhat`,
-  getAmenityEditPath: (id: string | number) => `${AMENITY_BASE}/${id}/cap-nhat`
 }
 
 export default ROUTER_NAMES

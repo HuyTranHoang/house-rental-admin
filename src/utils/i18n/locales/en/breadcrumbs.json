@@ -47,6 +47,9 @@
   "advertisement": {
     "picture": "Picture Management"
   },
+  "memberShip": {
+    "list": "Membership Management"
+  },
   "transaction": "Transaction",
   "currentLoginAccount": "Current login account",
   "home": "Home",

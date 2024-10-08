@@ -1,0 +1,51 @@
+{
+  "title": "Quản lý gói thành viên",
+  "searchPlaceholder": "Tìm kiếm gói thành viên",
+  "button": {
+    "add": "Gói thành viên mới"
+  },
+  "form": {
+    "addForm": "Thêm gói thành viên",
+    "editForm": "Chỉnh sửa gói thành viên",
+    "name": "Tên gói thành viên",
+    "price": "Giá",
+    "durationDays": "Số ngày hiệu lực",
+    "refresh": "Lượt làm mới",
+    "priority": "Lượt ưu tiên",
+    "description": "Mô tả",
+    "namePlaceholder": "Nhập tên gói thành viên",
+    "nameRequired": "Vui lòng nhập tên gói thành viên",
+    "nameMin": "Tên gói thành viên phải có ít nhất 3 ký tự",
+    "nameMax": "Tên gói thành viên phải có tối đa 50 ký tự",
+    "priceRequired": "Vui lòng nhập giá",
+    "pricePlaceHolder": "Nhập giá",
+    "durationDaysRequired": "Vui lòng nhập thời lượng ngày",
+    "durationsDaysPlaceHolder": "Nhập thời lượng ngày",
+    "refreshRequired": "Vui lòng nhập lượt làm mới",
+    "refreshPlaceHolder": "Nhập số lượt làm mới",
+    "priorityRequired": "Vui lòng nhập độ ưu tiên",
+    "priorityPlaceHolder": "Nhập độ ưu tiên",
+    "descriptionRequired": "Vui lòng nhập mô tả",
+    "descriptionPlaceHolder": "Nhập mô tả",
+    "priceInvalid": "Giá không hợp lệ, vui lòng nhập số lớn hơn 0 và nhỏ hơn 9999999",
+    "durationDaysInvalid": "Ngày hiệu lực không hợp lệ , vui lòng nhập số lớn hơn 0 và nhỏ hơn 999",
+    "refreshInvalid": "Ngày làm mới không hợp lệ, vui lòng nhập số và lớn hơn 0 và nhỏ hơn 999",
+    "priorityInvalid": "Sự ưu tiên không hợp lệ , vui lòng nhập số lớn hơn 0 và nhỏ hơn 999",
+    "descriptionDaysMin": "Mô tả phải dài hơn 10 ký tự",
+    "descriptionDaysMax": "Không thể nhập quá 900 từ"
+  },
+  "pagination": {
+    "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} gói thành viên"
+  },
+  "notification": {
+    "addSuccess": "Thêm gói thành viên thành công",
+    "editSuccess": "Chỉnh sửa gói thành viên thành công",
+    "deleteSuccess": "Xóa gói thành viên thành công",
+    "deleteSuccessMultiple": "Xóa các gói thành viên đã chọn thành công"
+  },
+  "deleteModal": {
+    "title": "Xác nhận xóa gói thành viên",
+    "titleMultiple": "Xác nhận xóa các gói thành viên"
+  }
+}
+  

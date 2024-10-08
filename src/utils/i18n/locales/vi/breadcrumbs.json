@@ -17,7 +17,7 @@
     "add": "Thêm loại phòng",
     "edit": "Chỉnh sửa loại phòng"
   },
-  "amenities": {
+  "amenity": {
     "list": "Quản lý tiện ích",
     "add": "Thêm tiện ích",
     "edit": "Chỉnh sửa tiện ích"
@@ -46,6 +46,9 @@
   "advertisementManagement": "Quảng cáo",
   "advertisement": {
     "picture": "Quản lý hình ảnh"
+  },
+  "memberShip": {
+    "list": "Quản lý gói thành viên"
   },
   "transaction": "Giao dịch",
   "currentLoginAccount": "Tài khoản đăng nhập hiện tại",

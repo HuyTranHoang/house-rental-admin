@@ -3,8 +3,8 @@ import ROUTER_NAMES from '@/constant/routerNames.ts'
 import useBoundStore from '@/store.ts'
 import { toTitleCase } from '@/utils/toTitleCase.ts'
 import {
+  AuditOutlined,
   BarChartOutlined,
-  createFromIconfontCN,
   EditOutlined,
   HomeOutlined,
   LogoutOutlined,
@@ -19,10 +19,7 @@ import Sider from 'antd/es/layout/Sider'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-
-const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/c/font_4645396_ko0yqafz4er.js'
-})
+import { Building2 } from 'lucide-react'
 
 function AppSider({ darkMode }: { darkMode: boolean }) {
   const navigate = useNavigate()
@@ -49,6 +46,12 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
       onClick: () => navigate(ROUTER_NAMES.TRANSACTION)
     },
     {
+      key: ROUTER_NAMES.MEMBER_SHIP,
+      label: t('memberShip.list'),
+      icon: <AuditOutlined />,
+      onClick: () => navigate(ROUTER_NAMES.MEMBER_SHIP)
+    },
+    {
       key: 'property',
       label: t('propertyManagement'),
       icon: <ScheduleOutlined />,
@@ -68,7 +71,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     {
       key: 'cityDistrict',
       label: t('cityAndDistrict'),
-      icon: <IconFont type='icon-city' />,
+      icon: <Building2 size={16} />,
       children: [
         {
           key: ROUTER_NAMES.CITY,
