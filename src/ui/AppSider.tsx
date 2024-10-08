@@ -1,6 +1,7 @@
 import axiosInstance from '@/axiosInstance.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import useBoundStore from '@/store.ts'
+import filterMenuItems from '@/utils/filterMenuItem.ts'
 import { toTitleCase } from '@/utils/toTitleCase.ts'
 import {
   AuditOutlined,
@@ -16,16 +17,16 @@ import {
 } from '@ant-design/icons'
 import { Avatar, Button, ConfigProvider, Dropdown, Flex, Layout, Menu, MenuProps, Space, theme, Typography } from 'antd'
 import Sider from 'antd/es/layout/Sider'
+import { Building2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Building2 } from 'lucide-react'
 
 function AppSider({ darkMode }: { darkMode: boolean }) {
   const navigate = useNavigate()
   const location = useLocation()
   const { t } = useTranslation('breadcrumbs')
-  const user = useBoundStore((state) => state.user)
+  const currentUser = useBoundStore((state) => state.user)
   const logout = useBoundStore((state) => state.logout)
 
   const {
@@ -108,9 +109,9 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
       icon: <SolutionOutlined />,
       children: [
         {
-          key: ROUTER_NAMES.REVIEW,
+          key: ROUTER_NAMES.COMMENT,
           label: t('comment.list'),
-          onClick: () => navigate(ROUTER_NAMES.REVIEW)
+          onClick: () => navigate(ROUTER_NAMES.COMMENT)
         },
         {
           key: ROUTER_NAMES.COMMENT_REPORT,
@@ -139,7 +140,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     {
       key: 'advertisement',
       label: t('advertisementManagement'),
-      icon: < PictureOutlined/>,
+      icon: <PictureOutlined />,
       children: [
         {
           key: ROUTER_NAMES.ADVERTISEMENT,
@@ -150,13 +151,15 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     }
   ]
 
+  const filteredSiderItems = filterMenuItems(siderItems, currentUser)
+
   const dropdownItems: MenuProps['items'] = [
     {
       key: 'username',
       label: (
         <Flex vertical>
           <Typography.Text type='secondary'>{t('currentLoginAccount')}</Typography.Text>
-          <Typography.Text strong>{user?.username}</Typography.Text>
+          <Typography.Text strong>{currentUser?.username}</Typography.Text>
         </Flex>
       ),
       disabled: true,
@@ -229,7 +232,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
             defaultSelectedKeys={[location.pathname]}
             defaultOpenKeys={['cityDistrict']}
             style={{ borderRight: 0 }}
-            items={siderItems}
+            items={filteredSiderItems}
           />
         </Layout>
         <Space
@@ -252,7 +255,9 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
           >
             <Dropdown menu={{ items: dropdownItems, onClick: dropdownOnClick }} placement='top'>
               <Button
-                icon={<Avatar src={user?.avatarUrl || `https://robohash.org/${user?.username}?set=set4`} />}
+                icon={
+                  <Avatar src={currentUser?.avatarUrl || `https://robohash.org/${currentUser?.username}?set=set4`} />
+                }
                 size='large'
                 style={{
                   padding: '24px 0',
@@ -260,7 +265,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
                   marginBottom: 16
                 }}
               >
-                {toTitleCase(user?.firstName)} {toTitleCase(user?.lastName)}
+                {toTitleCase(currentUser?.firstName)} {toTitleCase(currentUser?.lastName)}
               </Button>
             </Dropdown>
           </ConfigProvider>

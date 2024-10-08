@@ -71,7 +71,7 @@ export const routerList = [
             breadcrumb: 'role.list'
           },
           {
-            path: ROUTER_NAMES.REVIEW,
+            path: ROUTER_NAMES.COMMENT,
             element: <CommentManager />,
             breadcrumb: 'comment.list'
           },
