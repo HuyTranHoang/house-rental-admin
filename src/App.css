@@ -31,22 +31,6 @@
     text-align: center;
 }
 
-.icon-primary {
-    color: #1890ff;
-}
-
-.icon-primary:hover {
-    color: #69b1ff;
-}
-
-.icon-danger {
-    color: #ff4d4f;
-}
-
-.icon-danger:hover {
-    color: #ff7875;
-}
-
 .container {
     -ms-overflow-style: none;  /* Internet Explorer 10+ */
     scrollbar-width: none;  /* Firefox */

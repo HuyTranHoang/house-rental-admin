@@ -2,8 +2,10 @@ import { getRoleById, RoleField } from '@/api/role.api.ts'
 import RoleTable from '@/features/role/RoleTable.tsx'
 import { useAuthorities } from '@/hooks/useAuthorities.ts'
 import { useUpdateRole } from '@/hooks/useRoles.ts'
+import useBoundStore from '@/store.ts'
 import { Authority } from '@/types/authority.type.ts'
 import { Role } from '@/types/role.type.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { blue, red } from '@ant-design/colors'
 import { MinusSquareOutlined, PlusSquareOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
@@ -53,6 +55,8 @@ interface AuthorityPrivileges {
 }
 
 function RoleManager() {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [form] = Form.useForm()
 
   const { authorities } = useAuthorities()
@@ -111,23 +115,27 @@ function RoleManager() {
       dataIndex: 'update',
       key: 'update'
     },
-    {
-      title: t('role:table.more'),
-      dataIndex: 'other',
-      key: 'other',
-      render: (_, rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
-        return (
-          <Space>
-            <Tooltip title={t('role:form.selectAll')}>
-              <PlusSquareOutlined onClick={() => selectAll(rowIndex)} />
-            </Tooltip>
-            <Tooltip title={t('role:form.unSelectAll')}>
-              <MinusSquareOutlined onClick={() => unselectAll(rowIndex)} style={{ color: red.primary }} />
-            </Tooltip>
-          </Space>
-        )
-      }
-    }
+    ...(hasAuthority(currentUser, 'role:edit')
+      ? [
+        {
+          title: t('role:table.more'),
+          dataIndex: 'other',
+          key: 'other',
+          render: (_: undefined, rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
+            return (
+              <Space>
+                <Tooltip title={t('role:form.selectAll')}>
+                  <PlusSquareOutlined onClick={() => selectAll(rowIndex)} />
+                </Tooltip>
+                <Tooltip title={t('role:form.unSelectAll')}>
+                  <MinusSquareOutlined onClick={() => unselectAll(rowIndex)} style={{ color: red.primary }} />
+                </Tooltip>
+              </Space>
+            )
+          }
+        }
+      ]
+      : [])
   ]
 
   const groupBy = (array: Authority[] | undefined): GroupedAuthorities => {
@@ -148,7 +156,7 @@ function RoleManager() {
         ...result[translatedGroupKey],
         [action]: (
           <Form.Item name={['authorityPrivilegesObject', groupKey, action]} valuePropName='checked' noStyle>
-            <Checkbox />
+            <Checkbox disabled={!hasAuthority(currentUser, 'role:edit')} />
           </Form.Item>
         )
       }
@@ -284,7 +292,12 @@ function RoleManager() {
 
             <Form.Item>
               {currentRole.id && currentRole.name !== 'ROLE_ADMIN' && (
-                <Button loading={updateRolePending} type='primary' htmlType='submit'>
+                <Button
+                  loading={updateRolePending}
+                  type='primary'
+                  disabled={!hasAuthority(currentUser, 'role:edit')}
+                  htmlType='submit'
+                >
                   {t('role:list.editAuthority')}
                 </Button>
               )}

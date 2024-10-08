@@ -5,6 +5,7 @@ import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useCreateRole, useDeleteRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
 import useBoundStore from '@/store.ts'
 import { Role } from '@/types/role.type.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, FormInstance, type FormProps, Input, List, Modal, Space, Tooltip, Typography } from 'antd'
@@ -19,6 +20,8 @@ interface ListRoleProps {
 }
 
 function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [isAddMode, setIsAddMode] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -32,12 +35,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const formatDate = useCustomDateFormatter()
 
   const { addRoleMutate, addRolePending } = useCreateRole(setError, setIsModalOpen, formAddRole)
-  const { updateRoleMutate, updateRolePending } = useUpdateRole(
-    setError,
-    setIsModalOpen,
-    formAddRole,
-    setCurrentRole
-  )
+  const { updateRoleMutate, updateRolePending } = useUpdateRole(setError, setIsModalOpen, formAddRole, setCurrentRole)
   const { deleteRoleMutate } = useDeleteRole()
 
   const { data, isLoading } = useRolesAll()
@@ -95,7 +93,12 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
         <Space align='center'>
           {t('role:list.roleList')}
           <Tooltip title={t('role:list.addNewRole')}>
-            <PlusCircleOutlined className='icon-primary' onClick={showAddModal} />
+            <Button
+              type='link'
+              icon={<PlusCircleOutlined className='icon-primary' />}
+              className={clsx(!hasAuthority(currentUser, 'role:create') && 'hidden')}
+              onClick={showAddModal}
+            />
           </Tooltip>
         </Space>
       </Typography.Title>
@@ -111,12 +114,16 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
             actions={
               item.name !== 'ROLE_ADMIN' && item.name !== 'ROLE_USER'
                 ? [
-                    <EditOutlined onClick={() => showEditModal(item)} />,
-                    <DeleteOutlined onClick={() => showDeleteModal(item)} className='icon-danger' />
+                    hasAuthority(currentUser, 'role:update') && (
+                      <Button type='link' icon={<EditOutlined />} onClick={() => showEditModal(item)} />
+                    ),
+                    hasAuthority(currentUser, 'role:delete') && (
+                      <Button type='link' danger icon={<DeleteOutlined />} onClick={() => showDeleteModal(item)} />
+                    )
                   ]
                 : [
                     <Tooltip title={t('role:list.defaultRole')}>
-                      <InfoCircleOutlined />
+                      <Button type='text' icon={<InfoCircleOutlined />} />
                     </Tooltip>
                   ]
             }
@@ -172,7 +179,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
           <Form.Item>
             <Flex justify='end'>
               <Space>
-                <Button onClick={() => setIsDeleteModalOpen(false)} danger>
+                <Button onClick={() => setIsModalOpen(false)} danger>
                   {t('common.cancel')}
                 </Button>
                 <Button loading={addRolePending || updateRolePending} type='primary' htmlType='submit'>
