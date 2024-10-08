@@ -6,3 +6,10 @@ export interface Advertisement {
     createdAt: string
     actived: boolean
 }
+
+export interface AdvertisementForm {
+    id?: number
+    name: string
+    description: string
+    image: string
+}

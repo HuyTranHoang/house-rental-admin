@@ -1,4 +1,4 @@
-import { deleteAdvertisement, getAdvertisementById, getAllAdvertisements, updateIsActivedById } from "@/api/advertisement.api"
+import { createAdvertisement, deleteAdvertisement, getAdvertisementById, getAllAdvertisements, updateAdvertisement, updateIsActivedById } from "@/api/advertisement.api"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 
@@ -46,4 +46,31 @@ export const useDeleteAdvertisement = () => {
       })
     
       return { deleteAdvMutate, deleteAdvPending }
+}
+
+export const useCreateAdvertisement = () => {
+  const queryClient = useQueryClient()
+
+  const { mutateAsync: addAdvMutate, isPending: addAdvPending } = useMutation({
+    mutationFn: createAdvertisement,
+    onSuccess: async () => await queryClient.invalidateQueries({ queryKey: ['advertisements'] }),
+    onError: (error) => toast.error(error.message)
+  })
+
+  return { addAdvMutate, addAdvPending }
+}
+
+export const useUpdateAdvertisement = () => {
+  const queryClient = useQueryClient()
+
+  const { mutateAsync: updateAdvMutate, isPending: updateAdvPending } = useMutation({
+    mutationFn: updateAdvertisement,
+    onSuccess: async (_, variables) => {
+      await queryClient.invalidateQueries({ queryKey: ['cities'] })
+      await queryClient.invalidateQueries({ queryKey: ['city', variables.id] })
+    },
+    onError: (error) => toast.error(error.message)
+  })
+
+  return { updateAdvMutate, updateAdvPending }
 }

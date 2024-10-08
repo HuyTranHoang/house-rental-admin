@@ -1,22 +1,23 @@
-import { useAdvertisements, useDeleteAdvertisement } from '@/hooks/useAdvertisement'
+import { useAdvertisements } from '@/hooks/useAdvertisement'
 import { Alert, Button, Col, Divider, Flex, Row, Space, Spin, Typography } from 'antd'
 import { AdvertisementItem } from './AdvertisementItem'
 import { PlusCircleOutlined } from '@ant-design/icons'
+import { useState } from 'react'
+import AddUpdateAdvertisement from './AddUpdateAdvertisement'
 
 export function ListAdvertisement() {
   const { advData, advIsLoading, advIsError } = useAdvertisements()
-  const { deleteAdvMutate } = useDeleteAdvertisement()
+
+  const [editId, setEditId] = useState<number>(0)
+  const [formOpen, setFormOpen] = useState(false)
+
+  const handeOpenForm = (id: number) => {
+    setEditId(id)
+    setFormOpen(true)
+  }
 
   if (advIsLoading) return <Spin tip='Đang tải...' />
   if (advIsError) return <Alert message='Lỗi khi lấy quảng cáo' type='error' />
-
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteAdvMutate(id)
-    } catch (error) {
-      console.error('Xóa quảng cáo thất bại:', error)
-    }
-  }
 
   return (
     <>
@@ -29,7 +30,7 @@ export function ListAdvertisement() {
           
         </Flex>
         <Space>
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary'>
+          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handeOpenForm(0)}>
             Thêm mới
           </Button>
         </Space>
@@ -37,10 +38,12 @@ export function ListAdvertisement() {
       <Row gutter={16} className='flex justify-center'>
         {advData?.map((ad) => (
           <Col span={7} key={ad.id}>
-            <AdvertisementItem key={ad.id} advertisement={ad} onDelete={(id) => handleDelete(id)} />
+            <AdvertisementItem key={ad.id} advertisement={ad}/>
           </Col>
         ))}
       </Row>
+
+      <AddUpdateAdvertisement id={editId} formOpen={formOpen} setFormOpen={setFormOpen} />
     </>
   )
 }

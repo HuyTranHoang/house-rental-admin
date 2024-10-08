@@ -1,0 +1,10 @@
+
+  .advertisement-item {
+    width: 200px;
+  }
+
+  .fixed-image {
+    width: 200px;
+    height: 600px !important;
+    object-fit: cover;
+  }
