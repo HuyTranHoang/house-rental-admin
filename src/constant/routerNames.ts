@@ -1,53 +1,33 @@
-const CITY_BASE = '/thanh-pho'
-const DISTRICT_BASE = '/quan-huyen'
-const ROOM_TYPE_BASE = '/loai-phong'
-const AMENITY_BASE = '/tien-ich'
-const ADVERTISEMENT_BASE = '/quang-cao'
-const MEMBERSHIP_BASE = '/goi-thanh-vien'
-
 const ROUTER_NAMES = {
   DASHBOARD: '/',
+
   LOGIN: '/dang-nhap',
 
-  CITY: `${CITY_BASE}`,
-  ADD_CITY: `${CITY_BASE}/them-moi`,
-  DETAIL_CITY: `${CITY_BASE}/:id`,
-  EDIT_CITY: `${CITY_BASE}/:id/cap-nhat`,
+  CITY: '/thanh-pho',
 
-  DISTRICT: `${DISTRICT_BASE}`,
-  ADD_DISTRICT: `${DISTRICT_BASE}/them-moi`,
-  DETAIL_DISTRICT: `${DISTRICT_BASE}/:id`,
-  EDIT_DISTRICT: `${DISTRICT_BASE}/:id/cap-nhat`,
+  DISTRICT: '/quan-huyen',
 
-  ROOM_TYPE: `${ROOM_TYPE_BASE}`,
-  ADD_ROOM_TYPE: `${ROOM_TYPE_BASE}/them-moi`,
-  DETAIL_ROOM_TYPE: `${ROOM_TYPE_BASE}/:id`,
-  EDIT_ROOM_TYPE: `${ROOM_TYPE_BASE}/:id/cap-nhat`,
+  ROOM_TYPE: '/loai-phong',
 
-  AMENITY: `${AMENITY_BASE}`,
-  ADD_AMENITY: `${AMENITY_BASE}/them-moi`,
-  DETAIL_AMENITY: `${AMENITY_BASE}/:id`,
-  EDIT_AMENITY: `${AMENITY_BASE}/:id/cap-nhat`,
+  AMENITY: '/tien-ich',
 
-  MEMBER_SHIP: `${MEMBERSHIP_BASE}`,
-  ADD_MEMBERSHIP: `${MEMBERSHIP_BASE}/them-moi`,
-  DETAIL_MEMBERSHIP: `${MEMBERSHIP_BASE}/:id`,
-  EDIT_MEMBERSHIP: `${MEMBERSHIP_BASE}/:id/cap-nhat`,
-  TRANSACTION : `/giao-dich`,
-  
+  MEMBER_SHIP: '/goi-thanh-vien',
+
+  TRANSACTION: '/giao-dich',
+
   REPORT: '/bao-cao-vi-pham',
-  
+
   COMMENT_REPORT: '/bao-cao-binh-luan',
-  
+
   ROLE: '/vai-tro',
-  
+
   REVIEW: '/danh-gia',
-  
+
   USER: '/nguoi-dung',
-  
+
   PROPERTY: '/bai-dang',
-  
-  ADVERTISEMENT:`${ADVERTISEMENT_BASE}`,
+
+  ADVERTISEMENT: '/quang-cao'
 }
 
 export default ROUTER_NAMES
