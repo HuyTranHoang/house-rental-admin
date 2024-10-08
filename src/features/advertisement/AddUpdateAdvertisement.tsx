@@ -1,5 +1,6 @@
 import { useAdvertisement, useCreateAdvertisement, useUpdateAdvertisement } from '@/hooks/useAdvertisement'
 import { AdvertisementForm } from '@/types/advertisement.type'
+import { validateFile } from '@/utils/uploadFile.ts'
 import { LeftCircleOutlined, UploadOutlined } from '@ant-design/icons'
 import { Button, Drawer, Form, FormProps, Input, Upload, UploadFile } from 'antd'
 import { RcFile } from 'antd/es/upload'
@@ -45,7 +46,10 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
   const onClose = () => setFormOpen(false)
 
   const beforeUpload = (file: UploadFile): boolean => {
-    setFileList([file])
+    if (validateFile(file)) {
+      setFileList([file])
+    }
+
     return false
   }
 
