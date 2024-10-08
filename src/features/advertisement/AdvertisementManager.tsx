@@ -14,7 +14,7 @@ function AdvertisementManager() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [currentAd, setCurrentAd] = useState<Advertisement | null>(null)
 
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common', 'adv'])
   const { advData, advIsLoading, advIsError } = useAdvertisements()
   const { deleteAdvMutate, deleteAdvPending } = useDeleteAdvertisement()
   const { updateAdvActive, updateAdvActivePending } = useUpdateIsActived()
@@ -34,7 +34,7 @@ function AdvertisementManager() {
       deleteAdvMutate(currentAd.id).then(() => {
         setCurrentAd(null)
         setDeleteModalOpen(false)
-        toast.success('Xoá quảng cáo thành công')
+        toast.success(t('adv:toast.success.delete'))
       })
     }
   }
@@ -42,10 +42,10 @@ function AdvertisementManager() {
   const handleActivate = async (id: number, actived: boolean) => {
     try {
       await updateAdvActive(id)
-      toast.success(`Quảng cáo ${actived ? 'vô hiệu hóa' : 'kích hoạt'} thành công!`)
+      toast.success(actived ? t('adv:toast.success.deactivate') : t('adv:toast.success.activate'))
     } catch (error) {
       console.error('Error updating advertisement active status:', error)
-      toast.error('Cập nhật trạng thái quảng cáo thất bại.')
+      toast.error(t('adv:toast.error.update'))
     }
   }
 
@@ -55,10 +55,10 @@ function AdvertisementManager() {
     <>
       <Flex align='center' justify='space-between' className='mb-3'>
         <Typography.Title level={2} className='m-0'>
-          Quảng Cáo
+          {t('adv:title')}
         </Typography.Title>
         <Button shape='round' type='primary' onClick={() => handleOpenForm()}>
-          <PlusCircleOutlined /> Thêm mới
+          <PlusCircleOutlined /> {t('common.add')}
         </Button>
       </Flex>
 
@@ -82,7 +82,7 @@ function AdvertisementManager() {
 
       <Modal
         open={deleteModalOpen}
-        title={`Bạn có chắc chắn muốn xoá '${currentAd?.name}'`}
+        title={t('adv:deleteModal.title', { name: currentAd?.name })}
         okText={t('common.ok')}
         okType='danger'
         cancelText={t('common.cancel')}
@@ -92,7 +92,7 @@ function AdvertisementManager() {
         onOk={handleDelete}
       >
         <img src={currentAd?.imageUrl} alt={currentAd?.name} className='w-full object-cover' />
-        <Typography.Text type='danger'>Hành động này không thể hoàn tác</Typography.Text>
+        <Typography.Text type='danger'>{t('adv:deleteModal.content')}</Typography.Text>
       </Modal>
     </>
   )

@@ -1,0 +1,34 @@
+{
+  "title": "Advertisement",
+  "toast": {
+    "success": {
+      "create": "Advertisement created successfully",
+      "update": "Advertisement updated successfully",
+      "delete": "Advertisement deleted successfully",
+      "activate": "Advertisement activated successfully",
+      "deactivate": "Advertisement deactivated successfully"
+    },
+    "error": {
+      "create": "Failed to create advertisement",
+      "update": "Failed to update advertisement",
+      "delete": "Failed to delete advertisement"
+    }
+  },
+  "deleteModal": {
+    "title": "Are you sure want to delete {{name}}?",
+    "content": "This action cannot be reversed.!"
+  },
+  "form": {
+    "image": "Image",
+    "imageRequired": "Image is required",
+    "selectPicture": "Select picture",
+    "name": "Name",
+    "nameRequired": "Name is required",
+    "nameMin": "Name must be at least 3 characters",
+    "nameMax": "Name must be at most 100 characters",
+    "description": "Description",
+    "descriptionRequired": "Description is required",
+    "descriptionMin": "Description must be at least 3 characters",
+    "descriptionMax": "Description must be at most 100 characters"
+  }
+}

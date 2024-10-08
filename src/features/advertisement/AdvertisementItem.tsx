@@ -2,6 +2,7 @@ import { Advertisement } from '@/types/advertisement.type'
 import { Button, Card, Flex, Image, Switch, Tooltip } from 'antd'
 import { Edit, Trash2 } from 'lucide-react'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface AdvertisementItemProps {
   advertisement: Advertisement
@@ -18,6 +19,8 @@ const AdvertisementItem: React.FC<AdvertisementItemProps> = ({
   onActivate,
   updateAdvActivePending
 }) => {
+  const { t } = useTranslation()
+
   return (
     <Card
       title={advertisement.name}
@@ -40,12 +43,12 @@ const AdvertisementItem: React.FC<AdvertisementItemProps> = ({
         className='object-cover'
       />
       <Flex justify='space-evenly' className='mt-4'>
-        <Tooltip title='Chỉnh sửa'>
+        <Tooltip title={t('common.edit')}>
           <Button type='primary' onClick={onEdit} className='mr-2'>
             <Edit />
           </Button>
         </Tooltip>
-        <Tooltip title='Xoá'>
+        <Tooltip title={t('common.delete')}>
           <Button danger onClick={onDelete} className='mr-2'>
             <Trash2 />
           </Button>

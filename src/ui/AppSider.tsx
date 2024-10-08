@@ -135,17 +135,12 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
     },
     {
       key: 'advertisement',
-      label: 'Advertisement',
+      label: t('advertisementManagement'),
       icon: < PictureOutlined/>,
       children: [
-        // {
-        //   key: ROUTER_NAMES.USER,
-        //   label: 'Header',
-        //   onClick: () => navigate(ROUTER_NAMES.USER)
-        // },
         {
           key: ROUTER_NAMES.ADVERTISEMENT,
-          label: 'Picture',
+          label: t('advertisement.picture'),
           onClick: () => navigate(ROUTER_NAMES.ADVERTISEMENT)
         }
       ]

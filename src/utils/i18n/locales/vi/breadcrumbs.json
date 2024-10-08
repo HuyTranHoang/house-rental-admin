@@ -43,6 +43,10 @@
   "role": {
     "list": "Quản lý vai trò"
   },
+  "advertisementManagement": "Quảng cáo",
+  "advertisement": {
+    "picture": "Quản lý hình ảnh"
+  },
   "transaction": "Giao dịch",
   "currentLoginAccount": "Tài khoản đăng nhập hiện tại",
   "home": "Trang chủ",

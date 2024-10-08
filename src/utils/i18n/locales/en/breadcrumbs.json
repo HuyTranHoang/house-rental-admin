@@ -43,6 +43,10 @@
   "role": {
     "list": "Role Management"
   },
+  "advertisementManagement": "Advertisement",
+  "advertisement": {
+    "picture": "Picture Management"
+  },
   "transaction": "Transaction",
   "currentLoginAccount": "Current login account",
   "home": "Home",
