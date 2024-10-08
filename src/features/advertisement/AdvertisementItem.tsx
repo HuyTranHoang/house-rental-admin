@@ -1,26 +1,25 @@
-
-import { useDeleteAdvertisement, useUpdateIsActived } from '@/hooks/useAdvertisement'
 import { Advertisement } from '@/types/advertisement.type'
-import { Button, Card, Image, Modal, Switch, Tooltip } from 'antd'
+import { UseMutateAsyncFunction } from '@tanstack/react-query'
+import { Button, Card, Image, Switch, Tooltip } from 'antd'
 import { Edit, Trash2 } from 'lucide-react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import './Advertisement.css';
+import './Advertisement.css'
 
 interface AdvertisementItemProps {
   advertisement: Advertisement
+  setIsModalOpen: (open: boolean) => void
+  setCurrentRecord: (record: Advertisement) => void
+  updateAdvActivePending: boolean
+  updateAdvActive: UseMutateAsyncFunction<Advertisement | undefined, Error, number, unknown>
 }
 
-export const AdvertisementItem: React.FC<AdvertisementItemProps> = ({ advertisement }) => {
-  const { updateAdvActive, updateAdvPending } = useUpdateIsActived()
-  const { deleteAdvMutate, deleteAdvPending } = useDeleteAdvertisement()
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [currentRecord, setCurrentRecord] = useState<Advertisement | null>(null)
-
-  const { t } = useTranslation(['common', 'city'])
-
+export const AdvertisementItem = ({
+  advertisement,
+  setIsModalOpen,
+  setCurrentRecord,
+  updateAdvActivePending,
+  updateAdvActive
+}: AdvertisementItemProps) => {
   const handleDeleteConfirmation = () => {
     setCurrentRecord(advertisement)
     setIsModalOpen(true)
@@ -47,14 +46,18 @@ export const AdvertisementItem: React.FC<AdvertisementItemProps> = ({ advertisem
             onChange={handleActivate}
             checkedChildren='Kích hoạt'
             unCheckedChildren='Vô hiệu hóa'
-            loading={updateAdvPending}
+            loading={updateAdvActivePending}
           />
         }
       >
-        <Image src={advertisement.imageUrl} alt={advertisement.name} className="fixed-image" />
+        <Image src={advertisement.imageUrl} alt={advertisement.name} className='fixed-image' />
         <div className='mt-4 flex justify-evenly'>
           <Tooltip title='Chỉnh sửa'>
-            <Button type='primary' onClick={() => console.log('Chỉnh sửa quảng cáo với ID:', advertisement.id)} className='mr-2'>
+            <Button
+              type='primary'
+              onClick={() => console.log('Chỉnh sửa quảng cáo với ID:', advertisement.id)}
+              className='mr-2'
+            >
               <Edit />
             </Button>
           </Tooltip>
@@ -65,28 +68,6 @@ export const AdvertisementItem: React.FC<AdvertisementItemProps> = ({ advertisem
           </Tooltip>
         </div>
       </Card>
-
-      <Modal
-        open={isModalOpen}
-        className='w-96'
-        title={`Bạn có chắc chắn muốn xoá '${currentRecord?.name}'`}
-        okText={t('common.ok')}
-        okType='danger'
-        cancelText={t('common.cancel')}
-        okButtonProps={{ loading: deleteAdvPending }}
-        cancelButtonProps={{ disabled: deleteAdvPending }}
-        onCancel={() => setIsModalOpen(false)}
-        onOk={() => {
-          if (currentRecord) {
-            deleteAdvMutate(currentRecord.id).then(() => {
-              setCurrentRecord(null)
-              setIsModalOpen(false)
-              toast.success('Xoá quảng cáo thành công')
-            })
-          }
-        }}
-      >
-      </Modal>
     </>
   )
 }

@@ -49,7 +49,7 @@ export const deleteAdvertisement = async (id: number) => {
 
 export const createAdvertisement = async (values: AdvertisementForm) => {
     try {
-        const response = await axiosInstance.post('/api/advertisements', values)
+        const response = await axiosInstance.postForm('/api/advertisements', values)
         if (response.status === 200) {
             return response.data
         }

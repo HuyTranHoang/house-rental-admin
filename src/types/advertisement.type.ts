@@ -1,3 +1,4 @@
+import { RcFile } from 'antd/es/upload'
 
 export interface Advertisement {
     id: number
@@ -11,5 +12,5 @@ export interface AdvertisementForm {
     id?: number
     name: string
     description: string
-    image: string
+    image: RcFile
 }

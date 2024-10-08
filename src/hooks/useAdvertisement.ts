@@ -22,7 +22,7 @@ export const useAdvertisement = (id: number) => {
 export const useUpdateIsActived = () => {
     const queryClient = useQueryClient()
 
-    const { mutateAsync: updateAdvActive, isPending: updateAdvPending } = useMutation({
+    const { mutateAsync: updateAdvActive, isPending: updateAdvActivePending } = useMutation({
         mutationFn: (id: number) => updateIsActivedById(id),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ['advertisements'] })
@@ -33,7 +33,7 @@ export const useUpdateIsActived = () => {
         }
     })
 
-    return { updateAdvActive, updateAdvPending }
+    return { updateAdvActive, updateAdvActivePending }
 }
 
 export const useDeleteAdvertisement = () => {

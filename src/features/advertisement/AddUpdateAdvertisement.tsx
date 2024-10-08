@@ -1,9 +1,9 @@
 import { useAdvertisement, useCreateAdvertisement, useUpdateAdvertisement } from '@/hooks/useAdvertisement'
 import { AdvertisementForm } from '@/types/advertisement.type'
 import { LeftCircleOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Drawer, Form, FormProps, Input, Upload } from 'antd'
-import { RcFile } from 'antd/es/upload/interface'
-import { useEffect } from 'react'
+import { Button, Drawer, Form, FormProps, Input, Upload, UploadFile } from 'antd'
+import { RcFile } from 'antd/es/upload'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -17,6 +17,7 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
   const isAddMode = id === 0
   const [form] = Form.useForm<AdvertisementForm>()
   const { t } = useTranslation(['common', 'city'])
+  const [fileList, setFileList] = useState<UploadFile[]>([])
 
   const { addAdvMutate, addAdvPending } = useCreateAdvertisement()
   const { updateAdvMutate, updateAdvPending } = useUpdateAdvertisement()
@@ -26,11 +27,13 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
 
   const onFinish: FormProps<AdvertisementForm>['onFinish'] = (values) => {
     console.log('Form Values: ', values)
-    if (!values.name) {
-      toast.error('Vui lòng nhập tên quảng cáo!')
+
+    if (!fileList.length) {
+      toast.error('Vui lòng chọn hình ảnh cho quảng cáo')
       return
     }
 
+    values.image = fileList[0].originFileObj as RcFile
     const mutate = isAddMode ? addAdvMutate : updateAdvMutate
     mutate(values).then(() => {
       setFormOpen(false)
@@ -41,10 +44,12 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
 
   const onClose = () => setFormOpen(false)
 
-  const beforeUpload = (file: RcFile): boolean => {
-    form.setFieldValue('image', file)
+  const beforeUpload = (file: UploadFile): boolean => {
+    setFileList([file])
     return false
   }
+
+  const handleChange = ({ fileList }: { fileList: UploadFile[] }) => setFileList(fileList)
 
   useEffect(() => {
     if (formOpen && advData) {
@@ -53,8 +58,10 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
         name: advData.name,
         image: advData.imageUrl
       })
+      setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: advData.imageUrl }])
     } else {
       form.resetFields()
+      setFileList([])
     }
   }, [advData, form, formOpen])
 
@@ -104,7 +111,13 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
           name='image'
           rules={[{ required: true, message: 'Hình ảnh không được để trống' }]}
         >
-          <Upload beforeUpload={beforeUpload} maxCount={1} listType='picture'>
+          <Upload
+            fileList={fileList}
+            beforeUpload={beforeUpload}
+            onChange={handleChange}
+            maxCount={1}
+            listType='picture'
+          >
             <Button icon={<UploadOutlined />}>Chọn ảnh</Button>
           </Upload>
         </Form.Item>
