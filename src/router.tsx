@@ -1,5 +1,6 @@
 import ProtectedRoute from '@/components/ProtectedRoute.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import AdvertisementManager from '@/features/advertisement/AdvertisementManager.tsx'
 import ListAmenity from '@/features/amenity/ListAmenity.tsx'
 import Login from '@/features/auth/Login.tsx'
 import ListCity from '@/features/city/ListCity.tsx'
@@ -15,7 +16,6 @@ import AppLayout from '@/ui/AppLayout.tsx'
 import { createBrowserRouter } from 'react-router-dom'
 import ListCommentReport from './features/commentReport/ListCommentReport'
 import ListTransaction from './features/transaction/ListTransaction'
-import { ListAdvertisement } from './features/advertisement/ListAdvertisement'
 
 export const routerList = [
   {
@@ -96,7 +96,7 @@ export const routerList = [
           },
           {
             path: ROUTER_NAMES.ADVERTISEMENT,
-            element: <ListAdvertisement />,
+            element: <AdvertisementManager />,
             breadcrumb: 'advertisement.picture'
           }
         ] // End of ProtectedRoute children

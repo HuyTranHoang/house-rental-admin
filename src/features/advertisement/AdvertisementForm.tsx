@@ -1,34 +1,45 @@
-import { useAdvertisement, useCreateAdvertisement, useUpdateAdvertisement } from '@/hooks/useAdvertisement'
-import { AdvertisementForm } from '@/types/advertisement.type'
-import { validateFile } from '@/utils/uploadFile.ts'
+import React, { useEffect, useState } from 'react'
+import { Button, Drawer, Form, Input, Upload, UploadFile } from 'antd'
 import { LeftCircleOutlined, UploadOutlined } from '@ant-design/icons'
-import { Button, Drawer, Form, FormProps, Input, Upload, UploadFile } from 'antd'
-import { RcFile } from 'antd/es/upload'
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { RcFile } from 'antd/es/upload'
+import { useAdvertisement, useCreateAdvertisement, useUpdateAdvertisement } from '@/hooks/useAdvertisement'
+import { AdvertisementForm as AdvertisementFormType } from '@/types/advertisement.type'
+import { validateFile } from '@/utils/uploadFile'
 
-interface AddUpdateAdvertisementProps {
+interface AdvertisementFormProps {
   id: number
-  formOpen: boolean
-  setFormOpen: (open: boolean) => void
+  open: boolean
+  onClose: () => void
 }
 
-function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertisementProps) {
-  const isAddMode = id === 0
-  const [form] = Form.useForm<AdvertisementForm>()
-  const { t } = useTranslation(['common', 'city'])
+const AdvertisementForm: React.FC<AdvertisementFormProps> = ({ id, open, onClose }) => {
+  const [form] = Form.useForm<AdvertisementFormType>()
   const [fileList, setFileList] = useState<UploadFile[]>([])
+  const { t } = useTranslation(['common', 'city'])
 
+  const isAddMode = id === 0
   const { addAdvMutate, addAdvPending } = useCreateAdvertisement()
   const { updateAdvMutate, updateAdvPending } = useUpdateAdvertisement()
   const { advData, advIsLoading } = useAdvertisement(id)
 
-  const title = isAddMode ? t('common.add') : t('common.edit')
+  useEffect(() => {
+    if (open && advData) {
+      form.setFieldsValue({
+        id: advData.id,
+        name: advData.name,
+        description: advData.description,
+        image: advData.imageUrl
+      })
+      setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: advData.imageUrl }])
+    } else {
+      form.resetFields()
+      setFileList([])
+    }
+  }, [advData, form, open])
 
-  const onFinish: FormProps<AdvertisementForm>['onFinish'] = (values) => {
-    console.log('Form Values: ', values)
-
+  const onFinish = (values: AdvertisementFormType) => {
     if (!fileList.length) {
       toast.error('Vui lòng chọn hình ảnh cho quảng cáo')
       return
@@ -37,44 +48,25 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
     values.image = fileList[0].originFileObj as RcFile
     const mutate = isAddMode ? addAdvMutate : updateAdvMutate
     mutate(values).then(() => {
-      setFormOpen(false)
+      onClose()
       form.resetFields()
       toast.success(isAddMode ? 'Thêm thành công' : 'Cập nhật thành công')
     })
   }
 
-  const onClose = () => setFormOpen(false)
-
   const beforeUpload = (file: UploadFile): boolean => {
     if (validateFile(file)) {
       setFileList([file])
     }
-
     return false
   }
 
-  const handleChange = ({ fileList }: { fileList: UploadFile[] }) => setFileList(fileList)
-
-  useEffect(() => {
-    if (formOpen && advData) {
-      form.setFieldsValue({
-        id: advData.id,
-        name: advData.name,
-        image: advData.imageUrl
-      })
-      setFileList([{ uid: '-1', name: 'image.png', status: 'done', url: advData.imageUrl }])
-    } else {
-      form.resetFields()
-      setFileList([])
-    }
-  }, [advData, form, formOpen])
-
   return (
     <Drawer
-      title={title}
+      title={isAddMode ? t('common.add') : t('common.edit')}
       size='large'
       onClose={onClose}
-      open={formOpen}
+      open={open}
       loading={advIsLoading}
       extra={
         <Button icon={<LeftCircleOutlined />} shape='round' onClick={onClose}>
@@ -83,11 +75,11 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
       }
     >
       <Form form={form} layout='vertical' name='advertisementForm' onFinish={onFinish} autoComplete='off'>
-        <Form.Item<AdvertisementForm> label='Id' name='id' hidden>
+        <Form.Item<AdvertisementFormType> label='Id' name='id' hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item<AdvertisementForm>
+        <Form.Item<AdvertisementFormType>
           label='Tên quảng cáo'
           name='name'
           rules={[
@@ -98,7 +90,8 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
         >
           <Input placeholder='Tên quảng cáo' />
         </Form.Item>
-        <Form.Item<AdvertisementForm>
+
+        <Form.Item<AdvertisementFormType>
           label='Ghi chú'
           name='description'
           rules={[
@@ -110,7 +103,7 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
           <Input placeholder='Ghi chú' />
         </Form.Item>
 
-        <Form.Item<AdvertisementForm>
+        <Form.Item<AdvertisementFormType>
           label='Hình ảnh'
           name='image'
           rules={[{ required: true, message: 'Hình ảnh không được để trống' }]}
@@ -118,7 +111,7 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
           <Upload
             fileList={fileList}
             beforeUpload={beforeUpload}
-            onChange={handleChange}
+            onChange={({ fileList }) => setFileList(fileList)}
             maxCount={1}
             listType='picture'
           >
@@ -130,7 +123,6 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
           <Button className='mr-4' onClick={() => form.resetFields()}>
             {t('common.reset')}
           </Button>
-
           <Button loading={addAdvPending || updateAdvPending} type='primary' htmlType='submit'>
             {isAddMode ? t('common.add') : t('common.update')}
           </Button>
@@ -140,4 +132,4 @@ function AddUpdateAdvertisement({ id, formOpen, setFormOpen }: AddUpdateAdvertis
   )
 }
 
-export default AddUpdateAdvertisement
+export default AdvertisementForm

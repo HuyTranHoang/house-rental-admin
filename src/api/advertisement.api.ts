@@ -61,7 +61,7 @@ export const createAdvertisement = async (values: AdvertisementForm) => {
 
 export const updateAdvertisement = async (values: AdvertisementForm) => {
     try {
-        const response = await axiosInstance.put(`/api/advertisements/${values.id}`, values)
+        const response = await axiosInstance.putForm(`/api/advertisements/${values.id}`, values)
         if (response.status === 200) {
             return response.data
         }

@@ -66,8 +66,8 @@ export const useUpdateAdvertisement = () => {
   const { mutateAsync: updateAdvMutate, isPending: updateAdvPending } = useMutation({
     mutationFn: updateAdvertisement,
     onSuccess: async (_, variables) => {
-      await queryClient.invalidateQueries({ queryKey: ['cities'] })
-      await queryClient.invalidateQueries({ queryKey: ['city', variables.id] })
+      await queryClient.invalidateQueries({ queryKey: ['advertisements'] })
+      await queryClient.invalidateQueries({ queryKey: ['advertisement', variables.id] })
     },
     onError: (error) => toast.error(error.message)
   })

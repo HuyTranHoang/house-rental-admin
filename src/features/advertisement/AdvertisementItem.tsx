@@ -1,73 +1,58 @@
 import { Advertisement } from '@/types/advertisement.type'
-import { UseMutateAsyncFunction } from '@tanstack/react-query'
-import { Button, Card, Image, Switch, Tooltip } from 'antd'
+import { Button, Card, Flex, Image, Switch, Tooltip } from 'antd'
 import { Edit, Trash2 } from 'lucide-react'
-import { toast } from 'sonner'
-import './Advertisement.css'
+import React from 'react'
 
 interface AdvertisementItemProps {
   advertisement: Advertisement
-  setIsModalOpen: (open: boolean) => void
-  setCurrentRecord: (record: Advertisement) => void
+  onEdit: () => void
+  onDelete: () => void
+  onActivate: () => void
   updateAdvActivePending: boolean
-  updateAdvActive: UseMutateAsyncFunction<Advertisement | undefined, Error, number, unknown>
 }
 
-export const AdvertisementItem = ({
+const AdvertisementItem: React.FC<AdvertisementItemProps> = ({
   advertisement,
-  setIsModalOpen,
-  setCurrentRecord,
-  updateAdvActivePending,
-  updateAdvActive
-}: AdvertisementItemProps) => {
-  const handleDeleteConfirmation = () => {
-    setCurrentRecord(advertisement)
-    setIsModalOpen(true)
-  }
-
-  const handleActivate = async () => {
-    try {
-      await updateAdvActive(advertisement.id)
-      toast.success(`Quảng cáo ${advertisement.actived ? 'vô hiệu hóa' : 'kích hoạt'} thành công!`)
-    } catch (error) {
-      console.error('Error updating advertisement active status:', error)
-      toast.error('Cập nhật trạng thái quảng cáo thất bại.')
-    }
-  }
-
+  onEdit,
+  onDelete,
+  onActivate,
+  updateAdvActivePending
+}) => {
   return (
-    <>
-      <Card
-        title={advertisement.name}
-        className='mb-4'
-        extra={
-          <Switch
-            defaultChecked={advertisement.actived}
-            onChange={handleActivate}
-            checkedChildren='Kích hoạt'
-            unCheckedChildren='Vô hiệu hóa'
-            loading={updateAdvActivePending}
-          />
-        }
-      >
-        <Image src={advertisement.imageUrl} alt={advertisement.name} className='fixed-image' />
-        <div className='mt-4 flex justify-evenly'>
-          <Tooltip title='Chỉnh sửa'>
-            <Button
-              type='primary'
-              onClick={() => console.log('Chỉnh sửa quảng cáo với ID:', advertisement.id)}
-              className='mr-2'
-            >
-              <Edit />
-            </Button>
-          </Tooltip>
-          <Tooltip title='Xoá'>
-            <Button danger onClick={handleDeleteConfirmation} className='mr-2'>
-              <Trash2 />
-            </Button>
-          </Tooltip>
-        </div>
-      </Card>
-    </>
+    <Card
+      title={advertisement.name}
+      className='mb-4'
+      extra={
+        <Switch
+          checked={advertisement.actived}
+          onChange={onActivate}
+          checkedChildren='Kích hoạt'
+          unCheckedChildren='Vô hiệu hóa'
+          loading={updateAdvActivePending}
+        />
+      }
+    >
+      <Image
+        src={advertisement.imageUrl}
+        alt={advertisement.name}
+        height={600}
+        width={'100%'}
+        className='object-cover'
+      />
+      <Flex justify='space-evenly' className='mt-4'>
+        <Tooltip title='Chỉnh sửa'>
+          <Button type='primary' onClick={onEdit} className='mr-2'>
+            <Edit />
+          </Button>
+        </Tooltip>
+        <Tooltip title='Xoá'>
+          <Button danger onClick={onDelete} className='mr-2'>
+            <Trash2 />
+          </Button>
+        </Tooltip>
+      </Flex>
+    </Card>
   )
 }
+
+export default AdvertisementItem
