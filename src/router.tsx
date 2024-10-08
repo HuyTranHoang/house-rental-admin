@@ -1,5 +1,6 @@
 import ProtectedRoute from '@/components/ProtectedRoute.tsx'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
+import AdvertisementManager from '@/features/advertisement/AdvertisementManager.tsx'
 import ListAmenity from '@/features/amenity/ListAmenity.tsx'
 import Login from '@/features/auth/Login.tsx'
 import ListCity from '@/features/city/ListCity.tsx'
@@ -93,6 +94,11 @@ export const routerList = [
             path: ROUTER_NAMES.COMMENT_REPORT,
             element: <ListCommentReport />,
             breadcrumb: 'commentReport.list'
+          },
+          {
+            path: ROUTER_NAMES.ADVERTISEMENT,
+            element: <AdvertisementManager />,
+            breadcrumb: 'advertisement.picture'
           },
           {
             path: ROUTER_NAMES.MEMBER_SHIP,

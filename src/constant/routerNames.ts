@@ -2,6 +2,7 @@ const CITY_BASE = '/thanh-pho'
 const DISTRICT_BASE = '/quan-huyen'
 const ROOM_TYPE_BASE = '/loai-phong'
 const AMENITY_BASE = '/tien-ich'
+const ADVERTISEMENT_BASE = '/quang-cao'
 const MEMBERSHIP_BASE = '/goi-thanh-vien'
 
 const ROUTER_NAMES = {
@@ -32,20 +33,21 @@ const ROUTER_NAMES = {
   ADD_MEMBERSHIP: `${MEMBERSHIP_BASE}/them-moi`,
   DETAIL_MEMBERSHIP: `${MEMBERSHIP_BASE}/:id`,
   EDIT_MEMBERSHIP: `${MEMBERSHIP_BASE}/:id/cap-nhat`,
-
   TRANSACTION : `/giao-dich`,
-
+  
   REPORT: '/bao-cao-vi-pham',
-
+  
   COMMENT_REPORT: '/bao-cao-binh-luan',
-
+  
   ROLE: '/vai-tro',
-
+  
   REVIEW: '/danh-gia',
-
+  
   USER: '/nguoi-dung',
-
+  
   PROPERTY: '/bai-dang',
+  
+  ADVERTISEMENT:`${ADVERTISEMENT_BASE}`,
 }
 
 export default ROUTER_NAMES

@@ -43,6 +43,10 @@
   "role": {
     "list": "Quản lý vai trò"
   },
+  "advertisementManagement": "Quảng cáo",
+  "advertisement": {
+    "picture": "Quản lý hình ảnh"
+  },
   "memberShip": {
     "list": "Quản lý gói thành viên"
   },

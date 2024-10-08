@@ -8,6 +8,7 @@ import {
   EditOutlined,
   HomeOutlined,
   LogoutOutlined,
+  PictureOutlined,
   ScheduleOutlined,
   SolutionOutlined,
   TransactionOutlined,
@@ -132,6 +133,18 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
           key: ROUTER_NAMES.ROLE,
           label: t('role.list'),
           onClick: () => navigate(ROUTER_NAMES.ROLE)
+        }
+      ]
+    },
+    {
+      key: 'advertisement',
+      label: t('advertisementManagement'),
+      icon: < PictureOutlined/>,
+      children: [
+        {
+          key: ROUTER_NAMES.ADVERTISEMENT,
+          label: t('advertisement.picture'),
+          onClick: () => navigate(ROUTER_NAMES.ADVERTISEMENT)
         }
       ]
     }
