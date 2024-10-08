@@ -14,6 +14,7 @@ export type AuthSlice = {
   user: User | null
   token: string | null
   isAdmin: boolean
+  haveDashboardAccess: boolean
   loginSuccess: (user: User, token: string) => void
   logout: () => void
 }

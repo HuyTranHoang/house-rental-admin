@@ -1,8 +1,6 @@
-'use client'
-
 import GradientButton from '@/components/GradientButton'
-import { User } from '@/types/user.type'
 import useBoundStore from '@/store'
+import { User } from '@/types/user.type'
 import { delay } from '@/utils/delay'
 import { AntDesignOutlined, LockOutlined, UserOutlined } from '@ant-design/icons'
 import { useMutation } from '@tanstack/react-query'
@@ -38,7 +36,17 @@ function Login() {
   const loginMutation = useMutation({
     mutationFn: (values: LoginFormType) => axios.post<User>('/api/auth/login', values),
     onSuccess: (response) => {
-      toast.success('Đăng nhập thành công')
+
+      const isAdmin = response.data.roles.includes('ROLE_ADMIN')
+      const haveDashboardAccess = response.data.authorities.includes('dashboard:read')
+      const canAccess = isAdmin || haveDashboardAccess
+
+      if (!canAccess) {
+        toast.error('Tài khoản của bạn không có quyền truy cập')
+        return
+      } else {
+        toast.success('Đăng nhập thành công')
+      }
 
       const payload = {
         user: response.data,
