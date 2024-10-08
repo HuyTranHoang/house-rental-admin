@@ -2,7 +2,9 @@ import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useDeleteMultiDistrict, useDistrictFilters, useDistricts } from '@/hooks/useDistricts.ts'
+import useBoundStore from '@/store.ts'
 import { District, DistrictDataSource } from '@/types/district.type.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -20,6 +22,7 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function DistrictManager() {
+  const currentUser = useBoundStore((state) => state.user)
   const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -130,11 +133,23 @@ function DistrictManager() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
+            <Button
+              shape='round'
+              type='primary'
+              danger
+              disabled={!hasAuthority(currentUser, 'district:delete')}
+              onClick={() => setIsOpen(true)}
+            >
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handleOpenForm(0)}>
+          <Button
+            icon={<PlusCircleOutlined />}
+            shape='round'
+            type='primary'
+            disabled={!hasAuthority(currentUser, 'district:create')}
+            onClick={() => handleOpenForm(0)}
+          >
             {t('district:button.add')}
           </Button>
         </Space>

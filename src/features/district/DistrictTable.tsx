@@ -10,6 +10,8 @@ import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import useBoundStore from '@/store.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface DistrictTableProps {
   dataSource: DistrictDataSource[]
@@ -32,6 +34,8 @@ function DistrictTable({
   sortedInfo,
   onEdit
 }: DistrictTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<DistrictDataSource | null>(null)
 
@@ -107,6 +111,8 @@ function DistrictTable({
       width: 200,
       render: (_, record) => (
         <TableActions
+          updateDisabled={!hasAuthority(currentUser, 'district:update')}
+          deleteDisabled={!hasAuthority(currentUser, 'district:delete')}
           onUpdate={() => onEdit(record.id)}
           onDelete={() => {
             setCurrentRecord(record)
