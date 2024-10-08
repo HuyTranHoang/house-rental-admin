@@ -7,25 +7,10 @@ import useBoundStore from '@/store.ts'
 import { Role } from '@/types/role.type.ts'
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import {
-  Button,
-  DescriptionsProps,
-  Flex,
-  Form,
-  FormInstance,
-  type FormProps,
-  Input,
-  List,
-  Modal,
-  Space,
-  Tooltip,
-  Typography
-} from 'antd'
+import { Button, Flex, Form, FormInstance, type FormProps, Input, List, Modal, Space, Tooltip, Typography } from 'antd'
 import { clsx } from 'clsx'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-const { confirm } = Modal
 
 interface ListRoleProps {
   form: FormInstance
@@ -36,6 +21,9 @@ interface ListRoleProps {
 function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const [isAddMode, setIsAddMode] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null)
+
   const [error, setError] = useState<string>('')
   const [formAddRole] = Form.useForm()
   const { t } = useTranslation(['common', 'role'])
@@ -43,8 +31,13 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
   const isDarkMode = useBoundStore((state) => state.isDarkMode)
   const formatDate = useCustomDateFormatter()
 
-  const { addRoleMutate, addRolePending } = useCreateRole(setError, setIsModalOpen, formAddRole)
-  const { updateRoleMutate, updateRolePending } = useUpdateRole(setError, setIsModalOpen, formAddRole, setCurrentRole)
+  const { addRoleMutate, addRolePending } = useCreateRole(setError, setIsDeleteModalOpen, formAddRole)
+  const { updateRoleMutate, updateRolePending } = useUpdateRole(
+    setError,
+    setIsDeleteModalOpen,
+    formAddRole,
+    setCurrentRole
+  )
   const { deleteRoleMutate } = useDeleteRole()
 
   const { data, isLoading } = useRolesAll()
@@ -64,41 +57,17 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
     }
   }
 
-  const showDeleteConfirm = (record: Role) => {
-    const items: DescriptionsProps['items'] = [
-      {
-        key: '1',
-        label: 'Id',
-        children: <span>{record.id}</span>,
-        span: 3
-      },
-      {
-        key: '2',
-        label: t('role:form.roleName'),
-        children: <span>{record.name}</span>,
-        span: 3
-      },
-      {
-        key: '3',
-        label: t('common:common.table.createdAt'),
-        children: <span>{formatDate(record.createdAt)}</span>,
-        span: 3
-      }
-    ]
+  const showDeleteModal = (record: Role) => {
+    setSelectedRole(record)
+    setIsDeleteModalOpen(true)
+  }
 
-    confirm({
-      icon: null,
-      title: <ConfirmModalTitle title={t('role:deleteModal.title')} />,
-      content: <ConfirmModalContent items={items} />,
-      okText: t('common.ok'),
-      okType: 'danger',
-      cancelText: t('common.cancel'),
-      maskClosable: true,
-      onOk() {
-        deleteRoleMutate(record.id)
-        setCurrentRole({} as Role)
-      }
-    })
+  const handleDelete = () => {
+    if (selectedRole) {
+      deleteRoleMutate(selectedRole.id)
+      setCurrentRole({} as Role)
+      setIsDeleteModalOpen(false)
+    }
   }
 
   useEffect(() => {
@@ -119,7 +88,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
                 formAddRole.resetFields()
                 setError('')
                 setIsAddMode(true)
-                setIsModalOpen(true)
+                setIsDeleteModalOpen(true)
               }}
             />
           </Tooltip>
@@ -141,10 +110,10 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
                       onClick={() => {
                         setCurrentRole(item)
                         setIsAddMode(false)
-                        setIsModalOpen(true)
+                        setIsDeleteModalOpen(true)
                       }}
                     />,
-                    <DeleteOutlined onClick={() => showDeleteConfirm(item)} className='icon-danger' />
+                    <DeleteOutlined onClick={() => showDeleteModal(item)} className='icon-danger' />
                   ]
                 : [
                     <Tooltip title={t('role:list.defaultRole')}>
@@ -204,7 +173,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
           <Form.Item>
             <Flex justify='end'>
               <Space>
-                <Button onClick={() => setIsModalOpen(false)} danger>
+                <Button onClick={() => setIsDeleteModalOpen(false)} danger>
                   {t('common.cancel')}
                 </Button>
                 <Button loading={addRolePending || updateRolePending} type='primary' htmlType='submit'>
@@ -214,6 +183,41 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
             </Flex>
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        title={<ConfirmModalTitle title={t('role:deleteModal.title')} />}
+        open={isDeleteModalOpen}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        onOk={handleDelete}
+        okText={t('common.ok')}
+        okType='danger'
+        cancelText={t('common.cancel')}
+      >
+        {selectedRole && (
+          <ConfirmModalContent
+            items={[
+              {
+                key: '1',
+                label: 'Id',
+                children: <span>{selectedRole.id}</span>,
+                span: 3
+              },
+              {
+                key: '2',
+                label: t('role:form.roleName'),
+                children: <span>{selectedRole.name}</span>,
+                span: 3
+              },
+              {
+                key: '3',
+                label: t('common:common.table.createdAt'),
+                children: <span>{formatDate(selectedRole.createdAt)}</span>,
+                span: 3
+              }
+            ]}
+          />
+        )}
       </Modal>
     </>
   )
