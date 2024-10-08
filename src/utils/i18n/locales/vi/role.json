@@ -26,7 +26,13 @@
     "roomType": "Loại phòng",
     "amenity": "Tiện nghi",
     "role": "Vai trò",
-    "adminPage": "Trang quản trị"
+    "dashboard": "Trang quản trị",
+    "comment": "Bình luận",
+    "membership": "Gói thành viên",
+    "transaction": "Giao dịch",
+    "advertisement": "Quảng cáo",
+    "report": "Báo cáo",
+    "commentReport": "Báo cáo bình luận"
   },
   "notification": {
     "addSuccess": "Thêm vai trò thành công",

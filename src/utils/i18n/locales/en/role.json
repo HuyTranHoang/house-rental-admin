@@ -26,7 +26,13 @@
     "roomType": "Room Type",
     "amenity": "Amenity",
     "role": "Role",
-    "adminPage": "Admin Page"
+    "dashboard": "Dashboard",
+    "comment": "Comment",
+    "membership": "Membership",
+    "transaction": "Transaction",
+    "advertisement": "Advertisement",
+    "report": "Report",
+    "commentReport": "Report Comment"
   },
   "notification": {
     "addSuccess": "Add role successfully",

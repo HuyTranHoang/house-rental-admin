@@ -1,7 +1,9 @@
 import { getRoleById, RoleField } from '@/api/role.api.ts'
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
+import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useCreateRole, useDeleteRole, useRolesAll, useUpdateRole } from '@/hooks/useRoles.ts'
+import useBoundStore from '@/store.ts'
 import { Role } from '@/types/role.type.ts'
 import { DeleteOutlined, EditOutlined, InfoCircleOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
@@ -21,8 +23,6 @@ import {
 } from 'antd'
 import { clsx } from 'clsx'
 import React, { useEffect, useState } from 'react'
-import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
-import useBoundStore from '@/store.ts'
 import { useTranslation } from 'react-i18next'
 
 const { confirm } = Modal
@@ -158,11 +158,11 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
               form.resetFields()
               setCurrentRole(item)
             }}
-            className={clsx('cursor-pointer relative p-1', {
+            className={clsx('relative cursor-pointer p-1', {
               'bg-gradient-to-l from-blue-50 to-blue-200': !isDarkMode && item.id === currentRole.id,
               'bg-gradient-to-l from-blue-950 to-blue-700': isDarkMode && item.id === currentRole.id,
               'bg-gray-100 hover:bg-gray-200': !isDarkMode && item.id !== currentRole.id,
-              'bg-gray-900 hover:bg-gray-700': isDarkMode && item.id !== currentRole.id,
+              'bg-gray-900 hover:bg-gray-700': isDarkMode && item.id !== currentRole.id
             })}
           >
             {item.name}
@@ -196,7 +196,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
             <Input />
           </Form.Item>
           <Form.Item<RoleField> label={t('role:form.description')} name='description'>
-            <Input.TextArea />  
+            <Input.TextArea />
           </Form.Item>
           <Form.Item<RoleField> label={t('role:form.authority')} name='authorityPrivileges' hidden>
             <Input />

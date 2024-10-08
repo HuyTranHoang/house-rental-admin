@@ -73,10 +73,16 @@ function RoleManager() {
     review: t('role:table.evaluate'),
     city: t('role:table.city'),
     district: t('role:table.district'),
-    room_type: t('role:table.roomType'),
+    roomType: t('role:table.roomType'),
     amenity: t('role:table.amenity'),
     role: t('role:table.role'),
-    dashboard: t('role:table.adminPage')
+    dashboard: t('role:table.dashboard'),
+    comment: t('role:table.comment'),
+    membership: t('role:table.membership'),
+    transaction: t('role:table.transaction'),
+    advertisement: t('role:table.advertisement'),
+    report: t('role:table.report'),
+    commentReport: t('role:table.commentReport')
   }
 
   const columns: TableProps<AuthoritiesTable>['columns'] = [

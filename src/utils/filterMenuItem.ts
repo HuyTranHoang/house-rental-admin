@@ -43,7 +43,7 @@ const filterMenuItems = (items: MenuItems, currentUser: User | null): MenuItems 
           if (hasAuthority(currentUser, 'district:read')) acc.push(item)
           break
         case ROUTER_NAMES.ROOM_TYPE:
-          if (hasAuthority(currentUser, 'room_type:read')) acc.push(item)
+          if (hasAuthority(currentUser, 'roomType:read')) acc.push(item)
           break
         case ROUTER_NAMES.AMENITY:
           if (hasAuthority(currentUser, 'amenity:read')) acc.push(item)
