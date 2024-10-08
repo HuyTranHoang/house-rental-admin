@@ -3,7 +3,9 @@ import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.
 import AmenityForm from '@/features/amenity/AmenityForm.tsx'
 import { useAmenities, useAmenityFilters, useDeleteMultiAmenity } from '@/hooks/useAmenities.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
+import useBoundStore from '@/store.ts'
 import { Amenity, AmenityDataSource } from '@/types/amenity.type.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -19,6 +21,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function AmenityManager() {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -112,11 +116,23 @@ function AmenityManager() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
+            <Button
+              shape='round'
+              type='primary'
+              danger
+              disabled={!hasAuthority(currentUser, 'amenity:delete')}
+              onClick={() => setIsOpen(true)}
+            >
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handleOpenForm(0)}>
+          <Button
+            icon={<PlusCircleOutlined />}
+            shape='round'
+            type='primary'
+            disabled={!hasAuthority(currentUser, 'amenity:create')}
+            onClick={() => handleOpenForm(0)}
+          >
             {t('amenity:button.add')}
           </Button>
         </Space>

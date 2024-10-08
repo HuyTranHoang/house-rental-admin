@@ -9,6 +9,8 @@ import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import useBoundStore from '@/store.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface RoomTypeTableProps {
   dataSource: RoomTypeDataSource[]
@@ -29,6 +31,8 @@ function RoomTypeTable({
   sortedInfo,
   onEdit
 }: RoomTypeTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<RoomTypeDataSource | null>(null)
 
@@ -81,6 +85,8 @@ function RoomTypeTable({
       width: 200,
       render: (_, record) => (
         <TableActions
+          updateDisabled={!hasAuthority(currentUser, 'roomType:update')}
+          deleteDisabled={!hasAuthority(currentUser, 'roomType:delete')}
           onUpdate={() => onEdit(record.id)}
           onDelete={() => {
             setCurrentRecord(record)

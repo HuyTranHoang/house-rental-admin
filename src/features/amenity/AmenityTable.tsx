@@ -9,6 +9,8 @@ import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import useBoundStore from '@/store.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface AmenityTableProps {
   dataSource: AmenityDataSource[]
@@ -29,6 +31,8 @@ function AmenityTable({
   sortedInfo,
   onEdit
 }: AmenityTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<AmenityDataSource | null>(null)
 
@@ -81,6 +85,8 @@ function AmenityTable({
       width: 200,
       render: (_, record) => (
         <TableActions
+          updateDisabled={!hasAuthority(currentUser, 'amenity:update')}
+          deleteDisabled={!hasAuthority(currentUser, 'amenity:delete')}
           onUpdate={() => onEdit(record.id)}
           onDelete={() => {
             setCurrentRecord(record)
