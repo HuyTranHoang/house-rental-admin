@@ -104,7 +104,7 @@
       "delete": "Role: Delete"
     },
     "admin": {
-      "all": "Admin: Full Access"
+      "all": "Super Admin: Full Access"
     },
     "dashboard": {
       "read": "Dashboard: View"

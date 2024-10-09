@@ -140,7 +140,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
               'bg-gray-900 hover:bg-gray-700': isDarkMode && item.id !== currentRole.id
             })}
           >
-            {item.name}
+            <span className={clsx('transition duration-300',item.id === currentRole.id && 'translate-x-4')}>{item.name}</span>
           </List.Item>
         )}
       />

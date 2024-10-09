@@ -54,15 +54,15 @@ const BlockUserButton: React.FC<BlockUserButtonProps> = ({ record, hasText }) =>
       <Tooltip title={record.nonLocked ? t('table.tooltips.lock') : t('table.tooltips.unlock')}>
         <Button
           icon={record.nonLocked ? <LockOutlined /> : <UnlockOutlined />}
-          disabled={record.username === 'admin' || !hasAuthority(currentUser, 'user:update')}
+          disabled={record.roles.includes('Super Admin') || !hasAuthority(currentUser, 'user:update')}
           onClick={() => setOpen(true)}
           className={clsx(
             record.nonLocked &&
-              record.username !== 'admin' &&
+              !record.roles.includes('Super Admin') &&
               hasAuthority(currentUser, 'user:update') &&
               'border-orange-500 text-orange-500',
             !record.nonLocked &&
-              record.username !== 'admin' &&
+              !record.roles.includes('Super Admin') &&
               hasAuthority(currentUser, 'user:update') &&
               'border-green-500 text-green-500'
           )}

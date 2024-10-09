@@ -29,7 +29,9 @@ function UserUpdateRoleModal({
   const { updateRoleForUserMutate, updateRoleForUserIsPending } = useUpdateRoleForUser()
 
   const checkBoxOptions = data
-    ? data.map((role) => ({
+    ? data
+      .filter((role) => role.name !== 'Super Admin')
+      .map((role) => ({
         label: role.name,
         value: role.name
       }))

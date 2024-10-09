@@ -5,7 +5,9 @@ import UserDetailsModal from '@/features/user/UserDetailsModal.tsx'
 import UserUpdateRoleModal from '@/features/user/UserUpdateRoleModal.tsx'
 import { useRolesAll } from '@/hooks/useRoles'
 import { useDeleteUser } from '@/hooks/useUsers'
+import useBoundStore from '@/store.ts'
 import { UserDataSource } from '@/types/user.type'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import {
   Avatar,
@@ -26,8 +28,6 @@ import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import useBoundStore from '@/store.ts'
-import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface UserTableProps {
   dataSource: UserDataSource[]
@@ -147,7 +147,7 @@ function UserTable({
           <Tooltip title={t('user:table.tooltips.editRole')}>
             <Button
               icon={<EditOutlined />}
-              disabled={record.username === 'admin' || !hasAuthority(currentUserLogin, 'user:update')}
+              disabled={record.roles.includes('Super Admin') || !hasAuthority(currentUserLogin, 'user:update')}
               onClick={() => handleUpdateRoles(record)}
             />
           </Tooltip>
@@ -171,8 +171,8 @@ function UserTable({
           <Tooltip title={t('user:table.tooltips.quickView')}>
             <Button
               icon={<EyeOutlined />}
-              disabled={record.username === 'admin'}
-              className={record.username === 'admin' ? 'disabled' : 'border-blue-500 text-blue-500'}
+              disabled={record.roles.includes('Super Admin')}
+              className={record.roles.includes('Super Admin') ? 'disabled' : 'border-blue-500 text-blue-500'}
               onClick={() => handleView(record)}
             />
           </Tooltip>
@@ -182,7 +182,7 @@ function UserTable({
           <Tooltip title={t('user:table.tooltips.delete')}>
             <Button
               icon={<DeleteOutlined />}
-              disabled={record.username === 'admin' || !hasAuthority(currentUserLogin, 'user:delete')}
+              disabled={record.roles.includes('Super Admin') || !hasAuthority(currentUserLogin, 'user:delete')}
               onClick={() => {
                 setCurrentUser(record)
                 setIsDeleteModalOpen(true)

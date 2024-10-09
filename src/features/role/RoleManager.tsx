@@ -1,4 +1,5 @@
 import { getRoleById, RoleField } from '@/api/role.api.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 import RoleTable from '@/features/role/RoleTable.tsx'
 import { useAuthorities } from '@/hooks/useAuthorities.ts'
 import { useUpdateRole } from '@/hooks/useRoles.ts'
@@ -28,7 +29,6 @@ import { formatDate } from 'date-fns/format'
 import { ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 interface GroupedAuthorities {
   [key: string]: {
@@ -120,24 +120,24 @@ function RoleManager() {
     },
     ...(hasAuthority(currentUser, 'role:edit')
       ? [
-        {
-          title: t('role:table.more'),
-          dataIndex: 'other',
-          key: 'other',
-          render: (_: undefined, rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
-            return (
-              <Space>
-                <Tooltip title={t('role:form.selectAll')}>
-                  <PlusSquareOutlined onClick={() => selectAll(rowIndex)} />
-                </Tooltip>
-                <Tooltip title={t('role:form.unSelectAll')}>
-                  <MinusSquareOutlined onClick={() => unselectAll(rowIndex)} style={{ color: red.primary }} />
-                </Tooltip>
-              </Space>
-            )
+          {
+            title: t('role:table.more'),
+            dataIndex: 'other',
+            key: 'other',
+            render: (_: undefined, rowIndex: GroupedAuthorities[keyof GroupedAuthorities]) => {
+              return (
+                <Space>
+                  <Tooltip title={t('role:form.selectAll')}>
+                    <PlusSquareOutlined onClick={() => selectAll(rowIndex)} />
+                  </Tooltip>
+                  <Tooltip title={t('role:form.unSelectAll')}>
+                    <MinusSquareOutlined onClick={() => unselectAll(rowIndex)} style={{ color: red.primary }} />
+                  </Tooltip>
+                </Space>
+              )
+            }
           }
-        }
-      ]
+        ]
       : [])
   ]
 
@@ -231,11 +231,13 @@ function RoleManager() {
   const groupedPrivileges = groupBy(authorities)
   const dataSource = Object.values(groupedPrivileges)
 
+  const isNotDefaultRole = currentRole.id && currentRole.name !== 'Super Admin' && currentRole.name !== 'User'
+
   useEffect(() => {
-    if (!hasAuthority(currentUser,'role:read')) {
+    if (!hasAuthority(currentUser, 'role:read')) {
       navigate(ROUTER_NAMES.DASHBOARD)
     }
-  },[currentUser, navigate])
+  }, [currentUser, navigate])
 
   // Set initial values for form
   useEffect(() => {
@@ -291,23 +293,43 @@ function RoleManager() {
 
             <Form.Item<RoleField>>
               {!currentRole.id && <Typography.Paragraph>{t('role:list.selectRole')}</Typography.Paragraph>}
-              {currentRole.id && currentRole.name === 'Super Admin' && (
-                <Typography.Paragraph>{t('role:list.adminRole')}</Typography.Paragraph>
+              {currentRole.id && currentRole.name === 'User' && (
+                <>
+                  <ul>
+                    <li>Thay đổi thông tin cá nhân, mật khẩu và ảnh đại diện</li>
+                    <li>Bình luận, đánh giá, lưu bài đăng yêu thích</li>
+                    <li>Báo cáo bài đăng và bình luận xấu</li>
+                    <li>Đăng bài, quản lí các bài đã đăng</li>
+                    <li>Nạp tiền và sử dụng các chức năng ưu tiên</li>
+                  </ul>
+                  <span>Đây là vai trò mặc định, không thể chỉnh sửa</span>
+                </>
               )}
-              {currentRole.id && currentRole.name !== 'Super Admin' && (
+              {currentRole.id && currentRole.name === 'Super Admin' && (
+                <>
+                  <ul>
+                    <li>Quản lí thông tin hệ thống</li>
+                    <li>Quản lí vai trò và quyền hạn</li>
+                    <li>Quản lí thông tin thành phố, quận huyện, loại phòng, tiện ích</li>
+                    <li>Quản lí thông tin người dùng, bài đăng, bình luận, đánh giá, báo cáo, quảng cáo, giao dịch</li>
+                  </ul>
+                  <span>Đây là vai trò mặc định, không thể chỉnh sửa</span>
+                </>
+              )}
+              {isNotDefaultRole && (
                 <Table dataSource={dataSource} columns={columns} pagination={false} loading={roleUpdateLoading} />
               )}
             </Form.Item>
 
             <Form.Item>
-              {currentRole.id && currentRole.name !== 'Super Admin' && (
+              {isNotDefaultRole && (
                 <Button
                   loading={updateRolePending}
                   type='primary'
                   disabled={!hasAuthority(currentUser, 'role:edit')}
                   htmlType='submit'
                 >
-                  {t('role:list.editAuthority')}
+                  {t('role:list.editAuthority')} {currentRole.name}
                 </Button>
               )}
             </Form.Item>
@@ -315,7 +337,7 @@ function RoleManager() {
         </Col>
 
         <Col span={7}>
-          {currentRole.id && (
+          {isNotDefaultRole && (
             <>
               <Typography.Title level={5}>{t('role:list.infoDetail')}</Typography.Title>
               <Typography.Paragraph>
