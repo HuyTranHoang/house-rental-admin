@@ -13,10 +13,11 @@ import RoleManager from '@/features/role/RoleManager.tsx'
 import RoomTypeManager from '@/features/roomType/RoomTypeManager.tsx'
 import UserManager from '@/features/user/UserManager.tsx'
 import AppLayout from '@/ui/AppLayout.tsx'
+import NotFound from '@/ui/NotFound.tsx'
 import { createBrowserRouter } from 'react-router-dom'
 import CommentReportManager from './features/commentReport/CommentReportManager.tsx'
-import TransactionManager from './features/transaction/TransactionManager.tsx'
 import MembershipManager from './features/menbership/MembershipManager.tsx'
+import TransactionManager from './features/transaction/TransactionManager.tsx'
 
 export const routerList = [
   {
@@ -115,7 +116,7 @@ export const routerList = [
   },
   {
     path: '*',
-    element: <div>Page Not Found</div>
+    element: <NotFound />
   }
 ]
 
