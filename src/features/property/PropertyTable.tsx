@@ -1,7 +1,9 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle'
 import { useBlockProperty, useDeleteProperty, useUpdatePropertyStatus } from '@/hooks/useProperties'
+import useBoundStore from '@/store.ts'
 import { Property, PropertyDataSource, PropertyStatus } from '@/types/property.type'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy'
 import { blue } from '@ant-design/colors'
 import { CheckOutlined, CloseOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons'
@@ -47,6 +49,8 @@ function PropertyTable({
   handleTableChange,
   sortedInfo
 }: PropertyTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [open, setOpen] = useState(false)
   const [currentProperty, setCurrentProperty] = useState<Property | undefined>(undefined)
 
@@ -92,6 +96,7 @@ function PropertyTable({
                 setOpen(false)
               }}
               icon={<CheckOutlined />}
+              disabled={!hasAuthority(currentUser, 'property:update')}
               type='primary'
             >
               {t('property:button.approved')}
@@ -104,6 +109,7 @@ function PropertyTable({
               setOpen(false)
             }}
             icon={<CloseOutlined />}
+            disabled={!hasAuthority(currentUser, 'property:update')}
             danger
           >
             {t('property:button.reject')}
@@ -235,9 +241,20 @@ function PropertyTable({
     {
       title: t('property:table.title'),
       dataIndex: 'title',
-      key: 'title'
+      key: 'title',
+      render: (_, record) => (
+        <Typography.Text
+          className='text-blue-500 cursor-pointer'
+          onClick={() => {
+            setCurrentProperty(record)
+            setOpen(true)
+          }}
+        >
+          {record.title}
+        </Typography.Text>
+      )
     },
-    { title: t('property:table.location'), dataIndex: 'location', key: 'location' },
+    // { title: t('property:table.location'), dataIndex: 'location', key: 'location' },
     {
       title: t('property:table.area'),
       dataIndex: 'area',
@@ -278,6 +295,7 @@ function PropertyTable({
             const status = e ? 'block' : 'unblock'
             blockProperty({ id: record.id, status })
           }}
+          disabled={!hasAuthority(currentUser, 'property:update')}
         />
       )
     },
@@ -316,6 +334,7 @@ function PropertyTable({
                 setCurrentRecord(record)
                 setIsModalOpen(true)
               }}
+              disabled={!hasAuthority(currentUser, 'property:delete')}
               danger
             />
           </Tooltip>
@@ -358,6 +377,7 @@ function PropertyTable({
           <Descriptions bordered items={modalItems} />
         </Modal>
       )}
+
       <Modal
         open={isModalOpen}
         className='w-96'
