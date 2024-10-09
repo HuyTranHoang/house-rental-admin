@@ -26,6 +26,8 @@ import { FilterValue } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useBoundStore from '@/store.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface CommentReportTableProps {
   dataSource: CommentReportDataSource[]
@@ -46,6 +48,8 @@ function CommentReportTable({
   filteredInfo,
   sortedInfo
 }: CommentReportTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [commentId, setCommentId] = useState<number>(0)
   const [commentReport, setCommentReport] = useState<CommentReport>({} as CommentReport)
 
@@ -93,6 +97,7 @@ function CommentReportTable({
                 updateCommentReportStatusMutate({ id: commentReport.id, status: CommentReportStatus.APPROVED })
                 setOpen(false)
               }}
+              disabled={!hasAuthority(currentUser,'commentReport:update')}
               icon={<CheckOutlined />}
               type='primary'
             >
@@ -105,6 +110,7 @@ function CommentReportTable({
               updateCommentReportStatusMutate({ id: commentReport.id, status: CommentReportStatus.REJECTED })
               setOpen(false)
             }}
+            disabled={!hasAuthority(currentUser,'commentReport:update')}
             icon={<CloseOutlined />}
             danger
           >
@@ -259,6 +265,7 @@ function CommentReportTable({
               setCommentId(record.commentId)
               setCommentReport(record)
             }}
+            disabled={!hasAuthority(currentUser,'commentReport:update')}
           >
             {t('commentReport:button.review')}
           </Button>
