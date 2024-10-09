@@ -1,5 +1,19 @@
 import { useQueryClient } from '@tanstack/react-query'
-import { Button, Cascader, Col, Form, Input, Row, Select, TableProps, Tabs, TabsProps, Typography } from 'antd'
+import {
+  Button,
+  Cascader,
+  Col,
+  Divider,
+  Form,
+  Input,
+  Row,
+  Select,
+  Space,
+  TableProps,
+  Tabs,
+  TabsProps,
+  Typography
+} from 'antd'
 
 import ErrorFetching from '@/components/ErrorFetching'
 import { DollarIcon, GeoIcon, HomeIcon } from '@/components/FilterIcons.tsx'
@@ -210,11 +224,15 @@ function PropertyManager() {
 
   return (
     <>
-      <Row gutter={[16, 16]} align='middle' justify='space-between' style={{ marginBottom: 16 }}>
+      <Row style={{ marginBottom: 16 }}>
         <Col span={6}>
-          <Typography.Title level={2} style={{ margin: 0 }}>
-            {t('property:title')}
-          </Typography.Title>
+          <Space size='small'>
+            <Typography.Title level={2} style={{ margin: 0 }}>
+              {t('property:title')}
+            </Typography.Title>
+
+            <Divider type='vertical' className='mx-4 h-10 bg-gray-600' />
+          </Space>
         </Col>
         <Col span={18}>
           <Form form={form} name='searchCityForm'>
