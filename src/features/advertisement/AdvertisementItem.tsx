@@ -1,4 +1,6 @@
+import useBoundStore from '@/store.ts'
 import { Advertisement } from '@/types/advertisement.type'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { Button, Card, Flex, Image, Switch, Tooltip } from 'antd'
 import { Edit, Trash2 } from 'lucide-react'
 import React from 'react'
@@ -19,6 +21,8 @@ const AdvertisementItem: React.FC<AdvertisementItemProps> = ({
   onActivate,
   updateAdvActivePending
 }) => {
+  const currentUser = useBoundStore((state) => state.user)
+
   const { t } = useTranslation()
 
   return (
@@ -32,6 +36,7 @@ const AdvertisementItem: React.FC<AdvertisementItemProps> = ({
           checkedChildren='Kích hoạt'
           unCheckedChildren='Vô hiệu hóa'
           loading={updateAdvActivePending}
+          disabled={!hasAuthority(currentUser, 'advertisement:update')}
         />
       }
     >
@@ -44,12 +49,22 @@ const AdvertisementItem: React.FC<AdvertisementItemProps> = ({
       />
       <Flex justify='space-evenly' className='mt-4'>
         <Tooltip title={t('common.edit')}>
-          <Button type='primary' onClick={onEdit} className='mr-2'>
+          <Button
+            type='primary'
+            onClick={onEdit}
+            disabled={!hasAuthority(currentUser, 'advertisement:update')}
+            className='mr-2'
+          >
             <Edit />
           </Button>
         </Tooltip>
         <Tooltip title={t('common.delete')}>
-          <Button danger onClick={onDelete} className='mr-2'>
+          <Button
+            danger
+            onClick={onDelete}
+            disabled={!hasAuthority(currentUser, 'advertisement:delete')}
+            className='mr-2'
+          >
             <Trash2 />
           </Button>
         </Tooltip>

@@ -12,6 +12,7 @@
     "ok": "Đồng ý",
     "cancel": "Hủy",
     "deleting": "Đang xóa, vui lòng đợi...",
+    "loading": "Đang tải, vui lòng đợi...",
     "table": {
       "action": "Hành động",
       "createdAt": "Ngày tạo",

@@ -1,5 +1,7 @@
 import { useAdvertisements, useDeleteAdvertisement, useUpdateIsActived } from '@/hooks/useAdvertisement'
+import useBoundStore from '@/store.ts'
 import { Advertisement } from '@/types/advertisement.type'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Alert, Button, Col, Flex, Modal, Row, Typography } from 'antd'
 import { useState } from 'react'
@@ -9,6 +11,8 @@ import AdvertisementForm from './AdvertisementForm'
 import AdvertisementItem from './AdvertisementItem.tsx'
 
 function AdvertisementManager() {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [editId, setEditId] = useState<number>(0)
   const [formOpen, setFormOpen] = useState(false)
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -57,12 +61,17 @@ function AdvertisementManager() {
         <Typography.Title level={2} className='m-0'>
           {t('adv:title')}
         </Typography.Title>
-        <Button shape='round' type='primary' onClick={() => handleOpenForm()}>
+        <Button
+          shape='round'
+          type='primary'
+          disabled={!hasAuthority(currentUser, 'advertisement:create')}
+          onClick={() => handleOpenForm()}
+        >
           <PlusCircleOutlined /> {t('common.add')}
         </Button>
       </Flex>
 
-      {advIsLoading && <Alert className='mt-2' message='Đang tải dữ liệu' type='info' />}
+      {advIsLoading && <Alert className='mt-2' message={t('common.loading')} type='info' />}
 
       <Row gutter={16} className='mt-8 flex justify-center'>
         {advData?.map((ad) => (
