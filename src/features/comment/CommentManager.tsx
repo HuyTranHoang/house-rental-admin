@@ -2,7 +2,9 @@ import ErrorFetching from '@/components/ErrorFetching'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import { useComments, useDeleteMultiComment, useReviewFilters } from '@/hooks/useComments.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
+import useBoundStore from '@/store.ts'
 import { Comment, CommentDataSource } from '@/types/comment.type.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
@@ -17,6 +19,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function CommentManager() {
+  const currentUser = useBoundStore((state) => state.user)
+
   const { t } = useTranslation(['common', 'comment'])
 
   const { search, pageNumber, pageSize, sortBy, setFilters } = useReviewFilters()
@@ -101,7 +105,13 @@ function CommentManager() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
+            <Button
+              shape='round'
+              type='primary'
+              danger
+              disabled={!hasAuthority(currentUser, 'comment:delete')}
+              onClick={() => setIsOpen(true)}
+            >
               {t('common.multipleDelete')}
             </Button>
           )}

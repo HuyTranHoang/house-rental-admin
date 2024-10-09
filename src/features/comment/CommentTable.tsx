@@ -9,6 +9,8 @@ import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useBoundStore from '@/store.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface ReviewTableProps {
   dataSource: CommentDataSource[]
@@ -27,6 +29,8 @@ function CommentTable({
   rowSelection,
   sortedInfo
 }: ReviewTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const { t } = useTranslation(['common', 'comment'])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -122,6 +126,7 @@ function CommentTable({
               setCurrentComment(record)
               setIsDeleteModalOpen(true)
             }}
+            disabled={!hasAuthority(currentUser, 'comment:delete')}
             danger
           >
             {t('common.delete')}
@@ -196,6 +201,7 @@ function CommentTable({
                 setIsDeleteModalOpen(true)
                 setIsModalOpen(false)
               }}
+              disabled={!hasAuthority(currentUser, 'comment:delete')}
             >
               {t('common.delete')}
             </Button>
