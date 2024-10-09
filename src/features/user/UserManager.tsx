@@ -2,7 +2,9 @@ import ErrorFetching from '@/components/ErrorFetching'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useDeleteUsers, useUserFilters, useUsers } from '@/hooks/useUsers'
+import useBoundStore from '@/store.ts'
 import { User, UserDataSource } from '@/types/user.type'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { CheckCircleOutlined, CloseSquareOutlined } from '@ant-design/icons'
 import { useQueryClient } from '@tanstack/react-query'
 import { Button, Divider, Flex, Space, TableProps, Tabs, TabsProps, Typography } from 'antd'
@@ -19,6 +21,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function UserManager() {
+  const currentUser = useBoundStore((state) => state.user)
+
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'user'])
 
@@ -134,7 +138,13 @@ function UserManager() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
+            <Button
+              shape='round'
+              type='primary'
+              danger
+              disabled={!hasAuthority(currentUser, 'user:delete')}
+              onClick={() => setIsOpen(true)}
+            >
               {t('common.multipleDelete')}
             </Button>
           )}

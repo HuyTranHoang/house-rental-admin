@@ -26,6 +26,8 @@ import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import useBoundStore from '@/store.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface UserTableProps {
   dataSource: UserDataSource[]
@@ -46,6 +48,8 @@ function UserTable({
   filteredInfo,
   sortedInfo
 }: UserTableProps) {
+  const currentUserLogin = useBoundStore((state) => state.user)
+
   const { t } = useTranslation(['common', 'user'])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
@@ -143,7 +147,7 @@ function UserTable({
           <Tooltip title={t('user:table.tooltips.editRole')}>
             <Button
               icon={<EditOutlined />}
-              disabled={record.username === 'admin'}
+              disabled={record.username === 'admin' || !hasAuthority(currentUserLogin, 'user:update')}
               onClick={() => handleUpdateRoles(record)}
             />
           </Tooltip>
@@ -178,7 +182,7 @@ function UserTable({
           <Tooltip title={t('user:table.tooltips.delete')}>
             <Button
               icon={<DeleteOutlined />}
-              disabled={record.username === 'admin'}
+              disabled={record.username === 'admin' || !hasAuthority(currentUserLogin, 'user:delete')}
               onClick={() => {
                 setCurrentUser(record)
                 setIsDeleteModalOpen(true)

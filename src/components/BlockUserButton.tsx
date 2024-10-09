@@ -1,8 +1,10 @@
 import { useLockUser } from '@/hooks/useUsers'
+import useBoundStore from '@/store.ts'
 import { UserDataSource } from '@/types/user.type'
-import { green, red, volcano } from '@ant-design/colors'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { LockOutlined, UnlockOutlined, WarningOutlined } from '@ant-design/icons'
 import { Button, Flex, Modal, Tooltip } from 'antd'
+import { clsx } from 'clsx/lite'
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -13,6 +15,7 @@ interface BlockUserButtonProps {
 }
 
 const BlockUserButton: React.FC<BlockUserButtonProps> = ({ record, hasText }) => {
+  const currentUser = useBoundStore((state) => state.user)
   const { t } = useTranslation(['user', 'common'])
   const { lockUserMutate, lockUserIsPending } = useLockUser()
 
@@ -23,22 +26,15 @@ const BlockUserButton: React.FC<BlockUserButtonProps> = ({ record, hasText }) =>
       <Flex
         justify='center'
         align='center'
-        style={{
-          backgroundColor: record.nonLocked ? volcano[0] : green[0],
-          width: 44,
-          height: 44,
-          borderRadius: '100%'
-        }}
+        className={clsx('size-10 rounded-full', record.nonLocked ? 'bg-orange-100' : 'bg-green-100')}
       >
         {record.nonLocked ? (
-          <LockOutlined style={{ color: volcano.primary, fontSize: 24 }} />
+          <LockOutlined className='text-xl text-orange-500' />
         ) : (
-          <UnlockOutlined style={{ color: green.primary, fontSize: 24 }} />
+          <UnlockOutlined className='text-xl text-green-500' />
         )}
       </Flex>
-      <span style={{ margin: '6px 0' }}>
-        {record.nonLocked ? t('table.tooltips.lock') : t('table.tooltips.unlock')}
-      </span>
+      <span className='m-2'>{record.nonLocked ? t('table.tooltips.lock') : t('table.tooltips.unlock')}</span>
     </Flex>
   )
 
@@ -58,16 +54,18 @@ const BlockUserButton: React.FC<BlockUserButtonProps> = ({ record, hasText }) =>
       <Tooltip title={record.nonLocked ? t('table.tooltips.lock') : t('table.tooltips.unlock')}>
         <Button
           icon={record.nonLocked ? <LockOutlined /> : <UnlockOutlined />}
-          disabled={record.username === 'admin'}
+          disabled={record.username === 'admin' || !hasAuthority(currentUser, 'user:update')}
           onClick={() => setOpen(true)}
-          style={
-            record.username === 'admin'
-              ? {}
-              : {
-                  color: record.nonLocked ? volcano.primary : green.primary,
-                  borderColor: record.nonLocked ? volcano.primary : green.primary
-                }
-          }
+          className={clsx(
+            record.nonLocked &&
+              record.username !== 'admin' &&
+              hasAuthority(currentUser, 'user:update') &&
+              'border-orange-500 text-orange-500',
+            !record.nonLocked &&
+              record.username !== 'admin' &&
+              hasAuthority(currentUser, 'user:update') &&
+              'border-green-500 text-green-500'
+          )}
         >
           {hasText && (record.nonLocked ? t('button.lock') : t('button.unlock'))}
         </Button>
@@ -83,10 +81,7 @@ const BlockUserButton: React.FC<BlockUserButtonProps> = ({ record, hasText }) =>
         okText={t('common:common.ok')}
         cancelText={t('common:common.cancel')}
         okButtonProps={{
-          style: {
-            backgroundColor: record.nonLocked ? volcano.primary : green.primary,
-            borderColor: record.nonLocked ? volcano[5] : green[5]
-          },
+          className: clsx(record.nonLocked ? 'bg-orange-500 border-orange-500' : 'bg-green-500 border-green-500'),
           loading: lockUserIsPending
         }}
         cancelButtonProps={{
@@ -111,8 +106,8 @@ const BlockUserButton: React.FC<BlockUserButtonProps> = ({ record, hasText }) =>
               />
             )}
           </span>
-          <span style={{ color: red.primary }}>
-            <WarningOutlined style={{ color: red.primary }} />{' '}
+          <span className='text-red-500'>
+            <WarningOutlined className='text-red-500' />{' '}
             {record.nonLocked ? t('lockModal.content') : t('unlockModal.content')}
           </span>
         </Flex>
