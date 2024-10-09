@@ -1,16 +1,18 @@
 import ErrorFetching from '@/components/ErrorFetching.tsx'
 import MultipleDeleteConfirmModal from '@/components/MultipleDeleteConfirmModal.tsx'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
+import { useDeleteMutiMemberShip, useMembershipFilters, useMemberShips } from '@/hooks/useMemberships.ts'
+import useBoundStore from '@/store.ts'
+import { MemberShip, MemberShipDataSource } from '@/types/membership.type.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { MemberShip, MemberShipDataSource } from '@/types/membership.type.ts'
-import { useDeleteMutiMemberShip, useMembershipFilters, useMemberShips } from '@/hooks/useMemberships.ts'
-import MembershipTable from './MembershipTable.tsx'
 import MembershipForm from './MembershipForm.tsx'
+import MembershipTable from './MembershipTable.tsx'
 
 const { Search } = Input
 
@@ -19,6 +21,8 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function MembershipManager() {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -46,15 +50,9 @@ function MembershipManager() {
 
   const dataSource: MemberShipDataSource[] = data
     ? data.data.map((membership: MemberShip, idx) => ({
+        ...membership,
         key: membership.id,
         index: (pageNumber - 1) * pageSize + idx + 1,
-        id: membership.id,
-        name : membership.name,
-        price: membership.price,
-        durationDays: membership.durationDays,
-        priority: membership.priority,
-        refresh: membership.refresh,
-        description: membership.description,
         createdAt: formatDate(membership.createdAt)
       }))
     : []
@@ -117,12 +115,24 @@ function MembershipManager() {
 
         <Space>
           {deleteIdList.length > 0 && (
-            <Button shape='round' type='primary' danger onClick={() => setIsOpen(true)}>
-               {t('common.multipleDelete')}
+            <Button
+              shape='round'
+              type='primary'
+              danger
+              disabled={!hasAuthority(currentUser, 'membership:delete')}
+              onClick={() => setIsOpen(true)}
+            >
+              {t('common.multipleDelete')}
             </Button>
           )}
-          <Button icon={<PlusCircleOutlined />} shape='round' type='primary' onClick={() => handleOpenForm(0)}>
-              {t('membership:button.add')}
+          <Button
+            icon={<PlusCircleOutlined />}
+            shape='round'
+            type='primary'
+            disabled={!hasAuthority(currentUser, 'membership:create')}
+            onClick={() => handleOpenForm(0)}
+          >
+            {t('membership:button.add')}
           </Button>
         </Space>
       </Flex>
@@ -158,9 +168,9 @@ function MembershipManager() {
         pending={deleteMemberShipsIsPending}
         setIsModalOpen={setIsOpen}
         title={t('membership:deleteModal.titleMultiple')}
-        onOk={() => {   
+        onOk={() => {
           deleteMemberShipsMutate(deleteIdList).then(() => {
-            console.log('Delete ID List:', deleteIdList);
+            console.log('Delete ID List:', deleteIdList)
             deleteIdList.length > 1
               ? toast.success(t('membership:notification.deleteSuccessMultiple'))
               : toast.success(t('membership:notification.deleteSuccess'))

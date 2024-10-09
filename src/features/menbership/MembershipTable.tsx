@@ -2,7 +2,9 @@ import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
 import TableActions from '@/components/TableActions.tsx'
 import { useDeleteMemberShip } from '@/hooks/useMemberships.ts'
+import useBoundStore from '@/store.ts'
 import { MemberShipDataSource } from '@/types/membership.type'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -30,6 +32,8 @@ function MembershipTable({
   sortedInfo,
   onEdit
 }: MemberShipTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<MemberShipDataSource | null>(null)
 
@@ -122,6 +126,8 @@ function MembershipTable({
       width: 200,
       render: (_, record) => (
         <TableActions
+          updateDisabled={!hasAuthority(currentUser, 'membership:update')}
+          deleteDisabled={!hasAuthority(currentUser, 'membership:delete')}
           onUpdate={() => onEdit(record.id)}
           onDelete={() => {
             setCurrentRecord(record)
