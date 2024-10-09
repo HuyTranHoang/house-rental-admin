@@ -28,6 +28,8 @@ import { SorterResult } from 'antd/lib/table/interface'
 import DOMPurify from 'dompurify'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useBoundStore from '@/store.ts'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 
 interface ReportTableProps {
   dataSource: ReportDataSource[]
@@ -48,6 +50,8 @@ function ReportTable({
   filteredInfo,
   sortedInfo
 }: ReportTableProps) {
+  const currentUser = useBoundStore((state) => state.user)
+
   const [propertyId, setPropertyId] = useState<number>(0)
   const [report, setReport] = useState<Report>({} as Report)
   const [open, setOpen] = useState(false)
@@ -95,6 +99,7 @@ function ReportTable({
                 updateReportStatusMutate({ id: report.id, status: ReportStatus.APPROVED })
                 setOpen(false)
               }}
+              disabled={!hasAuthority(currentUser,'report:update')}
               icon={<CheckOutlined />}
               type='primary'
             >
@@ -107,6 +112,7 @@ function ReportTable({
               updateReportStatusMutate({ id: report.id, status: ReportStatus.REJECTED })
               setOpen(false)
             }}
+            disabled={!hasAuthority(currentUser,'report:update')}
             icon={<CloseOutlined />}
             danger
           >
@@ -130,6 +136,7 @@ function ReportTable({
                 blockProperty({ id: report.propertyId, status })
                 setOpen(false)
               }}
+              disabled={!hasAuthority(currentUser,'report:update')}
               icon={<CheckOutlined />}
               type='primary'
             >

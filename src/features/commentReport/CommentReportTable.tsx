@@ -265,7 +265,6 @@ function CommentReportTable({
               setCommentId(record.commentId)
               setCommentReport(record)
             }}
-            disabled={!hasAuthority(currentUser,'commentReport:update')}
           >
             {t('commentReport:button.review')}
           </Button>
