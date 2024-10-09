@@ -112,7 +112,7 @@ function RoleTable({ form, setCurrentRole, currentRole }: ListRoleProps) {
         renderItem={(item) => (
           <List.Item
             actions={
-              item.name !== 'ROLE_ADMIN' && item.name !== 'ROLE_USER'
+              item.name !== 'Super Admin' && item.name !== 'User'
                 ? [
                     hasAuthority(currentUser, 'role:update') && (
                       <Button type='link' icon={<EditOutlined />} onClick={() => showEditModal(item)} />

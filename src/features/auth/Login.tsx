@@ -37,7 +37,7 @@ function Login() {
     mutationFn: (values: LoginFormType) => axios.post<User>('/api/auth/login', values),
     onSuccess: (response) => {
 
-      const isAdmin = response.data.roles.includes('ROLE_ADMIN')
+      const isAdmin = response.data.roles.includes('Super Admin')
       const haveDashboardAccess = response.data.authorities.includes('dashboard:read')
       const canAccess = isAdmin || haveDashboardAccess
 

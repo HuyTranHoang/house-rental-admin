@@ -291,16 +291,16 @@ function RoleManager() {
 
             <Form.Item<RoleField>>
               {!currentRole.id && <Typography.Paragraph>{t('role:list.selectRole')}</Typography.Paragraph>}
-              {currentRole.id && currentRole.name === 'ROLE_ADMIN' && (
+              {currentRole.id && currentRole.name === 'Super Admin' && (
                 <Typography.Paragraph>{t('role:list.adminRole')}</Typography.Paragraph>
               )}
-              {currentRole.id && currentRole.name !== 'ROLE_ADMIN' && (
+              {currentRole.id && currentRole.name !== 'Super Admin' && (
                 <Table dataSource={dataSource} columns={columns} pagination={false} loading={roleUpdateLoading} />
               )}
             </Form.Item>
 
             <Form.Item>
-              {currentRole.id && currentRole.name !== 'ROLE_ADMIN' && (
+              {currentRole.id && currentRole.name !== 'Super Admin' && (
                 <Button
                   loading={updateRolePending}
                   type='primary'

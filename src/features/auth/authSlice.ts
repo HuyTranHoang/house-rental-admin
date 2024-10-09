@@ -19,7 +19,7 @@ export const createAuthSlice: StateCreator<UISlice & AuthSlice, [], [], AuthSlic
     set({
       user,
       token,
-      isAdmin: user.roles.includes('ROLE_ADMIN'),
+      isAdmin: user.roles.includes('Super Admin'),
       haveDashboardAccess: user.authorities.includes('dashboard:read')
     })
   },
