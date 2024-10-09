@@ -13,6 +13,8 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import CityTable from './CityTable.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useNavigate } from 'react-router-dom'
 
 const { Search } = Input
 
@@ -22,6 +24,8 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function CityManager() {
   const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
+
   const [editId, setEditId] = useState<number>(0)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -71,6 +75,12 @@ function CityManager() {
     setEditId(id)
     setFormOpen(true)
   }
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'city:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (sortBy) {

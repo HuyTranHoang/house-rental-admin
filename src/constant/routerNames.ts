@@ -21,7 +21,7 @@ const ROUTER_NAMES = {
 
   ROLE: '/vai-tro',
 
-  COMMENT: '/danh-gia',
+  COMMENT: '/binh-luan',
 
   USER: '/nguoi-dung',
 

@@ -4,14 +4,18 @@ import { Advertisement } from '@/types/advertisement.type'
 import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { PlusCircleOutlined } from '@ant-design/icons'
 import { Alert, Button, Col, Flex, Modal, Row, Typography } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import AdvertisementForm from './AdvertisementForm'
 import AdvertisementItem from './AdvertisementItem.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import ErrorFetching from '@/components/ErrorFetching.tsx'
+import { useNavigate } from 'react-router-dom'
 
 function AdvertisementManager() {
   const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
 
   const [editId, setEditId] = useState<number>(0)
   const [formOpen, setFormOpen] = useState(false)
@@ -53,7 +57,15 @@ function AdvertisementManager() {
     }
   }
 
-  if (advIsError) return <Alert message='Lỗi khi lấy quảng cáo' type='error' />
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'advertisement:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
+
+  if (advIsError) {
+    return <ErrorFetching />
+  }
 
   return (
     <>

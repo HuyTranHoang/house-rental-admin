@@ -7,6 +7,10 @@ import { Divider, Flex, Form, Input, Select, TableProps, Typography } from 'antd
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import TransactionTable from './TransactionTable'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import useBoundStore from '@/store.ts'
+import { useNavigate } from 'react-router-dom'
 const { Search } = Input
 
 type OnChange = NonNullable<TableProps<TransactionDataSource>['onChange']>
@@ -14,6 +18,9 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function TransactionManager() {
+  const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
+
   const formatDate = useCustomDateFormatter()
   const { t } = useTranslation(['common', 'transaction'])
   const { search, userId, amount, transactionType, status, pageNumber, pageSize, sortBy, setFilters } =
@@ -50,6 +57,12 @@ function TransactionManager() {
       setSortedInfo({})
     }
   }
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'transaction:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (sortBy) {

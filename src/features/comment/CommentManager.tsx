@@ -11,6 +11,8 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import CommentTable from './CommentTable.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useNavigate } from 'react-router-dom'
 
 const { Search } = Input
 
@@ -20,6 +22,7 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function CommentManager() {
   const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
 
   const { t } = useTranslation(['common', 'comment'])
 
@@ -59,6 +62,12 @@ function CommentManager() {
       setDeleteIdList(selectedIdList)
     }
   }
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'comment:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (sortBy) {

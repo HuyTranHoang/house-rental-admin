@@ -28,6 +28,9 @@
     "deleteModal": {
       "note": "Note: This action cannot be undone!",
       "quantitySelected": "Selected items"
+    },
+    "notification": {
+      "noPermission": "You do not have permission to access this page"
     }
   }
 }

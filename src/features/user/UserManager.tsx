@@ -14,6 +14,8 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import UserTable from './UserTable'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useNavigate } from 'react-router-dom'
 
 type OnChange = NonNullable<TableProps<UserDataSource>['onChange']>
 type Filters = Parameters<OnChange>[1]
@@ -22,6 +24,7 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function UserManager() {
   const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
 
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'user'])
@@ -93,6 +96,12 @@ function UserManager() {
       setDeleteIdList(selectedIdList)
     }
   }
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'user:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (roles) {

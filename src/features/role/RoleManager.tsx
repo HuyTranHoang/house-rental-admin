@@ -27,6 +27,8 @@ import {
 import { formatDate } from 'date-fns/format'
 import { ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 interface GroupedAuthorities {
   [key: string]: {
@@ -56,6 +58,7 @@ interface AuthorityPrivileges {
 
 function RoleManager() {
   const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
 
   const [form] = Form.useForm()
 
@@ -227,6 +230,12 @@ function RoleManager() {
 
   const groupedPrivileges = groupBy(authorities)
   const dataSource = Object.values(groupedPrivileges)
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'role:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   // Set initial values for form
   useEffect(() => {

@@ -28,6 +28,9 @@
     "deleteModal": {
       "note": "Lưu ý: Hành động này không thể hoàn tác!",
       "quantitySelected": "Số lượng đã chọn"
+    },
+    "notification": {
+      "noPermission": "Bạn không có quyền truy cập trang này"
     }
   }
 }

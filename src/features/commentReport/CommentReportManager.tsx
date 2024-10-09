@@ -12,6 +12,10 @@ import { Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } f
 import { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import CommentReportTable from './CommentReportTable'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import useBoundStore from '@/store.ts'
+import { useNavigate } from 'react-router-dom'
 
 const { Search } = Input
 
@@ -21,6 +25,9 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function CommentReportManager() {
+  const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
+
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'commentReport'])
 
@@ -84,6 +91,12 @@ function CommentReportManager() {
         createdAt: formatDate(commentReport.createdAt)
       }))
     : []
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'commentReport:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (search) {

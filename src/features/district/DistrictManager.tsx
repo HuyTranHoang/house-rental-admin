@@ -13,6 +13,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import DistrictForm from './DistrictForm.tsx'
 import DistrictTable from './DistrictTable.tsx'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
+import { useNavigate } from 'react-router-dom'
 
 const { Search } = Input
 
@@ -23,6 +25,8 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function DistrictManager() {
   const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
+
   const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
 
@@ -78,6 +82,12 @@ function DistrictManager() {
     setEditId(id)
     setFormOpen(true)
   }
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'district:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (cityId) {

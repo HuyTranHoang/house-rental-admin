@@ -13,6 +13,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import MembershipForm from './MembershipForm.tsx'
 import MembershipTable from './MembershipTable.tsx'
+import { useNavigate } from 'react-router-dom'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
@@ -22,6 +24,7 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function MembershipManager() {
   const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
 
   const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
@@ -69,6 +72,12 @@ function MembershipManager() {
     setEditId(id)
     setFormOpen(true)
   }
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'membership:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (sortBy) {

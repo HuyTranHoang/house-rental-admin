@@ -13,6 +13,8 @@ import React, { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import AmenityTable from './AmenityTable.tsx'
+import { useNavigate } from 'react-router-dom'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
@@ -22,6 +24,7 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function AmenityManager() {
   const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
 
   const [editId, setEditId] = useState(0)
   const [formOpen, setFormOpen] = useState(false)
@@ -70,6 +73,12 @@ function AmenityManager() {
     setEditId(id)
     setFormOpen(true)
   }
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'amenity:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (sortBy) {

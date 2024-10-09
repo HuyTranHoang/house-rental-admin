@@ -8,6 +8,10 @@ import { Divider, Flex, Form, Input, TableProps, Tabs, TabsProps, Typography } f
 import { useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import ReportTable from './ReportTable.tsx'
+import useBoundStore from '@/store.ts'
+import { useNavigate } from 'react-router-dom'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
@@ -17,6 +21,9 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function ReportManager() {
+  const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
+
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'report'])
 
@@ -80,6 +87,12 @@ function ReportManager() {
         createdAt: formatDate(report.createdAt)
       }))
     : []
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'report:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (search) {

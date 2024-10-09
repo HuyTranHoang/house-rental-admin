@@ -8,11 +8,15 @@ import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter.ts'
 import { useDistrictsAll } from '@/hooks/useDistricts.ts'
 import { useProperties, usePropertyFilters } from '@/hooks/useProperties'
 import { useRoomTypesAll } from '@/hooks/useRoomTypes.ts'
+import useBoundStore from '@/store.ts'
 import { PropertyDataSource, PropertyStatus, Property as PropertyType } from '@/types/property.type'
 import { CheckCircleOutlined, CloseSquareOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import PropertyTable from './PropertyTable'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 
 const { Search } = Input
 
@@ -29,6 +33,9 @@ type GetSingle<T> = T extends (infer U)[] ? U : never
 type Sorts = GetSingle<Parameters<OnChange>[2]>
 
 function PropertyManager() {
+  const currentUser = useBoundStore((state) => state.user)
+  const navigate = useNavigate()
+
   const [form] = Form.useForm()
   const queryClient = useQueryClient()
   const { t } = useTranslation(['common', 'property'])
@@ -161,6 +168,12 @@ function PropertyManager() {
           createdAt: formatDate(property.createdAt)
         }))
     : []
+
+  useEffect(() => {
+    if (!hasAuthority(currentUser,'property:read')) {
+      navigate(ROUTER_NAMES.DASHBOARD)
+    }
+  },[currentUser, navigate])
 
   useEffect(() => {
     if (sortBy) {
