@@ -5,7 +5,6 @@ import { useDeleteMutiMemberShip, useMembershipFilters, useMemberShips } from '@
 import useBoundStore from '@/store.ts'
 import { MemberShip, MemberShipDataSource } from '@/types/membership.type.ts'
 import { hasAuthority } from '@/utils/filterMenuItem.ts'
-import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Divider, Flex, Form, Input, Space, TableProps, Typography } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import React, { useEffect, useState } from 'react'
@@ -134,15 +133,6 @@ function MembershipManager() {
               {t('common.multipleDelete')}
             </Button>
           )}
-          <Button
-            icon={<PlusCircleOutlined />}
-            shape='round'
-            type='primary'
-            disabled={!hasAuthority(currentUser, 'membership:create')}
-            onClick={() => handleOpenForm(0)}
-          >
-            {t('membership:button.add')}
-          </Button>
         </Space>
       </Flex>
 
