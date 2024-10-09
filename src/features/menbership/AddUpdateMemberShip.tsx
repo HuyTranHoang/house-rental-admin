@@ -1,4 +1,4 @@
-import { useCreateMemberShip, useMemberShip, useUpdateMemberShip } from '@/hooks/useMemberships'
+import { useMemberShip, useUpdateMemberShip } from '@/hooks/useMemberships'
 import { MemberShipForm } from '@/types/membership.type'
 import { LeftCircleOutlined } from '@ant-design/icons'
 import { Button, Drawer, Form, FormProps, Input, InputNumber } from 'antd'
@@ -13,23 +13,21 @@ interface AddUpdateMemberShipProps {
 }
 
 function AddUpdateMemberShip({ id, formOpen, setFormOpen }: AddUpdateMemberShipProps) {
-  const isAddMode = id === 0
   const { t } = useTranslation(['common', 'membership'])
   const [form] = Form.useForm<MemberShipForm>()
 
-  const { addMemberShipMutate, addMemberShipPending } = useCreateMemberShip()
   const { updateMemberShipMutate, updateMemberShipPending } = useUpdateMemberShip()
   const { memberShipData, memberShipIsLoading } = useMemberShip(id)
 
-  const title = isAddMode ? t('membership:form.addForm') : t('membership:form.editForm')
+  const title = t('membership:form.editForm')
 
   const onFinish: FormProps<MemberShipForm>['onFinish'] = (values) => {
-    const mutate = isAddMode ? addMemberShipMutate : updateMemberShipMutate
+    const mutate = updateMemberShipMutate
 
     mutate(values).then(() => {
       setFormOpen(false)
       form.resetFields()
-      toast.success(t(`membership:notification.${isAddMode ? 'add' : 'edit'}Success`))
+      toast.success(t(`membership:notification.${'edit'}Success`))
     })
   }
 
@@ -76,7 +74,7 @@ function AddUpdateMemberShip({ id, formOpen, setFormOpen }: AddUpdateMemberShipP
             { max: 50, message: t('membership:form.nameMax') }
           ]}
         >
-          <Input placeholder={t('membership:form.namePlaceholder')} />
+          <Input placeholder={t('membership:form.namePlaceholder')} disabled/>
         </Form.Item>
 
         <Form.Item<MemberShipForm>
@@ -169,8 +167,8 @@ function AddUpdateMemberShip({ id, formOpen, setFormOpen }: AddUpdateMemberShipP
             {t('common.reset')}
           </Button>
 
-          <Button loading={addMemberShipPending || updateMemberShipPending} type='primary' htmlType='submit'>
-            {isAddMode ? t('common.add') : t('common.update')}
+          <Button loading={updateMemberShipPending} type='primary' htmlType='submit'>
+            {t('common.update')}
           </Button>
         </Form.Item>
       </Form>
