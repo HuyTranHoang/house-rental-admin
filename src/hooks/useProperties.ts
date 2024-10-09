@@ -149,6 +149,24 @@ export const usePropertyFilters = () => {
     (filters: PropertyFilters) => {
       setSearchParams(
         (params) => {
+          if (filters.reset) {
+            params.delete('search');
+            params.delete('cityId');
+            params.delete('districtId');
+            params.delete('roomTypeId');
+            params.delete('minPrice');
+            params.delete('maxPrice');
+            params.delete('minArea');
+            params.delete('maxArea');
+            params.delete('numOfDays');
+            params.delete('status');
+            params.delete('sortBy');
+            // Reset page number and size to defaults
+            params.set('pageNumber', '1');
+            params.set('pageSize', '5');
+            return params;
+          }
+
           if (filters.search !== undefined) {
             if (filters.search) {
               params.set('search', filters.search)

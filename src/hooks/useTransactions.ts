@@ -16,8 +16,6 @@ export const useTransaction = (id: number) => {
 
 export const useTransactions = (
   search: string,
-  userId: number,
-  amount: number,
   transactionType: string,
   status: string,
   pageNumber: number,
@@ -25,9 +23,8 @@ export const useTransactions = (
   sortBy: string
 ) => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['transactions', search, userId, amount, transactionType, status, pageNumber, pageSize, sortBy],
-    queryFn: () =>
-      getAllTransactionsWithPagination(search, userId, amount, transactionType, status, pageNumber, pageSize, sortBy)
+    queryKey: ['transactions', search, transactionType, status, pageNumber, pageSize, sortBy],
+    queryFn: () => getAllTransactionsWithPagination(search, transactionType, status, pageNumber, pageSize, sortBy)
   })
 
   return { data, isLoading, isError }
@@ -37,10 +34,8 @@ export const useTransactionFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const search = searchParams.get('search') || ''
-  const userId = parseInt(searchParams.get('userId') || '0')
-  const amount = parseInt(searchParams.get('amount') || '0')
-  const status = (searchParams.get('status') as TransactionStatus) || ''
-  const transactionType = (searchParams.get('transactionType') as TransactionTypes) || ''
+  const status = (searchParams.get('status') as TransactionStatus) || undefined
+  const transactionType = (searchParams.get('transactionType') as TransactionTypes) || undefined
   const sortBy = searchParams.get('sortBy') || ''
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1')
   const pageSize = parseInt(searchParams.get('pageSize') || '5')
@@ -49,6 +44,18 @@ export const useTransactionFilters = () => {
     (filters: TransactionFilters) => {
       setSearchParams(
         (params) => {
+          if (filters.reset) {
+            params.delete('search')
+            params.delete('status')
+            params.delete('transactionType')
+            params.delete('pageNumber')
+            params.delete('pageSize')
+            params.delete('sortBy')
+            params.set('pageNumber', '1')
+            params.set('pageSize', '5')
+            return params
+          }
+
           if (filters.search !== undefined) {
             if (filters.search) {
               params.set('search', filters.search)
@@ -57,31 +64,13 @@ export const useTransactionFilters = () => {
             }
           }
 
-          if (filters.userId !== undefined) {
-            params.set('userId', String(filters.userId))
-            params.set('pageNumber', '1')
-          }
-
-          if (filters.amount !== undefined) {
-            params.set('amount', String(filters.amount))
-            params.set('pageNumber', '1')
-          }
-
           if (filters.status !== undefined) {
-            if (filters.status) {
-              params.set('status', filters.status)
-            } else {
-              params.delete('status')
-            }
+            params.set('status', String(filters.status))
             params.set('pageNumber', '1')
           }
 
           if (filters.transactionType !== undefined) {
-            if (filters.transactionType) {
-              params.set('transactionType', filters.transactionType)
-            } else {
-              params.delete('transactionType')
-            }
+            params.set('transactionType', String(filters.transactionType))
             params.set('pageNumber', '1')
           }
 
@@ -111,8 +100,6 @@ export const useTransactionFilters = () => {
 
   return {
     search,
-    userId,
-    amount,
     status,
     transactionType,
     sortBy,

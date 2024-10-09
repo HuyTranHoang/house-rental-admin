@@ -19,12 +19,14 @@ export type TransactionDataSource = Transaction & {
 }
 
 export enum TransactionStatus {
+  ALL = '',
   PENDING = 'PENDING',
   SUCCESS = 'SUCCESS',
   FAILED = 'FAILED',
 }
 
 export enum TransactionTypes {
+  ALL = '',
   DEPOSIT = 'DEPOSIT',
   WITHDRAWAL = 'WITHDRAWAL',
 }
@@ -32,10 +34,10 @@ export enum TransactionTypes {
 export type TransactionFilters = {
   search?: string
   sortBy?: string
-  userId?: number,
   amount?: number,
   status?: TransactionStatus,
   transactionType?: TransactionTypes,
   pageNumber?: number
   pageSize?: number
+  reset?: boolean
 }

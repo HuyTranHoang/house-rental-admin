@@ -1,16 +1,18 @@
 import ErrorFetching from '@/components/ErrorFetching'
+import ROUTER_NAMES from '@/constant/routerNames.ts'
 import { useCustomDateFormatter } from '@/hooks/useCustomDateFormatter'
 import { useTransactionFilters, useTransactions } from '@/hooks/useTransactions'
+import useBoundStore from '@/store.ts'
 import { Transaction, TransactionDataSource, TransactionStatus, TransactionTypes } from '@/types/transaction.type'
+import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { InfoOutlined, SwapOutlined } from '@ant-design/icons'
-import { Divider, Flex, Form, Input, Select, TableProps, Typography } from 'antd'
+import { Button, Divider, Flex, Form, Input, Select, TableProps, Typography } from 'antd'
+import { FilterX } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import TransactionTable from './TransactionTable'
-import { hasAuthority } from '@/utils/filterMenuItem.ts'
-import ROUTER_NAMES from '@/constant/routerNames.ts'
-import useBoundStore from '@/store.ts'
 import { useNavigate } from 'react-router-dom'
+import TransactionTable from './TransactionTable'
+
 const { Search } = Input
 
 type OnChange = NonNullable<TableProps<TransactionDataSource>['onChange']>
@@ -21,19 +23,20 @@ function TransactionManager() {
   const currentUser = useBoundStore((state) => state.user)
   const navigate = useNavigate()
 
+  const [form] = Form.useForm()
+
   const formatDate = useCustomDateFormatter()
   const { t } = useTranslation(['common', 'transaction'])
-  const { search, userId, amount, transactionType, status, pageNumber, pageSize, sortBy, setFilters } =
-    useTransactionFilters()
+  const { search, transactionType, status, pageNumber, pageSize, sortBy, setFilters } = useTransactionFilters()
+
+  const haveFilterActive = search || transactionType || status
 
   const [sortedInfo, setSortedInfo] = useState<Sorts>({})
 
   const { data, isLoading, isError } = useTransactions(
     search,
-    userId,
-    amount,
-    transactionType,
-    status,
+    transactionType || '',
+    status || '',
     pageNumber,
     pageSize,
     sortBy
@@ -59,10 +62,10 @@ function TransactionManager() {
   }
 
   useEffect(() => {
-    if (!hasAuthority(currentUser,'transaction:read')) {
+    if (!hasAuthority(currentUser, 'transaction:read')) {
       navigate(ROUTER_NAMES.DASHBOARD)
     }
-  },[currentUser, navigate])
+  }, [currentUser, navigate])
 
   useEffect(() => {
     if (sortBy) {
@@ -77,6 +80,14 @@ function TransactionManager() {
     }
   }, [sortBy])
 
+  useEffect(() => {
+    form.setFieldsValue({
+      search,
+      transactionType,
+      status
+    })
+  }, [form, search, status, transactionType])
+
   if (isError) {
     return <ErrorFetching />
   }
@@ -89,50 +100,48 @@ function TransactionManager() {
             {t('transaction:title')}
           </Typography.Title>
           <Divider type='vertical' style={{ height: 40, backgroundColor: '#9a9a9b', margin: '0 16px' }} />
-          <Form
-            name='serachReviewForm'
-            initialValues={{
-              search: search
-            }}
-            layout='inline'
-          >
+          <Form form={form} name='serachReviewForm' layout='inline'>
             <Form.Item name='search'>
               <Search
                 allowClear
                 onSearch={(value) => setFilters({ search: value })}
                 placeholder={t('transaction:searchPlaceholder')}
-                className='w-64'
+                className='w-72'
               />
             </Form.Item>
-            <Form.Item>
+            <Form.Item name='transactionType'>
               <Select
+                onChange={(value) => setFilters({ transactionType: value as TransactionTypes })}
                 placeholder={t('transaction:filters.type')}
-                className="w-36"
-                suffixIcon={<SwapOutlined className="text-base" />}
-                onChange={(value) => setFilters({ transactionType: value })}
-                value={transactionType || undefined}
-              >
-                <Select.Option value="">{t('transaction:type.ALL')}</Select.Option>
-                <Select.Option value={TransactionTypes.DEPOSIT}>{t('transaction:type.DEPOSIT')}</Select.Option>
-                <Select.Option value={TransactionTypes.WITHDRAWAL}>{t('transaction:type.WITHDRAWAL')}</Select.Option>
-              </Select>
+                suffixIcon={<SwapOutlined className='text-base' />}
+                options={[
+                  { label: t('transaction:type.ALL'), value: '' },
+                  { label: t('transaction:type.DEPOSIT'), value: TransactionTypes.DEPOSIT },
+                  { label: t('transaction:type.WITHDRAWAL'), value: TransactionTypes.WITHDRAWAL }
+                ]}
+                className='w-48'
+              />
             </Form.Item>
 
-            <Form.Item>
+            <Form.Item name='status'>
               <Select
                 placeholder={t('transaction:filters.status')}
-                className="w-36"
-                suffixIcon={<InfoOutlined className="text-base" />}
-                onChange={(value) => setFilters({ status: value })}
-                value={status || undefined}
-              >
-                <Select.Option value="">{t('transaction:status.ALL')}</Select.Option>
-                <Select.Option value={TransactionStatus.SUCCESS}>{t('transaction:status.SUCCESS')}</Select.Option>
-                <Select.Option value={TransactionStatus.FAILED}>{t('transaction:status.FAILED')}</Select.Option>
-                <Select.Option value={TransactionStatus.PENDING}>{t('transaction:status.PENDING')}</Select.Option>
-              </Select>
+                className='w-36'
+                suffixIcon={<InfoOutlined className='text-base' />}
+                onChange={(value) => setFilters({ status: value as TransactionStatus })}
+                options={[
+                  { label: t('transaction:status.ALL'), value: '' },
+                  { label: t('transaction:status.SUCCESS'), value: TransactionStatus.SUCCESS },
+                  { label: t('transaction:status.FAILED'), value: TransactionStatus.FAILED },
+                  { label: t('transaction:status.PENDING'), value: TransactionStatus.PENDING }
+                ]}
+              />
             </Form.Item>
           </Form>
+
+          {haveFilterActive && (
+            <Button icon={<FilterX size={16} />} type='text' onClick={() => setFilters({ reset: true })} />
+          )}
         </Flex>
       </Flex>
 

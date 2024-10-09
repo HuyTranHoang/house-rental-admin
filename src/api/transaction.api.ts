@@ -21,26 +21,22 @@ export const getAllTransactions = async () => {
 
 export const getAllTransactionsWithPagination = async (
   search: string,
-  userId: number,
-  amount: number,
   transactionType: string,
   status: string,
   pageNumber: number,
   pageSize: number,
-  sortBy: string,
+  sortBy: string
 ) => {
   try {
     pageNumber = pageNumber - 1
 
     const params = {
       search,
-      userId,
-      amount,
       transactionType,
       status,
       pageNumber,
       pageSize,
-      sortBy,
+      sortBy
     }
 
     const response = await axios.get<TransactionsWithPagination>('/api/transaction', { params })

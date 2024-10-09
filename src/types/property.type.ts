@@ -48,4 +48,5 @@ export type PropertyFilters = {
   sortBy?: string
   pageNumber?: number
   pageSize?: number
+  reset?: boolean
 }
