@@ -55,7 +55,7 @@ function PropertyTable({
   const [currentProperty, setCurrentProperty] = useState<Property | undefined>(undefined)
 
   const { updatePropertyStatus, updatePropertyStatusIsPending } = useUpdatePropertyStatus()
-  const { blockProperty } = useBlockProperty()
+  const { blockProperty, blockPropertyIsPending } = useBlockProperty()
   const { t } = useTranslation(['common', 'property'])
   const { deleteProperty, deletePropertyIsPending } = useDeleteProperty()
 
@@ -292,12 +292,19 @@ function PropertyTable({
       width: 130,
       render: (blocked, record) => (
         <Switch
+          loading={blockPropertyIsPending}
           checkedChildren={t('property:button.block')}
           unCheckedChildren={t('property:button.unblock')}
           defaultChecked={blocked}
           onChange={(e) => {
             const status = e ? 'block' : 'unblock'
-            blockProperty({ id: record.id, status })
+            blockProperty({ id: record.id, status }).then(() => {
+              if (status === 'block') {
+                toast.success(t('property:notification.blockSuccess'))
+              } else {
+                toast.success(t('property:notification.unblockSuccess'))
+              }
+            })
           }}
           disabled={!hasAuthority(currentUser, 'property:update')}
         />

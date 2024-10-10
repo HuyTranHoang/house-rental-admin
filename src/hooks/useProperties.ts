@@ -8,7 +8,6 @@ import {
 import { PropertyFilters, PropertyStatus } from '@/types/property.type.ts'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -104,23 +103,16 @@ export const useProperties = (
 
 export const useBlockProperty = () => {
   const queryClient = useQueryClient()
-  const { t } = useTranslation(['common', 'property'])
 
-  const { mutate, isPending } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: blockProperty,
-    onSuccess: (property) => {
-      queryClient.invalidateQueries({ queryKey: ['properties'] }).then(() => {
-        toast.success(
-          property.blocked ? t('property:notification.blockSuccess') : t('property:notification.unblockSuccess')
-        )
-      })
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['properties'] }),
     onError: (error) => {
       toast.error(error.message)
     }
   })
 
-  return { blockProperty: mutate, blockPropertyIsPending: isPending }
+  return { blockProperty: mutateAsync, blockPropertyIsPending: isPending }
 }
 
 export const usePropertyFilters = () => {
@@ -145,21 +137,21 @@ export const usePropertyFilters = () => {
       setSearchParams(
         (params) => {
           if (filters.reset) {
-            params.delete('search');
-            params.delete('cityId');
-            params.delete('districtId');
-            params.delete('roomTypeId');
-            params.delete('minPrice');
-            params.delete('maxPrice');
-            params.delete('minArea');
-            params.delete('maxArea');
-            params.delete('numOfDays');
-            params.delete('status');
-            params.delete('sortBy');
+            params.delete('search')
+            params.delete('cityId')
+            params.delete('districtId')
+            params.delete('roomTypeId')
+            params.delete('minPrice')
+            params.delete('maxPrice')
+            params.delete('minArea')
+            params.delete('maxArea')
+            params.delete('numOfDays')
+            params.delete('status')
+            params.delete('sortBy')
             // Reset page number and size to defaults
-            params.set('pageNumber', '1');
-            params.set('pageSize', '5');
-            return params;
+            params.set('pageNumber', '1')
+            params.set('pageSize', '5')
+            return params
           }
 
           if (filters.search !== undefined) {

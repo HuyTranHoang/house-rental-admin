@@ -1,6 +1,6 @@
-import { Property, PropertyStatus } from '@/types/property.type.ts'
 import axiosInstance from '@/axiosInstance'
 import { PageInfo } from '@/types/pageInfo.type'
+import { Property, PropertyStatus } from '@/types/property.type.ts'
 
 interface PropertyWithPagination {
   pageInfo: PageInfo
@@ -45,8 +45,7 @@ export const deleteProperty = async (id: number) => {
 
 export const blockProperty = async ({ id, status }: BlockProperty) => {
   try {
-    const response = await axiosInstance.put<Property>(`/api/properties/block/${id}?status=${status}`)
-    return response.data
+    await axiosInstance.put<Property>(`/api/properties/block/${id}?status=${status}`)
   } catch (error) {
     console.error(error)
     throw new Error('Thay đổi trạng thái bài đăng thất bại')
