@@ -1,7 +1,7 @@
 import { useLineChartData } from '@/hooks/useDashboard'
 import { Card } from 'antd'
 import { useTranslation } from 'react-i18next'
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 type DataItem = {
   month: string
@@ -39,6 +39,7 @@ export function DashboardAreaChart() {
           <XAxis dataKey='month' />
           <YAxis />
           <Tooltip />
+          <Legend />
           <Area type='monotone' dataKey='users' stroke='#8884d8' fill='#8884d8' name={t('users')} />
         </AreaChart>
       </ResponsiveContainer>
