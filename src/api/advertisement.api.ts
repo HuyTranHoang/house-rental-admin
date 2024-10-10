@@ -4,7 +4,14 @@ import { Advertisement, AdvertisementForm } from "@/types/advertisement.type"
 
 export const getAllAdvertisements = async () => {
     try {
-        const response = await axiosInstance.get<Advertisement[]>('/api/advertisements')
+        const params = {
+            isActived: "all"
+        }
+
+        const response = await axiosInstance.get<Advertisement[]>('/api/advertisements', {
+            params
+        })
+
         if (response.status === 200 ) {
             return response.data
         }
