@@ -92,8 +92,10 @@ function PropertyTable({
             <Button
               loading={updatePropertyStatusIsPending}
               onClick={() => {
-                updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.APPROVED })
-                setOpen(false)
+                updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.APPROVED }).then(() => {
+                  toast.success(t('property:notification.approvedSuccess'))
+                  setOpen(false)
+                })
               }}
               icon={<CheckOutlined />}
               disabled={!hasAuthority(currentUser, 'property:update')}
@@ -105,8 +107,10 @@ function PropertyTable({
           <Button
             loading={updatePropertyStatusIsPending}
             onClick={() => {
-              updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.REJECTED })
-              setOpen(false)
+              updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.REJECTED }).then(() => {
+                toast.success(t('property:notification.rejectedSuccess'))
+                setOpen(false)
+              })
             }}
             icon={<CloseOutlined />}
             disabled={!hasAuthority(currentUser, 'property:update')}
@@ -244,7 +248,7 @@ function PropertyTable({
       key: 'title',
       render: (_, record) => (
         <Typography.Text
-          className='text-blue-500 cursor-pointer'
+          className='cursor-pointer text-blue-500'
           onClick={() => {
             setCurrentProperty(record)
             setOpen(true)

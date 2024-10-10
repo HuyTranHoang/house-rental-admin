@@ -27,9 +27,10 @@
     "editSuccess": "Edit property successfully",
     "deleteSuccess": "Delete property successfully",
     "deleteSuccessMultiple": "Delete selected properties successfully",
-    "setStatusSuccess": "Edit Status successful",
     "blockSuccess": "Block property successfully",
-    "unblockSuccess": "Unblock property successfully"
+    "unblockSuccess": "Unblock property successfully",
+    "approvedSuccess": "Approve property successfully",
+    "rejectedSuccess": "Reject property successfully"
   },
   "deleteModal": {
     "title": "Confirm deletion",

@@ -28,7 +28,9 @@
     "deleteSuccess": "Xóa bài đăng thành công",
     "deleteSuccessMultiple": "Xóa các bài đăng đã chọn thành công",
     "blockSuccess": "Khóa bài đăng thành công",
-    "unblockSuccess": "Mở khóa bài đăng thành công"
+    "unblockSuccess": "Mở khóa bài đăng thành công",
+    "approvedSuccess": "Duyệt bài đăng thành công",
+    "rejectedSuccess": "Từ chối bài đăng thành công"
   },
   "deleteModal": {
     "title": "Xác nhận xóa bài đăng",

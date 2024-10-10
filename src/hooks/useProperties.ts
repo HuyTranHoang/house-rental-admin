@@ -24,22 +24,17 @@ export const useProperty = (id: number) => {
 
 export function useUpdatePropertyStatus() {
   const queryClient = useQueryClient()
-  const { t } = useTranslation(['common', 'property'])
 
-  const { mutate, isPending } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: updatePropertyStatus,
-    onSuccess: () => {
-      queryClient
-        .invalidateQueries({ queryKey: ['properties'] })
-        .then(() => toast.success(t('property:notification.setStatusSuccess')))
-    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['properties'] }),
 
     onError: (error) => {
       toast.error(error.message)
     }
   })
 
-  return { updatePropertyStatus: mutate, updatePropertyStatusIsPending: isPending }
+  return { updatePropertyStatus: mutateAsync, updatePropertyStatusIsPending: isPending }
 }
 
 export function useDeleteProperty() {
