@@ -1,12 +1,12 @@
 import ConfirmModalContent from '@/components/ConfirmModalContent.tsx'
 import ConfirmModalTitle from '@/components/ConfirmModalTitle.tsx'
-import TableActions from '@/components/TableActions.tsx'
 import { useDeleteMemberShip } from '@/hooks/useMemberships.ts'
 import useBoundStore from '@/store.ts'
 import { MemberShipDataSource } from '@/types/membership.type'
 import { hasAuthority } from '@/utils/filterMenuItem.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
-import { DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
+import { FormOutlined } from '@ant-design/icons'
+import { Button, DescriptionsProps, Modal, Table, TablePaginationConfig, TableProps } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { SorterResult } from 'antd/lib/table/interface'
 import { useState } from 'react'
@@ -125,15 +125,13 @@ function MembershipTable({
       fixed: 'right',
       width: 200,
       render: (_, record) => (
-        <TableActions
-          updateDisabled={!hasAuthority(currentUser, 'membership:update')}
-          deleteDisabled={!hasAuthority(currentUser, 'membership:delete')}
-          onUpdate={() => onEdit(record.id)}
-          onDelete={() => {
-            setCurrentRecord(record)
-            setIsModalOpen(true)
-          }}
-        />
+        <Button
+          disabled={!hasAuthority(currentUser, 'membership:update')}
+          icon={<FormOutlined />}
+          onClick={() => onEdit(record.id)}
+        >
+          {t('common.edit')}
+        </Button>
       )
     }
   ]
