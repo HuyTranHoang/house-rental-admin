@@ -25,11 +25,6 @@ import { useTranslation } from 'react-i18next'
 import {useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 
-type ChangePasswordField = {
-  oldPassword: string
-  newPassword: string
-}
-
 function AppSider({ darkMode }: { darkMode: boolean }) {
   const navigate = useNavigate()
   const location = useLocation()

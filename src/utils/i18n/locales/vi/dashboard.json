@@ -1,6 +1,6 @@
 {
-  "month": "tháng",
-  "week": "tuần",
+  "month": "tháng hiện tại",
+  "week": "tuần hiện tại",
   "newMember": "Thành viên mới",
   "revenue": "Doanh thu",
   "newPost": "Bài đăng mới",
