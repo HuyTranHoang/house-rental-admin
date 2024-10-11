@@ -10,6 +10,7 @@ interface PropertyWithPagination {
 export interface UpdatePropertyStatus {
   id: number
   status: PropertyStatus
+  reason?: string
 }
 
 export interface BlockProperty {
@@ -29,8 +30,13 @@ export const getPropertyById = async (id: number) => {
   }
 }
 
-export const updatePropertyStatus = async ({ id, status }: UpdatePropertyStatus) => {
-  const response = await axiosInstance.put<Property>(`/api/properties/status/${id}?status=${status}`)
+export const updatePropertyStatus = async ({ id, status, reason }: UpdatePropertyStatus) => {
+  const params = {
+    status,
+    reason
+  }
+
+  const response = await axiosInstance.put<Property>(`/api/properties/status/${id}`, {}, { params })
   return response.data
 }
 

@@ -17,7 +17,12 @@
     "amenities": "Amenities",
     "description": "Description",
     "image": "Images",
-    "viewAndBrowse": "View and browse"
+    "viewAndBrowse": "View and browse",
+    "rejectReason": "Reject reason",
+    "rejectReasonRequired": "Reject reason is required",
+    "selectRejectReason": "Select reject reason",
+    "customRejectReason": "Custom reject reason",
+    "customRejectReasonRequired": "Custom reject reason is required"
   },
   "pagination": {
     "showTotal": "{{rangeStart}}-{{rangeEnd}} of {{total}} properties"
@@ -62,5 +67,12 @@
     "approved": "Approve, property is valid",
     "reject": "Reject, property is invalid"
   },
-  "detail": "Property detail"
+  "detail": "Property detail",
+  "rejectReasons": {
+    "inappropriateContent": "Inappropriate content",
+    "inappropriateImage": "Inappropriate image",
+    "incorrectInformation": "Incorrect information",
+    "duplicateListing": "Duplicate listing",
+    "other": "Other"
+  }
 }

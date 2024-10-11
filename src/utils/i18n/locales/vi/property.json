@@ -17,7 +17,12 @@
     "amenities": "Tiện ích",
     "description": "Mô tả",
     "image": "Hình ảnh",
-    "viewAndBrowse": "Xem và duyệt"
+    "viewAndBrowse": "Xem và duyệt",
+    "rejectReason": "Lý do từ chối",
+    "rejectReasonRequired": "Vui lòng nhập lý do từ chối",
+    "selectRejectReason": "Chọn lý do từ chối",
+    "customRejectReason": "Lý do từ chối khác",
+    "customRejectReasonRequired": "Vui lòng nhập lý do từ chối khác"
   },
   "pagination": {
     "showTotal": "{{rangeStart}}-{{rangeEnd}} trong {{total}} bài đăng"
@@ -62,5 +67,12 @@
     "approved": "Duyệt, bài đăng hợp lệ",
     "reject": "Từ chối, bài đăng không hợp lệ"
   },
-  "detail": "Chi tiết bài đăng"
+  "detail": "Chi tiết bài đăng",
+  "rejectReasons": {
+    "inappropriateContent": "Nội dung không phù hợp",
+    "inappropriateImage": "Hình ảnh không phù hợp",
+    "incorrectInformation": "Thông tin không chính xác",
+    "duplicateListing": "Bài đăng trùng lặp",
+    "other": "Khác"
+  }
 }

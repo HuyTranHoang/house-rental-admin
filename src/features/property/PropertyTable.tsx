@@ -15,9 +15,12 @@ import {
   Descriptions,
   DescriptionsProps,
   Flex,
+  Form,
   Image,
+  Input,
   Modal,
   Row,
+  Select,
   Space,
   Switch,
   Table,
@@ -61,6 +64,32 @@ function PropertyTable({
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<PropertyDataSource | null>(null)
+  const [form] = Form.useForm()
+  const [isReject, setIsReject] = useState(false)
+  const [rejectReason, setRejectReason] = useState('')
+
+  const rejectReasons = [
+    {
+      value: t('property:rejectReasons.inappropriateContent'),
+      label: t('property:rejectReasons.inappropriateContent')
+    },
+    {
+      value: t('property:rejectReasons.inappropriateImage'),
+      label: t('property:rejectReasons.inappropriateImage')
+    },
+    {
+      value: t('property:rejectReasons.incorrectInformation'),
+      label: t('property:rejectReasons.incorrectInformation')
+    },
+    {
+      value: t('property:rejectReasons.duplicateListing'),
+      label: t('property:rejectReasons.duplicateListing')
+    },
+    {
+      value: 'other',
+      label: t('property:rejectReasons.other')
+    }
+  ]
 
   const items: DescriptionsProps['items'] = [
     { key: 'title', label: t('property:table.title'), children: <span>{currentRecord?.title}</span>, span: 3 },
@@ -78,39 +107,69 @@ function PropertyTable({
     }
   }
 
+  const handleRejectReasonChange = (value: string) => {
+    setRejectReason(value)
+    if (value !== 'other') {
+      form.setFieldsValue({ customRejectReason: '' })
+    }
+  }
+
+  const handleReject = () => {
+    form.validateFields().then((values) => {
+      updatePropertyStatus({
+        id: currentProperty!.id,
+        status: PropertyStatus.REJECTED,
+        reason: values.rejectReason === 'other' ? values.customRejectReason : values.rejectReason
+      }).then(() => {
+        toast.success(t('property:notification.rejectedSuccess'))
+        setOpen(false)
+        setIsReject(false)
+        setRejectReason('')
+        form.resetFields()
+      })
+    })
+  }
+
   const ModalFooter = (
     <Space>
       {status === PropertyStatus.PENDING && (
         <>
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: '#00b96b'
-              }
-            }}
-          >
-            <Button
-              loading={updatePropertyStatusIsPending}
-              onClick={() => {
-                updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.APPROVED }).then(() => {
-                  toast.success(t('property:notification.approvedSuccess'))
-                  setOpen(false)
-                })
+          {!isReject && (
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: '#00b96b'
+                }
               }}
-              icon={<CheckOutlined />}
-              disabled={!hasAuthority(currentUser, 'property:update')}
-              type='primary'
             >
-              {t('property:button.approved')}
-            </Button>
-          </ConfigProvider>
+              <Button
+                loading={updatePropertyStatusIsPending}
+                onClick={() => {
+                  updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.APPROVED }).then(() => {
+                    toast.success(t('property:notification.approvedSuccess'))
+                    setOpen(false)
+                  })
+                }}
+                icon={<CheckOutlined />}
+                disabled={!hasAuthority(currentUser, 'property:update')}
+                type='primary'
+              >
+                {t('property:button.approved')}
+              </Button>
+            </ConfigProvider>
+          )}
           <Button
             loading={updatePropertyStatusIsPending}
             onClick={() => {
-              updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.REJECTED }).then(() => {
-                toast.success(t('property:notification.rejectedSuccess'))
-                setOpen(false)
-              })
+              if (!isReject) {
+                setIsReject(true)
+              } else {
+                handleReject()
+              }
+              // updatePropertyStatus({ id: currentProperty!.id, status: PropertyStatus.REJECTED }).then(() => {
+              //   toast.success(t('property:notification.rejectedSuccess'))
+              //   setOpen(false)
+              // })
             }}
             icon={<CloseOutlined />}
             disabled={!hasAuthority(currentUser, 'property:update')}
@@ -120,7 +179,14 @@ function PropertyTable({
           </Button>
         </>
       )}
-      <Button onClick={() => setOpen(false)}>{t('common.back')}</Button>
+      <Button
+        onClick={() => {
+          setOpen(false)
+          setIsReject(false)
+        }}
+      >
+        {t('common.back')}
+      </Button>
     </Space>
   )
 
@@ -382,10 +448,52 @@ function PropertyTable({
       />
 
       {currentProperty && (
-        <Modal open={open} footer={ModalFooter} onCancel={() => setOpen(false)} width={1000}>
+        <Modal
+          open={open}
+          footer={ModalFooter}
+          onCancel={() => {
+            setOpen(false)
+            setIsReject(false)
+          }}
+          width={1000}
+        >
           <Typography.Title level={4}>{t('property:detail')}</Typography.Title>
 
-          <Descriptions bordered items={modalItems} />
+          {!isReject && <Descriptions bordered items={modalItems} />}
+          {isReject && (
+            <Form layout='vertical' form={form}>
+              <Form.Item
+                label={t('property:table.rejectReason')}
+                name='rejectReason'
+                rules={[
+                  {
+                    required: true,
+                    message: t('property:table.rejectReasonRequired')
+                  }
+                ]}
+              >
+                <Select
+                  options={rejectReasons}
+                  onChange={handleRejectReasonChange}
+                  placeholder={t('property:table.selectRejectReason')}
+                />
+              </Form.Item>
+              {rejectReason === 'other' && (
+                <Form.Item
+                  label={t('property:table.customRejectReason')}
+                  name='customRejectReason'
+                  rules={[
+                    {
+                      required: true,
+                      message: t('property:table.customRejectReasonRequired')
+                    }
+                  ]}
+                >
+                  <Input.TextArea rows={4} />
+                </Form.Item>
+              )}
+            </Form>
+          )}
         </Modal>
       )}
 
