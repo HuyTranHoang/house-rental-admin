@@ -1,8 +1,9 @@
 import BlockUserButton from '@/components/BlockUserButton.tsx'
+import { useRolesAll } from '@/hooks/useRoles.ts'
 import { UserDataSource } from '@/types/user.type.ts'
 import { formatCurrency } from '@/utils/formatCurrentcy.ts'
 import { green } from '@ant-design/colors'
-import { Avatar, Badge, Button, Col, Modal, Row, Space, Tag, theme, Typography } from 'antd'
+import { Avatar, Badge, Button, Col, Modal, Row, Space, Tooltip, Typography } from 'antd'
 import { useTranslation } from 'react-i18next'
 
 interface UserDetailsModalProps {
@@ -11,24 +12,11 @@ interface UserDetailsModalProps {
   currentUser: UserDataSource | null
 }
 
-const authorityColorMap: { [key: string]: string } = {
-  user: 'blue',
-  property: 'magenta',
-  review: 'purple',
-  city: 'volcano',
-  district: 'orange',
-  room_type: 'gold',
-  amenity: 'lime',
-  role: 'green',
-  admin: 'red',
-  dashboard: 'cyan'
-}
-
 function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDetailsModalProps) {
   const { t } = useTranslation(['common', 'user', 'role'])
-  const {
-    token: { colorBgLayout }
-  } = theme.useToken()
+  const { data } = useRolesAll()
+
+  const filteredRoles = data?.filter((role) => currentUser?.roles.includes(role.name))
 
   const footer = (
     <>
@@ -97,30 +85,14 @@ function UserDetailsModal({ isModalOpen, setIsModalOpen, currentUser }: UserDeta
               <div className='mx-0 my-4'>
                 <Space wrap={true}>
                   <b>{t('user:table.roles')}</b>
-                  <Typography.Text>{currentUser.roles.join(', ')}</Typography.Text>
-                </Space>
-              </div>
-
-              <b>{t('user:table.authorities')}</b>
-              <div
-                className='mt-2 h-20 overflow-y-scroll p-2'
-                style={{
-                  backgroundColor: colorBgLayout
-                }}
-              >
-                <Space wrap={true}>
-                  {currentUser.authorities.map((authority) => {
-                    const [resource] = authority.split(':')
-                    const color = authorityColorMap[resource] || 'blue'
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-expect-error
-                    const displayName = t(`role:authorityPrivilege.${authority}`)
-                    return (
-                      <Tag key={authority} color={color}>
-                        {displayName as string}
-                      </Tag>
-                    )
-                  })}
+                  {filteredRoles &&
+                    filteredRoles.map((role) => (
+                      <Tooltip key={role.id} title={role.description}>
+                        <Button type='text' className='text-blue-500'>
+                          {role.name}
+                        </Button>
+                      </Tooltip>
+                    ))}
                 </Space>
               </div>
             </Col>

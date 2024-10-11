@@ -25,14 +25,6 @@ export const useRoles = (search: string, authorities: string, pageNumber: number
   return { data, isLoading, isError }
 }
 
-export const useRolesWithoutParams = () => {
-  const { data } = useQuery({
-    queryKey: ['rolesList'],
-    queryFn: () => getAllRoles()
-  })
-
-  return { data }
-}
 
 export const useCreateRole = (
   setError: React.Dispatch<React.SetStateAction<string>>,

@@ -1,10 +1,11 @@
-import { useRolesWithoutParams } from '@/hooks/useRoles.ts'
+import { useRolesAll } from '@/hooks/useRoles.ts'
 import { useUpdateRoleForUser } from '@/hooks/useUsers.ts'
 import { UserDataSource } from '@/types/user.type.ts'
-import { Button, Checkbox, Flex, Form, Modal } from 'antd'
+import { Button, Checkbox, Flex, Form, Modal, Tooltip } from 'antd'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 interface UserUpdateRoleModalProps {
   isUpdateRolesModalOpen: boolean
@@ -18,14 +19,14 @@ interface UserUpdateRoleFormValues {
 }
 
 function UserUpdateRoleModal({
-  isUpdateRolesModalOpen,
-  setIsUpdateRolesModalOpen,
-  currentUser
-}: UserUpdateRoleModalProps) {
+                               isUpdateRolesModalOpen,
+                               setIsUpdateRolesModalOpen,
+                               currentUser
+                             }: UserUpdateRoleModalProps) {
   const [form] = Form.useForm()
   const { t } = useTranslation(['common', 'user'])
 
-  const { data } = useRolesWithoutParams()
+  const { data } = useRolesAll()
   const { updateRoleForUserMutate, updateRoleForUserIsPending } = useUpdateRoleForUser()
 
   const checkBoxOptions = data
@@ -33,7 +34,8 @@ function UserUpdateRoleModal({
       .filter((role) => role.name !== 'Super Admin')
       .map((role) => ({
         label: role.name,
-        value: role.name
+        value: role.name,
+        description: role.description
       }))
     : []
 
@@ -76,11 +78,16 @@ function UserUpdateRoleModal({
             label={t('user:updateRoleModal.form.roles')}
             rules={[{ required: true, message: t('user:updateRoleModal.form.roleRequired') }]}
           >
-            <Checkbox.Group>
+            <Checkbox.Group className='space-x-4'>
               {checkBoxOptions.map((role, index) => (
-                <Checkbox key={index} value={role.value} className='my-1'>
-                  {role.label}
-                </Checkbox>
+                <div key={index}>
+                  <Checkbox value={role.value}>
+                    {role.label}
+                  </Checkbox>
+                  <Tooltip title={role.description}>
+                    <InfoCircleOutlined className="text-blue-500 cursor-help" />
+                  </Tooltip>
+                </div>
               ))}
             </Checkbox.Group>
           </Form.Item>
