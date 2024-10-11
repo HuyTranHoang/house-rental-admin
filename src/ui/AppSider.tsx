@@ -1,6 +1,7 @@
 import axiosInstance from '@/axiosInstance.ts'
 import ROUTER_NAMES from '@/constant/routerNames.ts'
 import useBoundStore from '@/store.ts'
+import { User } from '@/types/user.type'
 import filterMenuItems from '@/utils/filterMenuItem.ts'
 import { toTitleCase } from '@/utils/toTitleCase.ts'
 import {
@@ -15,12 +16,19 @@ import {
   TransactionOutlined,
   UserOutlined
 } from '@ant-design/icons'
-import { Avatar, Button, ConfigProvider, Dropdown, Flex, Layout, Menu, MenuProps, Space, theme, Typography } from 'antd'
+import { useMutation } from '@tanstack/react-query'
+import { Avatar, Button, ConfigProvider, Dropdown, Flex, Form, Input, Layout, Menu, MenuProps, Modal, Space, theme, Typography } from 'antd'
 import Sider from 'antd/es/layout/Sider'
 import { Building2 } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLocation, useNavigate } from 'react-router-dom'
+import {useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
+
+type ChangePasswordField = {
+  oldPassword: string
+  newPassword: string
+}
 
 function AppSider({ darkMode }: { darkMode: boolean }) {
   const navigate = useNavigate()
@@ -28,10 +36,25 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
   const { t } = useTranslation('breadcrumbs')
   const currentUser = useBoundStore((state) => state.user)
   const logout = useBoundStore((state) => state.logout)
+  const [form] = Form.useForm()
+
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false)
 
   const {
     token: { colorBgContainer }
   } = theme.useToken()
+
+  const { mutate: updatePasswordMutate, isPending } = useMutation({
+    mutationFn: async (values) => await axiosInstance.put<User>('/api/user/change-password', values),
+    onSuccess: (response) => {
+      if (response && response.status === 200) {
+        toast.success('Thay đổi mật khẩu thành công')
+        form.resetFields()
+      } else {
+        toast.error('Mật khẩu hiện tại không chính xác, vui lòng thử lại.')
+      }
+    }
+  })
 
   const siderItems: MenuProps['items'] = [
     {
@@ -192,7 +215,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
         navigate(ROUTER_NAMES.DASHBOARD)
         break
       case 'profile':
-        toast.info('Chưa có làm uwu!!!')
+        setIsChangePasswordOpen(true)
         break
       case 'logout':
         logout()
@@ -206,6 +229,7 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
   }
 
   return (
+    <>
     <Sider
       width={260}
       style={{
@@ -272,6 +296,85 @@ function AppSider({ darkMode }: { darkMode: boolean }) {
         </Space>
       </div>
     </Sider>
+
+    <Modal title="Change password"
+    open={isChangePasswordOpen}
+    onCancel={() => setIsChangePasswordOpen(false)}
+    footer={null}>
+    
+      <Form form={form} layout='vertical' onFinish={(values) => updatePasswordMutate(values)}>
+      <Form.Item
+          label='Mật khẩu hiện tại'
+          name='oldPassword'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập mật khẩu'
+            },
+            {
+              pattern: new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/),
+              message: 'Mật khẩu gồm 8 ký tự bao gồm chữ và số'
+            }
+          ]}
+        >
+          <Input.Password placeholder='Mật khẩu hiện tại' />
+        </Form.Item>
+
+        <Form.Item
+          label='Mật khẩu mới'
+          name='newPassword'
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập mật khẩu'
+            },
+            {
+              pattern: new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/),
+              message: 'Mật khẩu gồm 8 ký tự bao gồm chữ và số'
+            }
+          ]}
+        >
+          <Input.Password placeholder='Mật khẩu mới' />
+        </Form.Item>
+
+        <Form.Item
+          label='Nhập lại mật khẩu mới'
+          name='confirmPassword'
+          dependencies={['newPassword']}
+          rules={[
+            {
+              required: true,
+              message: 'Vui lòng nhập lại mật khẩu mới'
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue('newPassword') === value) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('Mật khẩu không trùng khớp'))
+              }
+            })
+          ]}
+        >
+          <Input.Password placeholder={'Nhập lại mật khẩu mới'} />
+        </Form.Item>
+
+        <Form.Item>
+          <Space>
+          <Button 
+          loading={isPending}
+          onClick={() => {
+            form.resetFields()
+            setIsChangePasswordOpen(false)
+          }}>Quay lại</Button>
+
+          <Button loading={isPending} htmlType='submit' type='primary'>Cập nhật</Button>
+          </Space>
+        </Form.Item>
+      </Form>
+
+    </Modal>
+    </>
   )
 }
 
